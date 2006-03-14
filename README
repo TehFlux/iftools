@@ -49,13 +49,13 @@ http://sourceforge.net/projects/iftools/
 You can always get the latest version of the Ionflux Tools Class Library from 
 the Subversion repository at:
 
-http://iftools:iftools@xi.ionflux.org/svn/iftools/
+https://svn.sourceforge.net/svnroot/iftools/
 
 To get the Ionflux Tools Class Library from Subversion, you need to have 
 Subversion installed (http://subversion.tigris.org/). Then change to a 
 directory of your choice (for example iftools) and type:
 
-svn co http://iftools:iftools@xi.ionflux.org/svn/iftools/trunk/
+svn co https://svn.sourceforge.net/svnroot/iftools/trunk/
 
 This, however, is a development version, and might possibly be unstable. You 
 should not use this unless you want to help with debugging and testing new 

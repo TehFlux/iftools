@@ -52,13 +52,13 @@ http://sourceforge.net/projects/iftools/
 You can always get the latest version of the %Ionflux Tools Class Library 
 from the Subversion repository at:
 
-http://iftools:iftools@xi.ionflux.org/svn/iftools/
+https://svn.sourceforge.net/svnroot/iftools/
 
 To get the %Ionflux Tools Class Library from Subversion, you need to have 
 Subversion installed (http://subversion.tigris.org/). Then change to a 
 directory of your choice (for example \c iftools) and type:
 
-<tt>svn co http://iftools:iftools@xi.ionflux.org/svn/iftools/trunk/</tt>
+<tt>svn co https://svn.sourceforge.net/svnroot/iftools/trunk/</tt>
 
 This, however, is a development version, and might possibly be unstable. You 
 should not use this unless you want to help with debugging and testing new 
@@ -161,7 +161,7 @@ TCP client and server and an echo server.
 
 Have fun!
 
-Copyright &copy; 2003-2005 Joern P. Meier (mail@ionflux.org).
+Copyright &copy; 2003-2006 Joern P. Meier (mail@ionflux.org).
 
 \htmlonly <A href="http://sourceforge.net"><IMG src="http://sourceforge.net/sflogo.php?group_id=119253&amp;type=5" width="210" height="62" border="0" alt="SourceForge.net Logo" /></A> \endhtmlonly
  */
