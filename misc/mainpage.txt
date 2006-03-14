@@ -4,11 +4,7 @@
 
 Thank you for your interest in the %Ionflux Tools Class Library project!
 
-The %Ionflux Tools Class Library is a lightweight multi-platform C++ 
-framework designed for rapid development of applications in a client/server 
-architecture. It features a set of classes that are essential for most 
-projects, but on a higher level and thus not provided directly by the STL 
-(C++ Standard Template Library) or system libraries. The %Ionflux Tools Class 
+The %Ionflux Tools Class Library is a lightweight multi-platform C++ framework designed for rapid development of applications in a client/server architecture. It features a set of useful classes and tools, such as a powerful template engine and a universal hierarchical type. The %Ionflux Tools Class 
 Library is released under the GNU General Public License, meaning it is free 
 software! (See \c LICENSE in the distribution for more information.)
 
@@ -16,16 +12,16 @@ software! (See \c LICENSE in the distribution for more information.)
 
 Features of the %Ionflux Tools Class Library include:
 
+\li Generic, serializable tree data structure.
+\li \ref tpldoc, including \ref classtpldoc.
 \li Memory management (object pools, reference counting, parent objects).
 \li Logging/console output facility.
 \li Command line parsing.
 \li \ref configdoc.
 \li Database interface.
 \li IO multiplexing.
-\li Generic, serializable tree data structure.
 \li Perl-compatible regular expression pattern matching.
 \li \ref strfiltdoc.
-\li \ref tpldoc, including \ref classtpldoc.
 \li \ref datetimedoc (not restricted to the POSIX epoch, 
 supporting time zone conversions).
 \li Generic byte string tokenizer.

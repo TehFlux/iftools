@@ -2,7 +2,7 @@
 #define IONFLUX_TOOLS
 /* ==========================================================================
  * Ionflux Tools
- * Copyright (c) 2004 Joern P. Meier
+ * Copyright (c) 2004-2006 Joern P. Meier
  * mail@ionflux.org
  * --------------------------------------------------------------------------
  * tools.hpp                    Various tools & helper functions
@@ -78,7 +78,7 @@ class CharTypeMap;
 /// Module name.
 const std::string MODULE_NAME = "Ionflux Tools";
 /// Module version.
-const std::string MODULE_VERSION = "0.2.3";
+const std::string MODULE_VERSION = "0.2.4";
 /// Default size for read buffers.
 const int READ_BUFFER_SIZE = 1024;
 /// Default size for compression (and decompression) buffers.

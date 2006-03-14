@@ -35,7 +35,7 @@ namespace Ionflux
 namespace Tools
 {
 
-/** A token for the UTF-8 tokenizer..
+/** A token for the UTF-8 tokenizer.
  * \ingroup tokenizer
  */
 struct Utf8Token

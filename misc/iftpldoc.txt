@@ -113,7 +113,7 @@ Template Engine.
 \li \ref tplif
 \li \ref tplswrap
 \li \ref tplsection
-\li \ref ref
+\li \ref tplref
 
 \subsection tplinclude include
 

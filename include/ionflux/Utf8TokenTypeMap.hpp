@@ -41,7 +41,7 @@ struct Utf8TokenType;
 
 typedef std::map<unsigned int, Ionflux::Tools::Utf8TokenType*> ImplTokenTypeMap;
 
-/** A token type with UTF-8 support..
+/** A token type with UTF-8 support.
  * \ingroup tokenizer
  */
 struct Utf8TokenType
