@@ -1,0 +1,110 @@
+/*! \page configdoc Configuration file I/O
+
+\section cfgintro Introduction
+
+The Ionflux::Tools::ConfigTree API provides an easy to use and powerful 
+interface to machine- and human-readable (and even human-friendly) 
+configuration files which can be used by any application.
+
+\subsection cfgexpr Configuration file syntax
+
+The configuration tree can be generated from a configuration file of the 
+following format:
+
+\c # \c &lt;comment&gt; \n
+\c &lt;tree \c path&gt; \c = \c &lt;value&gt;
+
+Each line consists of either a comment or a tree path assignment, where the 
+tree path conforms to the rules set forth in <tt>misc/path-resolution.txt</tt> 
+and \ref tpldoc.
+
+Whitespace is ignored at the following positions:
+
+1) at the beginning of a line\n
+2) at the end of a line\n
+3) to the left and right of the '='
+
+Whitespace inside the value is preserved.
+
+A value may span multiple lines. This is accomplished by appending a '\\'
+character to the end of a line.
+
+Array indices may be omitted to fill arrays automatically:
+
+<tt>foo[] = bar\n
+foo[] = baz</tt>
+
+In this case, the next available index will be accessed, so the above is 
+equal to:
+
+<tt>foo[0] = bar\n
+foo[1] = baz</tt>
+
+However, if you want to use automatic array indexing along with complex node 
+structures, be aware that each occurence of a missing index will access the 
+next available index. Thus
+
+<tt>foo[].bar = 1\n
+foo[].baz = 2\n
+foo[].bar = 3\n
+foo[].baz = 4</tt>
+
+is equal to
+
+<tt>foo[0].bar = 1\n
+foo[1].baz = 2\n
+foo[2].bar = 3\n
+foo[3].baz = 4</tt>
+
+and not, as one might (somewhat carelessly) expect:
+
+<tt>foo[0].bar = 1\n
+foo[0].baz = 2\n
+foo[1].bar = 3\n
+foo[1].baz = 4</tt>
+
+You can avoid confusion by using automatic arrays in conjunction with nested 
+configuration, which is explained below.
+
+Configuration directives may be nested by using curly braces ({}):
+
+<tt>foo = {\n
+&nbsp;&nbsp;&nbsp;&nbsp;bar = 42\n
+&nbsp;&nbsp;&nbsp;&nbsp;baz = 23\n
+}</tt>
+
+This creates a new context (inside the curly braces) where the 'foo' node is 
+treated as the root node. You can use this feature to create nested automatic 
+array definitions:
+
+<tt>foo[] = {\n
+&nbsp;&nbsp;&nbsp;&nbsp;bar[] = {\n
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a = 1\n
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;b = 2\n
+&nbsp;&nbsp;&nbsp;&nbsp;}\n
+&nbsp;&nbsp;&nbsp;&nbsp;bar[] = {\n
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;c = 3\n
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;d = 4\n
+&nbsp;&nbsp;&nbsp;&nbsp;}\n
+}</tt>
+
+To assign data entries to the root node, or in fact any node, just place 
+quoted strings in the root context of a node:
+
+<tt>'This is a data entry in the root node context.'\n
+foo = {\n
+&nbsp;&nbsp;&nbsp;&nbsp;"This is a data entry in the context of node 'foo'"\n
+&nbsp;&nbsp;&nbsp;&nbsp;'This is yet another data entry.'\n
+}</tt>
+
+Interestingly enough, there are several possiblilities for setting data 
+entries of the root node (or the node currently in the root context). For 
+example:
+
+<tt>'Hello world!'\n
+[1] = 'This is another data entry of the root node.'\n
+[] = 'You can use automatic array indexing as well.'</tt>
+
+Quoting works as usual, with quote characters " and ' and \\ as an escape 
+character.
+*/

@@ -1,0 +1,33 @@
+/*! \page strfiltdoc String Filters
+
+\section strfiltintro Introduction
+
+String filters provide an easy means to manipulate strings in many ways, 
+without the need to write any additional code. A string filter consists of a 
+stack of string manipulators. When applied to an input string, the string 
+filter causes each manipulator to be applied to the string resulting from 
+applying the previous manipulator. Thus, you may chain an arbitrary amount of 
+manipulators to achieve a desired result.
+
+\li \ref strfiltexpr
+\li \ref strfiltmanip
+
+\subsection strfiltexpr String Filter Expressions
+
+A string filter expression consists of one or more string manipulators, 
+chained by a '|' (OR) sign, for example:
+
+<tt>uppercase|rpad(' ', 30)</tt>
+
+In this case, an input string would first be converted to upper case, then 
+padded to the right using ' ' as a padding character.
+
+Arguments of string manipulators should be enclosed in quotes, however, that 
+is not necessary if the argument is a (positive) number or an identifier.
+
+\subsection strfiltmanip String Manipulators
+
+See Ionflux::Tools::StringManipulator for a list of available string 
+manipulators.
+
+*/

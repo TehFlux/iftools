@@ -1,0 +1,302 @@
+/*! \page tpldoc Template Engine
+
+\section tplintro Introduction
+
+The %Ionflux Tools template engine is available both as a C++ class 
+(Ionflux::Tools::Template), which you can include in your projects, and a 
+standalone template processor, \c iftpl (see \ref iftpl), which you can use 
+to process templates. \c iftpl is designed to work with configuration files. 
+The %Ionflux Tools Class Library also provides a class for handling these 
+(see Ionflux::Tools::ConfigTree and \ref configdoc).
+
+\li \ref tpldef
+\li \ref tplvar
+\li \ref tpltag
+
+\section tpldef Templates
+
+The purpose of a template is to separate data from presentation, i.e. to be 
+able to change the representation of data without actually touching the data 
+itself and vice versa. A representation of data can then be generated easily 
+by invoking a template processor, such as \c iftpl or 
+Ionflux::Tools::Template on a template and set of data. A template consists 
+of a combination of arbitrary text and template tags, which may be stored in 
+a file or a buffer in memory. Template tags are used as special instructions 
+to the template processor. For example, a tag may instruct the template 
+processor to substitute the value of a variable in place of the tag, or to 
+execute a part of the template only if a special condition is satisfied. Some 
+tags, like <tt>foreach</tt> and <tt>if</tt>, may be nested to achieve special 
+results.
+
+\section tplvar Variables
+
+Template variables are containers for the data to be used for generating the 
+data representation (or output) of a template. The %Ionflux Tools Template 
+Engine uses tree nodes (Ionflux::Tools::Node) to represent all data, so you 
+can also use tree nodes in your configuration files. Each tree node can have 
+an arbitrary number of data entries (like an array) or child nodes (or fields, 
+like a struct or class). A specification of a tree node or data entry, as 
+used in a configuration file, is called a tree path expression.
+
+\subsection treepathexpr Tree Path Expressions
+
+The simplest form of a tree path expression is just a name specifying a 
+top-level tree node:
+
+\c myvar
+
+In a configuration file, you can assign values to tree nodes:
+
+<tt>myvar = foo</tt>
+
+Subscripts are allowed and may either consist of a numeric index or a name:
+
+<tt>myvar[1] = foo</tt>\n
+<tt>myvar['foo'] = 42</tt>
+
+You can also use the resolution operator to access child nodes of a node:
+
+<tt>myvar.foo = bar</tt>
+
+Actually, resolution in this way is handled the same way as a subscript, so 
+it doesn't really matter which variant you use.
+
+Finally, you can use the contents of a node as a name for a subscript or 
+resolution operand:
+
+<tt>foo = 1</tt>\n
+<tt>bar = baz</tt>\n
+<tt>myvar[.foo] = 2</tt>\n
+<tt>myvar.(.bar) = 3</tt>
+
+is the same as:
+
+<tt>myvar[1] = 2</tt>\n
+<tt>myvar['baz'] = 3</tt>
+
+Note that, in this case, a leading resolution operator is needed to 
+distinguish between a node reference and a subscript by name.
+
+\subsection tplvarspec Special Variables
+
+The %Ionflux Tools Template Engine has some built-in special variables. You 
+should not attempt to overwrite these yourself, but you may use them in your 
+templates. The special variables are:
+
+\li <tt>__i[&lt;depth&gt;]</tt> Iteration counter for nesting level \c depth 
+(starting from 0).
+\li <tt>__n[&lt;depth&gt;]</tt> Total number of iterations for nesting level 
+<tt>depth</tt>.
+\li \c __template_file The name of the template file (set by \c iftpl).
+\li \c __config_file The name of the configuration file (set by \c iftpl).
+
+Note that \c __template_file and \c __config_file are available only if you 
+are using \c iftpl to process a template.
+
+\section tpltag Template Tags
+
+This section provides an overview of the tags recognized by the %Ionflux Tools 
+Template Engine.
+
+\li \ref tplinclude
+\li \ref tplsubst
+\li \ref tplassign
+\li \ref tplforeach
+\li \ref tplfirst
+\li \ref tplmid
+\li \ref tpllast
+\li \ref tplsingle
+\li \ref tplnotfirst
+\li \ref tplnotmid
+\li \ref tplnotlast
+\li \ref tplnotsingle
+\li \ref tplif
+\li \ref tplswrap
+\li \ref tplsection
+\li \ref ref
+
+\subsection tplinclude include
+
+<tt>{include &lt;file&gt;}</tt>
+
+This tag is replaced by the contents of another file (which may or may not be 
+a template file itself). \c file can be an absolute path or a path relative to 
+the current working directory of the application using the template processor 
+(for example \c iftpl). Any template data included in this way will be treated 
+by the template processor as if it had been there in the template being 
+processed in the first place.
+
+\subsection tplsubst Variable Substitution
+
+<tt>{$&lt;path&gt;[|&lt;filter&gt; ...]}</tt>\n
+<tt>{.&lt;path&gt;[|&lt;filter&gt; ...]}</tt>\n
+<tt>{@&lt;path&gt;[|&lt;filter&gt; ...]}</tt>
+
+This tag is replaced by the value contained in the variable <tt>path</tt>. 
+Optionally, a string filter is applied to the value before the substitution 
+actually takes place (see \ref strfiltdoc). (By the way, it doesn't matter 
+which of the various variants specified above you use in your template. All of 
+them are valid variable substitution tags and behave exactly the same.)
+
+\subsection tplassign Variable Assignment
+
+<tt>{$&lt;path&gt; = &lt;expr&gt;}</tt>\n
+<tt>{.&lt;path&gt; = &lt;expr&gt;}</tt>\n
+<tt>{@&lt;path&gt; = &lt;expr&gt;}</tt>
+
+Assign the value resulting from evaluating \c expr to the variable specified 
+by <tt>path</tt>.
+
+\subsection tplforeach foreach
+
+<tt>{foreach &lt;iterator&gt; in &lt;path&gt;} ... [{empty} ... ] {/foreach}</tt>
+
+A \c foreach block will process the template section enclosed within its tags 
+once for each element in \c path. The current element is assigned to the 
+variable \c iterator. \c foreach will process data entries of \c path first, 
+child nodes second. If there are no iterations (i.e. there are neither data 
+entries nor child nodes), an optional \c empty block will be processed 
+instead of the main foreach block. The value of the iteration counter is made 
+available in the special variable <tt>__i[&lt;depth&gt;]</tt>, where \c depth 
+is the nesting level of the iteration block, starting from 0. The total number 
+of iterations, including all data entries and child nodes, is made available 
+in the special variable <tt>__n[&lt;depth&gt;]</tt> (see \ref tplvarspec).
+
+\subsection tplfirst first
+
+<tt>{first} ... {/first}</tt>
+
+A \c first block is processed only on the first iteration of an iteration 
+block (such as \ref tplforeach). Outside of an iteration block, the \c first 
+block simply does nothing. The tag also doesn't do anything if there is but a 
+single element in the iteration, i.e. the total number of iterations is 1 
+(see \ref tplsingle). Each iteration block may have an arbitrary amount of 
+\c first blocks, and it doesn't matter where they are placed within the 
+iteration block.
+
+\subsection tplmid mid
+
+<tt>{mid} ... {/mid}</tt>
+
+A \c mid block is processed on all but the first and last iteration of an 
+iteration block (such as \ref tplforeach). Outside of an iteration block, 
+the \c mid block simply does nothing. The tag also doesn't do anything if 
+there is but a single element in the iteration, i.e. the total number of 
+iterations is 1 (see \ref tplsingle). Each iteration block may have an 
+arbitrary amount of \c mid blocks, and it doesn't matter where they are 
+placed within the iteration block.
+
+\subsection tpllast last
+
+<tt>{last} ... {/last}</tt>
+
+A \c last block is processed only on the last iteration of an iteration 
+block (such as \ref tplforeach). Outside of an iteration block, the \c last 
+block simply does nothing. The tag also doesn't do anything if there is but a 
+single element in the iteration, i.e. the total number of iterations is 1 
+(see \ref tplsingle). Each iteration block may have an arbitrary amount of 
+\c last blocks, and it doesn't matter where they are placed within the 
+iteration block.
+
+\subsection tplsingle single
+
+<tt>{single} ... {/single}</tt>
+
+A \c single block is processed only if there is but a single iteration in an 
+iteration block (such as \ref tplforeach). Outside of an iteration block, the 
+\c single block simply does nothing. Each iteration block may have an 
+arbitrary amount of \c single blocks, and it doesn't matter where they are 
+placed within the iteration block.
+
+\subsection tplnotfirst notfirst
+
+<tt>{notfirst} ... {/notfirst}</tt>
+
+A \c notfirst block is processed only if the current iteration is not the 
+first iteration in an iteration block (such as \ref tplforeach). Outside of 
+an iteration block, the \c notfirst block simply does nothing. Each iteration 
+block may have an arbitrary amount of \c notfirst blocks, and it doesn't 
+matter where they are placed within the iteration block.
+
+\subsection tplnotmid notmid
+
+<tt>{notmid} ... {/notmid}</tt>
+
+A \c notmid block is processed only if the current iteration is not one of the 
+inner iterations (i.e. it is either the first or the last iteration) in an 
+iteration block (such as \ref tplforeach). Outside of an iteration block, the 
+\c notmid block simply does nothing. Each iteration block may have an 
+arbitrary amount of \c notmid blocks, and it doesn't matter where they are 
+placed within the iteration block.
+
+\subsection tplnotlast notlast
+
+<tt>{notlast} ... {/notlast}</tt>
+
+A \c notlast block is processed only if the current iteration is not the 
+last iteration in an iteration block (such as \ref tplforeach). Outside of 
+an iteration block, the \c notlast block simply does nothing. Each iteration 
+block may have an arbitrary amount of \c notlast blocks, and it doesn't 
+matter where they are placed within the iteration block.
+
+\subsection tplnotsingle notsingle
+
+<tt>{notsingle} ... {/notsingle}</tt>
+
+A \c notsingle block is processed only if there is more than one iteration in 
+an iteration block (such as \ref tplforeach). Outside of an iteration block, 
+the \c notsingle block simply does nothing. Each iteration block may have an 
+arbitrary amount of \c notsingle blocks, and it doesn't matter where they are 
+placed within the iteration block.
+
+\subsection tplif if
+
+<tt>{if &lt;condition&gt;} ... [{else} ... ] {/if}</tt>
+
+An \c if block is processed only if \c condition evaluates to \c true, i.e. 
+is not equal to zero. If the optional \c else tag is also present, the 
+corresponding block will be processed instead of the \c if block if 
+\c condition evaluates to \c false. You can use most operators and data types 
+in the conditional expression. Data type conversion is performed automatically 
+as necessary to evaluate the expression. Operands will be converted to the 
+data type that most accurately represents the result of an operation. If an 
+operator cannot reasonably be applied to a pair of operands, and they cannot 
+be converted to suitable types either, the template processor will issue a 
+warning.
+
+\subsection tplswrap swrap
+
+<tt>{swrap &lt;lineWidth&gt; ['&lt;prefix&gt;'] ['&lt;lineTerm&gt;']}</tt>
+
+Soft word wrapping is applied to the data resulting from processing the block 
+enclosed in the \c swrap tag. Wrapping takes place at whitespace boundaries in 
+the input, with each resulting line no longer than \c lineWidth, if at all 
+possible. An optional \c prefix is prepended to each line. The line terminator 
+may be specified explicitly by supplying the optional \c lineTerm argument.
+
+\subsection tplsection section
+
+<tt>{section &lt;sectionName&gt;}</tt>
+
+A section is a part of the template that is not processed until it is 
+referenced with the \c ref tag. A section may be referenced an arbitrary 
+number of times from within a template. It is also possible to reference a 
+section from within itself, thus allowing for recursive template processing. 
+Note that a section must be defined before it may be referenced.
+
+\warning Don't try recursive processing with data entries without adding some 
+break condition. It will likely cause an infinite loop, since each node with a 
+single data element is considered a list with one element which should be 
+iterated over. Thus any iterator variable which is not empty will be iterated 
+over in a recursive section. Child node iterations should work fine.
+
+\subsection tplref ref
+
+<tt>{ref &lt;referenceName&gt; [restore]}</tt>
+
+The \c ref tag is used to reference a section within a template. The section 
+will be processed in place of the \c ref tag. If the optional \c resore switch 
+is specified, the environment will be restored after the section has been 
+processed.
+
+*/

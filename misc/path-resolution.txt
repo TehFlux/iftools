@@ -1,0 +1,42 @@
+============================================================================
+Ionflux Tools
+Copyright (c) 2004 Joern P. Meier
+mail@ionflux.org
+----------------------------------------------------------------------------
+path-resolution.txt         How fully qualified node paths are resolved.
+============================================================================
+
+This file is part of Ionflux Tools.
+
+Ionflux Tools is free software; you can redistribute it and/or modify it 
+under the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 2 of the License, or (at  your option)
+any later version.
+
+Ionflux Tools is distributed in the hope that it will be useful, but 
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with Ionflux Tools; if not, write to the Free Software Foundation, 
+Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+
+============================================================================
+
+There are six types of valid node (or data) references. Each reference type 
+may be expressed as a combination of one of three basic reference types 
+(Name, ID, Path) and two reference subtypes (Reference, Subscript).
+
+          |  Name    |  ID      | Path
+----------+----------+----------+-----------
+Reference | foo.bar  | foo.42   | foo.(.bar)
+Subscript | foo[bar] | foo[42]* | foo[.42]
+
+The following additional rules apply:
+
+1) Subscript arguments may be enclosed in single or double quotes (', ").
+
+2) If the last reference is of type *, it denotes a data index.
+
+For examples, see tools/test/treeresolver.cpp.

@@ -1,0 +1,201 @@
+/*! \page classtpldoc Class templates
+
+\section cltplintro Introduction
+
+The %Ionflux Tools Class Library distribution provides a set of class 
+templates, which can be used to create interfaces and implementation 
+skeletons for C++ classes using the %Ionflux Tools \ref tpldoc. Using class 
+templates instead of writing everything by hand (or using copy & paste) has at 
+least all of the following advantages:
+
+\li Spend more time actually writing good interfaces than formatting header 
+and implementation files.
+\li Documentation tags are generated automatically from your interface 
+specifications and documentation hints. So you save time without compromising 
+good code documentation.
+\li Prevent typing errors in dull repetitive code fragments or documentation 
+tags.
+\li Create implementation skeletons that instantly compile, even if 
+implementation is not yet completed. So you can start testing code as early as 
+possible and save debugging time.
+\li Automatically include license disclaimer, copyright notice etc. with 
+header and implementation files.
+\li Support of properties and automatic generation of corresponding accessor 
+functions (although C++ does not natively support properties, you won't notice 
+the difference after some time using this feature).
+\li Changing interfaces becomes a lot easier.
+\li Preview the implementation skeleton of new classes as often as you like 
+before generating the actual files.
+\li Templates and configuration are fully customisable.
+\li It's easy to write code to generate more code automatically.
+
+At the moment, the class templates are useful for generating interface and 
+implementation skeletons. You will still have to do some work though to fill 
+in the function bodies and add specialties not yet supported by the class 
+templates. However, using the class templates can save you a lot of work in 
+creating nicely formatted, documented new classes for your project. See the 
+files in the \c conf directory of the distribution for examples. The class 
+templates are located in the \c template directory of the distribution. They 
+are written to be somewhat general on purpose, but you can of course modify 
+them to fit the specific requirements of your project.
+
+See <tt>conf/class/ExampleClass.conf</tt> for an example of how to use class 
+templates. You can generate the class header and implementation for the 
+\c ExampleClass using:
+
+<tt>iftpl template/class/Class.hpp.tpl conf/class/ExampleClass.conf</tt>\n
+<tt>iftpl template/class/Class.cpp.tpl conf/class/ExampleClass.conf</tt>
+
+\section cltplfeats Class template features
+
+This section provides an overview of the features provided by the %Ionflux 
+Tools class templates. You can set class configuration directives in a 
+configuration file (see \ref configdoc) and invoke \c iftpl (see \ref tpldoc) at 
+any time to create the header and implementation files for the new class.
+
+\subsection cltplproject Project
+
+The \c project configuration directive defines general information concerning 
+the project which a class is part of. You can use any of the following options:
+
+\c name Name of the project.\n
+\c author Author(s) or copyright holder of the project (this will be used in 
+the file header).\n
+\c mail Project e-mail address.
+
+\subsection cltplfile File
+
+These directives can be defined in the root configuration context to set 
+additional options:
+
+\c copyrightYear Copyright year or range of years.\n
+\c includeGuardPrefix Include guard prefix. This will be prepended to the 
+class name (in upper case) to define an include guard for header files.
+
+\subsection cltplns Namespace
+
+Use the \c namespace directive to specify namespaces which the class 
+should be a member of. The \c namespace directive supports only one option:
+
+\c name Name of the namespace.
+
+\subsection cltplud Using
+
+The \c using configuration directive specifies a list of using directives to 
+be included in the implementation file. It does not have any options.
+
+\subsection cltplinc Include
+
+The \c include configuration directive specifies a list of header files to 
+be included (using the \c \#include preprocessor instruction) in the class 
+header file. It does not have any options. You can use either \c include.header 
+or \c include.impl, depending on whether you want the include directives to 
+appear in the header or implementation file.
+
+\subsection cltplfwd Forward
+
+The \c forward configuration directive specifies a list of forward declarations 
+to be included in the class header file.
+
+\subsection cltplstruct Struct
+
+This directive can be used to specify helper structs that should be declared 
+along with the class in the header file. The following options are supported:
+
+\c name Struct name (this must be a valid C++ struct name).\n
+\c desc Short description.\n
+\c field A field of the struct. This supports the options \c type for field 
+type, \c name for field name and \c desc for field short description.
+
+\subsection cltplclass Class
+
+This directive provides general information about the class. You can use any 
+of the following options:
+
+\c name Class name (this must be a valid C++ class name).\n
+\c shortDesc Short description (this may describe the class in a more 
+human-readable way).\n
+\c longDesc Detailed description of the class, usage hints etc..\n
+\c includeDir Directory where the header file for this class is located.\n
+\c base List of base classes including access specifiers.\n
+\c group Documentation group (or module). This supports the options \c name, 
+for group name, \c shortDesc for group short description and \c longDesc for 
+long description. Note that you have to define \c shortDesc and \c longDesc 
+only once (i.e. in only one class configuration file).
+
+\subsection cltplcon Constructor
+
+Use the <tt>constructor.public</tt> directive to define a constructor. The 
+default constructor (and destructor) will always be generated automatically, 
+so you do not have to configure them explicitly. Constructor directives 
+support the following options:
+
+\c param Function parameter. Use the \c name option to specify the parameter 
+name, the \c type option to specify the parameter type and \c desc to specify 
+a short description for the parameter. Default values for parameters may be 
+specified with the \c default option.
+
+\subsection cltplvar Variables
+
+Use either the <tt>variable.public</tt>, <tt>variable.private</tt> or 
+<tt>variable.protected</tt> configuration directives to specify class member 
+variables. The \c variable directive supports the following options:
+
+\c spec This may be used to define static variables (set to \c static).\n
+\c type Variable type.\n
+\c name Variable name (this must be a valid C++ variable name).\n
+\c desc Short description of the variable.\n
+\c value Set the initial value of a static variable.
+
+\subsection cltplprop Property
+
+Properties are a special type of variables that can be publicly accessed 
+through special functions (called accessors). Accessors are usually named 
+after the variable, with a \c get or \c set prefix. You use the \c get 
+accessor function to read the current value of the variable and the \c set 
+accessor function to set the value of a variable. Properties have the 
+advantage of additional access security, possibilities for sanity checking and 
+separation of the data representation from the interface. Thus, it is a always
+a Good Thing to use properties instead of public variables. However, usually 
+this means some overhead in writing the accessor functions. Not so with the 
+%Ionflux Tools class templates, since you can just define properties like you 
+would define any member variable. You do this by using either the 
+<tt>property.private</tt> or the <tt>property.protected</tt> directive, which 
+support the following options:
+
+\c type Type of the property (the type that will be returned from a \c get 
+accessor function).\n
+\c name Property name.\n
+\c setFromType Type from which the property can be set (used in the \c set 
+accessor function).\n
+\c desc Short description of the property.
+
+Using the property directive with the unmodified class templates will create 
+default data representations and accessor behavior. Of course, you can change 
+this to any representation and behavior you like.
+
+\subsection cltplfunc Function
+
+You can use the <tt>function.public</tt>, <tt>function.private</tt> and 
+<tt>function.protected</tt> configuration directives to define member 
+functions of the class. Each of these directives supports the following 
+options:
+
+\c spec Function specifier (set to \c virtual for virtual functions).\n
+\c type Function return type.\n
+\c name Function name.\n
+\c const Set to \c true to define a const function.\n
+\c pureVirtual Set to \c true to define a pure virtual function (pure virtual 
+functions are declared as such in the header file but not included in the 
+implementation skeleton).\n
+\c shortDesc Function short description.\n
+\c longDesc Long description, usage hints etc..\n
+\c param Function parameter. Use the \c name option to specify the parameter 
+name, the \c type option to specify the parameter type and \c desc to specify 
+a short description for the parameter. Default values for parameters may be 
+specified with the \c default option.\n
+\c return Return value. Use the \c value option to specify an expression which 
+will be used as return value of the function and \c desc for a short 
+description of the return value.
+
+*/

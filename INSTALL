@@ -1,0 +1,56 @@
+================================================================================
+Ionflux Tools
+Copyright (c) 2004 Joern P. Meier
+mail@ionflux.org
+--------------------------------------------------------------------------------
+Install
+================================================================================
+
+To build, you need the SCons build system (see http://www.scons.org/) and the
+following libraries:
+
++ MySQL client
++ libbz2
++ PCRE (Perl Compatible Regular Expressions)
++ Gtkmm (optional)
+
+If you do not want to build the Ionflux Tools Class Library with Gtkmm 
+features, you can specify gtools=no after the build and install commands.
+
+You can then (on Linux and FreeBSD systems) build everything with:
+
+scons
+
+or
+
+scons platform=<your platform>
+
+where <your platform> is one of:
+
+linux
+freebsd
+win32
+
+Type
+
+scons -h
+
+for a list of build options.
+
+The Win32 build script assumes that you have MinGW/Dev-Cpp and the required 
+libraries properly installed and configured. Infortunately, this is currently 
+not tested very well. Please let me know if you encounter any problems.
+
+To install, type:
+
+scons install
+
+You must be root to install to default locations. If you want to install to a 
+different directory, you can specify a prefix with:
+
+scons install prefix=<target directory>
+
+Have fun!
+
+If you find any bugs or want to send a feature request or comments and 
+suggestions, please feel free to send a mail to mail@ionflux.org.

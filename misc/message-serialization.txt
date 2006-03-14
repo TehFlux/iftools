@@ -1,0 +1,66 @@
+============================================================================
+Ionflux Tools
+Copyright (c) 2004 Joern P. Meier
+mail@ionflux.org
+----------------------------------------------------------------------------
+message-serialization.txt       Message binary format specification.
+============================================================================
+
+This file is part of Ionflux Tools.
+
+Ionflux Tools is free software; you can redistribute it and/or modify it 
+under the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 2 of the License, or (at  your option)
+any later version.
+
+Ionflux Tools is distributed in the hope that it will be useful, but 
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with Ionflux Tools; if not, write to the Free Software Foundation, 
+Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+
+============================================================================
+
+This document describes the format for binary serialization of a Message 
+object.
+
+-----------+-----------------+----------------------------------------------
+Bytes      | Name            | Description
+-----------+-----------------+----------------------------------------------
+Data header (1x):
+-----------+-----------------+----------------------------------------------
+4          | magicWord       | Magic word. *1, *2
+4          | protocolVersion | Protocol version. *2
+4          | messageSize     | Message size (bytes). *2
+4          | UID             | Unique identifier.
+4          | type            | Message type ID.
+4          | flags           | Flags. *3
+20         | checksum        | SHA-1 checksum of the message. *2, *4
+-----------+-----------------+----------------------------------------------
+Message data block (1x):
+-----------+-----------------+----------------------------------------------
+?          | messageData     | Message data. *5
+-----------+-----------------+----------------------------------------------
+
+1) The default message protocol has a 4-byte magic word. However, the size of 
+   the magic word may differ for custom protocols.
+
+2) A message is considered invalid if the magic word does not match, the 
+   protocol version number is outside the acceptable range or the number of 
+   available serialized bytes does not match the specified message size, or 
+   if the checksum of the serialized bytes does not match the specified 
+   checksum.
+
+3) If the flag Message::FLAG_COMPRESS (default value: 1) is set, the message 
+   data block is compressed using the bzip2 algorithm.
+
+4) For purposes of calculating the checksum, the checksum field is zeroed out. 
+   For simple authentication, the username, user secret and session secret are 
+   temporarily appended to the message data block before calculating the 
+   checksum.
+
+5) This is the data obtained from serializing a Node object (see 
+   node-serialization.txt), optionally compressed using bzip2 (see 3). 

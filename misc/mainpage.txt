@@ -1,0 +1,167 @@
+/*! \mainpage The Ionflux Tools Class Library (iftools)
+
+\section intro Introduction
+
+Thank you for your interest in the %Ionflux Tools Class Library project!
+
+The %Ionflux Tools Class Library is a lightweight multi-platform C++ 
+framework designed for rapid development of applications in a client/server 
+architecture. It features a set of classes that are essential for most 
+projects, but on a higher level and thus not provided directly by the STL 
+(C++ Standard Template Library) or system libraries. The %Ionflux Tools Class 
+Library is released under the GNU General Public License, meaning it is free 
+software! (See \c LICENSE in the distribution for more information.)
+
+\section features Features
+
+Features of the %Ionflux Tools Class Library include:
+
+\li Memory management (object pools, reference counting, parent objects).
+\li Logging/console output facility.
+\li Command line parsing.
+\li \ref configdoc.
+\li Database interface.
+\li IO multiplexing.
+\li Generic, serializable tree data structure.
+\li Perl-compatible regular expression pattern matching.
+\li \ref strfiltdoc.
+\li \ref tpldoc, including \ref classtpldoc.
+\li \ref datetimedoc (not restricted to the POSIX epoch, 
+supporting time zone conversions).
+\li Generic byte string tokenizer.
+\li TCP socket API.
+\li Generic TCP client and server, message based client and server, and 
+authenticated client and server.
+\li Support for the Cairo vector graphics API (http://www.cairographics.org/).
+\li Miscellaneous helpful and easy to use utility functions.
+
+Furthermore, the following tools are provided with the distribution:
+
+\li \ref ifdate A world clock and datetime conversion utility.
+\li \ref iftpl An easy-to-use template processor.
+\li \ref ifpasswd An SHA-1 based authentication file generator.
+\li \ref ifls A template-enabled directory listing utility.
+
+\section download Download
+
+See the SourceForge.net page of the project for releases available for 
+download:
+
+http://sourceforge.net/projects/iftools/
+
+You can always get the latest version of the %Ionflux Tools Class Library 
+from the Subversion repository at:
+
+http://iftools:iftools@xi.ionflux.org/svn/iftools/
+
+To get the %Ionflux Tools Class Library from Subversion, you need to have 
+Subversion installed (http://subversion.tigris.org/). Then change to a 
+directory of your choice (for example \c iftools) and type:
+
+<tt>svn co http://iftools:iftools@xi.ionflux.org/svn/iftools/trunk/</tt>
+
+This, however, is a development version, and might possibly be unstable. You 
+should not use this unless you want to help with debugging and testing new 
+features.
+
+\section docs Documentation
+
+Documentation is available from the official %Ionflux Tools Class Library 
+Homepage:
+
+http://www.ionflux.org/tools/
+
+If you have already downloaded and unpacked the %Ionflux Tools Class Library, 
+or have obtained the distribution from Subversion, you can generate the 
+documentation from source using Doxygen (http://www.doxygen.org/). Just type
+
+\c doxygen
+
+in the root directory of the distribution.
+
+\section deps Dependencies and contributed code
+
+%Ionflux Tools uses the following libraries:
+
+\li PCRE (Perl compatible regular expressions).
+\li bzip2
+\li mysql
+\li Gtkmm (optional)
+
+%Ionflux Tools also uses the following external code:
+
+\li Mersenne Twister randomizer class by Richard J. Wagner 
+(rjwagner@writeme.com, 
+http://www-personal.engin.umich.edu/~wagnerr/MersenneTwister.html); 
+based on code by Makoto Matsumoto, Takuji 
+Nishimura, and Shawn Cokus (matumoto@math.keio.ac.jp, 
+Cokus@math.washington.edu, 
+http://www.math.sci.hiroshima-u.ac.jp/~m-mat/eindex.html).
+\li FIPS-180-1 compliant SHA-1 implementation by Christophe Devine 
+(http://www.cr0.net:8040/code/crypto/sha1/).
+
+Please refer to the \c extern directory of the distribution for detailed 
+information and license.
+
+Please see \c README in the distribution for more information and 
+\c INSTALL for installation instructions.
+
+If you find any bugs or want to send a feature request or comments and 
+suggestions, please feel free to send a mail to mail@ionflux.org.
+
+\section Tools
+
+This is an overview of the applications included with the distribution.
+
+\subsection ifdate ifdate
+
+\c ifdate is a world clock and datetime utility. It displays the current 
+time or various timestamp variants in a specified time zone and output 
+format.
+
+\c ifdate supports all the time zones of the world, but does not know 
+about all the cities and DST rules of the world (yet). To obtain a list of 
+recognized time zone alias names (which you may use with the \c -l option 
+of \c ifdate), run \c ifdate with the \c -a or \c --aliases option.
+
+More time zone aliases (city names) and DST rules will be added in the 
+future. (If you really miss a certain alias name or DST rule, or if you 
+detect a wrong time, please let me know and I will try to fix the problem 
+as soon as possible.)
+
+(See also \ref dtapp)
+
+\subsection iftpl iftpl
+
+\c iftpl is a template processor that uses the %Ionflux Tools template 
+engine (Ionflux::Tools::Template). See <tt>test/template/test.tpl</tt> and 
+<tt>test/conf/template.conf</tt> for an example of how to write templates 
+and configuration files. \c iftpl has been used to generate some of the 
+classes of %Ionflux Tools. You can also take a look at the templates in the 
+\c template directory of the distribution.
+
+For more information, see the \ref tpldoc documentation.
+
+\subsection ifpasswd ifpasswd
+
+\c ifpasswd is a tool to generate password files for the simple 
+authentication implemented in Ionflux::Tools::AuthFile. Actually, a line 
+generated by \c ifpasswd consists of an username, a separator (':') and 
+the SHA-1 hash of the password, encoded as a hexadecimal string. You can 
+use \c ifpasswd to generate authentication files for 
+Ionflux::Tools::TCPAuthServer.
+
+\subsection ifls ifls
+
+\c ifls is a directory listing utility (similar to \c ls). The output can be 
+customized using templates.
+
+You can also check the \c test directory for more tools, such as a generic 
+TCP client and server and an echo server.
+
+Have fun!
+
+Copyright &copy; 2003-2005 Joern P. Meier (mail@ionflux.org).
+
+\htmlonly <A href="http://sourceforge.net"><IMG src="http://sourceforge.net/sflogo.php?group_id=119253&amp;type=5" width="210" height="62" border="0" alt="SourceForge.net Logo" /></A> \endhtmlonly
+ */

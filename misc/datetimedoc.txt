@@ -1,0 +1,59 @@
+/*! \page datetimedoc Advanced date and time handling
+
+\section dtintro Introduction
+
+The %Ionflux Tools Datetime API allows you to handle datetimes expressed in 
+UTC or local time of any of the world's time zones in your applications and 
+scripts. The API makes use of 64-bit integers to store seconds (time ticks) 
+since 0001-01-01 00:00:00 UTC, so almost any datetime from the year 1 up to 
+tens of thousands of years into the future may be expressed and handled 
+correctly. (In comparison, POSIX datetimes can handle no more than the 
+datetime range from 1970 to approximately 2038.) Datetimes from the %Ionflux 
+Tools API may be converted and manipulated in a large number of ways and 
+expressed in many useful formats.
+
+\subsection dttype The DateTime type
+
+The Ionflux::Tools::DateTime type may be initialized either from the current 
+(POSIX) system time, from a string timestamp expressed in local time or UTC, 
+or from a time tick (64-bit integer) value. Using the facilities provided by 
+DateTime, you can express any datetime in local time of any one of the 
+world's time zones, use transparent conversion and datetime arithmetic. 
+Because the %Ionflux Tools DateTime API maintains its own time zone alias 
+list, datetime conversion and handling is surprisingly simple. Contrary to 
+POSIX datetimes, The Ionflux::Tools::DateTime type will not run out of range 
+anytime soon, since datetimes are stored as 64-bit values. However, full 
+compatibility in conversion from POSIX timestamps to Ionflux::Tools::DateTime 
+or the other way around (if possible) is provided by the API.
+
+Examples:
+
+\li Use any of the constructors or setTime() functions of DateTime to 
+initialize a datetime object. You can also use setLocalTime() after you have 
+specified a time zone.
+\li Use setTimeZone() to set the time zone if the datetime object should 
+express local time.
+\li Use broken down time accessors (getYear(), getMonth(), getDay() etc.) or 
+operators to perform datetime arithmetic or format conversions.
+
+\subsection dtapp The ifdate tool
+
+The \c ifdate tool is a small-footprint conversion utility for datetimes 
+expressed in UTC or local time. Its output is machine- as well as 
+human-readable and thus may easily be used in scripts and day-to-day use. 
+\c ifdate allows you to read a datetime in any of the supported input formats 
+(POSIX timestamp, string timestamp, local time or UTC, DST, time ticks etc.) 
+and express an equivalent in any of the supported output formats. \c ifdate 
+supports a large list of time zone alias names, so you do not have to be 
+concerned with selecting the right time zone. Instead, you can just specify a 
+major city in the target time zone.
+
+Examples:
+
+\li Use <tt>ifdate -h</tt> to show a list of options.
+\li Use <tt>ifdate -l &lt;alias name&gt;</tt> to get a local time string 
+timestamp for the current system time.
+\li Use <tt>ifdate -a</tt> to show a list of recognized time zone alias names.
+\li Use <tt>ifdate -l &lt;alias name&gt; -Ls &lt;string timestamp&gt; -o 
+posix</tt> to convert a string timestamp from local time to a POSIX timestamp.
+*/

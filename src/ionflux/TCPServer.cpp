@@ -1,0 +1,410 @@
+/* ==========================================================================
+ * Ionflux Tools
+ * Copyright (c) 2004 Joern P. Meier
+ * mail@ionflux.org
+ * --------------------------------------------------------------------------
+ * TCPServer.cpp                    Generic TCP server.
+ * ==========================================================================
+ * 
+ * This file is part of Ionflux Tools.
+ * 
+ * Ionflux Tools is free software; you can redistribute it and/or modify it 
+ * under the terms of the GNU General Public License as published by the Free
+ * Software Foundation; either version 2 of the License, or (at  your option)
+ * any later version.
+ * 
+ * Ionflux Tools is distributed in the hope that it will be useful, but 
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with Ionflux Tools; if not, write to the Free Software Foundation, 
+ * Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ * 
+ * ========================================================================== */
+
+#include "ionflux/TCPServer.hpp"
+
+using namespace std;
+
+namespace Ionflux
+{
+
+namespace Tools
+{
+
+const int TCPServer::DEFAULT_MAX_CLIENTS = 0;
+const int TCPServer::REJECTED_REASON_MAX_CLIENTS = 0;
+
+TCPServer::TCPServer()
+: maxClients(DEFAULT_MAX_CLIENTS), iomp(0), manageIomp(true)
+{
+	serverSocket.getLog().redirect(&log);
+	iomp = new SelectMultiplexer();
+	iomp->getLog().redirect(&log);
+}
+
+TCPServer::TCPServer(IOMultiplexer *initIomp)
+: maxClients(DEFAULT_MAX_CLIENTS), iomp(initIomp), manageIomp(false)
+{
+	serverSocket.getLog().redirect(&log);
+	if (iomp == 0)
+	{
+		iomp = new SelectMultiplexer();
+		manageIomp = true;
+	}
+	iomp->getLog().redirect(&log);
+}
+
+TCPServer::~TCPServer()
+{
+	cleanup();
+	if (manageIomp && (iomp != 0))
+		delete iomp;
+	iomp = 0;
+}
+
+void TCPServer::addClient(TCPRemotePeer *client)
+{
+	if (client == 0)
+	{
+		log.msg("[TCPServer::addClient] WARNING: Ignoring attempt to add "
+			"null client.", log.VL_WARNING);
+		return;
+	}
+	ostringstream status;
+	clients.push_back(client);
+	client->getSocket().getLog().redirect(&log);
+	status << "[TCPServer::addClient] DEBUG: Client " 
+		<< client->getID() << " added to client vector. (" << clients.size()
+		<< " clients connected)";
+	log.msg(status.str(), log.VL_DEBUG_OPT);
+}
+
+void TCPServer::removeClient(TCPRemotePeer *client)
+{
+	if (client == 0)
+	{
+		log.msg("[TCPServer::removeClient] WARNING: Ignoring attempt to "
+			"remove null client.", log.VL_WARNING);
+		return;
+	}
+	bool found = false;
+	unsigned int i = 0;
+	ostringstream status;
+	while(!found && (i < clients.size()))
+	{
+		if (clients[i] == client)
+			found = true;
+		else
+			i++;
+	}
+	if (found)
+	{
+		clients.erase(clients.begin() + i);
+		status << "[TCPServer::removeClient] DEBUG: Client " 
+			<< client->getID() << " removed from client vector. (" 
+			<< clients.size() << " clients connected)";
+		log.msg(status.str(), log.VL_DEBUG_OPT);
+		delete client;
+		client = 0;
+	} else
+	{
+		status.str("");
+		status << "[TCPServer::removeClient] WARNING: Client "
+			<< client->getID() << " does not exist.";
+		log.msg(status.str(), log.VL_WARNING);
+	}
+}
+
+void TCPServer::cleanupClients()
+{
+	if (trash.size() > 0)
+		log.msg("[TCPServer::cleanupClients] DEBUG: Removing disconnected "
+			"clients.", log.VL_DEBUG_OPT);
+	else
+		return;
+	for (unsigned int i = 0; i < trash.size(); i++)
+		removeClient(trash[i]);
+	trash.clear();
+}
+
+bool TCPServer::init()
+{
+	if (!log.assert(iomp != 0, "[TCPServer::init] IO multiplexer is null."))
+		return false;
+	cleanup();
+	log.msg("[TCPServer::init] DEBUG: Server startup.", log.VL_DEBUG);
+	log.msg("[TCPServer::init] DEBUG: Bind to local interface.", 
+		log.VL_DEBUG_OPT);
+	if (!serverSocket.bind())
+	{
+		log.msg("[TCPServer::init] ERROR: Bind failed.", log.VL_ERROR);
+		return false;
+	}
+	log.msg("[TCPServer::init] DEBUG: Listen on socket.", log.VL_DEBUG_OPT);
+	if (!serverSocket.listen())
+	{
+		log.msg("[TCPServer::init] ERROR: Listen failed.", log.VL_ERROR);
+		return false;
+	}
+	log.msg("[TCPServer::init] DEBUG: Server startup complete.", 
+		log.VL_DEBUG);
+	// Register IO event for the server socket.
+	serverSocketEvent.fd = serverSocket.getFD();
+	serverSocketEvent.type = IOEvent::IO_READ;
+	iomp->registerEvent(this, serverSocketEvent);
+	return true;
+}
+
+void TCPServer::run()
+{
+	if (!log.assert(iomp != 0, "[TCPServer::run] IO multiplexer is null."))
+		return;
+	if (!serverSocket.isListening())
+	{
+		log.msg("[TCPServer::run] ERROR: Server socket not listening.", 
+			log.VL_ERROR_CRIT);
+		return;
+	}
+	iomp->run();
+}
+
+void TCPServer::cleanup()
+{
+	log.msg("[TCPServer::cleanup] DEBUG: Server cleanup.", log.VL_DEBUG);
+	if (!log.assert(iomp != 0, "[TCPServer::cleanup] IO multiplexer is null."))
+		return;
+	if (serverSocket.isBound())
+	{
+		log.msg("[TCPServer::cleanup] DEBUG: Taking down server socket.", 
+			log.VL_DEBUG_OPT);
+		iomp->removeEvent(this, serverSocketEvent);
+		serverSocket.close();
+	}
+	log.msg("[TCPServer::cleanup] DEBUG: Cleaning up client vector.", 
+		log.VL_DEBUG_OPT);
+	TCPRemotePeer *currentClient;
+	IOEvent currentEvent;
+	for (unsigned int i = 0; i < clients.size(); i++)
+	{
+		currentClient = clients[i];
+		if (log.assert(currentClient != 0, 
+			"[TCPServer::cleanup] Client is null."))
+		{
+			if (currentClient->getSocket().isConnected())
+			{
+				currentEvent.fd = currentClient->getSocket().getFD();
+				currentEvent.peer = currentClient;
+				currentEvent.type = IOEvent::IO_READ;
+				iomp->removeEvent(this, currentEvent);
+				onDisconnect(*currentClient);
+				currentClient->getSocket().close();
+			}
+			delete clients[i];
+			clients[i] = 0;
+		}
+	}
+	clients.clear();
+	currentClientID = 0;
+	log.msg("[TCPServer::cleanup] DEBUG: Server cleanup complete.", 
+		log.VL_DEBUG);
+}
+
+void TCPServer::onConnect(TCPRemotePeer &client)
+{
+	ostringstream status;
+	status << "[TCPServer::onConnect] DEBUG: Client " << client.getID() 
+		<< " connected.";
+	log.msg(status.str(), log.VL_DEBUG_OPT);
+}
+
+void TCPServer::onReject(TCPRemotePeer &client, int reason)
+{
+	ostringstream status;
+	status << "[TCPServer::onConnect] DEBUG: Connection for client " 
+		<< client.getID() << " rejected. (Reason: " << reason << ")";
+	log.msg(status.str(), log.VL_DEBUG_OPT);
+}
+
+void TCPServer::onReceive(TCPRemotePeer &client)
+{
+	ostringstream status;
+	status << "[TCPServer::onConnect] DEBUG: From client " << client.getID() 
+		<< ":" << endl << makeNiceHex(makeHex(client.getRecvBuf()), 
+			makeReadable(client.getRecvBuf(), "."), 16, 8);
+	log.msg(status.str(), log.VL_DEBUG_OPT);
+	client.clearRecvBuf();
+}
+
+
+void TCPServer::onDisconnect(TCPRemotePeer &client)
+{
+	ostringstream status;
+	status << "[TCPServer::onDisconnect] DEBUG: Client " << client.getID() 
+		<< " disconnected.";
+	log.msg(status.str(), log.VL_DEBUG_OPT);
+}
+
+void TCPServer::onIO(const IOEvent &event)
+{
+	if (!log.assert(iomp != 0, "[TCPServer::onIO] IO multiplexer is null."))
+		return;
+	ostringstream status;
+	int serverFD = serverSocket.getFD();
+	TCPRemotePeer *currentClient = 0;
+	IOEvent currentEvent;
+	// Check for new connections on listening socket.
+	if (event.fd == serverFD)
+	{
+		log.msg("[TCPServer::onIO] DEBUG: Incoming connection.",
+			log.VL_DEBUG_OPT);
+		currentClient = new TCPRemotePeer(currentClientID);
+		if (!serverSocket.accept(currentClient->getSocket()))
+		{
+			log.msg("[TCPServer::onIO] ERROR: Failed to accept "
+				"client connection", log.VL_ERROR);
+			delete currentClient;
+			currentClient = 0;
+		} else
+		{
+			if ((maxClients == 0) || (clients.size() < maxClients))
+			{
+				currentEvent.fd = currentClient->getSocket().getFD();
+				currentEvent.peer = currentClient;
+				currentEvent.type = IOEvent::IO_READ;
+				iomp->registerEvent(this, currentEvent);
+				addClient(currentClient);
+				status.str("");
+				status << "[TCPServer::onIO] DEBUG: Accepted client "
+					"connection for client " << currentClient->getID() 
+					<< " from " << currentClient->getSocket().getClientIP() 
+					<< " (fd = " << currentClient->getSocket().getFD() << ").";
+				log.msg(status.str(), log.VL_DEBUG_OPT);
+				currentClientID++;
+				onConnect(*currentClient);
+			} else
+			{
+				status.str("");
+				status << "[TCPServer::onIO] DEBUG: Rejecting client "
+					"connection for client " << currentClient->getID() 
+					<< " from " << currentClient->getSocket().getClientIP() 
+					<< " (fd = " << currentClient->getSocket().getFD() 
+					<< "): Maximum number of clients connected.";
+				log.msg(status.str(), log.VL_DEBUG_OPT);
+				onReject(*currentClient, REJECTED_REASON_MAX_CLIENTS);
+				currentClient->getSocket().close();
+				delete currentClient;
+				currentClient = 0;
+			}
+		}
+	} else
+	{
+		// Check for incoming data.
+		currentClient = event.peer;
+		if (currentClient != 0)
+		{
+			if ((event.type & IOEvent::IO_READ) != 0)
+			{
+				if (!currentClient->receive())
+				{
+					status.str("");
+					status << "[TCPServer::onIO] DEBUG: Client "
+						<< currentClient->getID() << " disconnected (fd = " 
+						<< currentClient->getSocket().getFD() << ").";
+					log.msg(status.str(), log.VL_DEBUG_OPT);
+					disconnect(currentClient);
+				} else
+					onReceive(*currentClient);
+			} else
+			{
+				status.str("");
+				status << "[TCPServer::onIO] ERROR: Received unrequested "
+					"IO event for client " << currentClient->getID() << ".";
+				log.msg(status.str(), log.VL_ERROR);
+			}
+			cleanupClients();
+		} else
+		{
+			status.str("");
+			status << "[TCPServer::onIO] FATAL ERROR: Client "
+				<< currentClient->getID() << " is null.";
+			log.msg(status.str(), log.VL_ERROR_CRIT);
+			iomp->quit();
+		}
+	}
+}
+
+void TCPServer::disconnect(TCPRemotePeer *peer)
+{
+	if (!log.assert(iomp != 0, "[TCPServer::disconnect] "
+		"IO multiplexer is null."))
+		return;
+	if (peer == 0)
+	{
+		log.msg("[TCPServer::disconnect] WARNING: Ignoring attempt to "
+			"disconnect null peer.", log.VL_WARNING);
+		return;
+	}
+	IOEvent currentEvent;
+	currentEvent.fd = peer->getSocket().getFD();
+	currentEvent.peer = peer;
+	currentEvent.type = IOEvent::IO_READ;
+	iomp->removeEvent(this, currentEvent);
+	onDisconnect(*peer);
+	peer->getSocket().close();
+	if (iomp->isRunning())
+		trash.push_back(peer);
+	else
+		removeClient(peer);
+}
+
+void TCPServer::broadcast(const std::string &bytes)
+{
+	TCPRemotePeer *currentClient;
+	for (unsigned int i = 0; i < clients.size(); i++)
+	{
+		currentClient = clients[i];
+		if (currentClient != 0)
+			currentClient->send(bytes);
+	}
+}
+
+void TCPServer::setMaxClients(unsigned int newMaxClients)
+{
+	maxClients = newMaxClients;
+}
+
+void TCPServer::setPort(int newPort)
+{
+	serverSocket.setPort(newPort);
+}
+
+unsigned int TCPServer::getMaxClients()
+{
+	return maxClients;
+}
+
+int TCPServer::getPort()
+{
+	return serverSocket.getPort();
+}
+
+void TCPServer::shutdownHandler(int signum)
+{
+	SelectMultiplexer::shutdownHandler(signum);
+}
+
+Reporter &TCPServer::getLog()
+{
+	return log;
+}
+
+}
+
+}
+
+/** \file TCPServer.cpp
+ * \brief Generic TCP Server implementation.
+ */

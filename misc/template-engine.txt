@@ -1,0 +1,52 @@
+============================================================================
+Ionflux Tools
+Copyright (c) 2004 Joern P. Meier
+mail@ionflux.org
+----------------------------------------------------------------------------
+template-engine.txt              Template engine features.
+============================================================================
+
+This file is part of Ionflux Tools.
+
+Ionflux Tools is free software; you can redistribute it and/or modify it 
+under the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 2 of the License, or (at  your option)
+any later version.
+
+Ionflux Tools is distributed in the hope that it will be useful, but 
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with Ionflux Tools; if not, write to the Free Software Foundation, 
+Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+
+============================================================================
+
+See test/template/test.tpl and test/conf/template.conf for an example of 
+how to write template files and configuration files.
+
+Available features:
+
++ Variable substitution.
+  . Trees (support structured data).
+  . Special variables __template_file and __config_file supported by the 
+    implementation.
+  . String filters.
+
++ Iteration loops.
+  . foreach-loops (vectors, maps).
+  . iteration counter access using __i[<nesting level>].
+
+TODO:
+
++ Iteration loops.
+  . for-loops.
+
++ Control statements.
+  . if, else, elseif.
+  . first, last
+
++ In-template assignments.
+  . assign
