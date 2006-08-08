@@ -1,0 +1,24 @@
+================================================================================
+Ionflux Object Base System
+Copyright © 2006 Joern P. Meier
+mail@ionflux.org
+--------------------------------------------------------------------------------
+Readme
+================================================================================
+
+The Ionflux Object Base System (ifobject) is a small library which provides a 
+framework for developing object oriented software in C++. It is intended to be 
+the foundation of a modular re-implementation of the Ionflux Tools Class 
+Library. New classes based on the framework can be created easily using 
+templates and configuration files.
+
+See misc/spec.txt for an overview of features which will be provided by the 
+Ionflux Tools Object Base System.
+
+The Ionflux Object Base System is free software released under the GNU General 
+Public License. See COPYING for details.
+
+Please note that this program is distributed in the hope that it will be 
+useful, but WITHOUT ANY WARRANTY; without even the implied warranty of 
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General 
+Public License for more details.

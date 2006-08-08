@@ -1,0 +1,31 @@
+================================================================================
+Ionflux Object Base System
+Copyright © 2006 Joern P. Meier
+mail@ionflux.org
+--------------------------------------------------------------------------------
+Todo
+================================================================================
+
+• Create updated class templates from the current versions in the stuff 
+  repository:
+  
+  ▪ Get rid of the parts related to Ruby bindings.
+  ▪ Base class support should be able to distinguish between IFObject derived 
+    types and other types.
+  ▪ IFClassInfo must be initialized properly.
+
+• Create templates for automatically creating configuration files for event 
+  and signal proxy classes.
+
+• Create IFClassInfo with support for multiple inheritance. (This type is not 
+  derived from IFObject.)
+
+• Implement the remaining parts of the Ionflux Object Base System:
+
+  ▪ IFObject
+  ▪ IFLogMessage
+  ▪ IFSignal
+  ▪ IFObjectEvent (created automatically using new templates)
+  ▪ IFObjectSignalProxy (created automatically using new templates)
+  ▪ IFThread
+  ▪ IFMutex
