@@ -56,7 +56,29 @@ typedef {$td};{/foreach}{foreach si in signal}{first}{if haveTypedefs == 0}
 {swrap 75}typedef sigc::signal<{$si.return.type}{foreach prm in si.param}, {$prm.type}{/foreach}> IF{$si.id|uppercase(1)}Signal;{/swrap}{/foreach}{foreach td in typedefAfterSignals}{first}{if ( haveTypedefs == 0 ) && ( haveSignals == 0)}
 {/if}{/first}{single}{if ( haveTypedefs == 0 ) && ( haveSignals == 0)}
 {/if}{/single}
-typedef {$td};{/foreach}{/section}{section createPropertyAccessorDecl}		{if prop.style == "vector"}
+typedef {$td};{/foreach}{/section}{section createStructDecl}{foreach st in struct}
+ 
+/** {$st.desc}.{if (class.group.shortDesc == "") && (class.group.name != "")}
+ * \\ingroup {$class.group.name}{/if}
+ */
+struct {$st.name}
+\{{foreach fi in st.field}
+	/// {$fi.desc}.
+	{$fi.type} {$fi.name};{/foreach}{foreach cn in st.constant}
+	/// {$cn.desc}.
+	static const {$cn.type} {$cn.name};{/foreach}{if st.refCount.enabled == "true"}
+	/// Reference counting information.
+	Ionflux::Stuff::IFObjectRefInfo* refInfo;{/if}
+\};{/foreach}{/section}{section createEventHelperFunctionDecl}
+		
+		/** Create event: {$ev.id}.
+		 * 
+		 * Create and initialize a '{$ev.id}' event.
+		 * 
+		 * \\return New event, or 0 if an error occured.
+		 */
+		IF{$ev.id|uppercase(1)}Event* create{$ev.id|uppercase(1)}Event();{/section}{section createPropertyAccessorDecl}{if prop.style == "vector"}
+		
 		/** Get number of {$prop.element.name|lowercase(1)}s.
 		 *
 {swrap 75 "		 * "}\\return Number of {$prop.element.name|lowercase(1)}s.{/swrap}
@@ -99,8 +121,8 @@ typedef {$td};{/foreach}{/section}{section createPropertyAccessorDecl}		{if prop
 		 *
 {swrap 75 "		 * "}Clear all {$prop.element.name|lowercase(1)}s.{/swrap}
 		 */
-{swrap 75 "		"}virtual void clear{$prop.element.name|uppercase(1)}s();{/swrap}
-{/if}{else}{if prop.style == "map"}
+{swrap 75 "		"}virtual void clear{$prop.element.name|uppercase(1)}s();{/swrap}{/if}{else}{if prop.style == "map"}
+		
 		/** Get number of {$prop.element.name|lowercase(1)}s.
 		 *
 {swrap 75 "		 * "}\\return Number of {$prop.element.name|lowercase(1)}s.{/swrap}
@@ -144,8 +166,8 @@ typedef {$td};{/foreach}{/section}{section createPropertyAccessorDecl}		{if prop
 		 *
 {swrap 75 "		 * "}Clear all {$prop.element.name|lowercase(1)}s.{/swrap}
 		 */
-{swrap 75 "		"}virtual void clear{$prop.element.name|uppercase(1)}s();{/swrap}
-{/if}{else}{if prop.readOnly != "true"}
+{swrap 75 "		"}virtual void clear{$prop.element.name|uppercase(1)}s();{/swrap}{/if}{else}{if prop.readOnly != "true"}
+		
 		/** Set {$prop.desc|lowercase(1)}.
 		 *
 		 * Set new value of {$prop.desc|lowercase(1)}.
@@ -158,8 +180,7 @@ typedef {$td};{/foreach}{/section}{section createPropertyAccessorDecl}		{if prop
 		 *
 {swrap 75 "		 * "}\\return Current value of {$prop.desc|lowercase(1)}.{/swrap}
 		 */
-{swrap 75 "		"}virtual {$prop.type} get{$prop.name|uppercase(1)}() const;{/swrap}
-{/if}{/if}{/section}\#ifndef {$project.includeGuardPrefix}{$class.name|uppercase}
+{swrap 75 "		"}virtual {$prop.type} get{$prop.name|uppercase(1)}() const;{/swrap}{/if}{/if}{/section}\#ifndef {$project.includeGuardPrefix}{$class.name|uppercase}
 \#define {$project.includeGuardPrefix}{$class.name|uppercase}
 /* ==========================================================================
  * {$project.name}
@@ -178,22 +199,7 @@ namespace {$ns.name}
 {$class.group.longDesc|swrap(75,' * ')}
  *{/if}
  * @\{
- */{/if}{foreach st in struct}
- 
-/** {$st.desc}.{if (class.group.shortDesc == "") && (class.group.name != "")}
- * \\ingroup {$class.group.name}{/if}
- */
-struct {$st.name}
-\{{foreach fi in st.field}
-	/// {$fi.desc}.
-	{$fi.type} {$fi.name};{/foreach}{foreach cn in st.constant}
-	/// {$cn.desc}.
-	static const {$cn.type} {$cn.name};{/foreach}{if st.bindings.ruby.createMarkFunction == "true"}
-	/// Mark function for the ruby garbage collector.
-	static void (*const rubyMark)({$st.name}*);{/if}{if st.refCount.enabled == "true"}
-	/// Reference counting information.
-	Ionflux::Stuff::ObjectRefInfo* refInfo;{/if}
-\};{/foreach}{foreach sig in signal}
+ */{/if}{ref createStructDecl}{foreach sig in signal}
 
 /// Signal connections for IF{$sig.id|uppercase(1)}Signal.
 struct IF{$sig.id|uppercase(1)}SignalConnections
@@ -248,7 +254,7 @@ class {$class.name}{if ( haveBaseIFObject == 1 ) || ( haveBaseOther == 1 )}
 {/foreach}{foreach sig in signal}{foreach ins in sig.instance}		/// Signal: {$ins.desc}.
 		IF{$si.id|uppercase(1)}Signal signal{$ins.name|uppercase(1)};
 		/// Signal wrapper: {$ins.desc}.
-		Ionflux::ObjectBase::IFSignal* {$ins.name}Wrapper;
+		Ionflux::ObjectBase::IFSignal* signal{$ins.name|uppercase(1)}Wrapper;
 {/foreach}{/foreach}{foreach const in constant.protected}		/// {$const.desc}.
 		static const {$const.type} {$const.name};
 {/foreach}{foreach func in function.protected}		
@@ -296,7 +302,7 @@ class {$class.name}{if ( haveBaseIFObject == 1 ) || ( haveBaseOther == 1 )}
 		 *
 		 * Destruct {$class.name} object.
 		 */
-		virtual ~{$class.name}();
+		virtual ~{$class.name}();{foreach ev in event}{ref createEventHelperFunctionDecl}{/foreach}
 {foreach func in function.public}		
 		/** {$func.shortDesc}.{if func.longDesc != ""}
 		 *
@@ -308,7 +314,8 @@ class {$class.name}{if ( haveBaseIFObject == 1 ) || ( haveBaseOther == 1 )}
 {swrap 75 "		 * "}\\return {$func.return.desc}.{/swrap}{/if}
 		 */
 {swrap 75 "		"}{$func.spec} {$func.type} {$func.name}({foreach prm in func.param}{$prm.type} {$prm.name}{if prm.default != ""} = {$prm.default}{/if}{first}, {/first}{mid}, {/mid}{/foreach}){if func.const == "true"} const{/if}{if func.pureVirtual == "true"} = 0{/if};{/swrap}
-{/foreach}{foreach prop in property.private}{ref createPropertyAccessorDecl}{/foreach}{foreach prop in property.protected}{ref createPropertyAccessorDecl}{/foreach}{foreach sig in signal}{foreach ins in sig.instance}		
+{/foreach}{foreach prop in property.private}{ref createPropertyAccessorDecl}{/foreach}{foreach prop in property.protected}{ref createPropertyAccessorDecl}{/foreach}{foreach sig in signal}{foreach ins in sig.instance}
+		
 		/** Get signal: {$ins.desc}.
 		 *
 		 * Get the signal for the {$ins.desc} event.
