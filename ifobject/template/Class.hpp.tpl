@@ -36,7 +36,7 @@ You should have received a copy of the GNU General Public License along with {$p
 {/first}{single}
 {/single}
 \#include {$inc}{/foreach}{foreach bc in base.ifobject}
-\#include "{if bc.include == ""}{$bc.name}.hpp{else}{$bc.include}{/if}"{/foreach}{foreach bc in base.other}
+\#include "{if project.includePrefix != ""}{$project.includePrefix}/{/if}{if bc.include == ""}{$bc.name}.hpp{else}{$bc.include}{/if}"{/foreach}{foreach bc in base.other}
 \#include "{if bc.include == ""}{$bc.name}.hpp{else}{$bc.include}{/if}"{/foreach}{/section}{section insertForwards}{foreach fwd in forward}{first}
 {/first}{single}
 {/single}
@@ -174,8 +174,8 @@ struct {$st.name}
 		 *
 {swrap 75 "		 * "}\\param new{$prop.name|uppercase(1)} New value of {$prop.desc|lowercase(1)}.{/swrap}
 		 */
-{swrap 75 "		"}virtual void set{$prop.name|uppercase(1)}({$prop.setFromType} new{$prop.name|uppercase(1)});{/swrap}
-		{/if}
+{swrap 75 "		"}virtual void set{$prop.name|uppercase(1)}({$prop.setFromType} new{$prop.name|uppercase(1)});{/swrap}{/if}
+		
 		/** Get {$prop.desc|lowercase(1)}.
 		 *
 {swrap 75 "		 * "}\\return Current value of {$prop.desc|lowercase(1)}.{/swrap}
@@ -302,8 +302,8 @@ class {$class.name}{if ( haveBaseIFObject == 1 ) || ( haveBaseOther == 1 )}
 		 *
 		 * Destruct {$class.name} object.
 		 */
-		virtual ~{$class.name}();{foreach ev in event}{ref createEventHelperFunctionDecl}{/foreach}
-{foreach func in function.public}		
+		virtual ~{$class.name}();{foreach ev in event}{ref createEventHelperFunctionDecl}{/foreach}{foreach func in function.public}
+		
 		/** {$func.shortDesc}.{if func.longDesc != ""}
 		 *
 {$func.longDesc|swrap(72,'		 * ')}{/if}{foreach prm in func.param}{first}
@@ -313,8 +313,7 @@ class {$class.name}{if ( haveBaseIFObject == 1 ) || ( haveBaseOther == 1 )}
 		 *
 {swrap 75 "		 * "}\\return {$func.return.desc}.{/swrap}{/if}
 		 */
-{swrap 75 "		"}{$func.spec} {$func.type} {$func.name}({foreach prm in func.param}{$prm.type} {$prm.name}{if prm.default != ""} = {$prm.default}{/if}{first}, {/first}{mid}, {/mid}{/foreach}){if func.const == "true"} const{/if}{if func.pureVirtual == "true"} = 0{/if};{/swrap}
-{/foreach}{foreach prop in property.private}{ref createPropertyAccessorDecl}{/foreach}{foreach prop in property.protected}{ref createPropertyAccessorDecl}{/foreach}{foreach sig in signal}{foreach ins in sig.instance}
+{swrap 75 "		"}{$func.spec} {$func.type} {$func.name}({foreach prm in func.param}{$prm.type} {$prm.name}{if prm.default != ""} = {$prm.default}{/if}{first}, {/first}{mid}, {/mid}{/foreach}){if func.const == "true"} const{/if}{if func.pureVirtual == "true"} = 0{/if};{/swrap}{/foreach}{foreach prop in property.private}{ref createPropertyAccessorDecl}{/foreach}{foreach prop in property.protected}{ref createPropertyAccessorDecl}{/foreach}{foreach sig in signal}{foreach ins in sig.instance}
 		
 		/** Get signal: {$ins.desc}.
 		 *
@@ -331,7 +330,8 @@ class {$class.name}{if ( haveBaseIFObject == 1 ) || ( haveBaseOther == 1 )}
 		 * \\return Signal for the {$ins.desc} event.
 		 */
 		virtual Ionflux::ObjectBase::IFSignal* getSignal{$ins.name|uppercase(1)}Wrapper();
-{/foreach}{/foreach}\};{foreach func in function.global}
+{/foreach}{/foreach}
+\};{foreach func in function.global}
 
 /** {$func.shortDesc}.{if func.longDesc != ""}
  *
