@@ -26,19 +26,21 @@
 # ==========================================================================
 {$haveBaseIFObject = 0}{foreach bc in class.base.ifobject}{if bc.name != ""}{$haveBaseIFObject = 1}{/if}{/foreach}{$haveBaseOther = 0}{foreach bc in class.base.other}{if bc.name != ""}{$haveBaseOther = 1}{/if}{/foreach}{section insertGPLDisclaimer}
  * =========================================================================
-{swrap 75 " * "}This file is part of {$project.name}.
+{swrap 75 " * "}
+This file is part of {$project.name}.
 
 {$project.name} is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
 
 {$project.name} is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License along with {$project.name}; if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA{/swrap}{/section}{section insertIncludes}
+You should have received a copy of the GNU General Public License along with {$project.name}; if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+{/swrap}{/section}{section insertIncludes}
 
 \#include "{if project.includePrefix != ""}{$project.includePrefix}/{/if}{if class.includePrefix != ""}{$class.includePrefix}/{/if}{$class.name}.hpp"{if haveBaseIFObject == 1}
 \#include "{if project.includePrefix != ""}{$project.includePrefix}/{/if}IFMutex.hpp"
 \#include "{if project.includePrefix != ""}{$project.includePrefix}/{/if}IFGuard.hpp"
-\#include "{if project.includePrefix != ""}{$project.includePrefix}/{/if}IFLogMessage.hpp"{/if}
-\#include "{if project.includePrefix != ""}{$project.includePrefix}/{/if}IFSignal.hpp"{foreach ev in event}
+\#include "{if project.includePrefix != ""}{$project.includePrefix}/{/if}IFLogMessage.hpp"
+\#include "{if project.includePrefix != ""}{$project.includePrefix}/{/if}IFSignal.hpp"{/if}{foreach ev in event}
 \#include "{if project.includePrefix != ""}{$project.includePrefix}/{/if}{if class.includePrefix != ""}{$class.includePrefix}/{/if}IF{$ev.id|uppercase(1)}Event.hpp"{/foreach}{foreach inc in include.impl}
 \#include {$inc}{/foreach}{/section}{section createEventHelperFunctionImpl}
 		
