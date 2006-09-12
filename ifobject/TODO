@@ -18,8 +18,3 @@ Todo
   ▪ IFObjectSignalProxy (created automatically using new templates)
   ▪ IFThread
   ▪ IFMutex
-
-• Create an application to generate headers and implementations for the class 
-  and events used by the class automatically.
-  
-  ▪ Specify configuration file and target include/implementation directories.

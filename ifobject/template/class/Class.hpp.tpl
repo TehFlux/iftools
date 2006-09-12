@@ -226,7 +226,7 @@ class {$class.name}ClassInfo
 {$class.longDesc|swrap(75,' * ')}
  */
 class {$class.name}{if ( haveBaseIFObject == 1 ) || ( haveBaseOther == 1 )}
-: {swrap 75}{foreach bc in class.base.ifobject}{$bc.name}{notlast}, {/notlast}{/foreach}{foreach bc in class.base.other}{first}{if haveBaseIFObject == 1}, {/if}{/first}{single}{if haveBaseIFObject == 1}, {/if}{/single}{$bc.name}{notlast}, {/notlast}{/foreach}{/swrap}{/if}
+: {swrap 75}{foreach bc in class.base.ifobject}{if bc.inheritanceType == ""}public{else}{$bc.inheritanceType}{/if} {$bc.name}{notlast}, {/notlast}{/foreach}{foreach bc in class.base.other}{first}{if haveBaseIFObject == 1}, {/if}{/first}{single}{if haveBaseIFObject == 1}, {/if}{/single}{if bc.inheritanceType == ""}public{else}{$bc.inheritanceType}{/if} {$bc.name}{notlast}, {/notlast}{/foreach}{/swrap}{/if}
 \{
 	private:
 {foreach var in variable.private}		/// {$var.desc}.
