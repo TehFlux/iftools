@@ -137,6 +137,13 @@ ifobjectLib = ifobjectenv.SharedLibrary('lib/ifobject',
 
 buildIFObjectLib = ['lib/libifobject' + libext]
 
+# applications
+ifclassgenBin = ifobjectenv.Program('bin/ifclassgen',
+	['build/ifclassgen.cpp'],
+	CPPPATH = cpppath,
+	LIBS = ['iftools'] + libs,
+	LIBPATH = ['lib'] + libpath)
+
 # tests
 ifclassinfotestBin = ifobjectenv.Program('test/bin/ifclassinfotest',
 	['test/build/ifclassinfotest.cpp'],
@@ -148,22 +155,28 @@ ifclassinfotestBin = ifobjectenv.Program('test/bin/ifclassinfotest',
 allHeaders = ifobjectLibHeaders
 buildLibs = buildIFObjectLib
 targetLibs = [ifobjectLib]
+targetApps = [ifclassgenBin]
+buildApps = ['bin/ifclassgen']
 buildTest = ['test/bin/ifclassinfotest']
 
 # installation
 ifobjectenv.Install(prefix + '/include/ionflux', allHeaders)
 ifobjectenv.Install(prefix + '/lib', targetLibs)
+ifobjectenv.Install(prefix + '/bin', targetApps)
 
 installHeader = ifobjectenv.Alias('install-header',
     prefix + '/include/ifobject')
 installLib = ifobjectenv.Alias('install-lib',
     prefix + '/lib')
+installApps = ifobjectenv.Alias('install-bin',
+    prefix + '/bin')
 
 ifobjectenv.Alias('all',
-    buildLibs + buildTest)
+    buildLibs + buildApps + buildTest)
 
 ifobjectenv.Alias('install',
     [installHeader,
-	 installLib])
+	 installLib,
+	 installApps])
 
-Default(targetLibs)
+Default(targetLibs + targetApps)

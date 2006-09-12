@@ -32,7 +32,8 @@
 
 {$project.name} is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License along with {$project.name}; if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA{/swrap}{/section}{section insertIncludes}{foreach inc in include.header}{first}
+You should have received a copy of the GNU General Public License along with {$project.name}; if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA{/swrap}
+ * {/section}{section insertIncludes}{foreach inc in include.header}{first}
 {/first}{single}
 {/single}
 \#include {$inc}{/foreach}{foreach bc in base.ifobject}

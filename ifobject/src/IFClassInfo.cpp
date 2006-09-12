@@ -21,12 +21,10 @@
  * You should have received a copy of the GNU General Public License along 
  * with Ionflux Object Base System; if not, write to the Free Software 
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-
+ * 
  * ========================================================================== */
 
 #include "ifobject/IFClassInfo.hpp"
-
-using namespace std;
 
 namespace Ionflux
 {
