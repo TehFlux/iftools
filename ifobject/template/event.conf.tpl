@@ -1,10 +1,9 @@
-#!/bin/sh
 # ==========================================================================
 # Ionflux Object Base System
 # Copyright © 2006 Joern P. Meier
 # mail@ionflux.org
 # --------------------------------------------------------------------------
-# createClass.sh              Class creation script.
+# event.conf.tpl          Configuration template for events.
 # ==========================================================================
 # 
 # This file is part of Ionflux Object Base System.
@@ -25,4 +24,25 @@
 # 02111-1307 USA
 # 
 # ==========================================================================
-bin/ifclassgen -e -m conf/main.conf -i include/ifobject $1
+
+# The contents of this file will be processed to fill in values defined by 
+# the class configuration and the generator. The result processed to create 
+# the event header and implementation files.
+
+class = \{
+	name = IF{$id|uppercase(1)}Event
+	shortDesc = {if shortDesc == ""}Event class for the '{$id}' event.{else}{$shortDesc}{/if}
+	title = {$id|uppercase(1)} event
+	longDesc = {if longDesc == ""}Event class for the '{$id}' event.{else}{$longDesc}{/if}
+	group.name = ifobject
+	base = \{
+		# base classes from the IFObject hierarchy
+		ifobject[] = \{
+           # class name
+		   name = IFObject
+		   # include file (optional)
+		   # include = 
+		\}
+	\}
+\}
+

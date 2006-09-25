@@ -41,14 +41,25 @@ You should have received a copy of the GNU General Public License along with {$p
 \#include "{if bc.include == ""}{$bc.name}.hpp{else}{$bc.include}{/if}"{/foreach}{/section}{section insertForwards}{foreach fwd in forward}{first}
 {/first}{single}
 {/single}
-{$fwd};{/foreach}{if haveSignals == 1}{if haveForwards == 0}
+{$fwd};{/foreach}{foreach ev in event}{first}{if haveForwards == 0}
 {/if}
-class IFSignal;{/if}{foreach ev in event}{first}{if ( haveForwards == 0 ) && ( haveSignals == 0)}
-{/if}
-// events used by {$class.name}{/first}{single}{if ( haveForwards == 0 ) && ( haveSignals == 0)}
+// events used by {$class.name}{/first}{single}{if haveForwards == 0}
 {/if}
 // events used by {$class.name}{/single}
-class IF{$ev.id|uppercase(1)}Event;{/foreach}{/section}{section insertTypedefs}{foreach td in typedef}{first}
+class IF{$ev.id|uppercase(1)}Event;{/foreach}{/section}{section insertIFObjectForwards}{if haveSignals == 1}
+
+// forward declarations for types from the Ionflux Object Base System
+namespace Ionflux
+\{
+
+namespace ObjectBase
+\{
+
+class IFSignal;
+
+\}
+
+\}{/if}{/section}{section insertTypedefs}{foreach td in typedef}{first}
 {/first}{single}
 {/single}
 typedef {$td};{/foreach}{foreach si in signal}{first}{if haveTypedefs == 0}
@@ -190,7 +201,7 @@ struct {$st.name}
  * --------------------------------------------------------------------------
 {swrap 75 ' * '}{$class.name|append('.hpp')|rpad(' ', 30)}  {$class.shortDesc} (header).{/swrap}{if project.license == "GPL"}{ref insertGPLDisclaimer}{/if}
  * ========================================================================== */{ref insertIncludes}{foreach un in undef.header}
-\#undef {$un}{/foreach}{foreach ns in namespace}
+\#undef {$un}{/foreach}{ref insertIFObjectForwards}{foreach ns in namespace}
 
 namespace {$ns.name}
 \{{/foreach}{ref insertForwards}{ref insertTypedefs}{if class.group.shortDesc != ""}
@@ -226,7 +237,7 @@ class {$class.name}ClassInfo
 {$class.longDesc|swrap(75,' * ')}
  */
 class {$class.name}{if ( haveBaseIFObject == 1 ) || ( haveBaseOther == 1 )}
-: {swrap 75}{foreach bc in class.base.ifobject}{if bc.inheritanceType == ""}public{else}{$bc.inheritanceType}{/if} {$bc.name}{notlast}, {/notlast}{/foreach}{foreach bc in class.base.other}{first}{if haveBaseIFObject == 1}, {/if}{/first}{single}{if haveBaseIFObject == 1}, {/if}{/single}{if bc.inheritanceType == ""}public{else}{$bc.inheritanceType}{/if} {$bc.name}{notlast}, {/notlast}{/foreach}{/swrap}{/if}
+: {swrap 75}{foreach bc in class.base.ifobject}{if bc.inheritanceType == ""}public{else}{$bc.inheritanceType}{/if} Ionflux::ObjectBase::{$bc.name}{notlast}, {/notlast}{/foreach}{foreach bc in class.base.other}{first}{if haveBaseIFObject == 1}, {/if}{/first}{single}{if haveBaseIFObject == 1}, {/if}{/single}{if bc.inheritanceType == ""}public{else}{$bc.inheritanceType}{/if} {$bc.name}{notlast}, {/notlast}{/foreach}{/swrap}{/if}
 \{
 	private:
 {foreach var in variable.private}		/// {$var.desc}.
@@ -330,8 +341,7 @@ class {$class.name}{if ( haveBaseIFObject == 1 ) || ( haveBaseOther == 1 )}
 		 *
 		 * \\return Signal for the {$ins.desc} event.
 		 */
-		virtual Ionflux::ObjectBase::IFSignal* getSignal{$ins.name|uppercase(1)}Wrapper();
-{/foreach}{/foreach}
+		virtual Ionflux::ObjectBase::IFSignal* getSignal{$ins.name|uppercase(1)}Wrapper();{/foreach}{/foreach}
 \};{foreach func in function.global}
 
 /** {$func.shortDesc}.{if func.longDesc != ""}

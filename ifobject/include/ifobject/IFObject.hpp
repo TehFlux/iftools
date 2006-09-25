@@ -1,0 +1,535 @@
+#ifndef IONFLUX_OBJECT_IFOBJECT
+#define IONFLUX_OBJECT_IFOBJECT
+/* ==========================================================================
+ * Ionflux Object Base System
+ * Copyright © 2006 Joern P. Meier
+ * mail@ionflux.org
+ * --------------------------------------------------------------------------
+ * IFObject.hpp                    Object (header).
+ * =========================================================================
+ * This file is part of Ionflux Object Base System.
+ * 
+ * Ionflux Object Base System is free software; you can redistribute it 
+ * and/or modify it under the terms of the GNU General Public License as 
+ * published by the Free Software Foundation; either version 2 of the 
+ * License, or (at your option) any later version.
+ * 
+ * Ionflux Object Base System is distributed in the hope that it will be 
+ * useful, but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU 
+ * General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along 
+ * with Ionflux Object Base System; if not, write to the Free Software 
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ * 
+ * ========================================================================== */
+
+#include <string>
+#include <vector>
+#include <set>
+#include <map>
+#include <iostream>
+#include "sigc++/signal.h"
+#include "sigc++/connection.h"
+#include "ifobject/types.hpp"
+#include "ifobject/IFClassInfo.hpp"
+#undef assert
+
+// forward declarations for types from the Ionflux Object Base System
+namespace Ionflux
+{
+
+namespace ObjectBase
+{
+
+class IFSignal;
+
+}
+
+}
+
+namespace Ionflux
+{
+
+namespace ObjectBase
+{
+
+class IFObject;
+struct ObjectRefInfo;
+class IFMutex;
+// events used by IFObject
+class IFObjectEvent;
+
+typedef sigc::signal<bool, const Ionflux::ObjectBase::IFObjectEvent&> 
+IFObjectSignal;
+
+/** \addtogroup ifobject Ionflux Object Base System
+ *
+ * Classes implementing the core functionality of the Ionflux Object Base 
+ * System.
+ *
+ * @{
+ */
+ 
+/** Object reference information.
+ */
+struct IFObjectRefInfo
+{
+	/// Reference count.
+	unsigned int refCount;
+};
+ 
+/** Reference counting data.
+ */
+struct IFRefCountData
+{
+	/// Local reference map.
+	IFObjectRefMap refMap;
+	/// Reference count.
+	unsigned int refCount;
+};
+
+/// Signal connections for IFObjectSignal.
+struct IFObjectSignalConnections
+{
+	/// Signal connection: object changed signal
+	sigc::connection signalObjectChangedConnection;
+	/// Signal connection: object ID number changed signal
+	sigc::connection signalObjectIDNumChangedConnection;
+	/// Signal connection: object ID changed signal
+	sigc::connection signalObjectIDChangedConnection;
+};
+
+/** Object.
+ *
+ * Base class for all objects. Access to the object in a multi-threaded 
+ * application can be protected by a guard mutex with a call to 
+ * setGuardEnabled().
+ */
+class IFObject
+{
+	private:
+		
+	protected:
+		/// Class info.
+		const Ionflux::ObjectBase::IFClassInfo* theClass;
+		/// Object ID.
+		Ionflux::ObjectBase::IFObjectID id;
+		/// ID number.
+		Ionflux::ObjectBase::IFIDNum idNum;
+		/// Reference counting data.
+		Ionflux::ObjectBase::IFRefCountData* refData;
+		/// Guard mutex.
+		Ionflux::ObjectBase::IFMutex* guardMutex;
+		/// Log target.
+		Ionflux::ObjectBase::IFObject* logTarget;
+		/// Signal: object changed signal.
+		IFObjectSignal signalObjectChanged;
+		/// Signal wrapper: object changed signal.
+		Ionflux::ObjectBase::IFSignal* signalObjectChangedWrapper;
+		/// Signal: object ID number changed signal.
+		IFObjectSignal signalObjectIDNumChanged;
+		/// Signal wrapper: object ID number changed signal.
+		Ionflux::ObjectBase::IFSignal* signalObjectIDNumChangedWrapper;
+		/// Signal: object ID changed signal.
+		IFObjectSignal signalObjectIDChanged;
+		/// Signal wrapper: object ID changed signal.
+		Ionflux::ObjectBase::IFSignal* signalObjectIDChangedWrapper;
+		
+	public:
+		/// ID number: undefined.
+		static const IFIDNum ID_NUM_UNDEFINED;
+		/// Signal type: object.
+		static const SignalType SIGNAL_TYPE_OBJECT;
+		/// Signal name: object_changed.
+		static const std::string SIGNAL_NAME_OBJECT_CHANGED;
+		/// Signal name: object_id_num_changed.
+		static const std::string SIGNAL_NAME_OBJECT_ID_NUM_CHANGED;
+		/// Signal name: object_id_changed.
+		static const std::string SIGNAL_NAME_OBJECT_ID_CHANGED;
+		
+		/** Constructor.
+		 *
+		 * Construct new IFObject object.
+		 */
+		IFObject();
+		
+		/** Destructor.
+		 *
+		 * Destruct IFObject object.
+		 */
+		virtual ~IFObject();
+		
+		/** Create event: object.
+		 * 
+		 * Create and initialize a 'object' event.
+		 * 
+		 * \return New event, or 0 if an error occured.
+		 */
+		IFObjectEvent* createObjectEvent();
+		
+		/** Get class information.
+		 *
+		 * Get the class information.
+		 *
+		 * \return The class information, or 0 if no class information exists for
+		 * this class.
+		 */
+		virtual const Ionflux::ObjectBase::IFClassInfo* getClass() const;
+		
+		/** Get class name.
+		 *
+		 * Get the class name
+		 *
+		 * \return The class name.
+		 */
+		virtual std::string getClassName() const;
+		
+		/** Get class description.
+		 *
+		 * Get the class description
+		 *
+		 * \return The class description.
+		 */
+		virtual std::string getClassDesc() const;
+		
+		/** Set object ID.
+		 *
+		 * Set the object ID
+		 *
+		 * \param newID Object ID.
+		 */
+		virtual void setID(const Ionflux::ObjectBase::IFObjectID& newID);
+		
+		/** Get object ID.
+		 *
+		 * Get the object ID
+		 *
+		 * \return The object ID.
+		 */
+		virtual Ionflux::ObjectBase::ObjectID getID() const;
+		
+		/** Set ID number.
+		 *
+		 * Set the ID number
+		 *
+		 * \param newIDNum ID number.
+		 */
+		virtual void setIDNum(Ionflux::ObjectBase::IFIDNum newIDNum);
+		
+		/** Get ID number.
+		 *
+		 * Get the ID number
+		 *
+		 * \return The ID number.
+		 */
+		virtual Ionflux::ObjectBase::IFIDNum getIDNum() const;
+		
+		/** Get string representation.
+		 *
+		 * Get a string representation of the object
+		 *
+		 * \return String representation of the object.
+		 */
+		virtual std::string getString() const;
+		
+		/** Get string representation.
+		 *
+		 * Get a string representation of the object
+		 *
+		 * \return String representation of the object.
+		 */
+		virtual  operator std::string() const;
+		
+		/** Copy.
+		 *
+		 * Create a copy of the object.
+		 *
+		 * \return Copy of the object.
+		 */
+		virtual Ionflux::ObjectBase::IFObject* copy() const;
+		
+		/** Create instance.
+		 *
+		 * Create a new instance of the class. If the optional parent object 
+		 * is specified, a local reference for the new object will be added to
+		 * the parent object.
+		 *
+		 * \param parentObject Parent object.
+		 *
+		 * \return Pointer to the new instance, or 0 if an error occurs.
+		 */
+		static Ionflux::ObjectBase::IFObject* 
+		create(Ionflux::ObjectBase::IFObject* parentObject = 0);
+		
+		/** Assignment operator.
+		 *
+		 * Assignment operator.
+		 *
+		 * \param otherObject Object.
+		 *
+		 * \return The object itself.
+		 */
+		virtual Ionflux::ObjectBase::IFObject& operator=(const 
+		Ionflux::ObjectBase::IFObject& otherObject);
+		
+		/** Log object.
+		 *
+		 * Log an object. If no log target has been set, the default 
+		 * implementation just writes the string representation of the object 
+		 * to standard output. If a log target has been set, the log() 
+		 * function of the target will be called.
+		 *
+		 * \param logObject Object to be logged.
+		 */
+		virtual void log(const Ionflux::ObjectBase::IFObject& logObject);
+		
+		/** Log object.
+		 *
+		 * Causes the object to log itself.
+		 */
+		virtual void log();
+		
+		/** Log object.
+		 *
+		 * Log an object. If no log target has been set, the default 
+		 * implementation just writes the string representation of the object 
+		 * to standard output. If a log target has been set, the log() 
+		 * function of the target will be called.
+		 *
+		 * \param logObject Object to be logged.
+		 */
+		virtual void log(const Ionflux::ObjectBase::IFObject& logObject) const;
+		
+		/** Log object.
+		 *
+		 * Causes the object to log itself.
+		 */
+		virtual void log() const;
+		
+		/** Check assertion.
+		 *
+		 * Log the specified object if the assertion evaluates to \c false.
+		 *
+		 * \param assertion Assertion to be checked.
+		 * \param logObject Object to be logged.
+		 *
+		 * \return Value of the assertion.
+		 */
+		virtual bool assert(bool assertion, const Ionflux::ObjectBase::IFObject& 
+		logObject);
+		
+		/** Check assertion.
+		 *
+		 * Log the specified object if the assertion evaluates to \c false.
+		 *
+		 * \param assertion Assertion to be checked.
+		 * \param logObject Object to be logged.
+		 *
+		 * \return Value of the assertion.
+		 */
+		virtual bool assert(bool assertion, const Ionflux::ObjectBase::IFObject& 
+		logObject) const;
+		
+		/** Add reference.
+		 *
+		 * Add a reference for the object.
+		 *
+		 * \return \c true on success \c false otherwise.
+		 */
+		virtual bool addRef() const;
+		
+		/** Remove reference.
+		 *
+		 * Remove a reference for the object.
+		 *
+		 * \return \c true on success \c false otherwise.
+		 */
+		virtual bool removeRef() const;
+		
+		/** Get number of references.
+		 *
+		 * Get the number of references for the object.
+		 *
+		 * \return Number of references.
+		 */
+		virtual unsigned int getNumRefs() const;
+		
+		/** Add local reference.
+		 *
+		 * Add a local reference for the target object.
+		 *
+		 * \param refTarget Target object.
+		 *
+		 * \return \c true on success \c false otherwise..
+		 */
+		virtual bool addLocalRef(Ionflux::ObjectBase::IFObject* refTarget) const;
+		
+		/** Remove local reference.
+		 *
+		 * Remove a local reference for the target object.
+		 *
+		 * \param refTarget Target object.
+		 *
+		 * \return \c true on success \c false otherwise..
+		 */
+		virtual bool removeLocalRef(Ionflux::ObjectBase::IFObject* refTarget) 
+		const;
+		
+		/** Remove all local references.
+		 *
+		 * Remove all local references for other objects.
+		 *
+		 * \return \c true on success \c false otherwise..
+		 */
+		virtual bool removeAllLocalRefs() const;
+		
+		/** Set guard state.
+		 *
+		 * Enable or disable guards and object locking. If set to \c true, 
+		 * access to the object in a multi-threaded application will be 
+		 * protected by a guard mutex, if the implementation of the object 
+		 * supports it. Otherwise, the object must be protected by other 
+		 * means.
+		 * 
+		 * \note By default, calls to lock(), unlock() or tryLock() will not 
+		 * do anything if guards have not been enabled using this function.
+		 *
+		 * \param newGuardState Guard state.
+		 */
+		virtual void setGuardEnabled(bool newGuardState);
+		
+		/** Get guard state.
+		 *
+		 * Get the current guard state for the object.
+		 *
+		 * \return \c true if guards and locking are enabled, \c false otherwise.
+		 */
+		virtual bool getGuardEnabled();
+		
+		/** Lock.
+		 *
+		 * Lock the object. This may be necessary for using certain member 
+		 * functions which are not thread safe.
+		 * 
+		 * \note Locking must be enabled using setGuardEnabled() for this 
+		 * function to have an effect. If guards are disabled, the function 
+		 * will always return \c true.
+		 *
+		 * \return \c true on success, \c false otherwise.
+		 */
+		virtual bool lock() const;
+		
+		/** Try to lock.
+		 *
+		 * Try to lock the object. This may be necessary for using certain 
+		 * member functions which are not thread safe.
+		 * 
+		 * \note Locking must be enabled using setGuardEnabled() for this 
+		 * function to have an effect. If guards are disabled, the function 
+		 * will always return \c true.
+		 *
+		 * \return \c true on success, \c false otherwise.
+		 */
+		virtual bool tryLock() const;
+		
+		/** Unlock.
+		 *
+		 * Unlock the object. This may be necessary for using certain member 
+		 * functions which are not thread safe.
+		 * 
+		 * \note Locking must be enabled using setGuardEnabled() for this 
+		 * function to have an effect. If guards are disabled, the function 
+		 * will always return \c true.
+		 *
+		 * \return \c true on success, \c false otherwise.
+		 */
+		virtual bool unlock() const;
+		
+		/** Set log target.
+		 *
+		 * Set new value of log target.
+		 *
+		 * \param newLogTarget New value of log target.
+		 */
+		virtual void setLogTarget(Ionflux::ObjectBase::IFObject* newLogTarget);
+		
+		/** Get log target.
+		 *
+		 * \return Current value of log target.
+		 */
+		virtual Ionflux::ObjectBase::IFObject* getLogTarget() const;
+		
+		/** Get signal: object changed signal.
+		 *
+		 * Get the signal for the object changed signal event.
+		 *
+		 * \return Signal for the object changed signal event.
+		 */
+		virtual IFObjectSignal& getSignalObjectChanged();
+		
+		/** Get signal wrapper: object changed signal.
+		 *
+		 * Get the signal for the object changed signal event.
+		 *
+		 * \return Signal for the object changed signal event.
+		 */
+		virtual Ionflux::ObjectBase::IFSignal* getSignalObjectChangedWrapper();
+		
+		/** Get signal: object ID number changed signal.
+		 *
+		 * Get the signal for the object ID number changed signal event.
+		 *
+		 * \return Signal for the object ID number changed signal event.
+		 */
+		virtual IFObjectSignal& getSignalObjectIDNumChanged();
+		
+		/** Get signal wrapper: object ID number changed signal.
+		 *
+		 * Get the signal for the object ID number changed signal event.
+		 *
+		 * \return Signal for the object ID number changed signal event.
+		 */
+		virtual Ionflux::ObjectBase::IFSignal* getSignalObjectIDNumChangedWrapper();
+		
+		/** Get signal: object ID changed signal.
+		 *
+		 * Get the signal for the object ID changed signal event.
+		 *
+		 * \return Signal for the object ID changed signal event.
+		 */
+		virtual IFObjectSignal& getSignalObjectIDChanged();
+		
+		/** Get signal wrapper: object ID changed signal.
+		 *
+		 * Get the signal for the object ID changed signal event.
+		 *
+		 * \return Signal for the object ID changed signal event.
+		 */
+		virtual Ionflux::ObjectBase::IFSignal* getSignalObjectIDChangedWrapper();
+};
+
+/** Output operator.
+ *
+ * Output operator
+ *
+ * \param outputStream Output stream.
+ * \param source Source object.
+ *
+ * \return Output stream.
+ */
+std::ostream& operator<<(std::ostream& outputStream, const 
+Ionflux::ObjectBase::IFObject& source);
+
+/// @}
+
+
+}
+
+}
+
+/** \file IFObject.hpp
+ * \brief Object (header).
+ */
+#endif
