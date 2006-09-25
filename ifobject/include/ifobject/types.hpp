@@ -44,6 +44,7 @@ typedef int IFEventType;
 typedef	std::set<Ionflux::ObjectBase::IFObject*> IFObjectSet;
 typedef std::map<Ionflux::ObjectBase::IFObject*, IFObjectRefInfo*> IFObjectRefMap;
 typedef std::string IFSignalType;
+typedef int IFMutexType;
 
 }
 

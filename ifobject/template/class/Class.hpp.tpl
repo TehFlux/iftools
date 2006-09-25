@@ -290,7 +290,7 @@ class {$class.name}{if ( haveBaseIFObject == 1 ) || ( haveBaseOther == 1 )}
 		static const SignalType SIGNAL_TYPE_{$sig.id|uppercase};{foreach ins in sig.instance}
 		/// Signal name: {$ins.id}.
 		static const std::string SIGNAL_NAME_{$ins.id|uppercase};{/foreach}
-{/foreach}{if class.createClassInfo == "true"}		/// Class information instance.
+{/foreach}{if haveBaseIFObject == 1}		/// Class information instance.
 		static const {$class.name}ClassInfo {$class.name|lowercase(1)}ClassInfo;
 		/// Class information.
 		static const Ionflux::ObjectBase::IFClassInfo* CLASS_INFO;

@@ -258,7 +258,7 @@ const std::string {$class.name}::SIGNAL_NAME_{$ins.id|uppercase} = "{$ins.id|low
 
 // run-time type information instance constants
 const {$class.name}ClassInfo {$class.name}::{$class.name|lowercase(1)}ClassInfo;
-const ClassInfo* {$class.name}::CLASS_INFO = &{$class.name}::{$class.name|lowercase(1)}ClassInfo;{/if}
+const Ionflux::ObjectBase::IFClassInfo* {$class.name}::CLASS_INFO = &{$class.name}::{$class.name|lowercase(1)}ClassInfo;{/if}
 
 {$class.name}::{$class.name}(){$haveInitializer = 0}{foreach init in constructor.default.initializer}{$haveInitializer = 1}{first}
 : {/first}{single}
