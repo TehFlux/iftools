@@ -24,7 +24,7 @@
 # 02111-1307 USA
 # 
 # ==========================================================================
-{$haveSignals = 0}{foreach si in signal}{if si.id != ""}{$haveSignals = 1}{/if}{/foreach}{$haveBaseIFObject = 0}{foreach bc in class.base.ifobject}{if bc.name != ""}{$haveBaseIFObject = 1}{/if}{/foreach}{$haveBaseOther = 0}{foreach bc in class.base.other}{if bc.name != ""}{$haveBaseOther = 1}{/if}{/foreach}{section checkFeatures}{$enableMutex = 0}{$enableGuards = 0}{$enableAutoGuards = 0}{$enableLogMessage = 0}{$enableSignal = haveSignals}{foreach fe in class.features}{if fe == "mutex"}{$enableMutex = 1}{/if}{if fe == "guards"}{$enableMutex = 1}{$enableGuards = 1}{/if}{if fe == "autoguards"}{$enableMutex = 1}{$enableGuards = 1}{$enableAutoGuards = 1}{/if}{if fe == "logmessage"}{$enableLogMessage = 1}{/if}{if fe == "signal"}{$enableSignal = 1}{/if}{/foreach}{/section}{ref checkFeatures}{section insertGPLDisclaimer}
+{section checkFeatures}{$haveForwards = 0}{foreach fw in forward}{if fw != ""}{$haveForwards = 1}{/if}{/foreach}{$haveTypedefs = 0}{foreach td in typedef}{if td != ""}{$haveTypedefs = 1}{/if}{/foreach}{$haveEvents = 0}{foreach ev in event}{if ev.id != ""}{$haveEvents = 1}{/if}{/foreach}{$haveSignals = 0}{foreach si in signal}{if si.id != ""}{$haveSignals = 1}{/if}{/foreach}{$haveBaseIFObject = 0}{foreach bc in class.base.ifobject}{if bc.name != ""}{$haveBaseIFObject = 1}{/if}{/foreach}{$haveBaseOther = 0}{foreach bc in class.base.other}{if bc.name != ""}{$haveBaseOther = 1}{/if}{/foreach}{$enableClassInfo = 0}{if ( haveBaseIFObject == 1 ) || ( class.name == "IFObject" )}{$enableClassInfo = 1}{/if}{$enableMutex = 0}{$enableGuards = 0}{$enableAutoGuards = 0}{$enableLogMessage = 0}{$enableSignal = haveSignals}{foreach fe in class.features}{if fe == "mutex"}{$enableMutex = 1}{/if}{if fe == "guards"}{$enableMutex = 1}{$enableGuards = 1}{/if}{if fe == "autoguards"}{$enableMutex = 1}{$enableGuards = 1}{$enableAutoGuards = 1}{/if}{if fe == "logmessage"}{$enableLogMessage = 1}{/if}{if fe == "signal"}{$enableSignal = 1}{/if}{/foreach}{/section}{ref checkFeatures}{section insertGPLDisclaimer}
  * =========================================================================
 {swrap 75 " * "}
 This file is part of {$project.name}.
@@ -193,7 +193,7 @@ IF{$ev.id|uppercase(1)}Event* {$class.name}::create{$ev.id|uppercase(1)}Event()
 \}{/if}{/if}{/section}{section createFuncImpl}{if func.pureVirtual != "true"}
 
 {swrap 75}{$func.type} {$class.name}::{$func.name}({foreach prm in func.param}{$prm.type} {$prm.name}{first}, {/first}{mid}, {/mid}{/foreach}){if func.const == "true"} const{/if}{/swrap}
-\{{if enableGuards == 1}
+\{{if ( enableGuards == 1 ) && ( func.spec != "static" )}
 	IFGuard functionGuard(guardMutex);{/if}
 {if func.impl == ""}	// TODO: Implementation.{else}{$func.impl|swrap(75,'	')}{/if}
 {if func.return.value != ""}	return {$func.return.value};
@@ -215,7 +215,7 @@ namespace {$ns.name}
 // structure constants{/first}{single}
 
 // structure constants{/single}{foreach cn in st.constant}
-const {$cn.type} {$st.name}::{$cn.name} = {$cn.value};{/foreach}{/foreach}{if haveBaseIFObject == 1}
+const {$cn.type} {$st.name}::{$cn.name} = {$cn.value};{/foreach}{/foreach}{if enableClassInfo == 1}
 
 {$class.name|uppercase(1)}ClassInfo::{$class.name|uppercase(1)}ClassInfo()
 \{
@@ -252,9 +252,9 @@ const {$const.type} {$class.name}::{$const.name} = {$const.value};{/foreach}{for
 // signal type and instance name constants{/first}{single}
 
 // signal type and instance name constants{/single}
-const SignalType {$class.name}::SIGNAL_TYPE_{$sig.id|uppercase} = 
+const Ionflux::ObjectBase::IFSignalType {$class.name}::SIGNAL_TYPE_{$sig.id|uppercase} = 
 	"{$sig.return.type},{foreach prm in sig.param}{$prm.type}{notlast}, {/notlast}{/foreach}";{$signalInstanceID = 0}{foreach ins in sig.instance}
-const std::string {$class.name}::SIGNAL_NAME_{$ins.id|uppercase} = "{$ins.id|lowercase}";{/foreach}{/foreach}{if haveBaseIFObject == 1}
+const std::string {$class.name}::SIGNAL_NAME_{$ins.id|uppercase} = "{$ins.id|lowercase}";{/foreach}{/foreach}{if enableClassInfo == 1}
 
 // run-time type information instance constants
 const {$class.name}ClassInfo {$class.name}::{$class.name|lowercase(1)}ClassInfo;
@@ -264,8 +264,8 @@ const Ionflux::ObjectBase::IFClassInfo* {$class.name}::CLASS_INFO = &{$class.nam
 : {/first}{single}
 : {/single}{$init.name}({$init.value}){notlast}, {/notlast}{/foreach}{foreach sig in signal}{foreach ins in sig.instance}{first}{if haveInitializer == 0}
 : {$haveInitializer = 1}{else}, {/if}{/first}{single}{if haveInitializer == 0}
-: {$haveInitializer = 1}{else}, {/if}{/single}{$ins.name}Wrapper(0){notlast}, {/notlast}{/foreach}{/foreach}
-\{{if haveBaseIFObject == 1}
+: {$haveInitializer = 1}{else}, {/if}{/single}signal{$ins.name|uppercase(1)}Wrapper(0){notlast}, {/notlast}{/foreach}{/foreach}
+\{{if enableClassInfo == 1}
 	// NOTE: The following line is required for run-time type information.
 	theClass = CLASS_INFO;{/if}{if enableAutoGuards == 1}
 	// NOTE: The following line is required for guards to work.
@@ -273,10 +273,11 @@ const Ionflux::ObjectBase::IFClassInfo* {$class.name}::CLASS_INFO = &{$class.nam
 	// TODO: Nothing ATM. ;-){else}
 {$constructor.default.impl|swrap(75,'	')}{/if}
 \}{foreach con in constructor.public}
+
 {swrap 75}{$class.name}::{$class.name}({foreach prm in con.param}{$prm.type} {$prm.name}{first}, {/first}{mid}, {/mid}{/foreach}){foreach init in con.initializer}{first}
 : {/first}{single}
 : {/single}{$init.name}({$init.value}){notlast}, {/notlast}{/foreach}{/swrap}
-\{{if haveBaseIFObject == 1}
+\{{if enableClassInfo == 1}
 	// NOTE: The following line is required for run-time type information.
 	theClass = CLASS_INFO;{/if}{if enableAutoGuards == 1}
 	// NOTE: The following line is required for guards to work.
@@ -297,11 +298,11 @@ IF{$sig.id|uppercase(1)}Signal& {$class.name}::getSignal{$ins.name|uppercase(1)}
 	return signal{$ins.name|uppercase(1)};
 \}
 
-Ionflux::Stuff::IFSignal* {$class.name}::getSignal{$ins.name|uppercase(1)}Wrapper()
+Ionflux::ObjectBase::IFSignal* {$class.name}::getSignal{$ins.name|uppercase(1)}Wrapper()
 \{
 	if (signal{$ins.name|uppercase(1)}Wrapper == 0)
 	\{
-		signal{$ins.name|uppercase(1)}Wrapper = new Ionflux::Stuff::IFSignal(
+		signal{$ins.name|uppercase(1)}Wrapper = new Ionflux::ObjectBase::IFSignal(
 			&signal{$ins.name|uppercase(1)}, SIGNAL_TYPE_{$sig.id|uppercase}, 
 			SIGNAL_NAME_{$ins.id|uppercase});
 		if (signal{$ins.name|uppercase(1)}Wrapper == 0){if enableLogMessage == 1}

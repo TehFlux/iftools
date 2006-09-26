@@ -25,6 +25,7 @@
  * ========================================================================== */
 
 #include "ifobject/IFMutex.hpp"
+#include "ifobject/IFLogMessage.hpp"
 
 using namespace std;
 using namespace Ionflux::ObjectBase;
@@ -61,6 +62,7 @@ IFMutex::IFMutex()
 	pthread_mutexattr_settype(&attributes, PTHREAD_MUTEX_DEFAULT);
 	pthread_mutex_init(&mutex, &attributes);
 }
+
 IFMutex::IFMutex(Ionflux::ObjectBase::IFMutexType initType)
 : type(initType)
 {
@@ -107,9 +109,24 @@ bool IFMutex::unlock()
 	return false;
 }
 
+Ionflux::ObjectBase::IFObject* 
+IFMutex::create(Ionflux::ObjectBase::IFObject* parentObject)
+{
+	IFMutex* newObject = new IFMutex();
+	if (newObject == 0)
+	{
+		cerr << IFLogMessage("Could not allocate object instance.", 
+			IFLogMessage::VL_ERROR, 0, "IFObject::create") << endl;
+		return 0;
+	}
+	if (parentObject != 0)
+		parentObject->addLocalRef(newObject);
+	return newObject;
+}
+
 Ionflux::ObjectBase::IFObject* IFMutex::copy() const
 {
-	IFMutex* newMutex = new Ionflux::ObjectBase::IFMutex();
+	IFMutex* newMutex = new IFMutex();
 	*newMutex = *this;
 	return newMutex;
 }

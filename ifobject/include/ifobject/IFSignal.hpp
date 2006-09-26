@@ -1,11 +1,11 @@
-#ifndef IONFLUX_OBJECT_IFMUTEX
-#define IONFLUX_OBJECT_IFMUTEX
+#ifndef IONFLUX_OBJECT_IFSIGNAL
+#define IONFLUX_OBJECT_IFSIGNAL
 /* ==========================================================================
  * Ionflux Object Base System
  * Copyright © 2006 Joern P. Meier
  * mail@ionflux.org
  * --------------------------------------------------------------------------
- * IFMutex.hpp                     Mutex (header).
+ * IFSignal.hpp                    Signal (header).
  * =========================================================================
  * This file is part of Ionflux Object Base System.
  * 
@@ -26,7 +26,6 @@
  * ========================================================================== */
 
 #include "ifobject/IFObject.hpp"
-#include <pthread.h>
 
 namespace Ionflux
 {
@@ -34,93 +33,66 @@ namespace Ionflux
 namespace ObjectBase
 {
 
-/// Class information for class IFMutex.
-class IFMutexClassInfo
+/// Class information for class IFSignal.
+class IFSignalClassInfo
 : public Ionflux::ObjectBase::IFClassInfo
 {
 	public:
 		/// Constructor.
-		IFMutexClassInfo();
+		IFSignalClassInfo();
 		/// Destructor.
-		virtual ~IFMutexClassInfo() { };
+		virtual ~IFSignalClassInfo() { };
 };
 
-/** Mutex.
+/** Signal.
  * \ingroup ifobject
  *
- * A mutual exclusion for use with threads.
+ * A signal. The purpose of this class is to make signals available for 
+ * handling by code which is aware of features of the Ionflux Object Base 
+ * System, but not of the actual mechanism which is used for implementing 
+ * signals.
  */
-class IFMutex
+class IFSignal
 : public Ionflux::ObjectBase::IFObject
 {
 	private:
 		
 	protected:
-		/// Mutex.
-		pthread_mutex_t mutex;
-		/// Attributes.
-		pthread_mutexattr_t attributes;
-		/// Type.
-		Ionflux::ObjectBase::IFMutexType type;
+		/// Signal.
+		Ionflux::ObjectBase::IFSignalBase signal;
+		/// Signal type.
+		Ionflux::ObjectBase::IFSignalType type;
+		/// Signal name.
+		std::string name;
 		
 	public:
-		/// Mutex type: default.
-		static const Ionflux::ObjectBase::IFMutexType TYPE_DEFAULT;
-		/// Mutex type: normal.
-		static const Ionflux::ObjectBase::IFMutexType TYPE_NORMAL;
-		/// Mutex type: errorcheck.
-		static const Ionflux::ObjectBase::IFMutexType TYPE_ERRORCHECK;
-		/// Mutex type: recursive.
-		static const Ionflux::ObjectBase::IFMutexType TYPE_RECURSIVE;
 		/// Class information instance.
-		static const IFMutexClassInfo iFMutexClassInfo;
+		static const IFSignalClassInfo iFSignalClassInfo;
 		/// Class information.
 		static const Ionflux::ObjectBase::IFClassInfo* CLASS_INFO;
 		
 		/** Constructor.
 		 *
-		 * Construct new IFMutex object.
+		 * Construct new IFSignal object.
 		 */
-		IFMutex();
+		IFSignal();
 		
 		/** Constructor.
 		 *
-		 * Construct new IFMutex object.
+		 * Construct new IFSignal object.
 		 *
-		 * \param initType Initial type.
+		 * \param initSignal Initial signal.
+		 * \param initType Initial signal type.
+		 * \param initName Initial signal name.
 		 */
-		IFMutex(Ionflux::ObjectBase::IFMutexType initType);
+		IFSignal(Ionflux::ObjectBase::IFSignalBase initSignal, 
+		Ionflux::ObjectBase::IFSignalType initType, std::string initName);
 		
 		/** Destructor.
 		 *
-		 * Destruct IFMutex object.
+		 * Destruct IFSignal object.
 		 */
-		virtual ~IFMutex();
-		
-		/** Lock.
-		 *
-		 * Lock the mutex. This function blocks until the mutex can be locked.
-		 *
-		 * \return \c true on success, \c false otherwise.
-		 */
-		virtual bool lock();
-		
-		/** Try lock.
-		 *
-		 * Try to lock the mutex. This function returns immediately if the 
-		 * mutex cannot be locked.
-		 *
-		 * \return \c true on success, \c false otherwise.
-		 */
-		virtual bool tryLock();
-		
-		/** Unlock.
-		 *
-		 * Unlock the mutex.
-		 *
-		 * \return \c true on success, \c false otherwise.
-		 */
-		virtual bool unlock();
+		virtual ~IFSignal();
 		
 		/** Create instance.
 		 *
@@ -147,18 +119,18 @@ class IFMutex
 		 *
 		 * Assignment operator.
 		 *
-		 * \param otherMutex Mutex.
+		 * \param otherSignal Test module.
 		 *
 		 * \return The object itself.
 		 */
-		virtual Ionflux::ObjectBase::IFMutex& operator=(const 
-		Ionflux::ObjectBase::IFMutex& otherMutex);
+		virtual Ionflux::ObjectBase::IFSignal& operator=(const 
+		Ionflux::ObjectBase::IFSignal& otherSignal);
 		
 		/** Assignment operator.
 		 *
 		 * Assignment operator.
 		 *
-		 * \param otherObject Object.
+		 * \param otherObject IFObject.
 		 *
 		 * \return The object itself.
 		 */
@@ -173,18 +145,30 @@ class IFMutex
 		 */
 		virtual std::string getString() const;
 		
-		/** Get type.
+		/** Get signal.
 		 *
-		 * \return Current value of type.
+		 * \return Current value of signal.
 		 */
-		virtual Ionflux::ObjectBase::IFMutexType getType() const;
+		virtual Ionflux::ObjectBase::IFSignalBase getSignal() const;
+		
+		/** Get signal type.
+		 *
+		 * \return Current value of signal type.
+		 */
+		virtual Ionflux::ObjectBase::IFSignalType getType() const;
+		
+		/** Get signal name.
+		 *
+		 * \return Current value of signal name.
+		 */
+		virtual std::string getName() const;
 };
 
 }
 
 }
 
-/** \file IFMutex.hpp
- * \brief Mutex (header).
+/** \file IFSignal.hpp
+ * \brief Signal (header).
  */
 #endif

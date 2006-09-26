@@ -36,7 +36,7 @@ namespace ObjectBase
 
 class IFClassInfo;
 
-typedef std::vector<Ionflux::ObjectBase::IFClassInfo*> IFClassInfoVector;
+typedef std::vector<const Ionflux::ObjectBase::IFClassInfo*> IFClassInfoVector;
 
 /** Class information.
  * \ingroup ifobject
@@ -87,8 +87,8 @@ class IFClassInfo
 		 * \return Base class information record, or 0 if the index is out of 
 		 * range.
 		 */
-		virtual Ionflux::ObjectBase::IFClassInfo* getBaseClassInfo(unsigned int 
-		index) const;
+		virtual const Ionflux::ObjectBase::IFClassInfo* getBaseClassInfo(unsigned
+		int index) const;
 		
 		/** Derived class check.
 		 *

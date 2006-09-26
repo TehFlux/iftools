@@ -30,7 +30,6 @@
 #include <set>
 #include <map>
 #include <iostream>
-#include "sigc++/signal.h"
 #include "sigc++/connection.h"
 #include "ifobject/types.hpp"
 #include "ifobject/IFClassInfo.hpp"
@@ -55,8 +54,6 @@ namespace Ionflux
 namespace ObjectBase
 {
 
-class IFObject;
-struct ObjectRefInfo;
 class IFMutex;
 // events used by IFObject
 class IFObjectEvent;
@@ -101,6 +98,17 @@ struct IFObjectSignalConnections
 	sigc::connection signalObjectIDChangedConnection;
 };
 
+/// Class information for class IFObject.
+class IFObjectClassInfo
+: public Ionflux::ObjectBase::IFClassInfo
+{
+	public:
+		/// Constructor.
+		IFObjectClassInfo();
+		/// Destructor.
+		virtual ~IFObjectClassInfo() { };
+};
+
 /** Object.
  *
  * Base class for all objects. Access to the object in a multi-threaded 
@@ -141,13 +149,17 @@ class IFObject
 		/// ID number: undefined.
 		static const IFIDNum ID_NUM_UNDEFINED;
 		/// Signal type: object.
-		static const SignalType SIGNAL_TYPE_OBJECT;
+		static const IFSignalType SIGNAL_TYPE_OBJECT;
 		/// Signal name: object_changed.
 		static const std::string SIGNAL_NAME_OBJECT_CHANGED;
 		/// Signal name: object_id_num_changed.
 		static const std::string SIGNAL_NAME_OBJECT_ID_NUM_CHANGED;
 		/// Signal name: object_id_changed.
 		static const std::string SIGNAL_NAME_OBJECT_ID_CHANGED;
+		/// Class information instance.
+		static const IFObjectClassInfo iFObjectClassInfo;
+		/// Class information.
+		static const Ionflux::ObjectBase::IFClassInfo* CLASS_INFO;
 		
 		/** Constructor.
 		 *
@@ -208,7 +220,7 @@ class IFObject
 		 *
 		 * \return The object ID.
 		 */
-		virtual Ionflux::ObjectBase::ObjectID getID() const;
+		virtual Ionflux::ObjectBase::IFObjectID getID() const;
 		
 		/** Set ID number.
 		 *

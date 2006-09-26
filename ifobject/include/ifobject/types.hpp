@@ -28,6 +28,7 @@
 #include <set>
 #include <map>
 #include <string>
+#include "sigc++/signal.h"
 
 namespace Ionflux
 {
@@ -45,6 +46,7 @@ typedef	std::set<Ionflux::ObjectBase::IFObject*> IFObjectSet;
 typedef std::map<Ionflux::ObjectBase::IFObject*, IFObjectRefInfo*> IFObjectRefMap;
 typedef std::string IFSignalType;
 typedef int IFMutexType;
+typedef sigc::signal_base* IFSignalBase;
 
 }
 

@@ -76,9 +76,13 @@ class IFObjectEvent
 		/// event type: object changed.
 		static const Ionflux::ObjectBase::IFEventType TYPE_OBJECT_CHANGED;
 		/// event type: ID number changed.
-		static const Ionflux::ObjectBase::IFEventType TYPE_ID_NUM_CHANGED;
+		static const Ionflux::ObjectBase::IFEventType TYPE_OBJECT_ID_NUM_CHANGED;
 		/// event type: ID changed.
-		static const Ionflux::ObjectBase::IFEventType TYPE_ID_CHANGED;
+		static const Ionflux::ObjectBase::IFEventType TYPE_OBJECT_ID_CHANGED;
+		/// Class information instance.
+		static const IFObjectEventClassInfo iFObjectEventClassInfo;
+		/// Class information.
+		static const Ionflux::ObjectBase::IFClassInfo* CLASS_INFO;
 		
 		/** Constructor.
 		 *

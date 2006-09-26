@@ -24,7 +24,7 @@
 # 02111-1307 USA
 # 
 # ==========================================================================
-{$haveForwards = 0}{foreach fw in forward}{if fw != ""}{$haveForwards = 1}{/if}{/foreach}{$haveTypedefs = 0}{foreach td in typedef}{if td != ""}{$haveTypedefs = 1}{/if}{/foreach}{$haveEvents = 0}{foreach ev in event}{if ev.id != ""}{$haveEvents = 1}{/if}{/foreach}{$haveSignals = 0}{foreach si in signal}{if si.id != ""}{$haveSignals = 1}{/if}{/foreach}{$haveBaseIFObject = 0}{foreach bc in class.base.ifobject}{if bc.name != ""}{$haveBaseIFObject = 1}{/if}{/foreach}{$haveBaseOther = 0}{foreach bc in class.base.other}{if bc.name != ""}{$haveBaseOther = 1}{/if}{/foreach}{section insertGPLDisclaimer}
+{section checkFeatures}{$haveForwards = 0}{foreach fw in forward}{if fw != ""}{$haveForwards = 1}{/if}{/foreach}{$haveTypedefs = 0}{foreach td in typedef}{if td != ""}{$haveTypedefs = 1}{/if}{/foreach}{$haveEvents = 0}{foreach ev in event}{if ev.id != ""}{$haveEvents = 1}{/if}{/foreach}{$haveSignals = 0}{foreach si in signal}{if si.id != ""}{$haveSignals = 1}{/if}{/foreach}{$haveBaseIFObject = 0}{foreach bc in class.base.ifobject}{if bc.name != ""}{$haveBaseIFObject = 1}{/if}{/foreach}{$haveBaseOther = 0}{foreach bc in class.base.other}{if bc.name != ""}{$haveBaseOther = 1}{/if}{/foreach}{$enableClassInfo = 0}{if ( haveBaseIFObject == 1 ) || ( class.name == "IFObject" )}{$enableClassInfo = 1}{/if}{$enableMutex = 0}{$enableGuards = 0}{$enableAutoGuards = 0}{$enableLogMessage = 0}{$enableSignal = haveSignals}{foreach fe in class.features}{if fe == "mutex"}{$enableMutex = 1}{/if}{if fe == "guards"}{$enableMutex = 1}{$enableGuards = 1}{/if}{if fe == "autoguards"}{$enableMutex = 1}{$enableGuards = 1}{$enableAutoGuards = 1}{/if}{if fe == "logmessage"}{$enableLogMessage = 1}{/if}{if fe == "signal"}{$enableSignal = 1}{/if}{/foreach}{/section}{ref checkFeatures}{section insertGPLDisclaimer}
  * =========================================================================
 {swrap 75 " * "}This file is part of {$project.name}.
 
@@ -80,7 +80,7 @@ struct {$st.name}
 	/// {$cn.desc}.
 	static const {$cn.type} {$cn.name};{/foreach}{if st.refCount.enabled == "true"}
 	/// Reference counting information.
-	Ionflux::Stuff::IFObjectRefInfo* refInfo;{/if}
+	Ionflux::ObjectBase::IFObjectRefInfo* refInfo;{/if}
 \};{/foreach}{/section}{section createEventHelperFunctionDecl}
 		
 		/** Create event: {$ev.id}.
@@ -218,7 +218,7 @@ struct IF{$sig.id|uppercase(1)}SignalConnections
 \{{foreach ins in sig.instance}
 	/// Signal connection: {$ins.desc}
 	sigc::connection signal{$ins.name|uppercase(1)}Connection;{/foreach}
-\};{/foreach}{if haveBaseIFObject == 1}
+\};{/foreach}{if enableClassInfo == 1}
 
 /// Class information for class {$class.name}.
 class {$class.name}ClassInfo
@@ -287,10 +287,10 @@ class {$class.name}{if ( haveBaseIFObject == 1 ) || ( haveBaseOther == 1 )}
 {/foreach}{foreach const in constant.public}		/// {$const.desc}.
 		static const {$const.type} {$const.name};
 {/foreach}{foreach sig in signal}		/// Signal type: {$sig.id}.
-		static const SignalType SIGNAL_TYPE_{$sig.id|uppercase};{foreach ins in sig.instance}
+		static const IFSignalType SIGNAL_TYPE_{$sig.id|uppercase};{foreach ins in sig.instance}
 		/// Signal name: {$ins.id}.
 		static const std::string SIGNAL_NAME_{$ins.id|uppercase};{/foreach}
-{/foreach}{if haveBaseIFObject == 1}		/// Class information instance.
+{/foreach}{if enableClassInfo == 1}		/// Class information instance.
 		static const {$class.name}ClassInfo {$class.name|lowercase(1)}ClassInfo;
 		/// Class information.
 		static const Ionflux::ObjectBase::IFClassInfo* CLASS_INFO;

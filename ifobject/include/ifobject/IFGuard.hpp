@@ -1,11 +1,11 @@
-#ifndef IONFLUX_OBJECT_IFMUTEX
-#define IONFLUX_OBJECT_IFMUTEX
+#ifndef IONFLUX_OBJECT_IFGUARD
+#define IONFLUX_OBJECT_IFGUARD
 /* ==========================================================================
  * Ionflux Object Base System
  * Copyright © 2006 Joern P. Meier
  * mail@ionflux.org
  * --------------------------------------------------------------------------
- * IFMutex.hpp                     Mutex (header).
+ * IFGuard.hpp                     Guard (header).
  * =========================================================================
  * This file is part of Ionflux Object Base System.
  * 
@@ -26,7 +26,6 @@
  * ========================================================================== */
 
 #include "ifobject/IFObject.hpp"
-#include <pthread.h>
 
 namespace Ionflux
 {
@@ -34,93 +33,57 @@ namespace Ionflux
 namespace ObjectBase
 {
 
-/// Class information for class IFMutex.
-class IFMutexClassInfo
+/// Class information for class IFGuard.
+class IFGuardClassInfo
 : public Ionflux::ObjectBase::IFClassInfo
 {
 	public:
 		/// Constructor.
-		IFMutexClassInfo();
+		IFGuardClassInfo();
 		/// Destructor.
-		virtual ~IFMutexClassInfo() { };
+		virtual ~IFGuardClassInfo() { };
 };
 
-/** Mutex.
+/** Guard.
  * \ingroup ifobject
  *
- * A mutual exclusion for use with threads.
+ * A guard object which will lock a mutex on construction and release it on
+ * destruction. Locking and unlocking is also possible using the accessors.
  */
-class IFMutex
+class IFGuard
 : public Ionflux::ObjectBase::IFObject
 {
 	private:
 		
 	protected:
 		/// Mutex.
-		pthread_mutex_t mutex;
-		/// Attributes.
-		pthread_mutexattr_t attributes;
-		/// Type.
-		Ionflux::ObjectBase::IFMutexType type;
+		Ionflux::ObjectBase::IFMutex* mutex;
 		
 	public:
-		/// Mutex type: default.
-		static const Ionflux::ObjectBase::IFMutexType TYPE_DEFAULT;
-		/// Mutex type: normal.
-		static const Ionflux::ObjectBase::IFMutexType TYPE_NORMAL;
-		/// Mutex type: errorcheck.
-		static const Ionflux::ObjectBase::IFMutexType TYPE_ERRORCHECK;
-		/// Mutex type: recursive.
-		static const Ionflux::ObjectBase::IFMutexType TYPE_RECURSIVE;
 		/// Class information instance.
-		static const IFMutexClassInfo iFMutexClassInfo;
+		static const IFGuardClassInfo iFGuardClassInfo;
 		/// Class information.
 		static const Ionflux::ObjectBase::IFClassInfo* CLASS_INFO;
 		
 		/** Constructor.
 		 *
-		 * Construct new IFMutex object.
+		 * Construct new IFGuard object.
 		 */
-		IFMutex();
+		IFGuard();
 		
 		/** Constructor.
 		 *
-		 * Construct new IFMutex object.
+		 * Construct new IFGuard object.
 		 *
-		 * \param initType Initial type.
+		 * \param initMutex Initial mutex.
 		 */
-		IFMutex(Ionflux::ObjectBase::IFMutexType initType);
+		IFGuard(Ionflux::ObjectBase::IFMutex* initMutex);
 		
 		/** Destructor.
 		 *
-		 * Destruct IFMutex object.
+		 * Destruct IFGuard object.
 		 */
-		virtual ~IFMutex();
-		
-		/** Lock.
-		 *
-		 * Lock the mutex. This function blocks until the mutex can be locked.
-		 *
-		 * \return \c true on success, \c false otherwise.
-		 */
-		virtual bool lock();
-		
-		/** Try lock.
-		 *
-		 * Try to lock the mutex. This function returns immediately if the 
-		 * mutex cannot be locked.
-		 *
-		 * \return \c true on success, \c false otherwise.
-		 */
-		virtual bool tryLock();
-		
-		/** Unlock.
-		 *
-		 * Unlock the mutex.
-		 *
-		 * \return \c true on success, \c false otherwise.
-		 */
-		virtual bool unlock();
+		virtual ~IFGuard();
 		
 		/** Create instance.
 		 *
@@ -147,12 +110,12 @@ class IFMutex
 		 *
 		 * Assignment operator.
 		 *
-		 * \param otherMutex Mutex.
+		 * \param otherGuard Guard.
 		 *
 		 * \return The object itself.
 		 */
-		virtual Ionflux::ObjectBase::IFMutex& operator=(const 
-		Ionflux::ObjectBase::IFMutex& otherMutex);
+		virtual Ionflux::ObjectBase::IFGuard& operator=(const 
+		Ionflux::ObjectBase::IFGuard& otherGuard);
 		
 		/** Assignment operator.
 		 *
@@ -165,26 +128,26 @@ class IFMutex
 		virtual Ionflux::ObjectBase::IFObject& operator=(const 
 		Ionflux::ObjectBase::IFObject& otherObject);
 		
-		/** Get string representation.
+		/** Set mutex.
 		 *
-		 * Get a string representation of the object
+		 * Set new value of mutex.
 		 *
-		 * \return String representation of the object.
+		 * \param newMutex New value of mutex.
 		 */
-		virtual std::string getString() const;
+		virtual void setMutex(Ionflux::ObjectBase::IFMutex* newMutex);
 		
-		/** Get type.
+		/** Get mutex.
 		 *
-		 * \return Current value of type.
+		 * \return Current value of mutex.
 		 */
-		virtual Ionflux::ObjectBase::IFMutexType getType() const;
+		virtual Ionflux::ObjectBase::IFMutex* getMutex() const;
 };
 
 }
 
 }
 
-/** \file IFMutex.hpp
- * \brief Mutex (header).
+/** \file IFGuard.hpp
+ * \brief Guard (header).
  */
 #endif

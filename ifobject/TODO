@@ -7,14 +7,19 @@ Todo
 ================================================================================
 
 • Create templates for automatically creating configuration files for event 
-  and signal proxy classes.
+  and signal proxy classes (done for event classes; low priority for signal 
+  proxy classes).
 
-• Implement the remaining parts of the Ionflux Object Base System:
+• Implement and test the remaining parts of the Ionflux Object Base System:
 
-  ▪ IFObject
-  ▪ IFLogMessage
-  ▪ IFSignal
-  ▪ IFObjectEvent (created automatically using new templates)
-  ▪ IFObjectSignalProxy (created automatically using new templates)
+  ▪ IFObject (implementation done)
+  ▪ IFLogMessage (implementation done)
+  ▪ IFSignal (implementation done)
+  ▪ IFObjectEvent (created automatically using new templates, 
+    implementation done)
+  ▪ IFObjectSignalProxy (created automatically using new templates, 
+    low priority)
   ▪ IFThread
-  ▪ IFMutex
+  ▪ IFMutex (implementation done)
+
+• More testing.

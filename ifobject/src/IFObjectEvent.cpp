@@ -44,12 +44,12 @@ IFObjectEventClassInfo::IFObjectEventClassInfo()
 
 // public member constants
 const Ionflux::ObjectBase::IFEventType IFObjectEvent::TYPE_OBJECT_CHANGED = 0;
-const Ionflux::ObjectBase::IFEventType IFObjectEvent::TYPE_ID_NUM_CHANGED = 1;
-const Ionflux::ObjectBase::IFEventType IFObjectEvent::TYPE_ID_CHANGED = 2;
+const Ionflux::ObjectBase::IFEventType IFObjectEvent::TYPE_OBJECT_ID_NUM_CHANGED = 1;
+const Ionflux::ObjectBase::IFEventType IFObjectEvent::TYPE_OBJECT_ID_CHANGED = 2;
 
 // run-time type information instance constants
 const IFObjectEventClassInfo IFObjectEvent::iFObjectEventClassInfo;
-const ClassInfo* IFObjectEvent::CLASS_INFO = &IFObjectEvent::iFObjectEventClassInfo;
+const Ionflux::ObjectBase::IFClassInfo* IFObjectEvent::CLASS_INFO = &IFObjectEvent::iFObjectEventClassInfo;
 
 IFObjectEvent::IFObjectEvent()
 : type(TYPE_OBJECT_CHANGED), source(0), oldIDNum(0), newIDNum(0), oldID(""), newID("")

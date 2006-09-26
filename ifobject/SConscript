@@ -124,9 +124,21 @@ ifobjectenv = Environment(
     CCFLAGS = mainccflags)
 
 # IFObject library
-ifobjectLibHeaders = ['include/ifobject/IFClassInfo.hpp']
+ifobjectLibHeaders = ['include/ifobject/IFClassInfo.hpp',
+	'include/ifobject/IFObject.hpp',
+	'include/ifobject/IFObjectEvent.hpp',
+	'include/ifobject/IFMutex.hpp',
+	'include/ifobject/IFGuard.hpp',
+	'include/ifobject/IFSignal.hpp',
+	'include/ifobject/IFLogMessage.hpp']
 
-ifobjectLibSources = ['build/IFClassInfo.cpp']
+ifobjectLibSources = ['build/IFClassInfo.cpp',
+	'build/IFObject.cpp',
+	'build/IFObjectEvent.cpp',
+	'build/IFMutex.cpp',
+	'build/IFGuard.cpp',
+	'build/IFSignal.cpp',
+	'build/IFLogMessage.cpp']
 
 ifobjectLib = ifobjectenv.SharedLibrary('lib/ifobject',
     ifobjectLibSources,

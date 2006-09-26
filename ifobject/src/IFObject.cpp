@@ -43,19 +43,31 @@ namespace ObjectBase
 
 // structure constants
 
+IFObjectClassInfo::IFObjectClassInfo()
+{
+	name = "IFObject";
+	desc = "Object";
+}
+
 // public member constants
 const IFIDNum IFObject::ID_NUM_UNDEFINED = -1;
 
 // signal type and instance name constants
-const SignalType IFObject::SIGNAL_TYPE_OBJECT = 
+const Ionflux::ObjectBase::IFSignalType IFObject::SIGNAL_TYPE_OBJECT = 
 	"bool,const Ionflux::ObjectBase::IFObjectEvent&";
 const std::string IFObject::SIGNAL_NAME_OBJECT_CHANGED = "object_changed";
 const std::string IFObject::SIGNAL_NAME_OBJECT_ID_NUM_CHANGED = "object_id_num_changed";
 const std::string IFObject::SIGNAL_NAME_OBJECT_ID_CHANGED = "object_id_changed";
 
+// run-time type information instance constants
+const IFObjectClassInfo IFObject::iFObjectClassInfo;
+const Ionflux::ObjectBase::IFClassInfo* IFObject::CLASS_INFO = &IFObject::iFObjectClassInfo;
+
 IFObject::IFObject()
-: idNum(ID_NUM_UNDEFINED), refData(0), guardMutex(0), logTarget(0), objectChangedWrapper(0), objectIDNumChangedWrapper(0), objectIDChangedWrapper(0)
+: idNum(ID_NUM_UNDEFINED), refData(0), guardMutex(0), logTarget(0), signalObjectChangedWrapper(0), signalObjectIDNumChangedWrapper(0), signalObjectIDChangedWrapper(0)
 {
+	// NOTE: The following line is required for run-time type information.
+	theClass = CLASS_INFO;
 	/* NOTE: Creating IFObjects here will cause an infinite loop. 
 	         (Don't do it.) */
 	refData = new IFRefCountData();
@@ -127,7 +139,7 @@ void IFObject::setID(const Ionflux::ObjectBase::IFObjectID& newID)
 	removeLocalRef(event);
 }
 
-Ionflux::ObjectBase::ObjectID IFObject::getID() const
+Ionflux::ObjectBase::IFObjectID IFObject::getID() const
 {
 	IFGuard functionGuard(guardMutex);
 	// TODO: Implementation.
@@ -181,7 +193,6 @@ Ionflux::ObjectBase::IFObject* IFObject::copy() const
 Ionflux::ObjectBase::IFObject* 
 IFObject::create(Ionflux::ObjectBase::IFObject* parentObject)
 {
-	IFGuard functionGuard(guardMutex);
 	IFObject* newObject = new IFObject();
 	if (newObject == 0)
 	{
@@ -307,7 +318,7 @@ bool IFObject::addLocalRef(Ionflux::ObjectBase::IFObject* refTarget) const
 		{
 			log(IFLogMessage("Could not allocate "
 				"object reference info.", IFLogMessage::VL_ASSERTION, this, 
-				"addLocalRef")))
+				"addLocalRef"));
 			return false;
 		}
 		refInfo->refCount = 0;
@@ -377,7 +388,7 @@ const
 	}
 	if (refInfo->refCount == 0)
 	{
-		refData->refMap[refTarget] == 0;
+		refData->refMap[refTarget] = 0;
 		delete refInfo;
 		refInfo = 0;
 		refData->refMap.erase(i);
@@ -560,11 +571,11 @@ IFObjectSignal& IFObject::getSignalObjectChanged()
 	return signalObjectChanged;
 }
 
-Ionflux::Stuff::IFSignal* IFObject::getSignalObjectChangedWrapper()
+Ionflux::ObjectBase::IFSignal* IFObject::getSignalObjectChangedWrapper()
 {
 	if (signalObjectChangedWrapper == 0)
 	{
-		signalObjectChangedWrapper = new Ionflux::Stuff::IFSignal(
+		signalObjectChangedWrapper = new Ionflux::ObjectBase::IFSignal(
 			&signalObjectChanged, SIGNAL_TYPE_OBJECT, 
 			SIGNAL_NAME_OBJECT_CHANGED);
 		if (signalObjectChangedWrapper == 0)
@@ -581,11 +592,11 @@ IFObjectSignal& IFObject::getSignalObjectIDNumChanged()
 	return signalObjectIDNumChanged;
 }
 
-Ionflux::Stuff::IFSignal* IFObject::getSignalObjectIDNumChangedWrapper()
+Ionflux::ObjectBase::IFSignal* IFObject::getSignalObjectIDNumChangedWrapper()
 {
 	if (signalObjectIDNumChangedWrapper == 0)
 	{
-		signalObjectIDNumChangedWrapper = new Ionflux::Stuff::IFSignal(
+		signalObjectIDNumChangedWrapper = new Ionflux::ObjectBase::IFSignal(
 			&signalObjectIDNumChanged, SIGNAL_TYPE_OBJECT, 
 			SIGNAL_NAME_OBJECT_ID_NUM_CHANGED);
 		if (signalObjectIDNumChangedWrapper == 0)
@@ -602,11 +613,11 @@ IFObjectSignal& IFObject::getSignalObjectIDChanged()
 	return signalObjectIDChanged;
 }
 
-Ionflux::Stuff::IFSignal* IFObject::getSignalObjectIDChangedWrapper()
+Ionflux::ObjectBase::IFSignal* IFObject::getSignalObjectIDChangedWrapper()
 {
 	if (signalObjectIDChangedWrapper == 0)
 	{
-		signalObjectIDChangedWrapper = new Ionflux::Stuff::IFSignal(
+		signalObjectIDChangedWrapper = new Ionflux::ObjectBase::IFSignal(
 			&signalObjectIDChanged, SIGNAL_TYPE_OBJECT, 
 			SIGNAL_NAME_OBJECT_ID_CHANGED);
 		if (signalObjectIDChangedWrapper == 0)

@@ -150,7 +150,7 @@ void printClassInfo(const Ionflux::ObjectBase::IFClassInfo* classInfo,
 		<< "  inheritance:" << endl
 		<< "    base classes: ";
 	unsigned int numBaseClasses = classInfo->getNumBaseClasses();
-	Ionflux::ObjectBase::IFClassInfo* currentInfo = 0;
+	const Ionflux::ObjectBase::IFClassInfo* currentInfo = 0;
 	for (unsigned int k = 0; k < numBaseClasses; k++)
 	{
 		currentInfo = classInfo->getBaseClassInfo(k);

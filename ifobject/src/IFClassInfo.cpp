@@ -42,14 +42,15 @@ IFClassInfo::~IFClassInfo()
 {
 	// TODO: Nothing ATM. ;-)
 }
+
 int IFClassInfo::getNumBaseClasses() const
 {
 	// TODO: Implementation.
 	return baseClassInfo.size();
 }
 
-Ionflux::ObjectBase::IFClassInfo* IFClassInfo::getBaseClassInfo(unsigned 
-int index) const
+const Ionflux::ObjectBase::IFClassInfo* 
+IFClassInfo::getBaseClassInfo(unsigned int index) const
 {
 	IFClassInfo* result = 0;
 	if (index < baseClassInfo.size())
@@ -62,7 +63,7 @@ searchClass, bool recursive) const
 {
 	bool result = false;
 	IFClassInfoVector::const_iterator i = baseClassInfo.begin();
-	IFClassInfo* currentClassInfo = 0;
+	const IFClassInfo* currentClassInfo = 0;
 	while (!result
 		&& (i != baseClassInfo.end()))
 	{
@@ -88,7 +89,6 @@ checkClass, bool recursive) const
 	return checkClass->isDerivedFrom(this, recursive);
 }
 
-
 std::string IFClassInfo::getName() const
 {
 	return name;
@@ -98,6 +98,7 @@ std::string IFClassInfo::getDesc() const
 {
 	return desc;
 }
+
 }
 
 }
