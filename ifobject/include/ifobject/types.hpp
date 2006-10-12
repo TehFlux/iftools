@@ -26,6 +26,7 @@
  * ========================================================================== */
 
 #include <set>
+#include <vector>
 #include <map>
 #include <string>
 #include "sigc++/signal.h"
@@ -43,6 +44,7 @@ typedef std::string IFObjectID;
 typedef int IFIDNum;
 typedef int IFEventType;
 typedef	std::set<Ionflux::ObjectBase::IFObject*> IFObjectSet;
+typedef	std::vector<Ionflux::ObjectBase::IFObject*> IFObjectVector;
 typedef std::map<Ionflux::ObjectBase::IFObject*, IFObjectRefInfo*> IFObjectRefMap;
 typedef std::string IFSignalType;
 typedef int IFMutexType;

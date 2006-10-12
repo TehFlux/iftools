@@ -26,7 +26,6 @@
 
 #include "ifobject/IFObject.hpp"
 #include "ifobject/IFMutex.hpp"
-#include "ifobject/IFGuard.hpp"
 #include "ifobject/IFLogMessage.hpp"
 #include "ifobject/IFSignal.hpp"
 #include "ifobject/IFObjectEvent.hpp"
@@ -90,7 +89,6 @@ IFObject::~IFObject()
 
 IFObjectEvent* IFObject::createObjectEvent()
 {
-	IFGuard functionGuard(guardMutex);
 	IFObjectEvent* event = new IFObjectEvent();
 	if (event == 0)
 	{
@@ -104,14 +102,12 @@ IFObjectEvent* IFObject::createObjectEvent()
 
 const Ionflux::ObjectBase::IFClassInfo* IFObject::getClass() const
 {
-	IFGuard functionGuard(guardMutex);
 	// TODO: Implementation.
 	return theClass;
 }
 
 std::string IFObject::getClassName() const
 {
-	IFGuard functionGuard(guardMutex);
 	const IFClassInfo* theClassInfo = getClass();
 	if (theClassInfo != 0)
 		return theClassInfo->getName();
@@ -120,7 +116,6 @@ std::string IFObject::getClassName() const
 
 std::string IFObject::getClassDesc() const
 {
-	IFGuard functionGuard(guardMutex);
 	const IFClassInfo* theClassInfo = getClass();
 	if (theClassInfo != 0)
 		return theClassInfo->getDesc();
@@ -129,9 +124,9 @@ std::string IFObject::getClassDesc() const
 
 void IFObject::setID(const Ionflux::ObjectBase::IFObjectID& newID)
 {
-	IFGuard functionGuard(guardMutex);
 	IFObjectEvent* event = createObjectEvent();
 	event->setType(IFObjectEvent::TYPE_OBJECT_ID_CHANGED);
+	event->setSource(this);
 	event->setOldID(id);
 	event->setNewID(newID);
 	id = newID;
@@ -141,16 +136,15 @@ void IFObject::setID(const Ionflux::ObjectBase::IFObjectID& newID)
 
 Ionflux::ObjectBase::IFObjectID IFObject::getID() const
 {
-	IFGuard functionGuard(guardMutex);
 	// TODO: Implementation.
 	return id;
 }
 
 void IFObject::setIDNum(Ionflux::ObjectBase::IFIDNum newIDNum)
 {
-	IFGuard functionGuard(guardMutex);
 	IFObjectEvent* event = createObjectEvent();
 	event->setType(IFObjectEvent::TYPE_OBJECT_ID_NUM_CHANGED);
+	event->setSource(this);
 	event->setOldIDNum(idNum);
 	event->setNewIDNum(newIDNum);
 	idNum = newIDNum;
@@ -160,14 +154,12 @@ void IFObject::setIDNum(Ionflux::ObjectBase::IFIDNum newIDNum)
 
 Ionflux::ObjectBase::IFIDNum IFObject::getIDNum() const
 {
-	IFGuard functionGuard(guardMutex);
 	// TODO: Implementation.
 	return idNum;
 }
 
 std::string IFObject::getString() const
 {
-	IFGuard functionGuard(guardMutex);
 	ostringstream state;
 	state << getClassName();
 	if (id.size() > 0)
@@ -177,14 +169,12 @@ std::string IFObject::getString() const
 
  IFObject::operator std::string() const
 {
-	IFGuard functionGuard(guardMutex);
 	// TODO: Implementation.
 	return getString();
 }
 
 Ionflux::ObjectBase::IFObject* IFObject::copy() const
 {
-	IFGuard functionGuard(guardMutex);
 	log(IFLogMessage("Copy operation not implemented.", 
 		IFLogMessage::VL_ERROR, this, "copy"));
 	return 0;
@@ -208,7 +198,6 @@ IFObject::create(Ionflux::ObjectBase::IFObject* parentObject)
 Ionflux::ObjectBase::IFObject& IFObject::operator=(const 
 Ionflux::ObjectBase::IFObject& otherObject)
 {
-	IFGuard functionGuard(guardMutex);
 	log(IFLogMessage("Assignment operator not implemented.", 
 		IFLogMessage::VL_ERROR, this, "operator="));
 	return *this;
@@ -216,7 +205,6 @@ Ionflux::ObjectBase::IFObject& otherObject)
 
 void IFObject::log(const Ionflux::ObjectBase::IFObject& logObject)
 {
-	IFGuard functionGuard(guardMutex);
 	if (logTarget == 0)
 		cout << logObject << endl;
 	else
@@ -225,13 +213,11 @@ void IFObject::log(const Ionflux::ObjectBase::IFObject& logObject)
 
 void IFObject::log()
 {
-	IFGuard functionGuard(guardMutex);
 	log(*this);
 }
 
 void IFObject::log(const Ionflux::ObjectBase::IFObject& logObject) const
 {
-	IFGuard functionGuard(guardMutex);
 	if (logTarget == 0)
 		cout << logObject << endl;
 	else
@@ -240,14 +226,12 @@ void IFObject::log(const Ionflux::ObjectBase::IFObject& logObject) const
 
 void IFObject::log() const
 {
-	IFGuard functionGuard(guardMutex);
 	log(*this);
 }
 
 bool IFObject::assert(bool assertion, const Ionflux::ObjectBase::IFObject& 
 logObject)
 {
-	IFGuard functionGuard(guardMutex);
 	if (!assertion)
 		log(logObject);
 	return assertion;
@@ -256,7 +240,6 @@ logObject)
 bool IFObject::assert(bool assertion, const Ionflux::ObjectBase::IFObject& 
 logObject) const
 {
-	IFGuard functionGuard(guardMutex);
 	if (!assertion)
 		log(logObject);
 	return assertion;
@@ -264,7 +247,6 @@ logObject) const
 
 bool IFObject::addRef() const
 {
-	IFGuard functionGuard(guardMutex);
 	if (refData->refCount < UINT_MAX)
 		refData->refCount++;
 	else
@@ -278,7 +260,6 @@ bool IFObject::addRef() const
 
 bool IFObject::removeRef() const
 {
-	IFGuard functionGuard(guardMutex);
 	if (refData->refCount > 0)
 		refData->refCount--;
 	else
@@ -292,14 +273,12 @@ bool IFObject::removeRef() const
 
 unsigned int IFObject::getNumRefs() const
 {
-	IFGuard functionGuard(guardMutex);
 	// TODO: Implementation.
 	return refData->refCount;
 }
 
 bool IFObject::addLocalRef(Ionflux::ObjectBase::IFObject* refTarget) const
 {
-	IFGuard functionGuard(guardMutex);
 	if (refTarget == 0)
 	{
 		log(IFLogMessage("Attempt to add reference to null object.", 
@@ -355,7 +334,6 @@ bool IFObject::addLocalRef(Ionflux::ObjectBase::IFObject* refTarget) const
 bool IFObject::removeLocalRef(Ionflux::ObjectBase::IFObject* refTarget) 
 const
 {
-	IFGuard functionGuard(guardMutex);
 	if (refTarget == 0)
 	{
 		log(IFLogMessage("Attempt to remove reference to null object.", 
@@ -436,7 +414,6 @@ const
 
 bool IFObject::removeAllLocalRefs() const
 {
-	IFGuard functionGuard(guardMutex);
 	IFObjectRefInfo* refInfo = 0;
 	IFObjectRefMap::iterator i;
 	IFObject* refTarget = 0;
@@ -496,7 +473,6 @@ bool IFObject::removeAllLocalRefs() const
 
 void IFObject::setGuardEnabled(bool newGuardState)
 {
-	IFGuard functionGuard(guardMutex);
 	if (newGuardState)
 	{
 		if (guardMutex != 0)
@@ -518,7 +494,6 @@ void IFObject::setGuardEnabled(bool newGuardState)
 
 bool IFObject::getGuardEnabled()
 {
-	IFGuard functionGuard(guardMutex);
 	if (guardMutex != 0)
 		return true;
 	return false;
@@ -526,7 +501,6 @@ bool IFObject::getGuardEnabled()
 
 bool IFObject::lock() const
 {
-	IFGuard functionGuard(guardMutex);
 	if (guardMutex != 0)
 		return guardMutex->lock();
 	return true;
@@ -534,7 +508,6 @@ bool IFObject::lock() const
 
 bool IFObject::tryLock() const
 {
-	IFGuard functionGuard(guardMutex);
 	if (guardMutex != 0)
 		return guardMutex->tryLock();
 	return true;
@@ -542,7 +515,6 @@ bool IFObject::tryLock() const
 
 bool IFObject::unlock() const
 {
-	IFGuard functionGuard(guardMutex);
 	if (guardMutex != 0)
 		return guardMutex->unlock();
 	return true;
@@ -550,7 +522,6 @@ bool IFObject::unlock() const
 
 void IFObject::setLogTarget(Ionflux::ObjectBase::IFObject* newLogTarget)
 {
-	IFGuard propertyGuard(guardMutex);
 	if (logTarget == newLogTarget)
 		return;
 	if (logTarget != 0)
@@ -562,7 +533,6 @@ void IFObject::setLogTarget(Ionflux::ObjectBase::IFObject* newLogTarget)
 
 Ionflux::ObjectBase::IFObject* IFObject::getLogTarget() const
 {
-	IFGuard propertyGuard(guardMutex);
 	return logTarget;
 }
 

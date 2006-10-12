@@ -166,6 +166,11 @@ ifclassinfotestBin = ifobjectenv.Program('test/bin/ifclassinfotest',
 	CPPPATH = cpppath,
 	LIBS = ['ifobject'] + libs,
 	LIBPATH = ['lib'] + libpath)
+ifobjecttestBin = ifobjectenv.Program('test/bin/ifobjecttest',
+	['test/build/ifobjecttest.cpp'],
+	CPPPATH = cpppath + sigcppccflags,
+	LIBS = ['ifobject'] + libs + sigcpplibs,
+	LIBPATH = ['lib'] + libpath + sigcpplibpath)
 
 # targets and collections of files
 allHeaders = ifobjectLibHeaders
@@ -173,7 +178,8 @@ buildLibs = buildIFObjectLib
 targetLibs = [ifobjectLib]
 targetApps = [ifclassgenBin]
 buildApps = ['bin/ifclassgen']
-buildTest = ['test/bin/ifclassinfotest']
+buildTest = ['test/bin/ifclassinfotest',
+	'test/bin/ifobjecttest']
 
 # installation
 ifobjectenv.Install(prefix + '/include/ionflux', allHeaders)

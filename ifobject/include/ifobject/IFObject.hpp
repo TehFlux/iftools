@@ -111,9 +111,7 @@ class IFObjectClassInfo
 
 /** Object.
  *
- * Base class for all objects. Access to the object in a multi-threaded 
- * application can be protected by a guard mutex with a call to 
- * setGuardEnabled().
+ * Base class for all objects.
  */
 class IFObject
 {
@@ -399,11 +397,10 @@ class IFObject
 		
 		/** Set guard state.
 		 *
-		 * Enable or disable guards and object locking. If set to \c true, 
-		 * access to the object in a multi-threaded application will be 
-		 * protected by a guard mutex, if the implementation of the object 
-		 * supports it. Otherwise, the object must be protected by other 
-		 * means.
+		 * Enable or disable object locking. If set to \c true, access to the 
+		 * object in a multi-threaded application will be protected by a guard
+		 * mutex, if the implementation of the object supports it. Otherwise, 
+		 * the object must be protected by other means.
 		 * 
 		 * \note By default, calls to lock(), unlock() or tryLock() will not 
 		 * do anything if guards have not been enabled using this function.
