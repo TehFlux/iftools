@@ -47,6 +47,7 @@ typedef std::map<Ionflux::ObjectBase::IFObject*, IFObjectRefInfo*> IFObjectRefMa
 typedef std::string IFSignalType;
 typedef int IFMutexType;
 typedef sigc::signal_base* IFSignalBase;
+typedef int IFAtomic;
 
 }
 

@@ -30,4 +30,5 @@ scripts/createClass.sh IFObject &&
 scripts/createClass.sh IFMutex &&
 scripts/createClass.sh IFGuard &&
 scripts/createClass.sh IFSignal &&
-scripts/createClass.sh IFLogMessage
+scripts/createClass.sh IFLogMessage &&
+scripts/createClass.sh IFThread

@@ -130,7 +130,9 @@ ifobjectLibHeaders = ['include/ifobject/IFClassInfo.hpp',
 	'include/ifobject/IFMutex.hpp',
 	'include/ifobject/IFGuard.hpp',
 	'include/ifobject/IFSignal.hpp',
-	'include/ifobject/IFLogMessage.hpp']
+	'include/ifobject/IFLogMessage.hpp',
+	'include/ifobject/IFThread.hpp',
+	'include/ifobject/IFThreadEvent.hpp']
 
 ifobjectLibSources = ['build/IFClassInfo.cpp',
 	'build/IFObject.cpp',
@@ -138,7 +140,9 @@ ifobjectLibSources = ['build/IFClassInfo.cpp',
 	'build/IFMutex.cpp',
 	'build/IFGuard.cpp',
 	'build/IFSignal.cpp',
-	'build/IFLogMessage.cpp']
+	'build/IFLogMessage.cpp',
+	'build/IFThread.cpp',
+	'build/IFThreadEvent.cpp']
 
 ifobjectLib = ifobjectenv.SharedLibrary('lib/ifobject',
     ifobjectLibSources,

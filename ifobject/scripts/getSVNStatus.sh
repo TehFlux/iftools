@@ -4,7 +4,7 @@
 # Copyright © 2006 Joern P. Meier
 # mail@ionflux.org
 # --------------------------------------------------------------------------
-# getSVNStatus.sh         Subversion status script.
+# getSVNStatus.sh              Subversion status script.
 # ==========================================================================
 # 
 # This file is part of Ionflux Object Base System.
@@ -16,8 +16,8 @@
 # 
 # Ionflux Object Base System is distributed in the hope that it will be 
 # useful, but WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General 
-# Public License for more details.
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU 
+# General Public License for more details.
 # 
 # You should have received a copy of the GNU General Public License
 # along with Ionflux Object Base System; if not, write to the Free 
@@ -25,7 +25,9 @@
 # 02111-1307 USA
 # 
 # ==========================================================================
-svn status >svn-status.txt &&
-echo "------------------------------------------------------------------------" >svn-status-mod.txt &&
-grep "[AMD] " svn-status.txt >>svn-status-mod.txt
-grep "\? " svn-status.txt >svn-status-unknown.txt
+mv svnstatus.mod.txt svnstatus.mod.txt~ 2>/dev/null
+mv svnstatus.unknown.txt svnstatus.unknown.txt~ 2>/dev/null
+svn status >svnstatus.txt &&
+echo "------------------------------------------------------------------------" >svnstatus.mod.txt &&
+grep "[AMD] " svnstatus.txt >>svnstatus.mod.txt
+grep "\? " svnstatus.txt >svnstatus.unknown.txt

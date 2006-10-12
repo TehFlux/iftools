@@ -26,6 +26,7 @@
 
 #include "ifobject/IFLogMessage.hpp"
 #include "ifobject/IFMutex.hpp"
+#include "ifobject/IFGuard.hpp"
 #include <sstream>
 
 using namespace std;
@@ -116,6 +117,7 @@ IFLogMessage::create(Ionflux::ObjectBase::IFObject* parentObject)
 
 Ionflux::ObjectBase::IFObject* IFLogMessage::copy() const
 {
+	IFGuard functionGuard(guardMutex);
 	IFLogMessage* newLogMessage = new IFLogMessage();
 	*newLogMessage = *this;
 	return newLogMessage;
@@ -124,6 +126,7 @@ Ionflux::ObjectBase::IFObject* IFLogMessage::copy() const
 Ionflux::ObjectBase::IFLogMessage& IFLogMessage::operator=(const 
 Ionflux::ObjectBase::IFLogMessage& otherLogMessage)
 {
+	IFGuard functionGuard(guardMutex);
 	message = otherLogMessage.getMessage();
 	level = otherLogMessage.getLevel();
 	source = otherLogMessage.getSource();
@@ -134,6 +137,7 @@ Ionflux::ObjectBase::IFLogMessage& otherLogMessage)
 Ionflux::ObjectBase::IFObject& IFLogMessage::operator=(const 
 Ionflux::ObjectBase::IFObject& otherObject)
 {
+	IFGuard functionGuard(guardMutex);
 	const IFLogMessage* otherLogMessage = dynamic_cast<const 
 	IFLogMessage*>(&otherObject);
 	if (otherLogMessage != 0)
@@ -226,6 +230,7 @@ IFLogMessage::getLevelFromString(const std::string& levelString)
 
 std::string IFLogMessage::getString() const
 {
+	IFGuard functionGuard(guardMutex);
 	ostringstream state;
 	if ((source != 0)
 		|| (sourceFunctionName.size() > 0))
@@ -251,43 +256,51 @@ std::string IFLogMessage::getString() const
 
 void IFLogMessage::setMessage(const std::string& newMessage)
 {
+	IFGuard propertyGuard(guardMutex);
 	message = newMessage;
 }
 
 std::string IFLogMessage::getMessage() const
 {
+	IFGuard propertyGuard(guardMutex);
 	return message;
 }
 
 void IFLogMessage::setLevel(Ionflux::ObjectBase::IFVerbosityLevel newLevel)
 {
+	IFGuard propertyGuard(guardMutex);
 	level = newLevel;
 }
 
 Ionflux::ObjectBase::IFVerbosityLevel IFLogMessage::getLevel() const
 {
+	IFGuard propertyGuard(guardMutex);
 	return level;
 }
 
 void IFLogMessage::setSource(const Ionflux::ObjectBase::IFObject* 
 newSource)
 {
+	IFGuard propertyGuard(guardMutex);
 	source = newSource;
 }
 
 const Ionflux::ObjectBase::IFObject* IFLogMessage::getSource() const
 {
+	IFGuard propertyGuard(guardMutex);
 	return source;
 }
 
 void IFLogMessage::setSourceFunctionName(const std::string& 
 newSourceFunctionName)
 {
+	IFGuard propertyGuard(guardMutex);
 	sourceFunctionName = newSourceFunctionName;
 }
 
 std::string IFLogMessage::getSourceFunctionName() const
 {
+	IFGuard propertyGuard(guardMutex);
 	return sourceFunctionName;
 }
 
