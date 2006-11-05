@@ -215,6 +215,23 @@ void IFThread::sleep(unsigned int sleepSecs)
 	::sleep(sleepSecs);
 }
 
+void IFThread::nanoSleep(unsigned int sleepSecs, unsigned int 
+sleepNanoSecs)
+{
+	timespec sleepTime;
+	timespec remainingTime;
+	sleepTime.tv_sec = sleepSecs;
+	sleepTime.tv_nsec = sleepNanoSecs;
+	remainingTime.tv_sec = 0;
+	remainingTime.tv_nsec = 0;
+	while ((sleepTime.tv_sec != 0)
+		|| (sleepTime.tv_nsec != 0))
+	{
+		::nanosleep(&sleepTime, &remainingTime);
+		sleepTime = remainingTime;
+	}
+}
+
 void IFThread::setThreadFunction(Ionflux::ObjectBase::IFThreadFunction 
 newThreadFunction)
 {

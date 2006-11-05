@@ -275,6 +275,16 @@ class IFThread
 		 */
 		static void sleep(unsigned int sleepSecs);
 		
+		/** Sleep (nanosec resolution).
+		 *
+		 * Do nothing for the specified amount of time.
+		 *
+		 * \param sleepSecs Time in seconds.
+		 * \param sleepNanoSecs Time in nanoseconds.
+		 */
+		static void nanoSleep(unsigned int sleepSecs, unsigned int 
+		sleepNanoSecs);
+		
 		/** Set the function which is executed within the thread.
 		 *
 		 * Set new value of the function which is executed within the thread.

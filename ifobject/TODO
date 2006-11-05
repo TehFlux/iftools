@@ -19,7 +19,7 @@ Todo
     implementation done)
   ▪ IFObjectSignalProxy (created automatically using new templates, 
     low priority)
-  ▪ IFThread
+  ▪ IFThread (implementation done)
   ▪ IFMutex (implementation done)
 
 • More testing.
