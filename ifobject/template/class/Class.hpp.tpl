@@ -292,7 +292,16 @@ class {$class.name}{if ( haveBaseIFObject == 1 ) || ( haveBaseOther == 1 )}
 {swrap 75 "		 * "}\\param {$prm.name} {$prm.desc}.{/swrap}{/foreach}
 		 * \\param target Where to store the result.
 		 */
-{swrap 75 "		"}bool op{$op.name|uppercase(1)}({foreach prm in op.param}Ionflux::ObjectBase::IFObject* {$prm.name}, {/foreach}Ionflux::ObjectBase::IFObjectVector* target = 0){if op.const != ""} const{/if};{/swrap}{/foreach}{if haveOps == 1}
+{swrap 75 "		"}bool op{$op.name|uppercase(1)}({foreach prm in op.param}Ionflux::ObjectBase::IFObject* {$prm.name}, {/foreach}Ionflux::ObjectBase::IFObjectVector* target = 0){if op.const != ""} const{/if};{/swrap}{if ( op.const != "true" ) && ( op.constImpl != "" )}
+
+		/** Operation proxy: {$op.name}.
+		 *
+		 * Proxy for the '{$op.name}' operation.
+		 *{foreach prm in op.param}
+{swrap 75 "		 * "}\\param {$prm.name} {$prm.desc}.{/swrap}{/foreach}
+		 * \\param target Where to store the result.
+		 */
+{swrap 75 "		"}bool op{$op.name|uppercase(1)}({foreach prm in op.param}Ionflux::ObjectBase::IFObject* {$prm.name}, {/foreach}Ionflux::ObjectBase::IFObjectVector* target = 0) const;{/swrap}{/if}{/foreach}{if haveOps == 1}
 		
 		/** Operation dispatch.
 		 *

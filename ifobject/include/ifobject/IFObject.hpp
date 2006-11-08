@@ -154,6 +154,16 @@ class IFObject
 		 * \param target Where to store the result.
 		 */
 		bool opLog(Ionflux::ObjectBase::IFObject* logObject, 
+		Ionflux::ObjectBase::IFObjectVector* target = 0);
+
+		/** Operation proxy: log.
+		 *
+		 * Proxy for the 'log' operation.
+		 *
+		 * \param logObject Object to be logged.
+		 * \param target Where to store the result.
+		 */
+		bool opLog(Ionflux::ObjectBase::IFObject* logObject, 
 		Ionflux::ObjectBase::IFObjectVector* target = 0) const;
 		
 		/** Operation dispatch.

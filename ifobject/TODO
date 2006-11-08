@@ -22,8 +22,6 @@ Todo
   ▪ IFThread (implementation done)
   ▪ IFMutex (implementation done)
 
-• Finish implementation of opDispatch().
-
 • Add serialize() and deserialize() functions to the IFObject interface.
 
 • More testing.

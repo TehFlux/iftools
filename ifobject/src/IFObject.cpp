@@ -106,6 +106,14 @@ IFObject::~IFObject()
 }
 
 bool IFObject::opLog(Ionflux::ObjectBase::IFObject* logObject, 
+Ionflux::ObjectBase::IFObjectVector* target)
+{
+	if (logObject != 0)
+		log(*logObject);
+	return true;
+}
+
+bool IFObject::opLog(Ionflux::ObjectBase::IFObject* logObject, 
 Ionflux::ObjectBase::IFObjectVector* target) const
 {
 	if (logObject != 0)
@@ -117,7 +125,7 @@ bool IFObject::opDispatch(const Ionflux::ObjectBase::IFOpName& opName,
 	const Ionflux::ObjectBase::IFObjectVector* params, 
 	Ionflux::ObjectBase::IFObjectVector* target)
 {
-	const IFOpInfo* opInfo = CLASS_INFO->getOpInfo(opName);
+	const IFOpInfo* opInfo = theClass->getOpInfo(opName);
 	if (opInfo == 0)
 	{
 		ostringstream state;
@@ -126,10 +134,61 @@ bool IFObject::opDispatch(const Ionflux::ObjectBase::IFOpName& opName,
 			this, "opDispatch"));
 		return false;
 	}
-	/* TODO: Implementation:
-	 * + check parameters
-	 * + call the appropriate operation
-	 */
+	// Check parameters.
+	IFObjectVector checkedParams;
+	unsigned int numParams = opInfo->paramInfo.size();
+	unsigned int i = 0;
+	bool paramsOK = true;
+	while ((i < numParams)
+		&& paramsOK)
+	{
+		const IFOpParamInfo* paramInfo = &(opInfo->paramInfo[i]);
+		if ((params != 0) 
+			&& (i < params->size()))
+		{
+			/* Parameter is defined.
+			   Check parameter type. */
+			if ((paramInfo->type == 0)
+				|| (paramInfo->type == (*params)[i]->getClass())
+				|| ((*params)[i]->getClass()->isDerivedFrom(paramInfo->type)))
+				checkedParams.push_back((*params)[i]);
+			else
+			{
+				ostringstream state;
+				state << "Parameter " << i << " for operation '"
+					<< opName << "' is of wrong type (type is " 
+					<< (*params)[i]->getClassName() << ", expected " 
+					<< paramInfo->type->getName() << ").";
+				log(IFLogMessage(state.str(), IFLogMessage::VL_ERROR, 
+					this, "opDispatch"));
+				return false;
+			}
+		} else
+		{
+			// Parameter is missing.
+			if (!paramInfo->optional)
+			{
+				ostringstream state;
+				state << "Required parameter " << i << " for operation '"
+					<< opName << "' is missing.";
+				log(IFLogMessage(state.str(), IFLogMessage::VL_ERROR, 
+					this, "opDispatch"));
+				return false;
+			}
+			checkedParams.push_back(paramInfo->defaultValue);
+		}
+		i++;
+	}
+	// Call the appropriate operation proxy.
+	if (opName == "log")
+		return opLog(
+			checkedParams[0], 
+			target);
+	ostringstream state;
+	state << "Failed to dispatch operation '"
+		<< opName << "' for some unknown reason (this should not happen).";
+	log(IFLogMessage(state.str(), IFLogMessage::VL_ERROR, 
+		this, "opDispatch"));
 	return false;
 }
 
@@ -137,7 +196,7 @@ bool IFObject::opDispatch(const Ionflux::ObjectBase::IFOpName& opName,
 	const Ionflux::ObjectBase::IFObjectVector* params, 
 	Ionflux::ObjectBase::IFObjectVector* target) const
 {
-	const IFOpInfo* opInfo = CLASS_INFO->getOpInfo(opName);
+	const IFOpInfo* opInfo = theClass->getOpInfo(opName);
 	if (opInfo == 0)
 	{
 		ostringstream state;
@@ -146,10 +205,63 @@ bool IFObject::opDispatch(const Ionflux::ObjectBase::IFOpName& opName,
 			this, "opDispatch"));
 		return false;
 	}
-	/* TODO: Implementation:
-	 * + check parameters
-	 * + call the appropriate operation
-	 */
+	// Check parameters.
+	IFObjectVector checkedParams;
+	unsigned int numParams = opInfo->paramInfo.size();
+	unsigned int i = 0;
+	bool paramsOK = true;
+	while ((i < numParams)
+		&& paramsOK)
+	{
+		const IFOpParamInfo* paramInfo = &(opInfo->paramInfo[i]);
+		if ((params != 0) 
+			&& (i < params->size()))
+		{
+			/* Parameter is defined.
+			   Check parameter type. */
+			if ((paramInfo->type == 0)
+				|| (paramInfo->type == (*params)[i]->getClass())
+				|| ((*params)[i]->getClass()->isDerivedFrom(paramInfo->type)))
+				checkedParams.push_back((*params)[i]);
+			else
+			{
+				ostringstream state;
+				state << "Parameter " << i << " for operation '"
+					<< opName << "' is of wrong type (type is " 
+					<< (*params)[i]->getClassName() << ", expected " 
+					<< paramInfo->type->getName() << ").";
+				log(IFLogMessage(state.str(), IFLogMessage::VL_ERROR, 
+					this, "opDispatch"));
+				return false;
+			}
+		} else
+		{
+			// Parameter is missing.
+			if (!paramInfo->optional)
+			{
+				ostringstream state;
+				state << "Required parameter " << i << " for operation '"
+					<< opName << "' is missing.";
+				log(IFLogMessage(state.str(), IFLogMessage::VL_ERROR, 
+					this, "opDispatch"));
+				return false;
+			}
+			checkedParams.push_back(paramInfo->defaultValue);
+		}
+		i++;
+	}
+	// Call the appropriate operation proxy.
+	if (opName == "log")
+		return opLog(
+			checkedParams[0], 
+			target);
+	ostringstream state;
+	state << "Failed to dispatch operation '"
+		<< opName << "' (this is probably because there is no const "
+		"implementation available for the operation, but the object on "
+		"which the operation has been called is const).";
+	log(IFLogMessage(state.str(), IFLogMessage::VL_ERROR, 
+		this, "opDispatch"));
 	return false;
 }
 

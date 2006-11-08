@@ -53,7 +53,7 @@ struct IFOpParamInfo
 	/// Whether the parameter is optional.
 	bool optional;
 	/// Default value.
-	const Ionflux::ObjectBase::IFObject* defaultValue;
+	Ionflux::ObjectBase::IFObject* defaultValue;
 };
  
 /** Operation result info.
