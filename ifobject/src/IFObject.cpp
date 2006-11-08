@@ -42,10 +42,28 @@ namespace ObjectBase
 
 // structure constants
 
+// operation info records
+IFOpInfo IFObjectClassInfo::OP_INFO_LOG;
+
 IFObjectClassInfo::IFObjectClassInfo()
 {
 	name = "IFObject";
 	desc = "Object";
+	IFOpParamInfo currentParam;
+	OP_INFO_LOG.name = "log";
+	currentParam.type = Ionflux::ObjectBase::IFObject::CLASS_INFO;
+	currentParam.name = "logObject";
+	currentParam.desc = "Object to be logged";
+	currentParam.optional = false;
+	currentParam.defaultValue = 0;
+	OP_INFO_LOG.paramInfo.push_back(currentParam);
+	opInfo = new IFOpNameInfoMap();
+	(*opInfo)[OP_INFO_LOG.name] = &OP_INFO_LOG;
+}
+
+IFObjectClassInfo::~IFObjectClassInfo()
+{
+	delete opInfo;
 }
 
 // public member constants
@@ -85,6 +103,54 @@ IFObject::~IFObject()
 	removeAllLocalRefs();
 	delete refData;
 	refData = 0;
+}
+
+bool IFObject::opLog(Ionflux::ObjectBase::IFObject* logObject, 
+Ionflux::ObjectBase::IFObjectVector* target) const
+{
+	if (logObject != 0)
+		log(*logObject);
+	return true;
+}
+
+bool IFObject::opDispatch(const Ionflux::ObjectBase::IFOpName& opName, 
+	const Ionflux::ObjectBase::IFObjectVector* params, 
+	Ionflux::ObjectBase::IFObjectVector* target)
+{
+	const IFOpInfo* opInfo = CLASS_INFO->getOpInfo(opName);
+	if (opInfo == 0)
+	{
+		ostringstream state;
+		state << "Operation not supported: '" << opName << "'.";
+		log(IFLogMessage(state.str(), IFLogMessage::VL_ERROR, 
+			this, "opDispatch"));
+		return false;
+	}
+	/* TODO: Implementation:
+	 * + check parameters
+	 * + call the appropriate operation
+	 */
+	return false;
+}
+
+bool IFObject::opDispatch(const Ionflux::ObjectBase::IFOpName& opName, 
+	const Ionflux::ObjectBase::IFObjectVector* params, 
+	Ionflux::ObjectBase::IFObjectVector* target) const
+{
+	const IFOpInfo* opInfo = CLASS_INFO->getOpInfo(opName);
+	if (opInfo == 0)
+	{
+		ostringstream state;
+		state << "Operation not supported: '" << opName << "'.";
+		log(IFLogMessage(state.str(), IFLogMessage::VL_ERROR, 
+			this, "opDispatch"));
+		return false;
+	}
+	/* TODO: Implementation:
+	 * + check parameters
+	 * + call the appropriate operation
+	 */
+	return false;
 }
 
 IFObjectEvent* IFObject::createObjectEvent()
@@ -193,6 +259,22 @@ IFObject::create(Ionflux::ObjectBase::IFObject* parentObject)
 	if (parentObject != 0)
 		parentObject->addLocalRef(newObject);
 	return newObject;
+}
+
+bool IFObject::doOp(const Ionflux::ObjectBase::IFOpName& opName, const 
+Ionflux::ObjectBase::IFObjectVector* params, 
+Ionflux::ObjectBase::IFObjectVector* target)
+{
+	opDispatch(opName, params, target);
+	return false;
+}
+
+bool IFObject::doOp(const Ionflux::ObjectBase::IFOpName& opName, const 
+Ionflux::ObjectBase::IFObjectVector* params, 
+Ionflux::ObjectBase::IFObjectVector* target) const
+{
+	// TODO: Implementation.
+	return opDispatch(opName, params, target);;
 }
 
 Ionflux::ObjectBase::IFObject& IFObject::operator=(const 

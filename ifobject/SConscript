@@ -163,7 +163,7 @@ ifclassgenBin = ifobjectenv.Program('bin/ifclassgen',
 # tests
 ifclassinfotestBin = ifobjectenv.Program('test/bin/ifclassinfotest',
 	['test/build/ifclassinfotest.cpp'],
-	CPPPATH = cpppath,
+	CPPPATH = cpppath + sigcppccflags,
 	LIBS = ['ifobject'] + libs,
 	LIBPATH = ['lib'] + libpath)
 ifobjecttestBin = ifobjectenv.Program('test/bin/ifobjecttest',

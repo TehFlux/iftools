@@ -31,7 +31,6 @@
 #include <map>
 #include <iostream>
 #include "sigc++/connection.h"
-#include "ifobject/types.hpp"
 #include "ifobject/IFClassInfo.hpp"
 #undef assert
 
@@ -102,11 +101,15 @@ struct IFObjectSignalConnections
 class IFObjectClassInfo
 : public Ionflux::ObjectBase::IFClassInfo
 {
+	protected:
+		// Operation info: log.
+		static Ionflux::ObjectBase::IFOpInfo OP_INFO_LOG;
+		
 	public:
 		/// Constructor.
 		IFObjectClassInfo();
 		/// Destructor.
-		virtual ~IFObjectClassInfo() { };
+		virtual ~IFObjectClassInfo();
 };
 
 /** Object.
@@ -142,6 +145,40 @@ class IFObject
 		IFObjectSignal signalObjectIDChanged;
 		/// Signal wrapper: object ID changed signal.
 		Ionflux::ObjectBase::IFSignal* signalObjectIDChangedWrapper;
+		
+		/** Operation proxy: log.
+		 *
+		 * Proxy for the 'log' operation.
+		 *
+		 * \param logObject Object to be logged.
+		 * \param target Where to store the result.
+		 */
+		bool opLog(Ionflux::ObjectBase::IFObject* logObject, 
+		Ionflux::ObjectBase::IFObjectVector* target = 0) const;
+		
+		/** Operation dispatch.
+		 *
+		 * Default function used for dispatching operations.
+		 *
+		 * \param opName Operation name.
+		 * \param params Parameters.
+		 * \param target Where to store the result.
+		 */
+		bool opDispatch(const Ionflux::ObjectBase::IFOpName& opName, 
+			const Ionflux::ObjectBase::IFObjectVector* params = 0, 
+			Ionflux::ObjectBase::IFObjectVector* target = 0);
+		
+		/** Operation dispatch.
+		 *
+		 * Default function used for dispatching operations.
+		 *
+		 * \param opName Operation name.
+		 * \param params Parameters.
+		 * \param target Where to store the result.
+		 */
+		bool opDispatch(const Ionflux::ObjectBase::IFOpName& opName, 
+			const Ionflux::ObjectBase::IFObjectVector* params = 0, 
+			Ionflux::ObjectBase::IFObjectVector* target = 0) const;
 		
 	public:
 		/// ID number: undefined.
@@ -272,6 +309,42 @@ class IFObject
 		 */
 		static Ionflux::ObjectBase::IFObject* 
 		create(Ionflux::ObjectBase::IFObject* parentObject = 0);
+		
+		/** Perform operation.
+		 *
+		 * Perform an operation on the object. This provides a very general 
+		 * mechanism to let the object perform an operation. Other objects may
+		 * be passed for use in the operation in the parameter vector. Results
+		 * are stored in the target vector, if it is specified. The operation 
+		 * is identified by a name (a string, usually).
+		 *
+		 * \param opName Operation name.
+		 * \param params Parameters.
+		 * \param target Where to store the result.
+		 *
+		 * \return \c true if the operation succeded, \c false otherwise.
+		 */
+		virtual bool doOp(const Ionflux::ObjectBase::IFOpName& opName, const 
+		Ionflux::ObjectBase::IFObjectVector* params = 0, 
+		Ionflux::ObjectBase::IFObjectVector* target = 0);
+		
+		/** Perform operation.
+		 *
+		 * Perform an operation on the object. This provides a very general 
+		 * mechanism to let the object perform an operation. Other objects may
+		 * be passed for use in the operation in the parameter vector. Results
+		 * are stored in the target vector, if it is specified. The operation 
+		 * is identified by a name (a string, usually).
+		 *
+		 * \param opName Operation name.
+		 * \param params Parameters.
+		 * \param target Where to store the result.
+		 *
+		 * \return \c true if the operation succeded, \c false otherwise.
+		 */
+		virtual bool doOp(const Ionflux::ObjectBase::IFOpName& opName, const 
+		Ionflux::ObjectBase::IFObjectVector* params = 0, 
+		Ionflux::ObjectBase::IFObjectVector* target = 0) const;
 		
 		/** Assignment operator.
 		 *

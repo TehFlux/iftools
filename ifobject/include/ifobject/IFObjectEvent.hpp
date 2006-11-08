@@ -45,7 +45,7 @@ class IFObjectEventClassInfo
 		/// Constructor.
 		IFObjectEventClassInfo();
 		/// Destructor.
-		virtual ~IFObjectEventClassInfo() { };
+		virtual ~IFObjectEventClassInfo();
 };
 
 /** Object event.

@@ -27,6 +27,7 @@
 
 #include <string>
 #include <vector>
+#include "ifobject/types.hpp"
 
 namespace Ionflux
 {
@@ -37,6 +38,47 @@ namespace ObjectBase
 class IFClassInfo;
 
 typedef std::vector<const Ionflux::ObjectBase::IFClassInfo*> IFClassInfoVector;
+ 
+/** Operation parameter info.
+ * \ingroup ifobject
+ */
+struct IFOpParamInfo
+{
+	/// Type.
+	const Ionflux::ObjectBase::IFClassInfo* type;
+	/// Name.
+	std::string name;
+	/// Description.
+	std::string desc;
+	/// Whether the parameter is optional.
+	bool optional;
+	/// Default value.
+	const Ionflux::ObjectBase::IFObject* defaultValue;
+};
+ 
+/** Operation result info.
+ * \ingroup ifobject
+ */
+struct IFOpResultInfo
+{
+	/// Type.
+	const Ionflux::ObjectBase::IFClassInfo* type;
+	/// Description.
+	std::string desc;
+};
+ 
+/** Operation info.
+ * \ingroup ifobject
+ */
+struct IFOpInfo
+{
+	/// Operation name.
+	Ionflux::ObjectBase::IFOpName name;
+	/// Operation parameter information.
+	Ionflux::ObjectBase::IFOpParamInfoVector paramInfo;
+	/// Operation result information.
+	Ionflux::ObjectBase::IFOpResultInfoVector resultInfo;
+};
 
 /** Class information.
  * \ingroup ifobject
@@ -50,6 +92,8 @@ class IFClassInfo
 	protected:
 		/// base class type information.
 		IFClassInfoVector baseClassInfo;
+		/// Information on supported operations.
+		Ionflux::ObjectBase::IFOpNameInfoMap* opInfo;
 		/// class name.
 		std::string name;
 		/// class description.
@@ -119,6 +163,28 @@ class IFClassInfo
 		 */
 		virtual bool isBaseOf(const Ionflux::ObjectBase::IFClassInfo* checkClass,
 		bool recursive = true) const;
+		
+		/** Get operation info records.
+		 *
+		 * Get information about supported operations. The result is a map of 
+		 * operation names to operation information records.
+		 *
+		 * \param target Where to store the information info records.
+		 */
+		virtual void getOpInfo(Ionflux::ObjectBase::IFOpNameInfoMap& target) 
+		const;
+		
+		/** Get operation info record.
+		 *
+		 * Get the information record for an operation by name.
+		 *
+		 * \param opName Operation name.
+		 *
+		 * \return Operation info record, or 0 if the operation is not 
+		 * supported..
+		 */
+		virtual const Ionflux::ObjectBase::IFOpInfo* getOpInfo(const 
+		Ionflux::ObjectBase::IFOpName& opName) const;
 		
 		/** Get class name.
 		 *

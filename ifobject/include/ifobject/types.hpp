@@ -39,6 +39,9 @@ namespace ObjectBase
 
 class IFObject;
 struct IFObjectRefInfo;
+struct IFOpParamInfo;
+struct IFOpResultInfo;
+struct IFOpInfo;
 
 typedef std::string IFObjectID;
 typedef int IFIDNum;
@@ -50,6 +53,10 @@ typedef std::string IFSignalType;
 typedef int IFMutexType;
 typedef sigc::signal_base* IFSignalBase;
 typedef int IFAtomic;
+typedef std::string IFOpName;
+typedef std::vector<IFOpParamInfo> IFOpParamInfoVector;
+typedef std::vector<IFOpResultInfo> IFOpResultInfoVector;
+typedef std::map<IFOpName, const IFOpInfo*> IFOpNameInfoMap;
 
 }
 

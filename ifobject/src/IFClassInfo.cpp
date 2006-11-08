@@ -32,8 +32,10 @@ namespace Ionflux
 namespace ObjectBase
 {
 
+// structure constants
+
 IFClassInfo::IFClassInfo()
-: name("<undefined>"), desc("<undefined>")
+: opInfo(0), name("<undefined>"), desc("<undefined>")
 {
 	// TODO: Nothing ATM. ;-)
 }
@@ -87,6 +89,26 @@ checkClass, bool recursive) const
 	if (checkClass == 0)
 		return false;
 	return checkClass->isDerivedFrom(this, recursive);
+}
+
+void IFClassInfo::getOpInfo(Ionflux::ObjectBase::IFOpNameInfoMap& target) 
+const
+{
+	if (opInfo != 0)
+		target = *opInfo;
+	else
+		target.clear();
+}
+
+const Ionflux::ObjectBase::IFOpInfo* IFClassInfo::getOpInfo(const 
+Ionflux::ObjectBase::IFOpName& opName) const
+{
+	if (opInfo == 0)
+		return 0;
+	IFOpNameInfoMap::const_iterator i = opInfo->find(opName);
+	if (i != opInfo->end())
+		return (*i).second;
+	return 0;
 }
 
 std::string IFClassInfo::getName() const

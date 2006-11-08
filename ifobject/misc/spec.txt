@@ -62,6 +62,13 @@ The Ionflux Object Base System shall provide at least the following features:
 • Object-level locking, if threads are used. This can be enabled on demand or 
   by using IFGuardedObject as base class.
 
+• Operations: Operations may be performed on an IFObject derived type using 
+  other IFObject derived types as parameters and returning an arbitrary 
+  number of objects as result. A single doOp() function is provided as an 
+  interface for invoking any operation. Implementation of operations is 
+  supported using the class templates. Information about supported operations 
+  can be obtained from the IFClassInfo instance.
+
 • Bloat will be avoided where possible.
 
 iftools ≥ 0.2.3 will be required initially to create IFObject based types 

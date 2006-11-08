@@ -42,6 +42,10 @@ IFObjectEventClassInfo::IFObjectEventClassInfo()
 	baseClassInfo.push_back(IFObject::CLASS_INFO);
 }
 
+IFObjectEventClassInfo::~IFObjectEventClassInfo()
+{
+}
+
 // public member constants
 const Ionflux::ObjectBase::IFEventType IFObjectEvent::TYPE_OBJECT_CHANGED = 0;
 const Ionflux::ObjectBase::IFEventType IFObjectEvent::TYPE_OBJECT_ID_NUM_CHANGED = 1;

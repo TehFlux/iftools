@@ -24,7 +24,7 @@
 # 02111-1307 USA
 # 
 # ==========================================================================
-{section checkFeatures}{$haveForwards = 0}{foreach fw in forward}{if fw != ""}{$haveForwards = 1}{/if}{/foreach}{$haveTypedefs = 0}{foreach td in typedef}{if td != ""}{$haveTypedefs = 1}{/if}{/foreach}{$haveEvents = 0}{foreach ev in event}{if ev.id != ""}{$haveEvents = 1}{/if}{/foreach}{$haveSignals = 0}{foreach si in signal}{if si.id != ""}{$haveSignals = 1}{/if}{/foreach}{$haveBaseIFObject = 0}{foreach bc in class.base.ifobject}{if bc.name != ""}{$haveBaseIFObject = 1}{/if}{/foreach}{$haveBaseOther = 0}{foreach bc in class.base.other}{if bc.name != ""}{$haveBaseOther = 1}{/if}{/foreach}{$enableClassInfo = 0}{if ( haveBaseIFObject == 1 ) || ( class.name == "IFObject" )}{$enableClassInfo = 1}{/if}{$enableMutex = 0}{$enableGuards = 0}{$enableAutoGuards = 0}{$enableLogMessage = 0}{$enableSignal = haveSignals}{foreach fe in class.features}{if fe == "mutex"}{$enableMutex = 1}{/if}{if fe == "guards"}{$enableMutex = 1}{$enableGuards = 1}{/if}{if fe == "autoguards"}{$enableMutex = 1}{$enableGuards = 1}{$enableAutoGuards = 1}{/if}{if fe == "logmessage"}{$enableLogMessage = 1}{/if}{if fe == "signal"}{$enableSignal = 1}{/if}{/foreach}{/section}{ref checkFeatures}{section insertGPLDisclaimer}
+{section checkFeatures}{$haveForwards = 0}{foreach fw in forward}{if fw != ""}{$haveForwards = 1}{/if}{/foreach}{$haveTypedefs = 0}{foreach td in typedef}{if td != ""}{$haveTypedefs = 1}{/if}{/foreach}{$haveEvents = 0}{foreach ev in event}{if ev.id != ""}{$haveEvents = 1}{/if}{/foreach}{$haveSignals = 0}{foreach si in signal}{if si.id != ""}{$haveSignals = 1}{/if}{/foreach}{$haveBaseIFObject = 0}{foreach bc in class.base.ifobject}{if bc.name != ""}{$haveBaseIFObject = 1}{/if}{/foreach}{$haveBaseOther = 0}{foreach bc in class.base.other}{if bc.name != ""}{$haveBaseOther = 1}{/if}{/foreach}{$enableClassInfo = 0}{if ( haveBaseIFObject == 1 ) || ( class.name == "IFObject" )}{$enableClassInfo = 1}{/if}{$enableMutex = 0}{$enableGuards = 0}{$enableAutoGuards = 0}{$enableLogMessage = 0}{$enableSignal = haveSignals}{foreach fe in class.features}{if fe == "mutex"}{$enableMutex = 1}{/if}{if fe == "guards"}{$enableMutex = 1}{$enableGuards = 1}{/if}{if fe == "autoguards"}{$enableMutex = 1}{$enableGuards = 1}{$enableAutoGuards = 1}{/if}{if fe == "logmessage"}{$enableLogMessage = 1}{/if}{if fe == "signal"}{$enableSignal = 1}{/if}{/foreach}{$haveOps = 0}{foreach op in operation}{if op.name != ""}{$haveOps = 1}{/if}{/foreach}{/section}{ref checkFeatures}{section insertGPLDisclaimer}
  * =========================================================================
 {swrap 75 " * "}
 This file is part of {$project.name}.
@@ -197,7 +197,66 @@ IF{$ev.id|uppercase(1)}Event* {$class.name}::create{$ev.id|uppercase(1)}Event()
 	IFGuard functionGuard(guardMutex);{/if}
 {if func.impl == ""}	// TODO: Implementation.{else}{$func.impl|swrap(75,'	')}{/if}
 {if func.return.value != ""}	return {$func.return.value};
-{/if}\}{/if}{/section}/* ==========================================================================
+{/if}\}{/if}{/section}{section createOpProxyImpl}
+
+{swrap 75}bool {$class.name}::op{$op.name|uppercase(1)}({foreach prm in op.param}Ionflux::ObjectBase::IFObject* {$prm.name}, {/foreach}Ionflux::ObjectBase::IFObjectVector* target){if op.const != ""} const{/if}{/swrap}
+\{{if op.impl != ""}
+{$op.impl|swrap(75,'	')}{else}
+	// TODO: Implementation.
+	if (target != 0)
+		target.clear();
+	return true;{/if}
+\}{/section}{section createOpDispatchImpl}
+
+bool {$class.name}::opDispatch(const Ionflux::ObjectBase::IFOpName& opName, 
+	const Ionflux::ObjectBase::IFObjectVector* params, 
+	Ionflux::ObjectBase::IFObjectVector* target)
+\{
+	const IFOpInfo* opInfo = CLASS_INFO->getOpInfo(opName);
+	if (opInfo == 0)
+	\{{if haveBaseIFObject == 1}
+		// Try one of the base classes.{foreach bc in class.base.ifobject}{if bc.inheritOps == "true"}
+		if ({$bc.name}::opDispatch(opName, params, target))
+			return true;{/if}{/foreach}{/if}{if enableLogMessage == 1}
+		ostringstream state;
+		state << "Operation not supported: '" << opName << "'.";
+		log(IFLogMessage(state.str(), IFLogMessage::VL_ERROR, 
+			this, "opDispatch"));{else}
+		std::cerr << "[{$class.name}::opDispatch] ERROR: "
+			"Operation not supported: '" << opName << "'.";{/if}
+		return false;
+	\}
+	/* TODO: Implementation:
+	 * + check parameters
+	 * + call the appropriate operation
+	 */
+	return false;
+\}
+
+bool {$class.name}::opDispatch(const Ionflux::ObjectBase::IFOpName& opName, 
+	const Ionflux::ObjectBase::IFObjectVector* params, 
+	Ionflux::ObjectBase::IFObjectVector* target) const
+\{
+	const IFOpInfo* opInfo = CLASS_INFO->getOpInfo(opName);
+	if (opInfo == 0)
+	\{{if haveBaseIFObject == 1}
+		// Try one of the base classes.{foreach bc in class.base.ifobject}{if bc.inheritOps == "true"}
+		if ({$bc.name}::opDispatch(opName, params, target))
+			return true;{/if}{/foreach}{/if}{if enableLogMessage == 1}
+		ostringstream state;
+		state << "Operation not supported: '" << opName << "'.";
+		log(IFLogMessage(state.str(), IFLogMessage::VL_ERROR, 
+			this, "opDispatch"));{else}
+		std::cerr << "[{$class.name}::opDispatch] ERROR: "
+			"Operation not supported: '" << opName << "'.";{/if}
+		return false;
+	\}
+	/* TODO: Implementation:
+	 * + check parameters
+	 * + call the appropriate operation
+	 */
+	return false;
+\}{/section}/* ==========================================================================
  * {$project.name}
  * Copyright © {$project.copyrightYear} {$project.author}
  * {$project.mail}
@@ -215,13 +274,36 @@ namespace {$ns.name}
 // structure constants{/first}{single}
 
 // structure constants{/single}{foreach cn in st.constant}
-const {$cn.type} {$st.name}::{$cn.name} = {$cn.value};{/foreach}{/foreach}{if enableClassInfo == 1}
+const {$cn.type} {$st.name}::{$cn.name} = {$cn.value};{/foreach}{/foreach}{if enableClassInfo == 1}{if haveOps == 1}
+
+// operation info records{foreach op in operation}
+IFOpInfo {$class.name|uppercase(1)}ClassInfo::OP_INFO_{$op.name|uppercase};{/foreach}{/if}
 
 {$class.name|uppercase(1)}ClassInfo::{$class.name|uppercase(1)}ClassInfo()
 \{
 	name = "{$class.name}";
 	desc = "{$class.shortDesc}";{foreach bc in class.base.ifobject}
-	baseClassInfo.push_back({$bc.name}::CLASS_INFO);{/foreach}
+	baseClassInfo.push_back({$bc.name}::CLASS_INFO);{/foreach}{if haveOps == 1}{$haveParams = 0}{$haveResults = 0}{foreach op in operation}{foreach prm in op.param}{first}{$haveParams = 1}{/first}{single}{$haveParams = 1}{/single}{/foreach}{foreach res in op.result}{first}{$haveResults = 1}{/first}{single}{$haveResults = 1}{/single}{/foreach}{/foreach}{if haveParams == 1}
+	IFOpParamInfo currentParam;{/if}{if haveResults == 1}
+	IFOpResultInfo currentResult;{/if}{foreach op in operation}
+	OP_INFO_{$op.name|uppercase}.name = "{$op.name}";{foreach prm in op.param}
+	currentParam.type = {if prm.type != ""}{$prm.type}::CLASS_INFO{else}0{/if};
+	currentParam.name = "{$prm.name}";
+	currentParam.desc = "{$prm.desc}";
+	currentParam.optional = {if prm.optional != ""}{$prm.optional}{else}false{/if};
+	currentParam.defaultValue = {if prm.optional != ""}{$prm.optional}{else}0{/if};
+	OP_INFO_{$op.name|uppercase}.paramInfo.push_back(currentParam);{/foreach}{foreach res in op.result}
+	currentResult.type = {if res.type != ""}{$res.type}::CLASS_INFO{else}0{/if};
+	currentResult.name = "{$prm.name}";
+	currentResult.desc = "{$prm.desc}";
+	OP_INFO_{$op.name|uppercase}.resultInfo.push_back(currentResult);{/foreach}{/foreach}
+	opInfo = new IFOpNameInfoMap();{foreach op in operation}
+	(*opInfo)[OP_INFO_{$op.name|uppercase}.name] = &OP_INFO_{$op.name|uppercase};{/foreach}{/if}
+\}
+
+{$class.name|uppercase(1)}ClassInfo::~{$class.name|uppercase(1)}ClassInfo()
+\{{if haveOps == 1}
+	delete opInfo;{/if}
 \}{/if}{foreach var in variable.private}{if var.spec == "static"}{first}
 
 // static private member variables{/first}{single}
@@ -291,7 +373,7 @@ const Ionflux::ObjectBase::IFClassInfo* {$class.name}::CLASS_INFO = &{$class.nam
 	clear{$prop.element.name|uppercase(1)}s();{/if}{/foreach}{if destructor.impl == ""}
 	// TODO: Nothing ATM. ;-){else}
 {$destructor.impl|swrap(75,'	')}{/if}
-\}{foreach func in function.private}{ref createFuncImpl}{/foreach}{foreach func in function.protected}{ref createFuncImpl}{/foreach}{foreach ev in event}{ref createEventHelperFunctionImpl}{/foreach}{foreach func in function.public}{ref createFuncImpl}{/foreach}{foreach prop in property.private}{ref createPropertyAccessorImpl}{/foreach}{foreach prop in property.protected}{ref createPropertyAccessorImpl}{/foreach}{foreach sig in signal}{foreach ins in sig.instance}
+\}{foreach func in function.private}{ref createFuncImpl}{/foreach}{foreach func in function.protected}{ref createFuncImpl}{/foreach}{foreach op in operation}{ref createOpProxyImpl}{/foreach}{if haveOps == 1}{ref createOpDispatchImpl}{/if}{foreach ev in event}{ref createEventHelperFunctionImpl}{/foreach}{foreach func in function.public}{ref createFuncImpl}{/foreach}{foreach prop in property.private}{ref createPropertyAccessorImpl}{/foreach}{foreach prop in property.protected}{ref createPropertyAccessorImpl}{/foreach}{foreach sig in signal}{foreach ins in sig.instance}
 
 IF{$sig.id|uppercase(1)}Signal& {$class.name}::getSignal{$ins.name|uppercase(1)}()
 \{

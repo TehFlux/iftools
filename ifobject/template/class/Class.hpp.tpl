@@ -24,7 +24,7 @@
 # 02111-1307 USA
 # 
 # ==========================================================================
-{section checkFeatures}{$haveForwards = 0}{foreach fw in forward}{if fw != ""}{$haveForwards = 1}{/if}{/foreach}{$haveTypedefs = 0}{foreach td in typedef}{if td != ""}{$haveTypedefs = 1}{/if}{/foreach}{$haveEvents = 0}{foreach ev in event}{if ev.id != ""}{$haveEvents = 1}{/if}{/foreach}{$haveSignals = 0}{foreach si in signal}{if si.id != ""}{$haveSignals = 1}{/if}{/foreach}{$haveBaseIFObject = 0}{foreach bc in class.base.ifobject}{if bc.name != ""}{$haveBaseIFObject = 1}{/if}{/foreach}{$haveBaseOther = 0}{foreach bc in class.base.other}{if bc.name != ""}{$haveBaseOther = 1}{/if}{/foreach}{$enableClassInfo = 0}{if ( haveBaseIFObject == 1 ) || ( class.name == "IFObject" )}{$enableClassInfo = 1}{/if}{$enableMutex = 0}{$enableGuards = 0}{$enableAutoGuards = 0}{$enableLogMessage = 0}{$enableSignal = haveSignals}{foreach fe in class.features}{if fe == "mutex"}{$enableMutex = 1}{/if}{if fe == "guards"}{$enableMutex = 1}{$enableGuards = 1}{/if}{if fe == "autoguards"}{$enableMutex = 1}{$enableGuards = 1}{$enableAutoGuards = 1}{/if}{if fe == "logmessage"}{$enableLogMessage = 1}{/if}{if fe == "signal"}{$enableSignal = 1}{/if}{/foreach}{/section}{ref checkFeatures}{section insertGPLDisclaimer}
+{section checkFeatures}{$haveForwards = 0}{foreach fw in forward}{if fw != ""}{$haveForwards = 1}{/if}{/foreach}{$haveTypedefs = 0}{foreach td in typedef}{if td != ""}{$haveTypedefs = 1}{/if}{/foreach}{$haveEvents = 0}{foreach ev in event}{if ev.id != ""}{$haveEvents = 1}{/if}{/foreach}{$haveSignals = 0}{foreach si in signal}{if si.id != ""}{$haveSignals = 1}{/if}{/foreach}{$haveBaseIFObject = 0}{foreach bc in class.base.ifobject}{if bc.name != ""}{$haveBaseIFObject = 1}{/if}{/foreach}{$haveBaseOther = 0}{foreach bc in class.base.other}{if bc.name != ""}{$haveBaseOther = 1}{/if}{/foreach}{$enableClassInfo = 0}{if ( haveBaseIFObject == 1 ) || ( class.name == "IFObject" )}{$enableClassInfo = 1}{/if}{$enableMutex = 0}{$enableGuards = 0}{$enableAutoGuards = 0}{$enableLogMessage = 0}{$enableSignal = haveSignals}{foreach fe in class.features}{if fe == "mutex"}{$enableMutex = 1}{/if}{if fe == "guards"}{$enableMutex = 1}{$enableGuards = 1}{/if}{if fe == "autoguards"}{$enableMutex = 1}{$enableGuards = 1}{$enableAutoGuards = 1}{/if}{if fe == "logmessage"}{$enableLogMessage = 1}{/if}{if fe == "signal"}{$enableSignal = 1}{/if}{/foreach}{$haveOps = 0}{foreach op in operation}{if op.name != ""}{$haveOps = 1}{/if}{/foreach}{/section}{ref checkFeatures}{section insertGPLDisclaimer}
  * =========================================================================
 {swrap 75 " * "}This file is part of {$project.name}.
 
@@ -223,12 +223,16 @@ struct IF{$sig.id|uppercase(1)}SignalConnections
 /// Class information for class {$class.name}.
 class {$class.name}ClassInfo
 : public Ionflux::ObjectBase::IFClassInfo
-\{
+\{{if haveOps == 1}
+	protected:{foreach op in operation}
+		// Operation info: {$op.name}.
+		static Ionflux::ObjectBase::IFOpInfo OP_INFO_{$op.name|uppercase};{/foreach}
+		{/if}
 	public:
 		/// Constructor.
 		{$class.name}ClassInfo();
 		/// Destructor.
-		virtual ~{$class.name}ClassInfo() \{ \};
+		virtual ~{$class.name}ClassInfo();
 \};{/if}
 
 /** {$class.title}.{if (class.group.shortDesc == "") && (class.group.name != "")}
@@ -258,18 +262,18 @@ class {$class.name}{if ( haveBaseIFObject == 1 ) || ( haveBaseOther == 1 )}
 		 */
 {swrap 75 "		"}{$func.spec} {$func.type} {$func.name}({foreach prm in func.param}{$prm.type} {$prm.name}{if prm.default != ""} = {$prm.default}{/if}{first}, {/first}{mid}, {/mid}{/foreach}){if func.const == "true"} const{/if}{if func.pureVirtual == "true"} = 0{/if};{/swrap}
 {/foreach}		
-	protected:
-{foreach var in variable.protected}		/// {$var.desc}.
-		{if var.spec != ""}{$var.spec} {/if}{$var.type} {$var.name}{if var.arraySize != ""}[{$var.arraySize}]{/if};
-{/foreach}{foreach prop in property.protected}		/// {$prop.desc}.
-		{if prop.style == "vector"}std::vector<{$prop.element.type}>{else}{if prop.style == "map"}std::map<{$prop.key.type}, {$prop.element.type}>{else}{$prop.type}{/if}{/if} {$prop.name};
-{/foreach}{foreach sig in signal}{foreach ins in sig.instance}		/// Signal: {$ins.desc}.
+	protected:{foreach var in variable.protected}
+		/// {$var.desc}.
+		{if var.spec != ""}{$var.spec} {/if}{$var.type} {$var.name}{if var.arraySize != ""}[{$var.arraySize}]{/if};{/foreach}{foreach prop in property.protected}
+		/// {$prop.desc}.
+		{if prop.style == "vector"}std::vector<{$prop.element.type}>{else}{if prop.style == "map"}std::map<{$prop.key.type}, {$prop.element.type}>{else}{$prop.type}{/if}{/if} {$prop.name};{/foreach}{foreach sig in signal}{foreach ins in sig.instance}
+		/// Signal: {$ins.desc}.
 		IF{$si.id|uppercase(1)}Signal signal{$ins.name|uppercase(1)};
 		/// Signal wrapper: {$ins.desc}.
-		Ionflux::ObjectBase::IFSignal* signal{$ins.name|uppercase(1)}Wrapper;
-{/foreach}{/foreach}{foreach const in constant.protected}		/// {$const.desc}.
-		static const {$const.type} {$const.name};
-{/foreach}{foreach func in function.protected}		
+		Ionflux::ObjectBase::IFSignal* signal{$ins.name|uppercase(1)}Wrapper;{/foreach}{/foreach}{foreach const in constant.protected}
+		/// {$const.desc}.
+		static const {$const.type} {$const.name};{/foreach}{foreach func in function.protected}
+		
 		/** {$func.shortDesc}.{if func.longDesc != ""}
 		 *
 {$func.longDesc|swrap(72,'		 * ')}{/if}{foreach prm in func.param}{first}
@@ -279,22 +283,55 @@ class {$class.name}{if ( haveBaseIFObject == 1 ) || ( haveBaseOther == 1 )}
 		 *
 {swrap 75 "		 * "}\\return {$func.return.desc}.{/swrap}{/if}
 		 */
-{swrap 75 "		"}{$func.spec} {$func.type} {$func.name}({foreach prm in func.param}{$prm.type} {$prm.name}{if prm.default != ""} = {$prm.default}{/if}{first}, {/first}{mid}, {/mid}{/foreach}){if func.const == "true"} const{/if}{if func.pureVirtual == "true"} = 0{/if};{/swrap}
-{/foreach}		
-	public:
-{foreach var in variable.public}		/// {$var.desc}.
-		{if var.spec != ""}{$var.spec} {/if}{$var.type} {$var.name}{if var.arraySize != ""}[{$var.arraySize}]{/if};
-{/foreach}{foreach const in constant.public}		/// {$const.desc}.
-		static const {$const.type} {$const.name};
-{/foreach}{foreach sig in signal}		/// Signal type: {$sig.id}.
+{swrap 75 "		"}{$func.spec} {$func.type} {$func.name}({foreach prm in func.param}{$prm.type} {$prm.name}{if prm.default != ""} = {$prm.default}{/if}{first}, {/first}{mid}, {/mid}{/foreach}){if func.const == "true"} const{/if}{if func.pureVirtual == "true"} = 0{/if};{/swrap}{/foreach}{foreach op in operation}
+		
+		/** Operation proxy: {$op.name}.
+		 *
+		 * Proxy for the '{$op.name}' operation.
+		 *{foreach prm in op.param}
+{swrap 75 "		 * "}\\param {$prm.name} {$prm.desc}.{/swrap}{/foreach}
+		 * \\param target Where to store the result.
+		 */
+{swrap 75 "		"}bool op{$op.name|uppercase(1)}({foreach prm in op.param}Ionflux::ObjectBase::IFObject* {$prm.name}, {/foreach}Ionflux::ObjectBase::IFObjectVector* target = 0){if op.const != ""} const{/if};{/swrap}{/foreach}{if haveOps == 1}
+		
+		/** Operation dispatch.
+		 *
+		 * Default function used for dispatching operations.
+		 *
+		 * \\param opName Operation name.
+		 * \\param params Parameters.
+		 * \\param target Where to store the result.
+		 */
+		bool opDispatch(const Ionflux::ObjectBase::IFOpName& opName, 
+			const Ionflux::ObjectBase::IFObjectVector* params = 0, 
+			Ionflux::ObjectBase::IFObjectVector* target = 0);
+		
+		/** Operation dispatch.
+		 *
+		 * Default function used for dispatching operations.
+		 *
+		 * \\param opName Operation name.
+		 * \\param params Parameters.
+		 * \\param target Where to store the result.
+		 */
+		bool opDispatch(const Ionflux::ObjectBase::IFOpName& opName, 
+			const Ionflux::ObjectBase::IFObjectVector* params = 0, 
+			Ionflux::ObjectBase::IFObjectVector* target = 0) const;{/if}
+		
+	public:{foreach var in variable.public}
+		/// {$var.desc}.
+		{if var.spec != ""}{$var.spec} {/if}{$var.type} {$var.name}{if var.arraySize != ""}[{$var.arraySize}]{/if};{/foreach}{foreach const in constant.public}
+		/// {$const.desc}.
+		static const {$const.type} {$const.name};{/foreach}{foreach sig in signal}
+		/// Signal type: {$sig.id}.
 		static const IFSignalType SIGNAL_TYPE_{$sig.id|uppercase};{foreach ins in sig.instance}
 		/// Signal name: {$ins.id}.
-		static const std::string SIGNAL_NAME_{$ins.id|uppercase};{/foreach}
-{/foreach}{if enableClassInfo == 1}		/// Class information instance.
+		static const std::string SIGNAL_NAME_{$ins.id|uppercase};{/foreach}{/foreach}{if enableClassInfo == 1}
+		/// Class information instance.
 		static const {$class.name}ClassInfo {$class.name|lowercase(1)}ClassInfo;
 		/// Class information.
-		static const Ionflux::ObjectBase::IFClassInfo* CLASS_INFO;
-{/if}		
+		static const Ionflux::ObjectBase::IFClassInfo* CLASS_INFO;{/if}
+		
 		/** Constructor.
 		 *
 		 * Construct new {$class.name} object.
