@@ -730,6 +730,37 @@ Ionflux::ObjectBase::IFObject* IFObject::getLogTarget() const
 	return logTarget;
 }
 
+bool IFObject::serialize(std::string& target) const
+{
+	target.clear();
+	target.append(pack(id));
+	target.append(pack(idNum));
+	return true;
+}
+
+int IFObject::deserialize(const std::string& source, int offset)
+{
+	offset = unpackString(source, id, offset);
+	if (offset < 0)
+	{
+		ostringstream state;
+		state << "Could not deserialize variable 'id'.";
+		log(IFLogMessage(state.str(), IFLogMessage::VL_ERROR, 
+			this, "deserialize"));
+		return false;
+	}
+	offset = unpackInt(source, idNum, offset);
+	if (offset < 0)
+	{
+		ostringstream state;
+		state << "Could not deserialize variable 'idNum'.";
+		log(IFLogMessage(state.str(), IFLogMessage::VL_ERROR, 
+			this, "deserialize"));
+		return false;
+	}
+	return offset;
+}
+
 IFObjectSignal& IFObject::getSignalObjectChanged()
 {
 	return signalObjectChanged;

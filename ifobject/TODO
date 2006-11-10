@@ -6,22 +6,21 @@ mail@ionflux.org
 Todo
 ================================================================================
 
-• Create templates for automatically creating configuration files for event 
-  and signal proxy classes (done for event classes; low priority for signal 
-  proxy classes).
-
 • Implement and test the remaining parts of the Ionflux Object Base System:
 
-  ▪ IFObject (implementation done)
-  ▪ IFLogMessage (implementation done)
-  ▪ IFSignal (implementation done)
-  ▪ IFObjectEvent (created automatically using new templates, 
-    implementation done)
-  ▪ IFObjectSignalProxy (created automatically using new templates, 
-    low priority)
-  ▪ IFThread (implementation done)
-  ▪ IFMutex (implementation done)
+  ▪ IFObjectSignalProxy (created automatically using ifclassgen)
 
-• Add serialize() and deserialize() functions to the IFObject interface.
+• Add features to IFExampleClass:
+
+  ▪ operations
+  ▪ serialization
+
+• Add tests for packing and serialization.
+
+• Add an API to create and deserialize a complete representation of the 
+  persistent state of an object.
+  
+  ▪ support for base64 encoding
+  ▪ parseable prefix
 
 • More testing.

@@ -24,7 +24,7 @@
 # 02111-1307 USA
 # 
 # ==========================================================================
-{section checkFeatures}{$haveForwards = 0}{foreach fw in forward}{if fw != ""}{$haveForwards = 1}{/if}{/foreach}{$haveTypedefs = 0}{foreach td in typedef}{if td != ""}{$haveTypedefs = 1}{/if}{/foreach}{$haveEvents = 0}{foreach ev in event}{if ev.id != ""}{$haveEvents = 1}{/if}{/foreach}{$haveSignals = 0}{foreach si in signal}{if si.id != ""}{$haveSignals = 1}{/if}{/foreach}{$haveBaseIFObject = 0}{foreach bc in class.base.ifobject}{if bc.name != ""}{$haveBaseIFObject = 1}{/if}{/foreach}{$haveBaseOther = 0}{foreach bc in class.base.other}{if bc.name != ""}{$haveBaseOther = 1}{/if}{/foreach}{$enableClassInfo = 0}{if ( haveBaseIFObject == 1 ) || ( class.name == "IFObject" )}{$enableClassInfo = 1}{/if}{$enableMutex = 0}{$enableGuards = 0}{$enableAutoGuards = 0}{$enableLogMessage = 0}{$enableSignal = haveSignals}{foreach fe in class.features}{if fe == "mutex"}{$enableMutex = 1}{/if}{if fe == "guards"}{$enableMutex = 1}{$enableGuards = 1}{/if}{if fe == "autoguards"}{$enableMutex = 1}{$enableGuards = 1}{$enableAutoGuards = 1}{/if}{if fe == "logmessage"}{$enableLogMessage = 1}{/if}{if fe == "signal"}{$enableSignal = 1}{/if}{/foreach}{$haveOps = 0}{foreach op in operation}{if op.name != ""}{$haveOps = 1}{/if}{/foreach}{/section}{ref checkFeatures}{section insertGPLDisclaimer}
+{section checkFeatures}{$haveForwards = 0}{foreach fw in forward}{if fw != ""}{$haveForwards = 1}{/if}{/foreach}{$haveTypedefs = 0}{foreach td in typedef}{if td != ""}{$haveTypedefs = 1}{/if}{/foreach}{$haveEvents = 0}{foreach ev in event}{if ev.id != ""}{$haveEvents = 1}{/if}{/foreach}{$haveSignals = 0}{foreach si in signal}{if si.id != ""}{$haveSignals = 1}{/if}{/foreach}{$haveBaseIFObject = 0}{foreach bc in class.base.ifobject}{if bc.name != ""}{$haveBaseIFObject = 1}{/if}{/foreach}{$haveBaseOther = 0}{foreach bc in class.base.other}{if bc.name != ""}{$haveBaseOther = 1}{/if}{/foreach}{$enableClassInfo = 0}{if ( haveBaseIFObject == 1 ) || ( class.name == "IFObject" )}{$enableClassInfo = 1}{/if}{$enableMutex = 0}{$enableGuards = 0}{$enableAutoGuards = 0}{$enableLogMessage = 0}{$enableSignal = haveSignals}{$enableSerialize = 0}{foreach fe in class.features}{if fe == "mutex"}{$enableMutex = 1}{/if}{if fe == "guards"}{$enableMutex = 1}{$enableGuards = 1}{/if}{if fe == "autoguards"}{$enableMutex = 1}{$enableGuards = 1}{$enableAutoGuards = 1}{/if}{if fe == "logmessage"}{$enableLogMessage = 1}{/if}{if fe == "signal"}{$enableSignal = 1}{/if}{if fe == "serialize"}{$enableSerialize = 1}{/if}{/foreach}{$haveOps = 0}{foreach op in operation}{if op.name != ""}{$haveOps = 1}{/if}{/foreach}{/section}{ref checkFeatures}{section insertGPLDisclaimer}
  * =========================================================================
 {swrap 75 " * "}
 This file is part of {$project.name}.
@@ -389,7 +389,35 @@ bool {$class.name}::opDispatch(const Ionflux::ObjectBase::IFOpName& opName,
 		"implementation available for the operation, but the object on "
 		"which the operation has been called is const).";{/if}
 	return false;
-\}{/section}/* ==========================================================================
+\}{/section}{section serializeProp}{if prop.serializeImpl != ""}
+{$prop.serializeImpl|swrap(75,'	')}{else}{if ( prop.type == "int" ) || ( prop.type == "unsigned int" ) || ( prop.type == "bool" ) || ( prop.type == "string" )}
+	target.append(pack({$prop.name}));{/if}{/if}{/section}{section serializeVar}{if var.serializeImpl != ""}
+{$var.serializeImpl|swrap(75,'	')}{else}{if ( var.type == "int" ) || ( var.type == "unsigned int" ) || ( var.type == "bool" ) || ( var.type == "string" )}
+	target.append(pack({$var.name}));{/if}{/if}{/section}{section deserializeProp}{if prop.deserializeImpl != ""}
+{$prop.deserializeImpl|swrap(75,'	')}{else}{if ( prop.type == "int" ) || ( prop.type == "unsigned int" ) || ( prop.type == "bool" ) || (prop.type == "std::string")}
+	offset = unpack{if prop.type == "int"}Int{/if}{if prop.type == "unsigned int"}UInt{/if}{if prop.type == "bool"}Bool{/if}{if prop.type == "std::string"}String{/if}(source, {$prop.name}, offset);{/if}{/if}
+	if (offset < 0)
+	\{{if enableLogMessage == 1}
+		ostringstream state;
+		state << "Could not deserialize property '{$prop.name}'.";
+		log(IFLogMessage(state.str(), IFLogMessage::VL_ERROR, 
+			this, "deserialize"));{else}
+		std::cerr << "[{$class.name}::deserialize] ERROR: "
+			"Could not deserialize property '{$prop.name}'.";{/if}
+		return false;
+	\}{/section}{section deserializeVar}{if var.deserializeImpl != ""}
+{$var.deserializeImpl|swrap(75,'	')}{else}{if ( var.type == "int" ) || ( var.type == "unsigned int" ) || ( var.type == "bool" ) || (var.type == "std::string")}
+	offset = unpack{if var.type == "int"}Int{/if}{if var.type == "unsigned int"}UInt{/if}{if var.type == "bool"}Bool{/if}{if var.type == "std::string"}String{/if}(source, {$var.name}, offset);{/if}{/if}
+	if (offset < 0)
+	\{{if enableLogMessage == 1}
+		ostringstream state;
+		state << "Could not deserialize variable '{$var.name}'.";
+		log(IFLogMessage(state.str(), IFLogMessage::VL_ERROR, 
+			this, "deserialize"));{else}
+		std::cerr << "[{$class.name}::deserialize] ERROR: "
+			"Could not deserialize variable '{$var.name}'.";{/if}
+		return false;
+	\}{/section}/* ==========================================================================
  * {$project.name}
  * Copyright © {$project.copyrightYear} {$project.author}
  * {$project.mail}
@@ -506,7 +534,23 @@ const Ionflux::ObjectBase::IFClassInfo* {$class.name}::CLASS_INFO = &{$class.nam
 	clear{$prop.element.name|uppercase(1)}s();{/if}{/foreach}{if destructor.impl == ""}
 	// TODO: Nothing ATM. ;-){else}
 {$destructor.impl|swrap(75,'	')}{/if}
-\}{foreach func in function.private}{ref createFuncImpl}{/foreach}{foreach func in function.protected}{ref createFuncImpl}{/foreach}{foreach op in operation}{ref createOpProxyImpl}{/foreach}{if haveOps == 1}{ref createOpDispatchImpl}{/if}{foreach ev in event}{ref createEventHelperFunctionImpl}{/foreach}{foreach func in function.public}{ref createFuncImpl}{/foreach}{foreach prop in property.private}{ref createPropertyAccessorImpl}{/foreach}{foreach prop in property.protected}{ref createPropertyAccessorImpl}{/foreach}{foreach sig in signal}{foreach ins in sig.instance}
+\}{foreach func in function.private}{ref createFuncImpl}{/foreach}{foreach func in function.protected}{ref createFuncImpl}{/foreach}{foreach op in operation}{ref createOpProxyImpl}{/foreach}{if haveOps == 1}{ref createOpDispatchImpl}{/if}{foreach ev in event}{ref createEventHelperFunctionImpl}{/foreach}{foreach func in function.public}{ref createFuncImpl}{/foreach}{foreach prop in property.private}{ref createPropertyAccessorImpl}{/foreach}{foreach prop in property.protected}{ref createPropertyAccessorImpl}{/foreach}{if enableSerialize == 1}
+
+bool {$class.name}::serialize(std::string& target) const
+\{{if haveBaseIFObject == 1}{foreach bc in class.base.ifobject}
+	if (!{$bc.name}::serialize(target))
+		return false;{/foreach}{/if}
+	target.clear();{foreach prop in property.private}{if prop.serialize == "true"}{ref serializeProp}{/if}{/foreach}{foreach prop in property.protected}{if prop.serialize == "true"}{ref serializeProp}{/if}{/foreach}{foreach var in variable.private}{if var.serialize == "true"}{ref serializeVar}{/if}{/foreach}{foreach var in variable.protected}{if var.serialize == "true"}{ref serializeVar}{/if}{/foreach}{foreach var in variable.public}{if var.serialize == "true"}{ref serializeVar}{/if}{/foreach}
+	return true;
+\}
+
+int {$class.name}::deserialize(const std::string& source, int offset)
+\{{if haveBaseIFObject == 1}{foreach bc in class.base.ifobject}
+	offset = {$bc.name}::deserialize(source, offset);
+	if (offset < 0)
+		return false;{/foreach}{/if}{foreach prop in property.private}{if prop.serialize == "true"}{ref deserializeProp}{/if}{/foreach}{foreach prop in property.protected}{if prop.serialize == "true"}{ref deserializeProp}{/if}{/foreach}{foreach var in variable.private}{if var.serialize == "true"}{ref deserializeVar}{/if}{/foreach}{foreach var in variable.protected}{if var.serialize == "true"}{ref deserializeVar}{/if}{/foreach}{foreach var in variable.public}{if var.serialize == "true"}{ref deserializeVar}{/if}{/foreach}
+	return offset;
+\}{/if}{foreach sig in signal}{foreach ins in sig.instance}
 
 IF{$sig.id|uppercase(1)}Signal& {$class.name}::getSignal{$ins.name|uppercase(1)}()
 \{

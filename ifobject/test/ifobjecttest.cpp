@@ -83,12 +83,16 @@ int main(int argc, char* argv[])
 		idCount++;
 	}
 	cout << "Done." << endl;
+	cout << "Testing operation 'log'... " << endl;
+	IFObjectVector opParams;
+	opParams.push_back(objects[1]);
+	objects[0]->doOp("log", &opParams);
+	cout << "Done." << endl;
 	cout << "Adding local references... " << endl;
 	cout << "    -> object[1] will be managed by object[0]" << endl;
 	objects[0]->addLocalRef(objects[1]);
 	objects[1] = 0;
 	cout << "Done." << endl;
-	// TODO: More tests.
 	cout << "Destroying objects... ";
 	for (IFObjectVector::iterator i = objects.begin(); 
 		i != objects.end(); i++)
