@@ -42,22 +42,25 @@ void printHelp()
 {
 	cerr << "Usage: ifclassgen [options] <class name>\n"
 		"Options:\n"
-		"  -t, --templatedir <dir>   Class template directory\n"
-		"                            (default: template/class).\n"
-		"  -c, --configdir <dir>     Class configuration directory\n"
-		"                            (default: conf/class).\n"
-		"  -m  --merge <list>        Whitespace separated list of\n"
-		"                            configuration files to be merged.\n"
-		"                            files to be merged.\n"
-		"  -i --includedir           Output directory for header files\n"
-		"                            (default: include).\n"
-		"  -s --srcdir               Output directory for implementation\n"
-		"                            files (default: src).\n"
-		"  -e --genevents            Generate event classes.\n"
-		"  --eventtemplate <file>    Event configuration template file\n"
-		"                            (default: template/event.conf.tpl)"
-		"  -h, --help                Print this help.\n"
-		"  -v, --version             Print version information."
+		"  -t, --templatedir <dir>        Class template directory\n"
+		"                                 (default: template/class).\n"
+		"  -c, --configdir <dir>          Class configuration directory\n"
+		"                                 (default: conf/class).\n"
+		"  -m  --merge <list>             Whitespace separated list of\n"
+		"                                 configuration files to be merged.\n"
+		"                                 files to be merged.\n"
+		"  -i --includedir                Output directory for header files\n"
+		"                                 (default: include).\n"
+		"  -s --srcdir                    Output directory for implementation\n"
+		"                                 files (default: src).\n"
+		"  -e --genevents                 Generate event classes.\n"
+		"  --eventtemplate <file>         Event configuration template file\n"
+		"                                 (default: template/event.conf.tpl)"
+		"  -p --gensignalproxies          Generate signal proxies.\n"
+		"  --signalproxytemplate <file>   Signal proxy configuration template file\n"
+		"                                 (default: template/signalproxy.conf.tpl)"
+		"  -h, --help                     Print this help.\n"
+		"  -v, --version                  Print version information."
 	<< endl;
 }
 
@@ -91,6 +94,9 @@ int main(int argc, char* argv[])
 	args.addAcceptableOption("e", false);
 	args.addAcceptableOption("genevents", false);
 	args.addAcceptableOption("eventtemplate", true);
+	args.addAcceptableOption("p", false);
+	args.addAcceptableOption("gensignalproxies", false);
+	args.addAcceptableOption("signalproxytemplate", true);
 	args.setArgs(argc, argv);
 	if (!args.optionsOK())
 	{
@@ -166,6 +172,15 @@ int main(int argc, char* argv[])
 		eventTplFile = eventTplOpt->value;
 	else
 		eventTplFile = "template/event.conf.tpl";
+	bool generateSignalProxies = false;
+	if (args.isSet("p") || args.isSet("gensignalproxies"))
+		generateSignalProxies = true;
+	CLOption* signalProxyTplOpt = args.getOption("signalproxytemplate");
+	string signalProxyTplFile;
+	if (signalProxyTplOpt != 0)
+		signalProxyTplFile = signalProxyTplOpt->value;
+	else
+		signalProxyTplFile = "template/signalproxy.conf.tpl";
 	cerr << "Ionflux Object Base system class generator 0.0.1" << endl;
 	ConfigTree config;
 	File currentFile;
@@ -300,6 +315,7 @@ int main(int argc, char* argv[])
 				Node eventConfNode;
 				eventConfNode.setAutoCreate(true);
 				eventConfNode.setIndexMode(Node::INDEX_MODE_NODE);
+				eventConfNode["parentClass"] = configRoot["class"];
 				eventConfNode["___datetime"].setData(now.getTimestamp());
 				eventConfNode["___rfc_datetime"].setData(now.getRFCTimestamp());
 				eventConfNode.merge(mergeConf);
@@ -342,6 +358,82 @@ int main(int argc, char* argv[])
 				cerr << "    Writing implementation file to '" << status.str() 
 					<< "'... ";
 				writeFile(status.str(), eventImpl, 'w');
+				cerr << "done." << endl;
+				cerr << "  Done." << endl;
+			}
+		}
+		cerr << "Done." << endl;
+	}
+	// Generate signal proxy classes.
+	if (generateSignalProxies)
+	{
+		currentFile.setFullName(signalProxyTplFile);
+		if (!currentFile.isValid())
+		{
+			cerr << "ERROR: Signal proxy configuration template file '" 
+				<< signalProxyTplFile << "' not found." << endl;
+			return -1;
+		}
+		string signalProxyConfTpl = readFile(signalProxyTplFile);
+		Node& signalNode = configRoot["signal"];
+		Node* currentSignal = 0;
+		unsigned int numSignals = signalNode.getNumChildren();
+		cerr << "Generating signal proxy classes... " << endl;
+		for (unsigned int i = 0; i < numSignals; i++)
+		{
+			currentSignal = signalNode.getChild(i);
+			if (currentSignal != 0)
+			{
+				Node signalProxyConfNode;
+				signalProxyConfNode.setAutoCreate(true);
+				signalProxyConfNode.setIndexMode(Node::INDEX_MODE_NODE);
+				signalProxyConfNode["parentClass"] = configRoot["class"];
+				signalProxyConfNode["___datetime"].setData(now.getTimestamp());
+				signalProxyConfNode["___rfc_datetime"].setData(
+					now.getRFCTimestamp());
+				signalProxyConfNode.merge(mergeConf);
+				signalProxyConfNode.merge(*currentSignal);
+				/* Create additional configuration using the global 
+				   configuration and the signal proxy configuration. */
+				string signalProxyConf = tpl.process(signalProxyConfTpl,
+					&signalProxyConfNode);
+				ConfigTree processedSignalProxyConf;
+				processedSignalProxyConf.parseConfig(signalProxyConf);
+				signalProxyConfNode.merge(*processedSignalProxyConf.getRoot());
+				string signalProxyClassName = signalProxyConfNode["class"]
+					["name"].getData();
+				if (signalProxyClassName.size() == 0)
+				{
+					cerr << "ERROR: Signal proxy class name not found "
+						"(it should be available in the configuration as "
+						"class.name)." << endl;
+					return -1;
+				}
+				if (!isIdentifier(signalProxyClassName))
+				{
+					cerr << "ERROR: Invalid characters in signal proxy "
+						"class name." << endl;
+					return -1;
+				}
+				cerr << "  Creating signal proxy class '" 
+					<< signalProxyClassName << "'..." << endl;
+				string signalProxyHeader = tpl.process(headerTpl,
+					&signalProxyConfNode);
+				status.str("");
+				status << appendDirSeparator(includeDir) 
+					<< signalProxyClassName << ".hpp";
+				cerr << "    Writing header file to '" << status.str() 
+					<< "'... ";
+				writeFile(status.str(), signalProxyHeader, 'w');
+				cerr << "done." << endl;
+				string signalProxyImpl = tpl.process(implTpl,
+					&signalProxyConfNode);
+				status.str("");
+				status << appendDirSeparator(srcDir) << signalProxyClassName 
+					<< ".cpp";
+				cerr << "    Writing implementation file to '" << status.str() 
+					<< "'... ";
+				writeFile(status.str(), signalProxyImpl, 'w');
 				cerr << "done." << endl;
 				cerr << "  Done." << endl;
 			}

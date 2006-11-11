@@ -73,7 +73,7 @@ class IFThreadClassInfo
 		/// Constructor.
 		IFThreadClassInfo();
 		/// Destructor.
-		virtual ~IFThreadClassInfo() { };
+		virtual ~IFThreadClassInfo();
 };
 
 /** Thread.

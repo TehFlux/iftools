@@ -129,23 +129,27 @@ ifobjectLibHeaders = ['include/ifobject/types.hpp',
 	'include/ifobject/IFClassInfo.hpp',
 	'include/ifobject/IFObject.hpp',
 	'include/ifobject/IFObjectEvent.hpp',
+	'include/ifobject/IFObjectSignalProxy.hpp',
 	'include/ifobject/IFMutex.hpp',
 	'include/ifobject/IFGuard.hpp',
 	'include/ifobject/IFSignal.hpp',
 	'include/ifobject/IFLogMessage.hpp',
 	'include/ifobject/IFThread.hpp',
-	'include/ifobject/IFThreadEvent.hpp']
+	'include/ifobject/IFThreadEvent.hpp',
+	'include/ifobject/IFObjectSignalProxy.hpp']
 
 ifobjectLibSources = ['build/serialize.cpp',
 	'build/IFClassInfo.cpp',
 	'build/IFObject.cpp',
 	'build/IFObjectEvent.cpp',
+	'build/IFObjectSignalProxy.cpp',
 	'build/IFMutex.cpp',
 	'build/IFGuard.cpp',
 	'build/IFSignal.cpp',
 	'build/IFLogMessage.cpp',
 	'build/IFThread.cpp',
-	'build/IFThreadEvent.cpp']
+	'build/IFThreadEvent.cpp',
+	'build/IFThreadSignalProxy.cpp']
 
 ifobjectLib = ifobjectenv.SharedLibrary('lib/ifobject',
     ifobjectLibSources,

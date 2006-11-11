@@ -6,14 +6,11 @@ mail@ionflux.org
 Todo
 ================================================================================
 
-• Implement and test the remaining parts of the Ionflux Object Base System:
-
-  ▪ IFObjectSignalProxy (created automatically using ifclassgen)
-
 • Add features to IFExampleClass:
 
   ▪ operations
   ▪ serialization
+  ▪ signal proxy options (includes, return type, default implementation etc.)
 
 • Add tests for packing and serialization.
 

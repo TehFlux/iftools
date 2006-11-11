@@ -47,6 +47,10 @@ IFThreadClassInfo::IFThreadClassInfo()
 	baseClassInfo.push_back(IFObject::CLASS_INFO);
 }
 
+IFThreadClassInfo::~IFThreadClassInfo()
+{
+}
+
 // public member constants
 const IFAtomic IFThread::SHUTDOWN_DISABLED = 0;
 const IFAtomic IFThread::SHUTDOWN_ENABLED = 1;

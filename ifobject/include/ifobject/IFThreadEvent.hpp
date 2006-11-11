@@ -45,7 +45,7 @@ class IFThreadEventClassInfo
 		/// Constructor.
 		IFThreadEventClassInfo();
 		/// Destructor.
-		virtual ~IFThreadEventClassInfo() { };
+		virtual ~IFThreadEventClassInfo();
 };
 
 /** Thread event.

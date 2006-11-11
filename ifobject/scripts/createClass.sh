@@ -25,4 +25,4 @@
 # 02111-1307 USA
 # 
 # ==========================================================================
-bin/ifclassgen -e -m conf/main.conf -i include/ifobject $1
+bin/ifclassgen -e -p -m conf/main.conf -i include/ifobject $1

@@ -42,6 +42,10 @@ IFThreadEventClassInfo::IFThreadEventClassInfo()
 	baseClassInfo.push_back(IFObject::CLASS_INFO);
 }
 
+IFThreadEventClassInfo::~IFThreadEventClassInfo()
+{
+}
+
 // public member constants
 const Ionflux::ObjectBase::IFEventType IFThreadEvent::TYPE_UNDEFINED = 0;
 const Ionflux::ObjectBase::IFEventType IFThreadEvent::TYPE_START = 1;
