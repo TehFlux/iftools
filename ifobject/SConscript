@@ -124,7 +124,8 @@ ifobjectenv = Environment(
     CCFLAGS = mainccflags)
 
 # IFObject library
-ifobjectLibHeaders = ['include/ifobject/types.hpp',
+ifobjectLibHeaders = ['include/ifobject/libb64.hpp',
+	'include/ifobject/types.hpp',
 	'include/ifobject/serialize.hpp',
 	'include/ifobject/IFClassInfo.hpp',
 	'include/ifobject/IFObject.hpp',
@@ -138,7 +139,8 @@ ifobjectLibHeaders = ['include/ifobject/types.hpp',
 	'include/ifobject/IFThreadEvent.hpp',
 	'include/ifobject/IFObjectSignalProxy.hpp']
 
-ifobjectLibSources = ['build/serialize.cpp',
+ifobjectLibSources = ['build/libb64.cpp',
+	'build/serialize.cpp',
 	'build/IFClassInfo.cpp',
 	'build/IFObject.cpp',
 	'build/IFObjectEvent.cpp',

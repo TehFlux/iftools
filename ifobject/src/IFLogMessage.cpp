@@ -45,6 +45,10 @@ IFLogMessageClassInfo::IFLogMessageClassInfo()
 	baseClassInfo.push_back(IFObject::CLASS_INFO);
 }
 
+IFLogMessageClassInfo::~IFLogMessageClassInfo()
+{
+}
+
 // public member constants
 const Ionflux::ObjectBase::IFVerbosityLevel IFLogMessage::VL_ASSERTION = -60;
 const Ionflux::ObjectBase::IFVerbosityLevel IFLogMessage::VL_SILENT = -50;
@@ -302,6 +306,46 @@ std::string IFLogMessage::getSourceFunctionName() const
 {
 	IFGuard propertyGuard(guardMutex);
 	return sourceFunctionName;
+}
+
+bool IFLogMessage::serialize(std::string& target) const
+{
+	if (!IFObject::serialize(target))
+		return false;
+	target.clear();
+	target.append(pack(message));
+	target.append(pack(level));
+	target.append(pack(sourceFunctionName));
+	return true;
+}
+
+int IFLogMessage::deserialize(const std::string& source, int offset)
+{
+	offset = IFObject::deserialize(source, offset);
+	if (offset < 0)
+		return false;
+	offset = unpackString(source, message, offset);
+	if (offset < 0)
+	{
+		std::cerr << "[IFLogMessage::deserialize] ERROR: "
+			"Could not deserialize property 'message'.";
+		return false;
+	}
+	offset = unpackInt(source, level, offset);
+	if (offset < 0)
+	{
+		std::cerr << "[IFLogMessage::deserialize] ERROR: "
+			"Could not deserialize property 'level'.";
+		return false;
+	}
+	offset = unpackString(source, sourceFunctionName, offset);
+	if (offset < 0)
+	{
+		std::cerr << "[IFLogMessage::deserialize] ERROR: "
+			"Could not deserialize property 'sourceFunctionName'.";
+		return false;
+	}
+	return offset;
 }
 
 }

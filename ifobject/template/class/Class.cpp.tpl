@@ -390,10 +390,12 @@ bool {$class.name}::opDispatch(const Ionflux::ObjectBase::IFOpName& opName,
 		"which the operation has been called is const).";{/if}
 	return false;
 \}{/section}{section serializeProp}{if prop.serializeImpl != ""}
-{$prop.serializeImpl|swrap(75,'	')}{else}{if ( prop.type == "int" ) || ( prop.type == "unsigned int" ) || ( prop.type == "bool" ) || ( prop.type == "string" )}
-	target.append(pack({$prop.name}));{/if}{/if}{/section}{section serializeVar}{if var.serializeImpl != ""}
-{$var.serializeImpl|swrap(75,'	')}{else}{if ( var.type == "int" ) || ( var.type == "unsigned int" ) || ( var.type == "bool" ) || ( var.type == "string" )}
-	target.append(pack({$var.name}));{/if}{/if}{/section}{section deserializeProp}{if prop.deserializeImpl != ""}
+{$prop.serializeImpl|swrap(75,'	')}{else}{if ( prop.type == "int" ) || ( prop.type == "unsigned int" ) || ( prop.type == "bool" ) || ( prop.type == "std::string" )}
+	target.append(pack({$prop.name}));{else}
+	// TODO: serialization of property '{$prop.name}'{/if}{/if}{/section}{section serializeVar}{if var.serializeImpl != ""}
+{$var.serializeImpl|swrap(75,'	')}{else}{if ( var.type == "int" ) || ( var.type == "unsigned int" ) || ( var.type == "bool" ) || ( var.type == "std::string" )}
+	target.append(pack({$var.name}));{else}
+	// TODO: serialization of variable '{$prop.name}'{/if}{/if}{/section}{section deserializeProp}{if prop.deserializeImpl != ""}
 {$prop.deserializeImpl|swrap(75,'	')}{else}{if ( prop.type == "int" ) || ( prop.type == "unsigned int" ) || ( prop.type == "bool" ) || (prop.type == "std::string")}
 	offset = unpack{if prop.type == "int"}Int{/if}{if prop.type == "unsigned int"}UInt{/if}{if prop.type == "bool"}Bool{/if}{if prop.type == "std::string"}String{/if}(source, {$prop.name}, offset);{/if}{/if}
 	if (offset < 0)
