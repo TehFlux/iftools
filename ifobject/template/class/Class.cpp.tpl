@@ -390,14 +390,12 @@ bool {$class.name}::opDispatch(const Ionflux::ObjectBase::IFOpName& opName,
 		"which the operation has been called is const).";{/if}
 	return false;
 \}{/section}{section serializeProp}{if prop.serializeImpl != ""}
-{$prop.serializeImpl|swrap(75,'	')}{else}{if ( prop.type == "int" ) || ( prop.type == "unsigned int" ) || ( prop.type == "bool" ) || ( prop.type == "std::string" )}
-	target.append(pack({$prop.name}));{else}
-	// TODO: serialization of property '{$prop.name}'{/if}{/if}{/section}{section serializeVar}{if var.serializeImpl != ""}
-{$var.serializeImpl|swrap(75,'	')}{else}{if ( var.type == "int" ) || ( var.type == "unsigned int" ) || ( var.type == "bool" ) || ( var.type == "std::string" )}
-	target.append(pack({$var.name}));{else}
-	// TODO: serialization of variable '{$prop.name}'{/if}{/if}{/section}{section deserializeProp}{if prop.deserializeImpl != ""}
-{$prop.deserializeImpl|swrap(75,'	')}{else}{if ( prop.type == "int" ) || ( prop.type == "unsigned int" ) || ( prop.type == "bool" ) || (prop.type == "std::string")}
-	offset = unpack{if prop.type == "int"}Int{/if}{if prop.type == "unsigned int"}UInt{/if}{if prop.type == "bool"}Bool{/if}{if prop.type == "std::string"}String{/if}(source, {$prop.name}, offset);{/if}{/if}
+{$prop.serializeImpl|swrap(75,'	')}{else}
+	pack({$prop.name}, target);{/if}{/section}{section serializeVar}{if var.serializeImpl != ""}
+{$var.serializeImpl|swrap(75,'	')}{else}
+	pack({$var.name}, target);{/if}{/section}{section deserializeProp}{if prop.deserializeImpl != ""}
+{$prop.deserializeImpl|swrap(75,'	')}{else}
+	offset = unpack(source, {$prop.name}, offset);{/if}
 	if (offset < 0)
 	\{{if enableLogMessage == 1}
 		ostringstream state;
@@ -408,8 +406,8 @@ bool {$class.name}::opDispatch(const Ionflux::ObjectBase::IFOpName& opName,
 			"Could not deserialize property '{$prop.name}'.";{/if}
 		return false;
 	\}{/section}{section deserializeVar}{if var.deserializeImpl != ""}
-{$var.deserializeImpl|swrap(75,'	')}{else}{if ( var.type == "int" ) || ( var.type == "unsigned int" ) || ( var.type == "bool" ) || (var.type == "std::string")}
-	offset = unpack{if var.type == "int"}Int{/if}{if var.type == "unsigned int"}UInt{/if}{if var.type == "bool"}Bool{/if}{if var.type == "std::string"}String{/if}(source, {$var.name}, offset);{/if}{/if}
+{$var.deserializeImpl|swrap(75,'	')}{else}
+	offset = unpack(source, {$var.name}, offset);{/if}
 	if (offset < 0)
 	\{{if enableLogMessage == 1}
 		ostringstream state;

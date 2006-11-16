@@ -12,8 +12,6 @@ Todo
   ▪ serialization
   ▪ signal proxy options (includes, return type, default implementation etc.)
 
-• Add tests for packing and serialization.
-
 • Add an API to create and deserialize a complete representation of the 
   persistent state of an object.
   

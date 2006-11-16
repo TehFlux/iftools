@@ -31,74 +31,30 @@ namespace Ionflux
 namespace ObjectBase
 {
 
-std::string pack(bool source)
+void pack(const std::string& source, std::string& target, bool append)
 {
-	if (source)
-		return "\1";
-	return "\0";
-}
-
-std::string pack(int source)
-{
-	return pack(static_cast<unsigned int>(source));
-}
-
-std::string pack(unsigned int source)
-{
-	std::string result = "\0\0\0\0";
-	for (int i = 0; i < 4; i++)
-		result[i] = source & (0xff << (2 * i));
-	return result;
-}
-
-std::string pack(const std::string& source)
-{
-	std::string result = pack(source.size());
-	result.append(source);
-	return result;
-}
-
-int unpackBool(const std::string source, bool& target, int offset)
-{
-	if (static_cast<unsigned int>(offset) >= source.size())
-		return -1;
-	if (source[offset] == '\1')
-		target = true;
+	std::string buffer;
+	pack(static_cast<unsigned int>(source.size()), buffer, false);
+	buffer.append(source);
+	if (append)
+		target.append(buffer);
 	else
-		target = false;
-	return offset + 1;
+		target = buffer;
 }
 
-int unpackInt(const std::string source, int& target, int offset)
+int unpack(const std::string& source, std::string& target, 
+	int offset)
 {
-	unsigned int value = 0;
-	if (unpackUInt(source, value, offset) == -1)
+	unsigned int dataSize = 0;
+	offset = unpack(source, dataSize, offset);
+	if ((offset == -1)
+		|| ((offset + dataSize) > source.size()))
 		return -1;
-	target = static_cast<int>(value);
-	return offset + 4;
+	target = source.substr(offset, dataSize);
+	offset += dataSize;
+	return offset;
 }
 
-int unpackUInt(const std::string source, unsigned int& target, int offset)
-{
-	if ((static_cast<unsigned int>(offset) + 3) >= source.size())
-		return -1;
-	target = 0;
-	for (int i = 0; i < 4; i++)
-		target |= ((source[offset + i] & 0xff) << (2 * i));
-	return offset + 4;
-}
-
-int unpackString(const std::string source, std::string& target, int offset)
-{
-	unsigned int length = 0;
-	if (unpackUInt(source, length, offset) == -1)
-		return -1;
-	offset += 4;
-	if ((static_cast<unsigned int>(offset) + length - 1) >= source.size())
-		return -1;
-	target = source.substr(offset, length);
-	return offset + length;
-}
 
 }
 

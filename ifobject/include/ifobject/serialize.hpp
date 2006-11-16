@@ -26,6 +26,7 @@
  * ========================================================================== */
 
 #include <string>
+#include "ifobject/types.hpp"
 
 namespace Ionflux
 {
@@ -33,94 +34,78 @@ namespace Ionflux
 namespace ObjectBase
 {
 
-/** Pack data into string (bool).
+/** Pack data.
  *
- * Packs the data into a string.
- *
- * \param source data to be packed
- *
- * \return packed data
- */
-std::string pack(bool source);
-
-/** Pack data into string (int).
- *
- * Packs the data into a string.
+ * Packs the data into a string. The default implementation will work for 
+ * any type which can be stored byte-wise.
  *
  * \param source data to be packed
- *
- * \return packed data
+ * \param target where to store the packed data
+ * \param append whether data should be appended to or replace the target data
  */
-std::string pack(int source);
+template<class T>
+void pack(const T& source, std::string& target, bool append = true)
+{
+	static const unsigned int dataSize = sizeof(T);
+	std::string buffer;
+	buffer.assign(dataSize, '\0');
+	const unsigned char* rawData = 
+		reinterpret_cast<const unsigned char*>(&source);
+	for (unsigned int i = 0; i < dataSize; i++)
+		buffer[i] = rawData[dataSize - i - 1];
+	if (append)
+		target.append(buffer);
+	else
+		target = buffer;
+}
 
-/** Pack data into string (unsigned int).
+/** Unpack data.
  *
- * Packs the data into a string.
+ * Unpacks the data from a string. The default implementation will work for 
+ * any type which can be stored byte-wise.
+ *
+ * \param source data to be unpacked
+ * \param target where to store the unpacked data
+ * \param offset offset from which to start unpacking
+ *
+ * \return new offset, or -1 if the data could not be unpacked
+ */
+template<class T>
+int unpack(const std::string& source, T& target, int offset = 0)
+{
+	static const unsigned int dataSize = sizeof(T);
+	if ((offset + dataSize) > source.size())
+		return -1;
+	unsigned char* rawData = reinterpret_cast<unsigned char*>(&target);
+	for (unsigned int i = 0; i < dataSize; i++)
+		rawData[dataSize - i - 1] = source[i + offset];
+	return offset + dataSize;
+}
+
+/** Pack data (string).
+ *
+ * Packs the data into a string. The default implementation will work for 
+ * any type which can be stored byte-wise.
  *
  * \param source data to be packed
- *
- * \return packed data
+ * \param target where to store the packed data
+ * \param append whether data should be appended to or replace the target data
  */
-std::string pack(unsigned int source);
+void pack(const std::string& source, std::string& target, bool append = true);
 
-/** Pack data into string (string).
+/** Unpack data (string).
  *
- * Packs the data into a string. The result will contain the length of the 
- * string in the first 4 bytes.
+ * Unpacks the data from a string. The default implementation will work for 
+ * any type which can be stored byte-wise.
  *
- * \param source data to be packed
+ * \param source data to be unpacked
+ * \param target where to store the unpacked data
+ * \param offset offset from which to start unpacking
  *
- * \return packed data
+ * \return new offset, or -1 if the data could not be unpacked
  */
-std::string pack(const std::string& source);
-
-/** Unpack data from string (bool).
- *
- * Unpacks data from a string.
- *
- * \param source buffer which contains the data to be unpacked
- * \param offset offset of the data to be unpacked
- * \param target where to store the result
- *
- * \return offset of remaining data, or -1 if an error occured
- */
-int unpackBool(const std::string source, bool& target, int offset = 0);
-
-/** Unpack data from string (int).
- *
- * Unpacks data from a string.
- *
- * \param source buffer which contains the data to be unpacked
- * \param offset offset of the data to be unpacked
- * \param target where to store the result
- *
- * \return offset of remaining data, or -1 if an error occured
- */
-int unpackInt(const std::string source, int& target, int offset = 0);
-
-/** Unpack data from string (unsigned int).
- *
- * Unpacks data from a string.
- *
- * \param source buffer which contains the data to be unpacked
- * \param offset offset of the data to be unpacked
- * \param target where to store the result
- *
- * \return offset of remaining data, or -1 if an error occured
- */
-int unpackUInt(const std::string source, unsigned int& target, int offset = 0);
-
-/** Unpack data from string (string).
- *
- * Unpacks data from a string.
- *
- * \param source buffer which contains the data to be unpacked
- * \param offset offset of the data to be unpacked
- * \param target where to store the result
- *
- * \return offset of remaining data, or -1 if an error occured
- */
-int unpackString(const std::string source, std::string& target, int offset = 0);
+int unpack(const std::string& source, std::string& target, 
+	int offset = 0);
 
 }
 

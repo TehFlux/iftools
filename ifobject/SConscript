@@ -185,6 +185,11 @@ ifthreadtestBin = ifobjectenv.Program('test/bin/ifthreadtest',
 	CPPPATH = cpppath + sigcppccflags,
 	LIBS = ['ifobject'] + libs + sigcpplibs,
 	LIBPATH = ['lib'] + libpath + sigcpplibpath)
+packtestBin = ifobjectenv.Program('test/bin/packtest',
+	['test/build/packtest.cpp'],
+	CPPPATH = cpppath + sigcppccflags,
+	LIBS = ['ifobject'] + libs + sigcpplibs,
+	LIBPATH = ['lib'] + libpath + sigcpplibpath)
 
 # targets and collections of files
 allHeaders = ifobjectLibHeaders
@@ -194,7 +199,8 @@ targetApps = [ifclassgenBin]
 buildApps = ['bin/ifclassgen']
 buildTest = ['test/bin/ifclassinfotest',
 	'test/bin/ifobjecttest',
-	'test/bin/ifthreadtest']
+	'test/bin/ifthreadtest',
+	'test/bin/packtest']
 
 # installation
 ifobjectenv.Install(prefix + '/include/ionflux', allHeaders)

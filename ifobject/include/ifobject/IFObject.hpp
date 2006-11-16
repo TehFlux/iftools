@@ -644,6 +644,40 @@ class IFObject
 std::ostream& operator<<(std::ostream& outputStream, const 
 Ionflux::ObjectBase::IFObject& source);
 
+/** Pack object.
+ *
+ * Pack an object into a string. This uses the serialize() method of the
+ * object to obtain a serialized representation of the persistent state 
+ * of the object, which is then stored in the target buffer. The data 
+ * will be prefixed by \c true if the object is non-null and by \c false
+ * if the object is null.
+ *
+ * \param source source object.
+ * \param target where to store the packed data.
+ * \param append whether data should be appended to or replace the target 
+ * data.
+ */
+void pack(const Ionflux::ObjectBase::IFObject*& source, std::string& 
+target, bool append = true);
+
+/** Unpack object.
+ *
+ * Unpack an object from a string. This uses the deserialize() method of
+ * the object to restore the persistent state of the child object from 
+ * the source buffer. The source data must start with a packed boolean 
+ * value to indicate whether the object is non-null. If the object is 
+ * non-null, it must be created before unpack() is called, i.e. \c 
+ * target must already point to a valid object.
+ *
+ * \param source data to be unpacked.
+ * \param target where to store the unpacked data.
+ * \param offset offset from which to start unpacking.
+ *
+ * \return new offset, or -1 if the data could not be unpacked.
+ */
+int unpack(const std::string& source, Ionflux::ObjectBase::IFObject*& 
+target, int offset = 0);
+
 /// @}
 
 

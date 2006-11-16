@@ -25,7 +25,9 @@
  * ========================================================================== */
 
 #include <iostream>
+#include <iomanip>
 #include <sstream>
+#include <string>
 #include "ifobject/IFObject.hpp"
 #include "ifobject/IFObjectEvent.hpp"
 
@@ -50,6 +52,73 @@ bool objectIDChanged(const IFObjectEvent& event)
 		<< "    oldID = " << event.getOldID() << endl
 		<< "    newID = " << event.getNewID() << endl;
 	return true;
+}
+
+// Hex functions from iftools.
+std::string makeHex(const std::string& inputData)
+{
+	ostringstream buffer;
+	buffer << uppercase << right << setfill('0') << hex;
+	for (unsigned int i = 0; i < inputData.size(); i++)
+		buffer << setw(2) << int(static_cast<unsigned char>(inputData[i]));
+	return buffer.str();
+}
+
+std::string makeReadable(const std::string& inputData, 
+	const std::string& replacement)
+{
+	ostringstream buffer;
+	unsigned char currentChar;
+	for (unsigned int i = 0; i < inputData.size(); i++)
+	{
+		currentChar = static_cast<unsigned char>(inputData[i]);
+		if (((currentChar >= 32) && (currentChar <= 126))
+			|| (currentChar >= 160))
+		{
+			buffer << inputData[i];
+		} else
+		{
+			buffer << replacement;
+		}
+	}
+	return buffer.str();
+}
+
+std::string makeNiceHex(const std::string& hex, const std::string& readable, 
+	int bytesPerLine, int groupBytes)
+{
+	ostringstream buffer;
+	string paddedHex(hex);
+	string paddedReadable(readable);
+	if ((paddedHex.size() % 2) != 0)
+		paddedHex.append(" ");
+	while (((paddedHex.size() / 2) % bytesPerLine) != 0)
+		paddedHex.append("  ");
+	unsigned int bytes = paddedHex.size() / 2;
+	while (paddedReadable.size() < bytes)
+		paddedReadable.append(" ");
+	int readablePos = 0;
+	for (unsigned int i = 0; i < bytes; i++)
+	{
+		buffer << paddedHex.substr(2 * i, 2) << " ";
+		if ((((i + 1) % groupBytes) == 0) && (((i + 1) % bytesPerLine) != 0))
+			buffer << " ";
+		if (((i + 1) % bytesPerLine) == 0)
+		{
+			buffer << " " << paddedReadable.substr(readablePos, bytesPerLine) 
+				<< "\n";
+			readablePos += bytesPerLine;
+		}
+	}
+	return buffer.str();
+}
+
+// Default hex output.
+std::string makeNiceHex(const std::string& data, int bytesPerLine = 20, 
+	int groupBytes = 10)
+{
+	return makeNiceHex(makeHex(data), makeReadable(data, "."), 
+		bytesPerLine, groupBytes);
 }
 
 int main(int argc, char* argv[])
@@ -83,11 +152,27 @@ int main(int argc, char* argv[])
 		idCount++;
 	}
 	cout << "Done." << endl;
+	// test operations
 	cout << "Testing operation 'log'... " << endl;
 	IFObjectVector opParams;
 	opParams.push_back(objects[1]);
 	objects[0]->doOp("log", &opParams);
 	cout << "Done." << endl;
+	// test serialization
+	cout << "Testing serialization... " << endl;
+	for (IFObjectVector::iterator i = objects.begin(); 
+		i != objects.end(); i++)
+	{
+		string buffer;
+		(*i)->serialize(buffer);
+		cout << "---> " << (*i)->getString() << endl;
+		cout << makeNiceHex(buffer);
+		IFObject restoredObject;
+		restoredObject.deserialize(buffer);
+		cout << "<--- " << restoredObject.getString() << endl;
+	}
+	cout << "Done." << endl;
+	// test local references
 	cout << "Adding local references... " << endl;
 	cout << "    -> object[1] will be managed by object[0]" << endl;
 	objects[0]->addLocalRef(objects[1]);

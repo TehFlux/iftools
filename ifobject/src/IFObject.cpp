@@ -733,14 +733,14 @@ Ionflux::ObjectBase::IFObject* IFObject::getLogTarget() const
 bool IFObject::serialize(std::string& target) const
 {
 	target.clear();
-	target.append(pack(id));
-	target.append(pack(idNum));
+	pack(id, target);
+	pack(idNum, target);
 	return true;
 }
 
 int IFObject::deserialize(const std::string& source, int offset)
 {
-	offset = unpackString(source, id, offset);
+	offset = unpack(source, id, offset);
 	if (offset < 0)
 	{
 		ostringstream state;
@@ -749,7 +749,7 @@ int IFObject::deserialize(const std::string& source, int offset)
 			this, "deserialize"));
 		return false;
 	}
-	offset = unpackInt(source, idNum, offset);
+	offset = unpack(source, idNum, offset);
 	if (offset < 0)
 	{
 		ostringstream state;
@@ -829,6 +829,45 @@ Ionflux::ObjectBase::IFObject& source)
 {
 	// TODO: Implementation.
 	return outputStream << source.getString();
+}
+
+void pack(const Ionflux::ObjectBase::IFObject*& source, std::string& 
+target, bool append)
+{
+	std::string buffer;
+	if (source == 0)
+		pack(false, buffer);
+	else
+	{
+		pack(true, buffer);
+		source->serialize(buffer);
+	}
+	if (append)
+		target.append(buffer);
+	else
+		target = buffer;
+}
+
+int unpack(const std::string& source, Ionflux::ObjectBase::IFObject*& 
+target, int offset)
+{
+	bool isNonNull = false;
+	offset = unpack(source, isNonNull, offset);
+	if (!isNonNull)
+	{
+		target = 0;
+		return offset;
+	}
+	if (target != 0)
+		offset = target->deserialize(source, offset);
+	else
+	{
+		std::cerr << "[unpack] ERROR: "
+			"Target IFObject must be non-null for deserialization." 
+			<< std::endl;
+		offset = -1;
+	}
+	return offset;
 }
 
 }

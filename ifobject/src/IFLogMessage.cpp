@@ -313,9 +313,9 @@ bool IFLogMessage::serialize(std::string& target) const
 	if (!IFObject::serialize(target))
 		return false;
 	target.clear();
-	target.append(pack(message));
-	target.append(pack(level));
-	target.append(pack(sourceFunctionName));
+	pack(message, target);
+	pack(level, target);
+	pack(sourceFunctionName, target);
 	return true;
 }
 
@@ -324,21 +324,21 @@ int IFLogMessage::deserialize(const std::string& source, int offset)
 	offset = IFObject::deserialize(source, offset);
 	if (offset < 0)
 		return false;
-	offset = unpackString(source, message, offset);
+	offset = unpack(source, message, offset);
 	if (offset < 0)
 	{
 		std::cerr << "[IFLogMessage::deserialize] ERROR: "
 			"Could not deserialize property 'message'.";
 		return false;
 	}
-	offset = unpackInt(source, level, offset);
+	offset = unpack(source, level, offset);
 	if (offset < 0)
 	{
 		std::cerr << "[IFLogMessage::deserialize] ERROR: "
 			"Could not deserialize property 'level'.";
 		return false;
 	}
-	offset = unpackString(source, sourceFunctionName, offset);
+	offset = unpack(source, sourceFunctionName, offset);
 	if (offset < 0)
 	{
 		std::cerr << "[IFLogMessage::deserialize] ERROR: "
