@@ -37,7 +37,7 @@ You should have received a copy of the GNU General Public License along with {$p
 {/first}{single}
 {/single}
 \#include {$inc}{/foreach}{foreach bc in base.ifobject}
-\#include "{if project.includePrefix != ""}{$project.includePrefix}/{/if}{if bc.include == ""}{$bc.name}.hpp{else}{$bc.include}{/if}"{/foreach}{foreach bc in base.other}
+\#include "{if bc.include == ""}ifobject/{$bc.name}.hpp{else}{$bc.include}{/if}"{/foreach}{foreach bc in base.other}
 \#include "{if bc.include == ""}{$bc.name}.hpp{else}{$bc.include}{/if}"{/foreach}{/section}{section insertForwards}{foreach fwd in forward}{first}
 {/first}{single}
 {/single}
@@ -333,7 +333,7 @@ class {$class.name}{if ( haveBaseIFObject == 1 ) || ( haveBaseOther == 1 )}
 		/// {$const.desc}.
 		static const {$const.type} {$const.name};{/foreach}{foreach sig in signal}
 		/// Signal type: {$sig.id}.
-		static const IFSignalType SIGNAL_TYPE_{$sig.id|uppercase};{foreach ins in sig.instance}
+		static const Ionflux::ObjectBase::IFSignalType SIGNAL_TYPE_{$sig.id|uppercase};{foreach ins in sig.instance}
 		/// Signal name: {$ins.id}.
 		static const std::string SIGNAL_NAME_{$ins.id|uppercase};{/foreach}{/foreach}{if enableClassInfo == 1}
 		/// Class information instance.

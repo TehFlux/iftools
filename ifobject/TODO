@@ -8,8 +8,6 @@ Todo
 
 • Add features to IFExampleClass:
 
-  ▪ operations
-  ▪ serialization
   ▪ signal proxy options (includes, return type, default implementation etc.)
 
 • Add an API to create and deserialize a complete representation of the 
@@ -18,4 +16,9 @@ Todo
   ▪ support for base64 encoding
   ▪ parseable prefix
 
+• Make sure the class templates use fully qualified names for all types 
+  from Ionflux::ObjectBase.
+
 • More testing.
+
+  ▪ implement a test application for IFExampleClass

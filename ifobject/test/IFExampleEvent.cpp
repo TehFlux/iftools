@@ -25,8 +25,8 @@
  * 
  * ========================================================================== */
 
-#include "ifobject/IFExampleEvent.hpp"
-#include "ifobject/IFExampleClass.hpp"
+#include "test/include/IFExampleEvent.hpp"
+#include "test/include/IFExampleClass.hpp"
 
 using namespace std;
 
@@ -43,13 +43,17 @@ IFExampleEventClassInfo::IFExampleEventClassInfo()
 	baseClassInfo.push_back(IFObject::CLASS_INFO);
 }
 
+IFExampleEventClassInfo::~IFExampleEventClassInfo()
+{
+}
+
 // public member constants
 const int IFExampleEvent::TYPE_FIRST = 0;
 const int IFExampleEvent::TYPE_SECOND = 1;
 
 // run-time type information instance constants
 const IFExampleEventClassInfo IFExampleEvent::iFExampleEventClassInfo;
-const ClassInfo* IFExampleEvent::CLASS_INFO = &IFExampleEvent::iFExampleEventClassInfo;
+const Ionflux::ObjectBase::IFClassInfo* IFExampleEvent::CLASS_INFO = &IFExampleEvent::iFExampleEventClassInfo;
 
 IFExampleEvent::IFExampleEvent()
 : type(TYPE_FIRST), source(0)
@@ -58,6 +62,7 @@ IFExampleEvent::IFExampleEvent()
 	theClass = CLASS_INFO;
 	// TODO: Nothing ATM. ;-)
 }
+
 IFExampleEvent::~IFExampleEvent()
 {
 	// TODO: Nothing ATM. ;-)

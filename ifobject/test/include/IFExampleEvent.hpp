@@ -1,5 +1,5 @@
-#ifndef IONFLUX_OBJECT_IFEXAMPLEEVENT
-#define IONFLUX_OBJECT_IFEXAMPLEEVENT
+#ifndef IONFLUX_EXAMPLE_IFEXAMPLEEVENT
+#define IONFLUX_EXAMPLE_IFEXAMPLEEVENT
 /* ==========================================================================
  * Ionflux Object Base System
  * Copyright © 2006 Joern P. Meier
@@ -44,7 +44,7 @@ class IFExampleEventClassInfo
 		/// Constructor.
 		IFExampleEventClassInfo();
 		/// Destructor.
-		virtual ~IFExampleEventClassInfo() { };
+		virtual ~IFExampleEventClassInfo();
 };
 
 /** Example event.
@@ -68,6 +68,10 @@ class IFExampleEvent
 		static const int TYPE_FIRST;
 		/// event type: second.
 		static const int TYPE_SECOND;
+		/// Class information instance.
+		static const IFExampleEventClassInfo iFExampleEventClassInfo;
+		/// Class information.
+		static const Ionflux::ObjectBase::IFClassInfo* CLASS_INFO;
 		
 		/** Constructor.
 		 *

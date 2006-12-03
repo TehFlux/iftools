@@ -37,10 +37,10 @@ You should have received a copy of the GNU General Public License along with {$p
  * {/section}{section insertIncludes}
 
 \#include "{if project.includePrefix != ""}{$project.includePrefix}/{/if}{if class.includePrefix != ""}{$class.includePrefix}/{/if}{$class.name}.hpp"{if enableMutex == 1}
-\#include "{if project.includePrefix != ""}{$project.includePrefix}/{/if}IFMutex.hpp"{/if}{if enableGuards == 1}
-\#include "{if project.includePrefix != ""}{$project.includePrefix}/{/if}IFGuard.hpp"{/if}{if enableLogMessage == 1}
-\#include "{if project.includePrefix != ""}{$project.includePrefix}/{/if}IFLogMessage.hpp"{/if}{if enableSignal == 1}
-\#include "{if project.includePrefix != ""}{$project.includePrefix}/{/if}IFSignal.hpp"{/if}{foreach ev in event}
+\#include "ifobject/IFMutex.hpp"{/if}{if enableGuards == 1}
+\#include "ifobject/IFGuard.hpp"{/if}{if enableLogMessage == 1}
+\#include "ifobject/IFLogMessage.hpp"{/if}{if enableSignal == 1}
+\#include "ifobject/IFSignal.hpp"{/if}{foreach ev in event}
 \#include "{if project.includePrefix != ""}{$project.includePrefix}/{/if}{if class.includePrefix != ""}{$class.includePrefix}/{/if}IF{$ev.id|uppercase(1)}Event.hpp"{/foreach}{foreach inc in include.impl}
 \#include {$inc}{/foreach}{/section}{section createEventHelperFunctionImpl}
 
@@ -438,15 +438,15 @@ namespace {$ns.name}
 const {$cn.type} {$st.name}::{$cn.name} = {$cn.value};{/foreach}{/foreach}{if enableClassInfo == 1}{if haveOps == 1}
 
 // operation info records{foreach op in operation}
-IFOpInfo {$class.name|uppercase(1)}ClassInfo::OP_INFO_{$op.name|uppercase};{/foreach}{/if}
+Ionflux::ObjectBase::IFOpInfo {$class.name|uppercase(1)}ClassInfo::OP_INFO_{$op.name|uppercase};{/foreach}{/if}
 
 {$class.name|uppercase(1)}ClassInfo::{$class.name|uppercase(1)}ClassInfo()
 \{
 	name = "{$class.name}";
 	desc = "{$class.shortDesc}";{foreach bc in class.base.ifobject}
 	baseClassInfo.push_back({$bc.name}::CLASS_INFO);{/foreach}{if haveOps == 1}{$haveParams = 0}{$haveResults = 0}{foreach op in operation}{foreach prm in op.param}{first}{$haveParams = 1}{/first}{single}{$haveParams = 1}{/single}{/foreach}{foreach res in op.result}{first}{$haveResults = 1}{/first}{single}{$haveResults = 1}{/single}{/foreach}{/foreach}{if haveParams == 1}
-	IFOpParamInfo currentParam;{/if}{if haveResults == 1}
-	IFOpResultInfo currentResult;{/if}{foreach op in operation}
+	Ionflux::ObjectBase::IFOpParamInfo currentParam;{/if}{if haveResults == 1}
+	Ionflux::ObjectBase::IFOpResultInfo currentResult;{/if}{foreach op in operation}
 	OP_INFO_{$op.name|uppercase}.name = "{$op.name}";{foreach prm in op.param}
 	currentParam.type = {if prm.type != ""}{$prm.type}::CLASS_INFO{else}0{/if};
 	currentParam.name = "{$prm.name}";
@@ -455,8 +455,7 @@ IFOpInfo {$class.name|uppercase(1)}ClassInfo::OP_INFO_{$op.name|uppercase};{/for
 	currentParam.defaultValue = {if prm.optional != ""}{$prm.optional}{else}0{/if};
 	OP_INFO_{$op.name|uppercase}.paramInfo.push_back(currentParam);{/foreach}{foreach res in op.result}
 	currentResult.type = {if res.type != ""}{$res.type}::CLASS_INFO{else}0{/if};
-	currentResult.name = "{$prm.name}";
-	currentResult.desc = "{$prm.desc}";
+	currentResult.desc = "{$res.desc}";
 	OP_INFO_{$op.name|uppercase}.resultInfo.push_back(currentResult);{/foreach}{/foreach}
 	opInfo = new IFOpNameInfoMap();{foreach op in operation}
 	(*opInfo)[OP_INFO_{$op.name|uppercase}.name] = &OP_INFO_{$op.name|uppercase};{/foreach}{/if}

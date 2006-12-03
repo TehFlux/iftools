@@ -1,5 +1,5 @@
-#ifndef IONFLUX_OBJECT_IFEXAMPLECLASS
-#define IONFLUX_OBJECT_IFEXAMPLECLASS
+#ifndef IONFLUX_EXAMPLE_IFEXAMPLECLASS
+#define IONFLUX_EXAMPLE_IFEXAMPLECLASS
 /* ==========================================================================
  * Ionflux Object Base System
  * Copyright © 2006 Joern P. Meier
@@ -94,11 +94,15 @@ struct IFExampleSignalConnections
 class IFExampleClassClassInfo
 : public Ionflux::ObjectBase::IFClassInfo
 {
+	protected:
+		// Operation info: doStuffWithObjectOp.
+		static Ionflux::ObjectBase::IFOpInfo OP_INFO_DOSTUFFWITHOBJECTOP;
+		
 	public:
 		/// Constructor.
 		IFExampleClassClassInfo();
 		/// Destructor.
-		virtual ~IFExampleClassClassInfo() { };
+		virtual ~IFExampleClassClassInfo();
 };
 
 /** Example class.
@@ -149,17 +153,67 @@ class IFExampleClass
 		 */
 		virtual int doStuff(int foo, char bar = 'x');
 		
+		/** Do stuff with object (implementation).
+		 *
+		 * Does some stuff with an object. This is the implementation for the 
+		 * \c doStuffWithObject operation.
+		 *
+		 * \param victim object.
+		 *
+		 * \return The result of doing stuff with the object.
+		 */
+		virtual Ionflux::ObjectBase::IFObject* 
+		doStuffWithObjectImpl(Ionflux::ObjectBase::IFObject* victim);
+		
+		/** Operation proxy: doStuffWithObjectOp.
+		 *
+		 * Proxy for the 'doStuffWithObjectOp' operation.
+		 *
+		 * \param victim object.
+		 * \param target Where to store the result.
+		 */
+		bool opDoStuffWithObjectOp(Ionflux::ObjectBase::IFObject* victim, 
+		Ionflux::ObjectBase::IFObjectVector* target = 0);
+		
+		/** Operation dispatch.
+		 *
+		 * Default function used for dispatching operations.
+		 *
+		 * \param opName Operation name.
+		 * \param params Parameters.
+		 * \param target Where to store the result.
+		 */
+		bool opDispatch(const Ionflux::ObjectBase::IFOpName& opName, 
+			const Ionflux::ObjectBase::IFObjectVector* params = 0, 
+			Ionflux::ObjectBase::IFObjectVector* target = 0);
+		
+		/** Operation dispatch.
+		 *
+		 * Default function used for dispatching operations.
+		 *
+		 * \param opName Operation name.
+		 * \param params Parameters.
+		 * \param target Where to store the result.
+		 */
+		bool opDispatch(const Ionflux::ObjectBase::IFOpName& opName, 
+			const Ionflux::ObjectBase::IFObjectVector* params = 0, 
+			Ionflux::ObjectBase::IFObjectVector* target = 0) const;
+		
 	public:
 		/// Module name.
 		static const std::string MODULE_NAME;
 		/// Module version.
 		static const unsigned int MODULE_VERSION;
 		/// Signal type: example.
-		static const SignalType SIGNAL_TYPE_EXAMPLE;
+		static const Ionflux::ObjectBase::IFSignalType SIGNAL_TYPE_EXAMPLE;
 		/// Signal name: first.
 		static const std::string SIGNAL_NAME_FIRST;
 		/// Signal name: second.
 		static const std::string SIGNAL_NAME_SECOND;
+		/// Class information instance.
+		static const IFExampleClassClassInfo iFExampleClassClassInfo;
+		/// Class information.
+		static const Ionflux::ObjectBase::IFClassInfo* CLASS_INFO;
 		
 		/** Constructor.
 		 *
@@ -200,6 +254,35 @@ class IFExampleClass
 		 * This function must be implemented by a derived class.
 		 */
 		virtual void needsImplementation() = 0;
+		
+		/** Serialize.
+		 *
+		 * Serialize the object. This creates a string which contains data 
+		 * from which the internal state of the object (as supported 
+		 * by serialization) can be restored using deserialize().
+		 *
+		 * \param target where to store the result
+		 *
+		 * \return \c true on success, \c false otherwise.
+		 *
+		 * \sa deserialize()
+		 */
+		virtual bool serialize(std::string& target) const;
+		
+		/** Deserialize.
+		 *
+		 * Initialize the object from a serialized representation of its 
+		 * internal state. The serialized representation can be obtained 
+		 * using serialize().
+		 *
+		 * \param source serialized data buffer
+		 * \param offset position where to start deserialization
+		 *
+		 * \return offset of remaining data, or -1 if an error occured.
+		 *
+		 * \sa serialize()
+		 */
+		virtual int deserialize(const std::string& source, int offset = 0);
 		
 		/** Set some numeric value.
 		 *
@@ -353,7 +436,6 @@ class IFExampleClass
 		 * \return Signal for the first signal event.
 		 */
 		virtual Ionflux::ObjectBase::IFSignal* getSignalFirstWrapper();
-
 		
 		/** Get signal: second signal.
 		 *
@@ -370,7 +452,6 @@ class IFExampleClass
 		 * \return Signal for the second signal event.
 		 */
 		virtual Ionflux::ObjectBase::IFSignal* getSignalSecondWrapper();
-
 };
 
 }
