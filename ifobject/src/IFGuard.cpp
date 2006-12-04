@@ -44,6 +44,10 @@ IFGuardClassInfo::IFGuardClassInfo()
 	baseClassInfo.push_back(IFObject::CLASS_INFO);
 }
 
+IFGuardClassInfo::~IFGuardClassInfo()
+{
+}
+
 // run-time type information instance constants
 const IFGuardClassInfo IFGuard::iFGuardClassInfo;
 const Ionflux::ObjectBase::IFClassInfo* IFGuard::CLASS_INFO = &IFGuard::iFGuardClassInfo;
@@ -76,7 +80,7 @@ IFGuard::create(Ionflux::ObjectBase::IFObject* parentObject)
 	if (newObject == 0)
 	{
 		cerr << IFLogMessage("Could not allocate object instance.", 
-			IFLogMessage::VL_ERROR, 0, "IFObject::create") << endl;
+			VL_ERROR, 0, "IFObject::create") << endl;
 		return 0;
 	}
 	if (parentObject != 0)

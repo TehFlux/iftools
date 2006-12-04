@@ -43,13 +43,13 @@ namespace ObjectBase
 // structure constants
 
 // operation info records
-IFOpInfo IFObjectClassInfo::OP_INFO_LOG;
+Ionflux::ObjectBase::IFOpInfo IFObjectClassInfo::OP_INFO_LOG;
 
 IFObjectClassInfo::IFObjectClassInfo()
 {
 	name = "IFObject";
 	desc = "Object";
-	IFOpParamInfo currentParam;
+	Ionflux::ObjectBase::IFOpParamInfo currentParam;
 	OP_INFO_LOG.name = "log";
 	currentParam.type = Ionflux::ObjectBase::IFObject::CLASS_INFO;
 	currentParam.name = "logObject";
@@ -67,6 +67,11 @@ IFObjectClassInfo::~IFObjectClassInfo()
 }
 
 // public member constants
+const std::string IFObject::LITERAL_PREFIX = "%";
+const std::string IFObject::LITERAL_SEPARATOR = ":";
+const std::string IFObject::ENCODING_RAW = "raw";
+const std::string IFObject::ENCODING_UTF8 = "utf8";
+const std::string IFObject::ENCODING_BASE64 = "base64";
 const IFIDNum IFObject::ID_NUM_UNDEFINED = -1;
 
 // signal type and instance name constants
@@ -130,7 +135,7 @@ bool IFObject::opDispatch(const Ionflux::ObjectBase::IFOpName& opName,
 	{
 		ostringstream state;
 		state << "Operation not supported: '" << opName << "'.";
-		log(IFLogMessage(state.str(), IFLogMessage::VL_ERROR, 
+		log(IFLogMessage(state.str(), VL_ERROR, 
 			this, "opDispatch"));
 		return false;
 	}
@@ -159,7 +164,7 @@ bool IFObject::opDispatch(const Ionflux::ObjectBase::IFOpName& opName,
 					<< opName << "' is of wrong type (type is " 
 					<< (*params)[i]->getClassName() << ", expected " 
 					<< paramInfo->type->getName() << ").";
-				log(IFLogMessage(state.str(), IFLogMessage::VL_ERROR, 
+				log(IFLogMessage(state.str(), VL_ERROR, 
 					this, "opDispatch"));
 				return false;
 			}
@@ -171,7 +176,7 @@ bool IFObject::opDispatch(const Ionflux::ObjectBase::IFOpName& opName,
 				ostringstream state;
 				state << "Required parameter " << i << " for operation '"
 					<< opName << "' is missing.";
-				log(IFLogMessage(state.str(), IFLogMessage::VL_ERROR, 
+				log(IFLogMessage(state.str(), VL_ERROR, 
 					this, "opDispatch"));
 				return false;
 			}
@@ -187,7 +192,7 @@ bool IFObject::opDispatch(const Ionflux::ObjectBase::IFOpName& opName,
 	ostringstream state;
 	state << "Failed to dispatch operation '"
 		<< opName << "' for some unknown reason (this should not happen).";
-	log(IFLogMessage(state.str(), IFLogMessage::VL_ERROR, 
+	log(IFLogMessage(state.str(), VL_ERROR, 
 		this, "opDispatch"));
 	return false;
 }
@@ -201,7 +206,7 @@ bool IFObject::opDispatch(const Ionflux::ObjectBase::IFOpName& opName,
 	{
 		ostringstream state;
 		state << "Operation not supported: '" << opName << "'.";
-		log(IFLogMessage(state.str(), IFLogMessage::VL_ERROR, 
+		log(IFLogMessage(state.str(), VL_ERROR, 
 			this, "opDispatch"));
 		return false;
 	}
@@ -230,7 +235,7 @@ bool IFObject::opDispatch(const Ionflux::ObjectBase::IFOpName& opName,
 					<< opName << "' is of wrong type (type is " 
 					<< (*params)[i]->getClassName() << ", expected " 
 					<< paramInfo->type->getName() << ").";
-				log(IFLogMessage(state.str(), IFLogMessage::VL_ERROR, 
+				log(IFLogMessage(state.str(), VL_ERROR, 
 					this, "opDispatch"));
 				return false;
 			}
@@ -242,7 +247,7 @@ bool IFObject::opDispatch(const Ionflux::ObjectBase::IFOpName& opName,
 				ostringstream state;
 				state << "Required parameter " << i << " for operation '"
 					<< opName << "' is missing.";
-				log(IFLogMessage(state.str(), IFLogMessage::VL_ERROR, 
+				log(IFLogMessage(state.str(), VL_ERROR, 
 					this, "opDispatch"));
 				return false;
 			}
@@ -260,7 +265,7 @@ bool IFObject::opDispatch(const Ionflux::ObjectBase::IFOpName& opName,
 		<< opName << "' (this is probably because there is no const "
 		"implementation available for the operation, but the object on "
 		"which the operation has been called is const).";
-	log(IFLogMessage(state.str(), IFLogMessage::VL_ERROR, 
+	log(IFLogMessage(state.str(), VL_ERROR, 
 		this, "opDispatch"));
 	return false;
 }
@@ -271,7 +276,7 @@ IFObjectEvent* IFObject::createObjectEvent()
 	if (event == 0)
 	{
 		log(IFLogMessage("Could not allocate event.", 
-			IFLogMessage::VL_ASSERTION, this, "createObjectEvent"));
+			VL_ASSERTION, this, "createObjectEvent"));
 		return 0;
 	}
 	addLocalRef(event);
@@ -351,10 +356,278 @@ std::string IFObject::getString() const
 	return getString();
 }
 
+void IFObject::getLiteral(std::string& target, const std::string& encoding)
+const
+{
+	ostringstream state;
+	state << LITERAL_PREFIX << getClassName() << LITERAL_SEPARATOR;
+	std::string buffer;
+	serialize(buffer);
+	std::string encoded;
+	if (encoding == ENCODING_UTF8)
+	{
+		state << ENCODING_UTF8 << LITERAL_SEPARATOR;
+		for (unsigned int i = 0; i < buffer.size(); i++)
+		{
+			IFUniChar currentChar = static_cast<IFUniChar>(buffer[i]);
+			encoded.append(uniCharToUTF8(currentChar, this));
+		}
+	} else
+	if (encoding == ENCODING_BASE64)
+	{
+		state << ENCODING_UTF8 << LITERAL_SEPARATOR;
+		base64::encode(buffer, encoded);
+	} else
+	{
+		state << ENCODING_RAW << LITERAL_SEPARATOR;
+		encoded = buffer;
+	}
+	UInt32 encodedSize = encoded.size();
+	state << encodedSize << LITERAL_SEPARATOR 
+		<< encoded;
+	target = state.str();
+}
+
+bool IFObject::initFromLiteral(const std::string& source)
+{
+	unsigned int pos = 0;
+	ostringstream status;
+	// check prefix
+	if (source.size() < LITERAL_PREFIX.size())
+	{
+		status << "Literal prefix is missing (literal: '" << source 
+			<< "').";
+		log(IFLogMessage(status.str(), VL_ERROR, this, "initFromLiteral"));
+		return false;
+	}
+	std::string sourcePrefix = source.substr(0, LITERAL_PREFIX.size());
+	if (sourcePrefix != LITERAL_PREFIX)
+	{
+		status << "Literal prefix not found (found: '" << sourcePrefix 
+			<< "', expected: '" << LITERAL_PREFIX << "').";
+		log(IFLogMessage(status.str(), VL_ERROR, this, "initFromLiteral"));
+		return false;
+	}
+	pos += LITERAL_PREFIX.size();
+	// parse literal
+	std::string className;
+	std::string encoding;
+	std::string rawEncodedSize;
+	std::string encodedData;
+	unsigned int encodedSize = 0;
+	std::string parseError;
+	/* state:
+		0 - extract class name
+		1 - extract encoding
+		2 - extract encoded size
+		3 - extract encoded data
+	   -1 - parse error
+	   -2 - finished (correct data)
+	   -3 - finished (class mismatch)
+	 */
+	int state = 0;
+	unsigned char currentChar = 0;
+	while ((state >= 0)
+		&& (pos < source.size()))
+	{
+		currentChar = source[pos];
+		if (state == 0)
+		{
+			// extract class name
+			if (currentChar == LITERAL_SEPARATOR[0])
+			{
+				if ((className != theClass->getName())
+					&& (!theClass->isDerivedFrom(className)))
+					state = -3;
+				else
+					state = 1;
+			} else
+			if (((currentChar >= 'A') 
+					&& (currentChar <= 'Z'))
+				|| ((currentChar >= 'a') 
+					&& (currentChar <= 'z'))
+				|| ((currentChar >= '0') 
+					&& (currentChar <= '9'))
+				|| (currentChar == '_'))
+				className.append(1, currentChar);
+			else
+			{
+				parseError = "invalid character in class name";
+				state = -1;
+			}
+		} else
+		if (state == 1)
+		{
+			// extract encoding
+			if (currentChar == LITERAL_SEPARATOR[0])
+				state = 2;
+			else
+			if (((currentChar >= 'a') 
+					&& (currentChar <= 'z'))
+				|| ((currentChar >= '0') 
+					&& (currentChar <= '9'))
+				|| (currentChar == '_'))
+				encoding.append(1, currentChar);
+			else
+			{
+				parseError = "invalid character in encoding";
+				state = -1;
+			}
+		} else
+		if (state == 2)
+		{
+			// extract encoded size
+			if (currentChar == LITERAL_SEPARATOR[0])
+			{
+				encodedSize = strtol(rawEncodedSize.c_str(), 0, 10);
+				state = 3;
+			} else
+			if ((currentChar >= '0') 
+					&& (currentChar <= '9'))
+				rawEncodedSize.append(1, currentChar);
+			else
+			{
+				parseError = "invalid character in encoded size";
+				state = -1;
+			}
+		} else
+		if (state == 2)
+		{
+			// extract encoded data
+			if (encodedData.size() < encodedSize)
+				encodedData.append(1, currentChar);
+			else
+				state = -2;
+		}
+		pos++;
+	}
+	// check for errors
+	if (state == -1)
+	{
+		status << "Parse error: " << parseError << " ('" 
+			<< currentChar << "' at position " << pos 
+			<< " in literal '";
+		if (source.size() > 512)
+			status << source.substr(0, 512) << "...";
+		else
+			status << source;
+		status << "').";
+		log(IFLogMessage(status.str(), VL_ERROR, this, "initFromLiteral"));
+		return false;
+	}
+	if (state == -3)
+	{
+		status << "Not a literal of class " << theClass->getName() 
+			<< " (literal: '";
+		if (source.size() > 512)
+			status << source.substr(0, 512) << "...";
+		else
+			status << source;
+		status << "').";
+		log(IFLogMessage(status.str(), VL_WARNING_OPT, this, 
+			"initFromLiteral"));
+		return false;
+	}
+	// verify size of encoded data
+	if (encodedData.size() != encodedSize)
+	{
+		status << "Size mismatch for encoded data (extracted: " 
+			<< encodedData.size() << " bytes, expected: " 
+			<< encodedSize << " bytes, literal: '";
+		if (source.size() > 512)
+			status << source.substr(0, 512) << "...";
+		else
+			status << source;
+		status << "').";
+		log(IFLogMessage(status.str(), VL_WARNING_OPT, this, 
+			"initFromLiteral"));
+		return false;
+	}
+	// decode data
+	std::string decodedData;
+	if (encoding == ENCODING_RAW)
+		decodedData = encodedData;
+	else
+	if (encoding == ENCODING_UTF8)
+	{
+		std::vector<IFUniChar> decodeTemp;
+		if (!utf8ToUniChar(encodedData, decodeTemp, this))
+		{
+			status << "Error while decoding UTF-8 data (literal: '";
+			if (source.size() > 512)
+				status << source.substr(0, 512) << "...";
+			else
+				status << source;
+			status << "').";
+			log(IFLogMessage(status.str(), VL_ERROR, this, 
+				"initFromLiteral"));
+			return false;
+		}
+		for (unsigned int i = 0; i < decodeTemp.size(); i++)
+		{
+			if (decodeTemp[i] > 0xff)
+			{
+				status << "Invalid byte value " << decodeTemp[i] 
+					<< " (literal: '";
+				if (source.size() > 512)
+					status << source.substr(0, 512) << "...";
+				else
+					status << source;
+				status << "').";
+				log(IFLogMessage(status.str(), VL_ERROR, this, 
+					"initFromLiteral"));
+				return false;
+			}
+			decodedData.append(1, static_cast<unsigned char>(decodeTemp[i]));
+		}
+	} else
+	if (encoding == ENCODING_BASE64)
+	{
+		if (!base64::decode(encodedData, decodedData))
+		{
+			status << "Error while decoding base64 data (literal: '";
+			if (source.size() > 512)
+				status << source.substr(0, 512) << "...";
+			else
+				status << source;
+			status << "').";
+			log(IFLogMessage(status.str(), VL_ERROR, this, 
+				"initFromLiteral"));
+			return false;
+		}
+	} else
+	{
+		status << "Unknown encoding '" << encoding 
+			<< "' (literal: '";
+		if (source.size() > 512)
+			status << source.substr(0, 512) << "...";
+		else
+			status << source;
+		status << "').";
+		log(IFLogMessage(status.str(), VL_ERROR, this, 
+			"initFromLiteral"));
+		return false;
+	}
+	// deserialize the object
+	if (deserialize(decodedData) == -1)
+	{
+		status << "Deserialization failed (literal: '";
+		if (source.size() > 512)
+			status << source.substr(0, 512) << "...";
+		else
+			status << source;
+		status << "').";
+		log(IFLogMessage(status.str(), VL_ERROR, this, 
+			"initFromLiteral"));
+		return false;
+	}
+	return true;
+}
+
 Ionflux::ObjectBase::IFObject* IFObject::copy() const
 {
 	log(IFLogMessage("Copy operation not implemented.", 
-		IFLogMessage::VL_ERROR, this, "copy"));
+		VL_ERROR, this, "copy"));
 	return 0;
 }
 
@@ -365,7 +638,7 @@ IFObject::create(Ionflux::ObjectBase::IFObject* parentObject)
 	if (newObject == 0)
 	{
 		cerr << IFLogMessage("Could not allocate object instance.", 
-			IFLogMessage::VL_ERROR, 0, "IFObject::create") << endl;
+			VL_ERROR, 0, "IFObject::create") << endl;
 		return 0;
 	}
 	if (parentObject != 0)
@@ -393,7 +666,7 @@ Ionflux::ObjectBase::IFObject& IFObject::operator=(const
 Ionflux::ObjectBase::IFObject& otherObject)
 {
 	log(IFLogMessage("Assignment operator not implemented.", 
-		IFLogMessage::VL_ERROR, this, "operator="));
+		VL_ERROR, this, "operator="));
 	return *this;
 }
 
@@ -446,7 +719,7 @@ bool IFObject::addRef() const
 	else
 	{
 		log(IFLogMessage("Reference count overflow.", 
-			IFLogMessage::VL_ERROR, this, "addRef"));
+			VL_ERROR, this, "addRef"));
 		return false;
 	}
 	return true;
@@ -459,7 +732,7 @@ bool IFObject::removeRef() const
 	else
 	{
 		log(IFLogMessage("Attempt to remove reference for object "
-			"with zero references.", IFLogMessage::VL_ERROR, this, "removeRef"));
+			"with zero references.", VL_ERROR, this, "removeRef"));
 		return false;
 	}
 	return true;
@@ -476,7 +749,7 @@ bool IFObject::addLocalRef(Ionflux::ObjectBase::IFObject* refTarget) const
 	if (refTarget == 0)
 	{
 		log(IFLogMessage("Attempt to add reference to null object.", 
-			IFLogMessage::VL_ERROR, this, "addLocalRef"));
+			VL_ERROR, this, "addLocalRef"));
 		return false;
 	}
 	IFObjectRefMap::iterator i = refData->refMap.find(refTarget);
@@ -490,7 +763,7 @@ bool IFObject::addLocalRef(Ionflux::ObjectBase::IFObject* refTarget) const
 		if (refInfo == 0)
 		{
 			log(IFLogMessage("Could not allocate "
-				"object reference info.", IFLogMessage::VL_ASSERTION, this, 
+				"object reference info.", VL_ASSERTION, this, 
 				"addLocalRef"));
 			return false;
 		}
@@ -503,7 +776,7 @@ bool IFObject::addLocalRef(Ionflux::ObjectBase::IFObject* refTarget) const
 		state << "Could not add reference to object '" 
 			<< refTarget->getString() << "'.";
 		log(IFLogMessage(state.str(), 
-			IFLogMessage::VL_ERROR, this, "addLocalRef"));
+			VL_ERROR, this, "addLocalRef"));
 		return false;
 	}
 	if (refInfo->refCount < UINT_MAX)
@@ -511,7 +784,7 @@ bool IFObject::addLocalRef(Ionflux::ObjectBase::IFObject* refTarget) const
 	else
 	{
 		log(IFLogMessage("Local reference count overflow.", 
-			IFLogMessage::VL_ERROR, this, "addLocalRef"));
+			VL_ERROR, this, "addLocalRef"));
 		refTarget->removeRef();
 		return false;
 	}
@@ -520,7 +793,7 @@ bool IFObject::addLocalRef(Ionflux::ObjectBase::IFObject* refTarget) const
 	state << "Added local reference to object '" 
 		<< refTarget->getString() << "'.";
 	log(IFLogMessage(state.str(), 
-		IFLogMessage::VL_DEBUG_INSANE, this, "addLocalRef"));
+		VL_DEBUG_INSANE, this, "addLocalRef"));
 	// ----- DEBUG ----- */
 	return true;
 }
@@ -531,7 +804,7 @@ const
 	if (refTarget == 0)
 	{
 		log(IFLogMessage("Attempt to remove reference to null object.", 
-			IFLogMessage::VL_ERROR, this, "removeLocalRef"));
+			VL_ERROR, this, "removeLocalRef"));
 		return false;
 	}
 	IFObjectRefMap::iterator i = refData->refMap.find(refTarget);
@@ -546,7 +819,7 @@ const
 		state << "Could not remove local reference to object '" 
 			<< refTarget->getString() << "': No local references found.";
 		log(IFLogMessage(state.str(), 
-			IFLogMessage::VL_ERROR, this, "removeLocalRef"));
+			VL_ERROR, this, "removeLocalRef"));
 		return false;
 	}
 	if (refInfo->refCount > 0)
@@ -554,7 +827,7 @@ const
 	else
 	{
 		log(IFLogMessage("Attempt to remove local reference for object "
-			"with zero local references.", IFLogMessage::VL_ERROR, this, 
+			"with zero local references.", VL_ERROR, this, 
 			"removeLocalRef"));
 		return false;
 	}
@@ -569,7 +842,7 @@ const
 		state << "Removed local reference info for object '" 
 			<< refTarget->getString() << "'.";
 		log(IFLogMessage(state.str(), 
-			IFLogMessage::VL_DEBUG_INSANE, this, "removeLocalRef"));
+			VL_DEBUG_INSANE, this, "removeLocalRef"));
 		// ----- DEBUG ----- */
 	}
 	if (!refTarget->removeRef())
@@ -578,7 +851,7 @@ const
 		state << "Could not remove reference to object '" 
 			<< refTarget->getString() << "'.";
 		log(IFLogMessage(state.str(), 
-			IFLogMessage::VL_ERROR, this, "removeLocalRef"));
+			VL_ERROR, this, "removeLocalRef"));
 		return false;
 	}
 	if (refTarget->getNumRefs() == 0)
@@ -588,7 +861,7 @@ const
 		state << "Deleting object '" << refTarget->getString() 
 			<< "' since there are no more references.";
 		log(IFLogMessage(state.str(), 
-			IFLogMessage::VL_DEBUG_INSANE, this, "removeLocalRef"));
+			VL_DEBUG_INSANE, this, "removeLocalRef"));
 		// ----- DEBUG ----- */
 		delete refTarget;
 		refTarget = 0;
@@ -600,7 +873,7 @@ const
 		state << "Removed local reference to object '" 
 			<< refTarget->getString() << "'.";
 		log(IFLogMessage(state.str(), 
-			IFLogMessage::VL_DEBUG_INSANE, this, "removeLocalRef"));
+			VL_DEBUG_INSANE, this, "removeLocalRef"));
 	}
 	// ----- DEBUG ----- */
 	return true;
@@ -627,7 +900,7 @@ bool IFObject::removeAllLocalRefs() const
 					state << "Could not remove reference to object '" 
 						<< refTarget->getString() << "'.";
 					log(IFLogMessage(state.str(), 
-						IFLogMessage::VL_ERROR, this, "removeAllLocalRefs"));
+						VL_ERROR, this, "removeAllLocalRefs"));
 					result = false;
 				}
 				refInfo->refCount--;
@@ -638,7 +911,7 @@ bool IFObject::removeAllLocalRefs() const
 					state << "Deleting object '" << refTarget->getString() 
 						<< "' since there are no more references.";
 					log(IFLogMessage(state.str(), 
-						IFLogMessage::VL_DEBUG_INSANE, this, 
+						VL_DEBUG_INSANE, this, 
 							"removeAllLocalRefs"));
 					// ----- DEBUG ----- */
 					delete refTarget;
@@ -651,7 +924,7 @@ bool IFObject::removeAllLocalRefs() const
 					state << "Removed local reference to object '" 
 						<< refTarget->getString() << "'.";
 					log(IFLogMessage(state.str(), 
-						IFLogMessage::VL_DEBUG_INSANE, this, 
+						VL_DEBUG_INSANE, this, 
 							"removeAllLocalRefs"));
 				}
 				// ----- DEBUG ----- */
@@ -674,7 +947,7 @@ void IFObject::setGuardEnabled(bool newGuardState)
 		guardMutex = new Ionflux::ObjectBase::IFMutex(IFMutex::TYPE_RECURSIVE);
 		if (guardMutex == 0)
 			log(IFLogMessage("Could not allocate guard mutex.", 
-				IFLogMessage::VL_ASSERTION, this, "setGuardEnabled"));
+				VL_ASSERTION, this, "setGuardEnabled"));
 		addLocalRef(guardMutex);
 	} else
 	{
@@ -745,7 +1018,7 @@ int IFObject::deserialize(const std::string& source, int offset)
 	{
 		ostringstream state;
 		state << "Could not deserialize variable 'id'.";
-		log(IFLogMessage(state.str(), IFLogMessage::VL_ERROR, 
+		log(IFLogMessage(state.str(), VL_ERROR, 
 			this, "deserialize"));
 		return false;
 	}
@@ -754,7 +1027,7 @@ int IFObject::deserialize(const std::string& source, int offset)
 	{
 		ostringstream state;
 		state << "Could not deserialize variable 'idNum'.";
-		log(IFLogMessage(state.str(), IFLogMessage::VL_ERROR, 
+		log(IFLogMessage(state.str(), VL_ERROR, 
 			this, "deserialize"));
 		return false;
 	}
@@ -775,7 +1048,7 @@ Ionflux::ObjectBase::IFSignal* IFObject::getSignalObjectChangedWrapper()
 			SIGNAL_NAME_OBJECT_CHANGED);
 		if (signalObjectChangedWrapper == 0)
 			log(IFLogMessage("Could not allocate signal wrapper.", 
-				IFLogMessage::VL_ASSERTION, this, 
+				VL_ASSERTION, this, 
 				"getSignalObjectChangedWrapper"));
 		addLocalRef(signalObjectChangedWrapper);
 	}
@@ -796,7 +1069,7 @@ Ionflux::ObjectBase::IFSignal* IFObject::getSignalObjectIDNumChangedWrapper()
 			SIGNAL_NAME_OBJECT_ID_NUM_CHANGED);
 		if (signalObjectIDNumChangedWrapper == 0)
 			log(IFLogMessage("Could not allocate signal wrapper.", 
-				IFLogMessage::VL_ASSERTION, this, 
+				VL_ASSERTION, this, 
 				"getSignalObjectIDNumChangedWrapper"));
 		addLocalRef(signalObjectIDNumChangedWrapper);
 	}
@@ -817,7 +1090,7 @@ Ionflux::ObjectBase::IFSignal* IFObject::getSignalObjectIDChangedWrapper()
 			SIGNAL_NAME_OBJECT_ID_CHANGED);
 		if (signalObjectIDChangedWrapper == 0)
 			log(IFLogMessage("Could not allocate signal wrapper.", 
-				IFLogMessage::VL_ASSERTION, this, 
+				VL_ASSERTION, this, 
 				"getSignalObjectIDChangedWrapper"));
 		addLocalRef(signalObjectIDChangedWrapper);
 	}

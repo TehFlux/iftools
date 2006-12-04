@@ -120,7 +120,7 @@ class IFThread
 		/// Shutdown state: enabled.
 		static const IFAtomic SHUTDOWN_ENABLED;
 		/// Signal type: thread.
-		static const IFSignalType SIGNAL_TYPE_THREAD;
+		static const Ionflux::ObjectBase::IFSignalType SIGNAL_TYPE_THREAD;
 		/// Signal name: start.
 		static const std::string SIGNAL_NAME_START;
 		/// Signal name: run.

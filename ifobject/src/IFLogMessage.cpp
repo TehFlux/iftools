@@ -50,18 +50,6 @@ IFLogMessageClassInfo::~IFLogMessageClassInfo()
 }
 
 // public member constants
-const Ionflux::ObjectBase::IFVerbosityLevel IFLogMessage::VL_ASSERTION = -60;
-const Ionflux::ObjectBase::IFVerbosityLevel IFLogMessage::VL_SILENT = -50;
-const Ionflux::ObjectBase::IFVerbosityLevel IFLogMessage::VL_ERROR_CRITICAL = -40;
-const Ionflux::ObjectBase::IFVerbosityLevel IFLogMessage::VL_ERROR = -30;
-const Ionflux::ObjectBase::IFVerbosityLevel IFLogMessage::VL_WARNING = -20;
-const Ionflux::ObjectBase::IFVerbosityLevel IFLogMessage::VL_WARNING_OPT = -10;
-const Ionflux::ObjectBase::IFVerbosityLevel IFLogMessage::VL_INFO = 0;
-const Ionflux::ObjectBase::IFVerbosityLevel IFLogMessage::VL_INFO_OPT = 10;
-const Ionflux::ObjectBase::IFVerbosityLevel IFLogMessage::VL_DEBUG = 20;
-const Ionflux::ObjectBase::IFVerbosityLevel IFLogMessage::VL_DEBUG_OPT = 30;
-const Ionflux::ObjectBase::IFVerbosityLevel IFLogMessage::VL_DEBUG_INSANE = 40;
-const Ionflux::ObjectBase::IFVerbosityLevel IFLogMessage::VL_ALL = 50;
 const std::string IFLogMessage::TEXT_ASSERTION = "ASSERTION FAILED";
 const std::string IFLogMessage::TEXT_SILENT = "";
 const std::string IFLogMessage::TEXT_ERROR_CRITICAL = "CRITICAL ERROR";
@@ -111,7 +99,7 @@ IFLogMessage::create(Ionflux::ObjectBase::IFObject* parentObject)
 	if (newObject == 0)
 	{
 		cerr << IFLogMessage("Could not allocate object instance.", 
-			IFLogMessage::VL_ERROR, 0, "IFObject::create") << endl;
+			VL_ERROR, 0, "IFObject::create") << endl;
 		return 0;
 	}
 	if (parentObject != 0)

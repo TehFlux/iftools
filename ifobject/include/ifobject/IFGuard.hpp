@@ -41,7 +41,7 @@ class IFGuardClassInfo
 		/// Constructor.
 		IFGuardClassInfo();
 		/// Destructor.
-		virtual ~IFGuardClassInfo() { };
+		virtual ~IFGuardClassInfo();
 };
 
 /** Guard.

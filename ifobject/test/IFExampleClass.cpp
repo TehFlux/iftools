@@ -148,7 +148,7 @@ bool IFExampleClass::opDispatch(const Ionflux::ObjectBase::IFOpName& opName,
 		// Try one of the base classes.
 		ostringstream state;
 		state << "Operation not supported: '" << opName << "'.";
-		log(IFLogMessage(state.str(), IFLogMessage::VL_ERROR, 
+		log(IFLogMessage(state.str(), VL_ERROR, 
 			this, "opDispatch"));
 		return false;
 	}
@@ -177,7 +177,7 @@ bool IFExampleClass::opDispatch(const Ionflux::ObjectBase::IFOpName& opName,
 					<< opName << "' is of wrong type (type is " 
 					<< (*params)[i]->getClassName() << ", expected " 
 					<< paramInfo->type->getName() << ").";
-				log(IFLogMessage(state.str(), IFLogMessage::VL_ERROR, 
+				log(IFLogMessage(state.str(), VL_ERROR, 
 					this, "opDispatch"));
 				return false;
 			}
@@ -189,7 +189,7 @@ bool IFExampleClass::opDispatch(const Ionflux::ObjectBase::IFOpName& opName,
 				ostringstream state;
 				state << "Required parameter " << i << " for operation '"
 					<< opName << "' is missing.";
-				log(IFLogMessage(state.str(), IFLogMessage::VL_ERROR, 
+				log(IFLogMessage(state.str(), VL_ERROR, 
 					this, "opDispatch"));
 				return false;
 			}
@@ -205,7 +205,7 @@ bool IFExampleClass::opDispatch(const Ionflux::ObjectBase::IFOpName& opName,
 	ostringstream state;
 	state << "Failed to dispatch operation '"
 		<< opName << "' for some unknown reason (this should not happen).";
-	log(IFLogMessage(state.str(), IFLogMessage::VL_ERROR, 
+	log(IFLogMessage(state.str(), VL_ERROR, 
 		this, "opDispatch"));
 	return false;
 }
@@ -220,7 +220,7 @@ bool IFExampleClass::opDispatch(const Ionflux::ObjectBase::IFOpName& opName,
 		// Try one of the base classes.
 		ostringstream state;
 		state << "Operation not supported: '" << opName << "'.";
-		log(IFLogMessage(state.str(), IFLogMessage::VL_ERROR, 
+		log(IFLogMessage(state.str(), VL_ERROR, 
 			this, "opDispatch"));
 		return false;
 	}
@@ -249,7 +249,7 @@ bool IFExampleClass::opDispatch(const Ionflux::ObjectBase::IFOpName& opName,
 					<< opName << "' is of wrong type (type is " 
 					<< (*params)[i]->getClassName() << ", expected " 
 					<< paramInfo->type->getName() << ").";
-				log(IFLogMessage(state.str(), IFLogMessage::VL_ERROR, 
+				log(IFLogMessage(state.str(), VL_ERROR, 
 					this, "opDispatch"));
 				return false;
 			}
@@ -261,7 +261,7 @@ bool IFExampleClass::opDispatch(const Ionflux::ObjectBase::IFOpName& opName,
 				ostringstream state;
 				state << "Required parameter " << i << " for operation '"
 					<< opName << "' is missing.";
-				log(IFLogMessage(state.str(), IFLogMessage::VL_ERROR, 
+				log(IFLogMessage(state.str(), VL_ERROR, 
 					this, "opDispatch"));
 				return false;
 			}
@@ -275,7 +275,7 @@ bool IFExampleClass::opDispatch(const Ionflux::ObjectBase::IFOpName& opName,
 		<< opName << "' (this is probably because there is no const "
 		"implementation available for the operation, but the object on "
 		"which the operation has been called is const).";
-	log(IFLogMessage(state.str(), IFLogMessage::VL_ERROR, 
+	log(IFLogMessage(state.str(), VL_ERROR, 
 		this, "opDispatch"));
 	return false;
 }
@@ -287,7 +287,7 @@ IFExampleEvent* IFExampleClass::createExampleEvent()
 	if (event == 0)
 	{
 		log(IFLogMessage("Could not allocate event.", 
-			IFLogMessage::VL_ASSERTION, this, "createExampleEvent"));
+			VL_ASSERTION, this, "createExampleEvent"));
 		return 0;
 	}
 	addLocalRef(event);
@@ -464,7 +464,7 @@ int IFExampleClass::deserialize(const std::string& source, int offset)
 	{
 		ostringstream state;
 		state << "Could not deserialize property 'someValue'.";
-		log(IFLogMessage(state.str(), IFLogMessage::VL_ERROR, 
+		log(IFLogMessage(state.str(), VL_ERROR, 
 			this, "deserialize"));
 		return false;
 	}
@@ -473,7 +473,7 @@ int IFExampleClass::deserialize(const std::string& source, int offset)
 	{
 		ostringstream state;
 		state << "Could not deserialize property 'someText'.";
-		log(IFLogMessage(state.str(), IFLogMessage::VL_ERROR, 
+		log(IFLogMessage(state.str(), VL_ERROR, 
 			this, "deserialize"));
 		return false;
 	}
@@ -482,7 +482,7 @@ int IFExampleClass::deserialize(const std::string& source, int offset)
 	{
 		ostringstream state;
 		state << "Could not deserialize property 'roProp'.";
-		log(IFLogMessage(state.str(), IFLogMessage::VL_ERROR, 
+		log(IFLogMessage(state.str(), VL_ERROR, 
 			this, "deserialize"));
 		return false;
 	}
@@ -491,7 +491,7 @@ int IFExampleClass::deserialize(const std::string& source, int offset)
 	{
 		ostringstream state;
 		state << "Could not deserialize variable 'miep'.";
-		log(IFLogMessage(state.str(), IFLogMessage::VL_ERROR, 
+		log(IFLogMessage(state.str(), VL_ERROR, 
 			this, "deserialize"));
 		return false;
 	}
@@ -512,7 +512,7 @@ Ionflux::ObjectBase::IFSignal* IFExampleClass::getSignalFirstWrapper()
 			SIGNAL_NAME_FIRST);
 		if (signalFirstWrapper == 0)
 			log(IFLogMessage("Could not allocate signal wrapper.", 
-				IFLogMessage::VL_ASSERTION, this, 
+				VL_ASSERTION, this, 
 				"getSignalFirstWrapper"));
 		addLocalRef(signalFirstWrapper);
 	}
@@ -533,7 +533,7 @@ Ionflux::ObjectBase::IFSignal* IFExampleClass::getSignalSecondWrapper()
 			SIGNAL_NAME_SECOND);
 		if (signalSecondWrapper == 0)
 			log(IFLogMessage("Could not allocate signal wrapper.", 
-				IFLogMessage::VL_ASSERTION, this, 
+				VL_ASSERTION, this, 
 				"getSignalSecondWrapper"));
 		addLocalRef(signalSecondWrapper);
 	}

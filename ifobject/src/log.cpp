@@ -1,11 +1,9 @@
-#ifndef IONFLUX_OBJECT_TYPES
-#define IONFLUX_OBJECT_TYPES
 /* ==========================================================================
  * Ionflux Object Base System
  * Copyright © 2006 Joern P. Meier
  * mail@ionflux.org
  * --------------------------------------------------------------------------
- * types.hpp                 Various types.
+ * log.cpp                 Logging.
  * ==========================================================================
  *
  * This file is part of Ionflux Object Base System.
@@ -26,12 +24,9 @@
  * 
  * ========================================================================== */
 
-#include <set>
-#include <vector>
-#include <map>
-#include <string>
-#include "stdint.h"
-#include "sigc++/signal.h"
+#include "ifobject/log.hpp"
+#include "ifobject/IFLogMessage.hpp"
+#include <iostream>
 
 namespace Ionflux
 {
@@ -39,47 +34,40 @@ namespace Ionflux
 namespace ObjectBase
 {
 
-// integers
-typedef int8_t Int8;
-typedef uint8_t UInt8;
-typedef int16_t Int16;
-typedef uint16_t UInt16;
-typedef int32_t Int32;
-typedef uint32_t UInt32;
-typedef int64_t Int64;
-typedef uint64_t UInt64;
+const IFObject* IF_DEFAULT_LOG_TARGET = 0;
 
-// unicode characters
-typedef UInt32 IFUniChar;
+void setDefaultLogTarget(const Ionflux::ObjectBase::IFObject* logTarget)
+{
+	IF_DEFAULT_LOG_TARGET = logTarget;
+}
 
-// forward declarations
-class IFObject;
-struct IFObjectRefInfo;
-struct IFOpParamInfo;
-struct IFOpResultInfo;
-struct IFOpInfo;
+const Ionflux::ObjectBase::IFObject* getDefaultLogTarget()
+{
+	return IF_DEFAULT_LOG_TARGET;
+}
 
-// other types
-typedef std::string IFObjectID;
-typedef int IFIDNum;
-typedef int IFEventType;
-typedef	std::set<Ionflux::ObjectBase::IFObject*> IFObjectSet;
-typedef	std::vector<Ionflux::ObjectBase::IFObject*> IFObjectVector;
-typedef std::map<Ionflux::ObjectBase::IFObject*, IFObjectRefInfo*> IFObjectRefMap;
-typedef std::string IFSignalType;
-typedef int IFMutexType;
-typedef sigc::signal_base* IFSignalBase;
-typedef int IFAtomic;
-typedef std::string IFOpName;
-typedef std::vector<IFOpParamInfo> IFOpParamInfoVector;
-typedef std::vector<IFOpResultInfo> IFOpResultInfoVector;
-typedef std::map<IFOpName, const IFOpInfo*> IFOpNameInfoMap;
+void log(const std::string& message, IFVerbosityLevel level, 
+	const std::string& source, const Ionflux::ObjectBase::IFObject* logTarget)
+{
+	IFLogMessage msg(message, level, 0, source);
+	if (logTarget == 0)
+	{
+		if (IF_DEFAULT_LOG_TARGET == 0)
+		{
+			if (level <= VL_WARNING_OPT)
+				std::cerr << msg << std::endl;
+			else
+				std::cout << msg << std::endl;
+		} else
+			IF_DEFAULT_LOG_TARGET->log(msg);
+	} else
+		logTarget->log(msg);
+}
 
 }
 
 }
 
-/** \file types.hpp
- * \brief Various types.
+/** \file log.cpp
+ * \brief Logging.
  */
-#endif

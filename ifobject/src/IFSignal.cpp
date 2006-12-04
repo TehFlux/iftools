@@ -44,6 +44,10 @@ IFSignalClassInfo::IFSignalClassInfo()
 	baseClassInfo.push_back(IFObject::CLASS_INFO);
 }
 
+IFSignalClassInfo::~IFSignalClassInfo()
+{
+}
+
 // run-time type information instance constants
 const IFSignalClassInfo IFSignal::iFSignalClassInfo;
 const Ionflux::ObjectBase::IFClassInfo* IFSignal::CLASS_INFO = &IFSignal::iFSignalClassInfo;
@@ -77,7 +81,7 @@ IFSignal::create(Ionflux::ObjectBase::IFObject* parentObject)
 	if (newObject == 0)
 	{
 		cerr << IFLogMessage("Could not allocate object instance.", 
-			IFLogMessage::VL_ERROR, 0, "IFObject::create") << endl;
+			VL_ERROR, 0, "IFObject::create") << endl;
 		return 0;
 	}
 	if (parentObject != 0)

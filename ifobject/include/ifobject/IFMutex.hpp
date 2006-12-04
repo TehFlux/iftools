@@ -42,7 +42,7 @@ class IFMutexClassInfo
 		/// Constructor.
 		IFMutexClassInfo();
 		/// Destructor.
-		virtual ~IFMutexClassInfo() { };
+		virtual ~IFMutexClassInfo();
 };
 
 /** Mutex.

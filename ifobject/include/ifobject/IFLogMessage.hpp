@@ -33,8 +33,6 @@ namespace Ionflux
 namespace ObjectBase
 {
 
-typedef int IFVerbosityLevel;
-
 /// Class information for class IFLogMessage.
 class IFLogMessageClassInfo
 : public Ionflux::ObjectBase::IFClassInfo
@@ -68,30 +66,6 @@ class IFLogMessage
 		std::string sourceFunctionName;
 		
 	public:
-		/// Verbosity level: assertion.
-		static const Ionflux::ObjectBase::IFVerbosityLevel VL_ASSERTION;
-		/// Verbosity level: silent.
-		static const Ionflux::ObjectBase::IFVerbosityLevel VL_SILENT;
-		/// Verbosity level: critical error.
-		static const Ionflux::ObjectBase::IFVerbosityLevel VL_ERROR_CRITICAL;
-		/// Verbosity level: error.
-		static const Ionflux::ObjectBase::IFVerbosityLevel VL_ERROR;
-		/// Verbosity level: warning.
-		static const Ionflux::ObjectBase::IFVerbosityLevel VL_WARNING;
-		/// Verbosity level: optional warning.
-		static const Ionflux::ObjectBase::IFVerbosityLevel VL_WARNING_OPT;
-		/// Verbosity level: info.
-		static const Ionflux::ObjectBase::IFVerbosityLevel VL_INFO;
-		/// Verbosity level: optional info.
-		static const Ionflux::ObjectBase::IFVerbosityLevel VL_INFO_OPT;
-		/// Verbosity level: debug.
-		static const Ionflux::ObjectBase::IFVerbosityLevel VL_DEBUG;
-		/// Verbosity level: optional debug.
-		static const Ionflux::ObjectBase::IFVerbosityLevel VL_DEBUG_OPT;
-		/// Verbosity level: insane debug.
-		static const Ionflux::ObjectBase::IFVerbosityLevel VL_DEBUG_INSANE;
-		/// Verbosity level: all.
-		static const Ionflux::ObjectBase::IFVerbosityLevel VL_ALL;
 		/// Verbosity level text: assertion.
 		static const std::string TEXT_ASSERTION;
 		/// Verbosity level text: silent.
@@ -138,9 +112,8 @@ class IFLogMessage
 		 */
 		IFLogMessage(const std::string& initMessage, 
 		Ionflux::ObjectBase::IFVerbosityLevel initLevel = 
-		Ionflux::ObjectBase::IFLogMessage::VL_INFO, const 
-		Ionflux::ObjectBase::IFObject* initSource = 0, const std::string& 
-		initFunctionName = "");
+		Ionflux::ObjectBase::VL_INFO, const Ionflux::ObjectBase::IFObject* 
+		initSource = 0, const std::string& initFunctionName = "");
 		
 		/** Destructor.
 		 *

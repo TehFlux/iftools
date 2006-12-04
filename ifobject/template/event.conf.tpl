@@ -29,6 +29,13 @@
 # the class configuration and the generator. The result processed to create 
 # the event header and implementation files.
 
+# using directives
+using = \{
+	'namespace std'
+	'namespace Ionflux::ObjectBase'
+\}
+
+# class definition
 class = \{
 	name = IF{$id|uppercase(1)}Event
 	shortDesc = {if shortDesc == ""}Event class for the '{$id}' event.{else}{$shortDesc}{/if}

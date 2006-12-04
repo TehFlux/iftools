@@ -32,6 +32,9 @@
 #include <iostream>
 #include "sigc++/connection.h"
 #include "ifobject/serialize.hpp"
+#include "ifobject/log.hpp"
+#include "ifobject/utf8.hpp"
+#include "libb64.hpp"
 #include "ifobject/IFClassInfo.hpp"
 #undef assert
 
@@ -192,10 +195,20 @@ class IFObject
 			Ionflux::ObjectBase::IFObjectVector* target = 0) const;
 		
 	public:
+		/// object literal prefix.
+		static const std::string LITERAL_PREFIX;
+		/// object literal separator.
+		static const std::string LITERAL_SEPARATOR;
+		/// encoding: raw.
+		static const std::string ENCODING_RAW;
+		/// encoding: UTF-8.
+		static const std::string ENCODING_UTF8;
+		/// encoding: base64.
+		static const std::string ENCODING_BASE64;
 		/// ID number: undefined.
 		static const IFIDNum ID_NUM_UNDEFINED;
 		/// Signal type: object.
-		static const IFSignalType SIGNAL_TYPE_OBJECT;
+		static const Ionflux::ObjectBase::IFSignalType SIGNAL_TYPE_OBJECT;
 		/// Signal name: object_changed.
 		static const std::string SIGNAL_NAME_OBJECT_CHANGED;
 		/// Signal name: object_id_num_changed.
@@ -299,6 +312,31 @@ class IFObject
 		 * \return String representation of the object.
 		 */
 		virtual  operator std::string() const;
+		
+		/** Get literal representation.
+		 *
+		 * Get a literal representation of the object. This is a string 
+		 * representation which contains the persistent state of the object, 
+		 * so it may be used to restore the state to an unititialized object. 
+		 * It also identifies the type of object which the literal represents.
+		 *
+		 * \param target where to store the literal.
+		 * \param encoding encoding to be used.
+		 */
+		virtual void getLiteral(std::string& target, const std::string& encoding 
+		= ENCODING_UTF8) const;
+		
+		/** Initialize from literal representation.
+		 *
+		 * Initialize the object from a literal representation. The object 
+		 * must be an instance of the class or a class derived from the class 
+		 * specified in the literal for this to work.
+		 *
+		 * \param source literal representation of an object.
+		 *
+		 * \return \c true on success, \c false otherwise.
+		 */
+		virtual bool initFromLiteral(const std::string& source);
 		
 		/** Copy.
 		 *

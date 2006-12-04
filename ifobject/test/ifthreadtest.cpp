@@ -106,7 +106,7 @@ void* TestThread::run()
 		sleep(interval);
 		message.str("");
 		message << "Thread #" << idNum << ": Doing stuff (" << i << ").";
-		log(IFLogMessage(message.str(), IFLogMessage::VL_INFO, 
+		log(IFLogMessage(message.str(), VL_INFO, 
 			this, "run"));
 		i++;
 	}

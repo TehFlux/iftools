@@ -51,7 +51,7 @@ IF{$ev.id|uppercase(1)}Event* {$class.name}::create{$ev.id|uppercase(1)}Event()
 	if (event == 0)
 	\{{if enableLogMessage == 1}
 		log(IFLogMessage("Could not allocate event.", 
-			IFLogMessage::VL_ASSERTION, this, "create{$ev.id|uppercase(1)}Event"));{else}
+			VL_ASSERTION, this, "create{$ev.id|uppercase(1)}Event"));{else}
 		std::cerr << "[{$class.name}::create{$ev.id|uppercase(1)}Event] ERROR: " 
 			"Could not allocate event." << std::endl;{/if}
 		return 0;
@@ -225,7 +225,7 @@ bool {$class.name}::opDispatch(const Ionflux::ObjectBase::IFOpName& opName,
 			return true;{/if}{/foreach}{/if}{if enableLogMessage == 1}
 		ostringstream state;
 		state << "Operation not supported: '" << opName << "'.";
-		log(IFLogMessage(state.str(), IFLogMessage::VL_ERROR, 
+		log(IFLogMessage(state.str(), VL_ERROR, 
 			this, "opDispatch"));{else}
 		std::cerr << "[{$class.name}::opDispatch] ERROR: "
 			"Operation not supported: '" << opName << "'.";{/if}
@@ -256,7 +256,7 @@ bool {$class.name}::opDispatch(const Ionflux::ObjectBase::IFOpName& opName,
 					<< opName << "' is of wrong type (type is " 
 					<< (*params)[i]->getClassName() << ", expected " 
 					<< paramInfo->type->getName() << ").";
-				log(IFLogMessage(state.str(), IFLogMessage::VL_ERROR, 
+				log(IFLogMessage(state.str(), VL_ERROR, 
 					this, "opDispatch"));{else}
 				std::cerr << "[{$class.name}::opDispatch] ERROR: "
 					"Parameter " << i << " for operation '"
@@ -273,7 +273,7 @@ bool {$class.name}::opDispatch(const Ionflux::ObjectBase::IFOpName& opName,
 				ostringstream state;
 				state << "Required parameter " << i << " for operation '"
 					<< opName << "' is missing.";
-				log(IFLogMessage(state.str(), IFLogMessage::VL_ERROR, 
+				log(IFLogMessage(state.str(), VL_ERROR, 
 					this, "opDispatch"));{else}
 				std::cerr << "[{$class.name}::opDispatch] ERROR: "
 					"Required parameter " << i << " for operation '"
@@ -292,7 +292,7 @@ bool {$class.name}::opDispatch(const Ionflux::ObjectBase::IFOpName& opName,
 	ostringstream state;
 	state << "Failed to dispatch operation '"
 		<< opName << "' for some unknown reason (this should not happen).";
-	log(IFLogMessage(state.str(), IFLogMessage::VL_ERROR, 
+	log(IFLogMessage(state.str(), VL_ERROR, 
 		this, "opDispatch"));{else}
 	std::cerr << "[{$class.name}::opDispatch] ERROR: "
 		"Failed to dispatch operation '" << opName 
@@ -312,7 +312,7 @@ bool {$class.name}::opDispatch(const Ionflux::ObjectBase::IFOpName& opName,
 			return true;{/if}{/foreach}{/if}{if enableLogMessage == 1}
 		ostringstream state;
 		state << "Operation not supported: '" << opName << "'.";
-		log(IFLogMessage(state.str(), IFLogMessage::VL_ERROR, 
+		log(IFLogMessage(state.str(), VL_ERROR, 
 			this, "opDispatch"));{else}
 		std::cerr << "[{$class.name}::opDispatch] ERROR: "
 			"Operation not supported: '" << opName << "'.";{/if}
@@ -343,7 +343,7 @@ bool {$class.name}::opDispatch(const Ionflux::ObjectBase::IFOpName& opName,
 					<< opName << "' is of wrong type (type is " 
 					<< (*params)[i]->getClassName() << ", expected " 
 					<< paramInfo->type->getName() << ").";
-				log(IFLogMessage(state.str(), IFLogMessage::VL_ERROR, 
+				log(IFLogMessage(state.str(), VL_ERROR, 
 					this, "opDispatch"));{else}
 				std::cerr << "[{$class.name}::opDispatch] ERROR: "
 					"Parameter " << i << " for operation '"
@@ -360,7 +360,7 @@ bool {$class.name}::opDispatch(const Ionflux::ObjectBase::IFOpName& opName,
 				ostringstream state;
 				state << "Required parameter " << i << " for operation '"
 					<< opName << "' is missing.";
-				log(IFLogMessage(state.str(), IFLogMessage::VL_ERROR, 
+				log(IFLogMessage(state.str(), VL_ERROR, 
 					this, "opDispatch"));{else}
 				std::cerr << "[{$class.name}::opDispatch] ERROR: "
 					"Required parameter " << i << " for operation '"
@@ -381,7 +381,7 @@ bool {$class.name}::opDispatch(const Ionflux::ObjectBase::IFOpName& opName,
 		<< opName << "' (this is probably because there is no const "
 		"implementation available for the operation, but the object on "
 		"which the operation has been called is const).";
-	log(IFLogMessage(state.str(), IFLogMessage::VL_ERROR, 
+	log(IFLogMessage(state.str(), VL_ERROR, 
 		this, "opDispatch"));{else}
 	std::cerr << "[{$class.name}::opDispatch] ERROR: "
 		"Failed to dispatch operation '"
@@ -400,7 +400,7 @@ bool {$class.name}::opDispatch(const Ionflux::ObjectBase::IFOpName& opName,
 	\{{if enableLogMessage == 1}
 		ostringstream state;
 		state << "Could not deserialize property '{$prop.name}'.";
-		log(IFLogMessage(state.str(), IFLogMessage::VL_ERROR, 
+		log(IFLogMessage(state.str(), VL_ERROR, 
 			this, "deserialize"));{else}
 		std::cerr << "[{$class.name}::deserialize] ERROR: "
 			"Could not deserialize property '{$prop.name}'.";{/if}
@@ -412,7 +412,7 @@ bool {$class.name}::opDispatch(const Ionflux::ObjectBase::IFOpName& opName,
 	\{{if enableLogMessage == 1}
 		ostringstream state;
 		state << "Could not deserialize variable '{$var.name}'.";
-		log(IFLogMessage(state.str(), IFLogMessage::VL_ERROR, 
+		log(IFLogMessage(state.str(), VL_ERROR, 
 			this, "deserialize"));{else}
 		std::cerr << "[{$class.name}::deserialize] ERROR: "
 			"Could not deserialize variable '{$var.name}'.";{/if}
@@ -565,7 +565,7 @@ Ionflux::ObjectBase::IFSignal* {$class.name}::getSignal{$ins.name|uppercase(1)}W
 			SIGNAL_NAME_{$ins.id|uppercase});
 		if (signal{$ins.name|uppercase(1)}Wrapper == 0){if enableLogMessage == 1}
 			log(IFLogMessage("Could not allocate signal wrapper.", 
-				IFLogMessage::VL_ASSERTION, this, 
+				VL_ASSERTION, this, 
 				"getSignal{$ins.name|uppercase(1)}Wrapper"));{else}
 			std::cerr << "[{$class.name}::getSignal{$ins.name|uppercase(1)}Wrapper] ERROR: " 
 				"Could not allocate signal wrapper." << std::endl;{/if}

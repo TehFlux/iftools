@@ -91,6 +91,29 @@ checkClass, bool recursive) const
 	return checkClass->isDerivedFrom(this, recursive);
 }
 
+bool IFClassInfo::isDerivedFrom(const std::string& searchClassName, bool 
+recursive) const
+{
+	bool result = false;
+	IFClassInfoVector::const_iterator i = baseClassInfo.begin();
+	const IFClassInfo* currentClassInfo = 0;
+	while (!result
+		&& (i != baseClassInfo.end()))
+	{
+		currentClassInfo = *i;
+		if (currentClassInfo != 0)
+		{
+			if (currentClassInfo->getName() == searchClassName)
+				result = true;
+			else
+			if (recursive)
+				result = currentClassInfo->isDerivedFrom(searchClassName, true);
+		}
+		i++;
+	}
+	return result;
+}
+
 void IFClassInfo::getOpInfo(Ionflux::ObjectBase::IFOpNameInfoMap& target) 
 const
 {

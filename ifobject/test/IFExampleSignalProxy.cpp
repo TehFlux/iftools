@@ -29,6 +29,9 @@
 #include "ifobject/IFLogMessage.hpp"
 #include <sstream>
 
+using namespace std;
+using namespace Ionflux::ObjectBase;
+
 namespace Ionflux
 {
 
@@ -97,7 +100,7 @@ IFExampleSignalProxy::create(Ionflux::ObjectBase::IFObject* parentObject)
 	if (newObject == 0)
 	{
 		std::cerr << IFLogMessage("Could not allocate object instance.", 
-			IFLogMessage::VL_ERROR, 0, "IFObject::create") << std::endl;
+			VL_ERROR, 0, "IFObject::create") << std::endl;
 		return 0;
 	}
 	if (parentObject != 0)

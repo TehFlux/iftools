@@ -164,6 +164,21 @@ class IFClassInfo
 		virtual bool isBaseOf(const Ionflux::ObjectBase::IFClassInfo* checkClass,
 		bool recursive = true) const;
 		
+		/** Derived class check.
+		 *
+		 * Check whether the class is derived from the specified class by 
+		 * searching base class records recursively. If \c recursive is set to
+		 * \c false, the search will be restricted to direct base classes.
+		 *
+		 * \param searchClassName Base class name to search for.
+		 * \param recursive Whether to search recursively.
+		 *
+		 * \return \c true if the class is a base class of the specified class, 
+		 * \c false otherwise.
+		 */
+		virtual bool isDerivedFrom(const std::string& searchClassName, bool 
+		recursive = true) const;
+		
 		/** Get operation info records.
 		 *
 		 * Get information about supported operations. The result is a map of 

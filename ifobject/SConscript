@@ -126,6 +126,8 @@ ifobjectenv = Environment(
 # IFObject library
 ifobjectLibHeaders = ['include/ifobject/libb64.hpp',
 	'include/ifobject/types.hpp',
+	'include/ifobject/log.hpp',
+	'include/ifobject/utf8.hpp',
 	'include/ifobject/serialize.hpp',
 	'include/ifobject/IFClassInfo.hpp',
 	'include/ifobject/IFObject.hpp',
@@ -140,6 +142,8 @@ ifobjectLibHeaders = ['include/ifobject/libb64.hpp',
 	'include/ifobject/IFObjectSignalProxy.hpp']
 
 ifobjectLibSources = ['build/libb64.cpp',
+	'build/log.cpp',
+	'build/utf8.cpp',
 	'build/serialize.cpp',
 	'build/IFClassInfo.cpp',
 	'build/IFObject.cpp',
@@ -190,6 +194,14 @@ packtestBin = ifobjectenv.Program('test/bin/packtest',
 	CPPPATH = cpppath + sigcppccflags,
 	LIBS = ['ifobject'] + libs + sigcpplibs,
 	LIBPATH = ['lib'] + libpath + sigcpplibpath)
+ifexampleclasstestBin = ifobjectenv.Program('test/bin/ifexampleclasstest',
+	['test/build/IFExampleClass.cpp', 
+		'test/build/IFExampleEvent.cpp',
+		'test/build/IFExampleSignalProxy.cpp', 
+		'test/build/ifexampleclasstest.cpp'],
+	CPPPATH = ['test/include', '.'] + cpppath + sigcppccflags,
+	LIBS = ['ifobject'] + libs + sigcpplibs,
+	LIBPATH = ['lib'] + libpath + sigcpplibpath)
 
 # targets and collections of files
 allHeaders = ifobjectLibHeaders
@@ -200,7 +212,8 @@ buildApps = ['bin/ifclassgen']
 buildTest = ['test/bin/ifclassinfotest',
 	'test/bin/ifobjecttest',
 	'test/bin/ifthreadtest',
-	'test/bin/packtest']
+	'test/bin/packtest',
+	'test/bin/ifexampleclasstest']
 
 # installation
 ifobjectenv.Install(prefix + '/include/ionflux', allHeaders)

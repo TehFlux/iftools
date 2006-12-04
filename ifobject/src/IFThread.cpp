@@ -86,7 +86,7 @@ IFThreadEvent* IFThread::createThreadEvent()
 	if (event == 0)
 	{
 		log(IFLogMessage("Could not allocate event.", 
-			IFLogMessage::VL_ASSERTION, this, "createThreadEvent"));
+			VL_ASSERTION, this, "createThreadEvent"));
 		return 0;
 	}
 	addLocalRef(event);
@@ -101,7 +101,7 @@ bool IFThread::start()
 	{
 		ostringstream state;
 		state << "Could not create thread (error code: " << result << ").";
-		log(IFLogMessage(state.str(), IFLogMessage::VL_ERROR, 
+		log(IFLogMessage(state.str(), VL_ERROR, 
 			this, "start"));
 		return false;
 	}
@@ -120,7 +120,7 @@ void* IFThread::run()
 	if (!initFlag)
 	{
 		log(IFLogMessage("Thread has not been initialized.", 
-			IFLogMessage::VL_ERROR, this, "run"));
+			VL_ERROR, this, "run"));
 		return 0;
 	}
 	shutdownFlag = SHUTDOWN_DISABLED;
@@ -140,7 +140,7 @@ void* IFThread::join()
 		pthread_join(thread, &result);
 	else
 		log(IFLogMessage("Thread has not been initialized.", 
-			IFLogMessage::VL_ERROR, this, "join"));
+			VL_ERROR, this, "join"));
 	return result;
 }
 
@@ -173,7 +173,7 @@ IFThread::create(Ionflux::ObjectBase::IFObject* parentObject)
 	if (newObject == 0)
 	{
 		cerr << IFLogMessage("Could not allocate object instance.", 
-			IFLogMessage::VL_ERROR, 0, "IFThread::create") << endl;
+			VL_ERROR, 0, "IFThread::create") << endl;
 		return 0;
 	}
 	if (parentObject != 0)
@@ -271,7 +271,7 @@ Ionflux::ObjectBase::IFSignal* IFThread::getSignalStartWrapper()
 			SIGNAL_NAME_START);
 		if (signalStartWrapper == 0)
 			log(IFLogMessage("Could not allocate signal wrapper.", 
-				IFLogMessage::VL_ASSERTION, this, 
+				VL_ASSERTION, this, 
 				"getSignalStartWrapper"));
 		addLocalRef(signalStartWrapper);
 	}
@@ -292,7 +292,7 @@ Ionflux::ObjectBase::IFSignal* IFThread::getSignalRunWrapper()
 			SIGNAL_NAME_RUN);
 		if (signalRunWrapper == 0)
 			log(IFLogMessage("Could not allocate signal wrapper.", 
-				IFLogMessage::VL_ASSERTION, this, 
+				VL_ASSERTION, this, 
 				"getSignalRunWrapper"));
 		addLocalRef(signalRunWrapper);
 	}
@@ -313,7 +313,7 @@ Ionflux::ObjectBase::IFSignal* IFThread::getSignalStopWrapper()
 			SIGNAL_NAME_STOP);
 		if (signalStopWrapper == 0)
 			log(IFLogMessage("Could not allocate signal wrapper.", 
-				IFLogMessage::VL_ASSERTION, this, 
+				VL_ASSERTION, this, 
 				"getSignalStopWrapper"));
 		addLocalRef(signalStopWrapper);
 	}

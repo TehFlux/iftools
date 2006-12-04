@@ -41,7 +41,7 @@ class IFSignalClassInfo
 		/// Constructor.
 		IFSignalClassInfo();
 		/// Destructor.
-		virtual ~IFSignalClassInfo() { };
+		virtual ~IFSignalClassInfo();
 };
 
 /** Signal.

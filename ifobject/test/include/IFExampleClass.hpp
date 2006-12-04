@@ -249,12 +249,6 @@ class IFExampleClass
 		 */
 		virtual void doNothing() const;
 		
-		/** Needs implementation..
-		 *
-		 * This function must be implemented by a derived class.
-		 */
-		virtual void needsImplementation() = 0;
-		
 		/** Serialize.
 		 *
 		 * Serialize the object. This creates a string which contains data 

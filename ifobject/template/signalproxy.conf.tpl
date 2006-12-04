@@ -29,6 +29,12 @@
 # the class configuration and the generator. The result processed to create 
 # the signal proxy header and implementation files.
 
+# using directives
+using = \{
+	'namespace std'
+	'namespace Ionflux::ObjectBase'
+\}
+
 # include files
 include= \{
 	header = \{
@@ -152,7 +158,7 @@ function.public[] = \{
 if (newObject == 0)\\
 \\\{\\
 	std::cerr << IFLogMessage("Could not allocate object instance.", \\
-		IFLogMessage::VL_ERROR, 0, "IFObject::create") << std::endl;\\
+		VL_ERROR, 0, "IFObject::create") << std::endl;\\
 	return 0;\\
 \\\}\\
 if (parentObject != 0)\\

@@ -29,6 +29,7 @@
 #include "test/include/IFExampleClass.hpp"
 
 using namespace std;
+using namespace Ionflux::ObjectBase;
 
 namespace Ionflux
 {

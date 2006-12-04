@@ -43,6 +43,10 @@ IFMutexClassInfo::IFMutexClassInfo()
 	baseClassInfo.push_back(IFObject::CLASS_INFO);
 }
 
+IFMutexClassInfo::~IFMutexClassInfo()
+{
+}
+
 // public member constants
 const Ionflux::ObjectBase::IFMutexType IFMutex::TYPE_DEFAULT = 0;
 const Ionflux::ObjectBase::IFMutexType IFMutex::TYPE_NORMAL = 1;
@@ -116,7 +120,7 @@ IFMutex::create(Ionflux::ObjectBase::IFObject* parentObject)
 	if (newObject == 0)
 	{
 		cerr << IFLogMessage("Could not allocate object instance.", 
-			IFLogMessage::VL_ERROR, 0, "IFObject::create") << endl;
+			VL_ERROR, 0, "IFObject::create") << endl;
 		return 0;
 	}
 	if (parentObject != 0)
