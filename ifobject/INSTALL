@@ -1,0 +1,50 @@
+================================================================================
+Ionflux Object Base System
+Copyright © 2006 Joern P. Meier
+mail@ionflux.org
+--------------------------------------------------------------------------------
+Install
+================================================================================
+
+To build the Ionflux Object Base System, the following dependencies must be 
+installed on your target system:
+
+• SCons (http://www.scons.org/)
+
+• libsigc++ (http://libsigc.sourceforge.net/)
+
+• iftools (http://iftools.sourceforge.net/), required for ifclassgen
+  (this will change in the future)
+
+Then, just change to a directory of yout choice and untar the distribution, 
+for example:
+
+  tar xvfj ifobject-0.0.1.tar.bz2
+
+Start the build with
+
+  scons all
+
+Install with
+
+  scons install prefix=<installation base directory>
+
+where <installation base directory> ist the directory where the 
+Ionflux Object Base System should be installed.
+
+ ******************************************************************************
+ * WARNING: It is not recommended at this point to install the Ionflux Object *
+ * Base System in a system directory, since this is an alpha version under    *
+ * development. (No harm should be done even if you decide otherwise, but     *
+ * there is no guarantee.)                                                    *
+ ******************************************************************************
+
+You can then test ifclassgen by creating the implementation files for 
+IFExampleClass:
+
+  bin/ifclassgen -epm conf/example.conf -i test/include IFExampleClass
+
+Take a look at conf/example.conf and conf/class/IFExampleClass.conf to see 
+how it works.
+
+Enjoy!

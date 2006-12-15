@@ -124,7 +124,7 @@ ifobjectenv = Environment(
     CCFLAGS = mainccflags)
 
 # IFObject library
-ifobjectLibHeaders = ['include/ifobject/libb64.hpp',
+ifobjectLibHeaders = ['include/libb64.hpp',
 	'include/ifobject/types.hpp',
 	'include/ifobject/log.hpp',
 	'include/ifobject/utf8.hpp',
@@ -204,7 +204,7 @@ ifexampleclasstestBin = ifobjectenv.Program('test/bin/ifexampleclasstest',
 	LIBPATH = ['lib'] + libpath + sigcpplibpath)
 
 # targets and collections of files
-allHeaders = ifobjectLibHeaders
+allHeaders = [ifobjectLibHeaders]
 buildLibs = buildIFObjectLib
 targetLibs = [ifobjectLib]
 targetApps = [ifclassgenBin]
@@ -216,7 +216,7 @@ buildTest = ['test/bin/ifclassinfotest',
 	'test/bin/ifexampleclasstest']
 
 # installation
-ifobjectenv.Install(prefix + '/include/ionflux', allHeaders)
+ifobjectenv.Install(prefix + '/include/ifobject', allHeaders)
 ifobjectenv.Install(prefix + '/lib', targetLibs)
 ifobjectenv.Install(prefix + '/bin', targetApps)
 
