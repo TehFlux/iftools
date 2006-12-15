@@ -1,0 +1,220 @@
+================================================================================
+Ionflux Object Base System
+Copyright © 2006 Joern P. Meier
+mail@ionflux.org
+--------------------------------------------------------------------------------
+ChangeLog
+================================================================================
+
+This file is generated from svn log for informational purposes only and thus 
+might not always be up to date. Use the svn log command to get a more recent 
+list of changes.
+
+------------------------------------------------------------------------
+r27 | ionflux | 2006-12-04 22:05:40 +0100 (Mo, 04 Dez 2006) | 14 lines
+
++ IFExampleClass: Added a test application; changed namespace 
+  declarations in the implementation.
++ Class templates: Changed to use new enum IFVerbosityLevel instead 
+  of IFLogMessage member constants; some changes to the way namespaces 
+  are used in the implementation of events and signal proxies.
++ Added a new logging API which is suitable for global functions and 
+  supports a default logging target; Moved declaration of verbosity 
+  levels from IFLogMessage member constants to enum IFVerbosityLevel.
++ Added UTF-8 encoder/decoder functions.
++ IFObject: Added an API to create a literal from an object and 
+  restore the persistent state from a literal.
++ Updated all classes from updated class templates.
++ Updated TODO list.
+
+------------------------------------------------------------------------
+r26 | ionflux | 2006-12-03 17:26:27 +0100 (So, 03 Dez 2006) | 7 lines
+
++ IFExampleClass: Added examples for serialization and operations; 
+  Moved the code to the test directory.
++ Class templates: Added fully qualified names for some 
+  Ionflux::ObjectBase types (this should be checked again, 
+  thoroughly).
++ Updated TODO list.
+
+------------------------------------------------------------------------
+r25 | ionflux | 2006-11-17 00:18:42 +0100 (Fr, 17 Nov 2006) | 6 lines
+
++ serialize: Replaced the old packing functions with a new template 
+  based implementation.
++ Added tests for packing and object serialization.
++ Updated class templates to use the new packing functions.
++ Updated TODO.
+
+------------------------------------------------------------------------
+r24 | ionflux | 2006-11-12 02:07:04 +0100 (So, 12 Nov 2006) | 5 lines
+
++ Added serialization for IFLogMessage.
++ Class templates: Fixed a bug in the serialization implementation 
+  template.
++ Added base64 encoder/decoder from libb64 project.
+
+------------------------------------------------------------------------
+r23 | ionflux | 2006-11-11 21:54:29 +0100 (Sa, 11 Nov 2006) | 6 lines
+
++ ifclassgen: Added automatic generartion of signal proxy classes.
++ Added signal proxies for IFObject and IFThread (testing required).
++ Added missing serialization utilities.
++ Updated class creation script to generate signal proxies.
++ Updated TODO list.
+
+------------------------------------------------------------------------
+r22 | ionflux | 2006-11-10 01:02:21 +0100 (Fr, 10 Nov 2006) | 4 lines
+
++ Added a test for operations.
++ Class templates/IFObject: Added support for serialization.
++ Updated TODO list.
+
+------------------------------------------------------------------------
+r21 | ionflux | 2006-11-09 00:47:34 +0100 (Do, 09 Nov 2006) | 5 lines
+
++ IFClassInfo: Removed constness of default value (until a better 
+  solution is found).
++ Class templates: Finished implementation of opDispatch() (testing 
+  required).
+
+------------------------------------------------------------------------
+r20 | ionflux | 2006-11-08 02:59:18 +0100 (Mi, 08 Nov 2006) | 3 lines
+
++ Added support for operations (work in progress).
++ Updated spec and TODO list.
+
+------------------------------------------------------------------------
+r19 | ionflux | 2006-11-06 00:17:16 +0100 (Mo, 06 Nov 2006) | 3 lines
+
++ IFThread: Added nanoSleep() function and a test application.
++ Updated TODO list.
+
+------------------------------------------------------------------------
+r18 | ionflux | 2006-10-12 23:55:22 +0200 (Do, 12 Okt 2006) | 8 lines
+
++ types.hpp: Added typedef for IFObjectVector.
++ Added a test for IFObject.
++ IFObject: Removed guards (this does not work since IFGuard is 
+  derived from IFObject, and removeAllRefs() is called in the 
+  destructor and would create an IFGuard object itself - maybe there 
+  is a better solution for this?); Added missing initialization of 
+  event source in the ID accessor functions.
+
+------------------------------------------------------------------------
+r17 | ionflux | 2006-10-12 22:12:05 +0200 (Do, 12 Okt 2006) | 5 lines
+
++ Added IFThread class (testing required).
++ types.hpp: Added typedef for atomic type.
++ IFLogMessage: Added guards feature.
++ getSVNStatus.sh: Replaced with new version.
+
+------------------------------------------------------------------------
+r16 | ionflux | 2006-09-26 22:32:47 +0200 (Di, 26 Sep 2006) | 11 lines
+
++ Added configuration and autogenerated implementation for IFSignal, 
+  IFGuard and IFLogMessage.
++ Class templates: Features are now checked uniformly in a dedicated 
+  section across the header and implementation templates; class info 
+  is now a feature which is activated either for IFObject derived 
+  classes or IFObject itself.
++ Several fixes in the configuration and template files to make 
+  things compile.
++ Added a script to create all classes.
++ Updated TODO.
+
+------------------------------------------------------------------------
+r15 | ionflux | 2006-09-25 22:45:14 +0200 (Mo, 25 Sep 2006) | 7 lines
+
++ Added configuration and autogenerated implementation for the 
+  IFMutex class.
++ types.hpp: Added typedef for IFMutexType.
++ IFExampleClass.conf: Fixed errors in the comments.
++ IFObject.conf: Removed redundant forward declarations.
++ Class templates: Changed some obsolete parts.
+
+------------------------------------------------------------------------
+r14 | ionflux | 2006-09-25 02:35:52 +0200 (Mo, 25 Sep 2006) | 15 lines
+
++ createClass.sh: Added -e command line option to create event classes
+  when a class is generated.
++ Class templates: Added features which can be enabled by setting 
+  keywords in the class configuration; Changed code for 'managed' 
+  properties to use new local reference mechanism; General whitespace 
+  cleanup.
++ Added include file for basic types.
++ Added main configuration file for example class and associated 
+  events.
++ IFExampleClass.conf: Updated to support new features.
++ Added configuration for IFObject (to be reviewed thoroughly).
++ Added automatically generated class files (which probably will not 
+  compile - more cleanup/testing is required and some classes are 
+  missing; see TODO).
+
+------------------------------------------------------------------------
+r13 | ionflux | 2006-09-12 23:03:18 +0200 (Di, 12 Sep 2006) | 6 lines
+
++ ifclassgen: Added generation of event classes.
++ IFExampleClass: Some corrections to include files and forward 
+  declarations; Added documentation for the new inheritanceType option.
++ Class templates: Added support for inheritance types.
++ Removed class generator item from TODO list.
+
+------------------------------------------------------------------------
+r12 | ionflux | 2006-09-12 21:46:03 +0200 (Di, 12 Sep 2006) | 6 lines
+
++ Class templates: Fixed the license disclaimer.
++ Added a global configuration file for configuration common to all 
+  classes.
++ Added a class generator application.
++ Updated the class creation script to use the new class generator.
+
+------------------------------------------------------------------------
+r11 | ionflux | 2006-08-31 23:16:20 +0200 (Do, 31 Aug 2006) | 8 lines
+
++ Class templates: Moved template files to 'class' subdirectory; 
+  Removed IFSignal dependency for objects which are not derived from 
+  IFObject.
++ IFClassInfo: Added implementation and test.
++ Added helper scripts for creating classes.
++ Added SCons build scripts.
++ Removed some finished items from the TODO list.
+
+------------------------------------------------------------------------
+r10 | ionflux | 2006-08-13 04:05:55 +0200 (So, 13 Aug 2006) | 7 lines
+
++ Class templates: Some corrections of  whitespace; Changed include 
+  prefix feature; Added some mandatory includes for classes derived 
+  from IFObject.
++ IFClassInfo: Added functions and properties required by the IOBS.
++ IFExampleClass: 
++ Updated TODO list.
+
+------------------------------------------------------------------------
+r9 | ionflux | 2006-08-13 00:00:42 +0200 (So, 13 Aug 2006) | 4 lines
+
++ More work on the new class templates and the example class 
+  configuration. Most of the old stuff has been removed or updated 
+  now, but some testing is required.
+
+------------------------------------------------------------------------
+r8 | ionflux | 2006-08-12 00:48:02 +0200 (Sa, 12 Aug 2006) | 2 lines
+
++ More work on the new class templates and the example class.
+
+------------------------------------------------------------------------
+r7 | ionflux | 2006-08-11 00:55:21 +0200 (Fr, 11 Aug 2006) | 3 lines
+
++ Started work on IFClassInfo and new class templates (not finished 
+  yet - do not use this!).
+
+------------------------------------------------------------------------
+r6 | ionflux | 2006-08-08 19:58:24 +0200 (Di, 08 Aug 2006) | 6 lines
+
++ Added basic directory structure, a specification and a list of 
+  important tasks to be done for the Ionflux Object Base System. 
+  This is intended as the foundation of a modular re-implementation 
+  of the Ionflux Tools Class library (see README and the spec for 
+  further information).
+
+------------------------------------------------------------------------
