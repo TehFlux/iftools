@@ -286,12 +286,16 @@ void ConfigTree::parseConfig(const std::string& configData)
 									&& (currentToken.value[0] 
 										!= TT_NESTED_OPEN.validChars[0])
 									&& (currentToken.value[0] 
-										!= TT_NESTED_CLOSE.validChars[0]))
+										!= TT_NESTED_CLOSE.validChars[0])
+									&& (currentToken.value[0] 
+										!= Tokenizer::ESCAPE_CHAR))
 								|| (currentToken.value.size() == 0))
 							{
 								/* Append the escape character, since it does 
-								   not really have a special meaning inside an 
-								   option value besides escaping newlines. */
+								   not initiate a valid escape sequence (this 
+								   is somehow inconsistent, but I'll leave it 
+								   for now, since all of this is going to be 
+								   rewritten). */
 								currentEntry.line.option.value.append(1, 
 									Tokenizer::ESCAPE_CHAR);
 							}
