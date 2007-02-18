@@ -134,10 +134,10 @@ int main(int argc, char* argv[])
 	if (locationOpt != 0)
 		timeZoneLocation = locationOpt->value;
 	if (posixOpt != 0)
-		now.setTime(static_cast<time_t>(
+		now.setTimePosix(static_cast<time_t>(
 			strtol(posixOpt->value.c_str(), 0, 10)));
 	if (ticksOpt != 0)
-		now.setTime(static_cast<TimeTicks>(
+		now.setTimeTicks(static_cast<TimeTicks>(
 			strtoll(ticksOpt->value.c_str(), 0, 10)));
 	now.setTimeZone(timeZoneLocation);
 	if (timestampOpt != 0)

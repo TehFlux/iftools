@@ -273,9 +273,10 @@ DateTime::DateTime()
   manageTimeZone(false)
 {
 	initTimeZones();
-	setTime(time(0));
+	setTimePosix(time(0));
 }
 
+/*
 DateTime::DateTime(time_t initTime)
 : ticks(0), timestamp(""), timeZone(0), year(1), month(1), day(1), hour(0), 
   minute(0), second(0), weekDay(0), yearDay(0), dstState(false), 
@@ -284,6 +285,7 @@ DateTime::DateTime(time_t initTime)
 	initTimeZones();
 	setTime(initTime);
 }
+*/
 
 DateTime::DateTime(TimeTicks initTime)
 : ticks(0), timestamp(""), timeZone(0), year(1), month(1), day(1), hour(0), 
@@ -291,7 +293,7 @@ DateTime::DateTime(TimeTicks initTime)
   manageTimeZone(false)
 {
 	initTimeZones();
-	setTime(initTime);
+	setTimeTicks(initTime);
 }
 
 DateTime::DateTime(struct tm initTime)
@@ -525,16 +527,31 @@ DateTime DateTime::getNth(Year targetYear, int targetMonth,
 	return result;
 }
 
+/*
 void DateTime::setTime(time_t newTime)
 {
 	ticks = POSIX_EPOCH + newTime;
 	updateBrokenDownTime(0);
 }
+*/
 
-void DateTime::setTime(TimeTicks newTime)
+void DateTime::setTimePosix(time_t newTime)
+{
+	ticks = POSIX_EPOCH + newTime;
+	updateBrokenDownTime(0);
+}
+
+void DateTime::setTimeTicks(TimeTicks newTime)
 {
 	ticks = newTime;
 	updateBrokenDownTime(0);
+}
+
+void DateTime::setTime(TimeTicks newTime)
+{
+    std::cerr << "[DateTime::setTimeTicks] WARNING: (DEPRECATED) "
+        "Use setTimeTicks() or setTimePosix() instead." << std::endl;
+    setTimeTicks(newTime);
 }
 
 void DateTime::setTime(tm newTime)
@@ -556,7 +573,7 @@ void DateTime::setTime(const std::string &newTime)
 
 void DateTime::setTime(const DateTime &newTime)
 {
-	setTime(newTime.getTicks());
+	setTimeTicks(newTime.getTicks());
 }
 
 void DateTime::setTime(int newYear, int newMonth, int newDay, 
@@ -791,7 +808,7 @@ bool DateTime::isLeapYear(Year checkYear)
 
 DateTime &DateTime::shift(int shiftSeconds)
 {
-	setTime(ticks + shiftSeconds);
+	setTimeTicks(ticks + shiftSeconds);
 	return *this;
 }
 
@@ -981,7 +998,9 @@ bool DateTime::isDatetime(const std::string &checkDatetime)
 
 DateTime DateTime::getUTC()
 {
-	return DateTime(getTicks());
+    DateTime result;
+    result.setTimeTicks(getTicks());
+	return result;
 }
 
 TimeTicks DateTime::getTicks() const
@@ -1114,13 +1133,13 @@ DateTime& DateTime::operator=(const DateTime& newTime)
 
 DateTime& DateTime::operator+=(TimeTicks seconds)
 {
-	setTime(ticks + seconds);
+	setTimeTicks(ticks + seconds);
 	return *this;
 }
 
 DateTime& DateTime::operator-=(TimeTicks seconds)
 {
-	setTime(ticks - seconds);
+	setTimeTicks(ticks - seconds);
 	return *this;
 }
 

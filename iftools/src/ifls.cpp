@@ -133,9 +133,9 @@ int main(int argc, char* argv[])
 	for (unsigned int i = 0; i < dirEntries.size(); i++)
 	{
 		file.setFullName(dirEntries[i]);
-		accessTime.setTime(file.getAccessTime());
-		modTime.setTime(file.getModTime());
-		changeTime.setTime(file.getChangeTime());
+		accessTime.setTimePosix(file.getAccessTime());
+		modTime.setTimePosix(file.getModTime());
+		changeTime.setTimePosix(file.getChangeTime());
 		if (file.getPath().size() > 0)
 			pathSep = DIR_SEPARATOR;
 		else

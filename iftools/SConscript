@@ -275,7 +275,7 @@ else:
 mainccflags = ['-Wall',
     '-Wno-deprecated',
     '-pedantic',
-    '-O3'] + debugFlags + ccflags
+    '-O2'] + debugFlags + ccflags
 
 toolsenv = Environment(
     CXX = cxx,

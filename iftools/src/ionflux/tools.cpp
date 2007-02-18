@@ -115,8 +115,8 @@ void explode(const std::string& bytes, const std::string& splitString,
 	result.clear();
 	if ((bytes == "") || (splitString == ""))
 		return;
-	unsigned int currentPos = 0;
-	unsigned int nextPos;
+	string::size_type currentPos = 0;
+	string::size_type nextPos;
 	while ((currentPos < bytes.size()) 
 		&& ((nextPos = bytes.find(splitString, currentPos)) != string::npos))
 	{

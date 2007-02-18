@@ -269,13 +269,15 @@ class DateTime
 		 *
 		 * \param initTime POSIX timestamp.
 		 */
-		DateTime(time_t initTime);
+		// DateTime(time_t initTime);
 		
 		/** Constructor.
 		 *
 		 * Construct new DateTime object which will be initialized with the
 		 * UTC seconds passed as an argument.
 		 *
+         * \deprecated Ambiguous if 64-bit time_t is used.
+         *
 		 * \param initTime Number of UTC seconds since 0001-01-01 00:00:00.
 		 */
 		DateTime(TimeTicks initTime);
@@ -337,12 +339,25 @@ class DateTime
 		 *
 		 * \sa setLocalTime()
 		 */
-		virtual void setTime(time_t newTime);
+		virtual void setTimePosix(time_t newTime);
 		
 		/** Set time.
 		 *
 		 * Set the date and time (UTC) represented by this DateTime object.
 		 *
+		 * \param newTime Number of UTC seconds since 0001-01-01 00:00:00.
+		 *
+		 * \sa setLocalTime()
+		 */
+		virtual void setTimeTicks(TimeTicks newTime);
+		
+		/** Set time.
+		 *
+		 * Set the date and time (UTC) represented by this DateTime object.
+		 *
+         * \deprecated Ambiguous if 64-bit time_t is used. Use setTimeTicks()
+         * or setTimePosix() instead.
+         *
 		 * \param newTime Number of UTC seconds since 0001-01-01 00:00:00.
 		 *
 		 * \sa setLocalTime()

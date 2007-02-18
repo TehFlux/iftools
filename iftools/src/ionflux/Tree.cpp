@@ -79,6 +79,7 @@ DataEntry Tree::resolve(const std::string &treePathExpr, bool createPath,
 	DataEntry result;
 	result.node = 0;
 	result.index = 0;
+    result.subscript = false;
 	vector<NodeReference> nodeRefs;
 	TreePath treePath;
 	if (!TreeResolver::parseTreePath(treePathExpr, nodeRefs))

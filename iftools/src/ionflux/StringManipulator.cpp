@@ -99,7 +99,7 @@ std::string StringErase::process(const std::string& bytes,
 		return bytes;
 	string result = bytes;
 	string eraseBytes = (*args)[0];
-	unsigned int currentPos;
+	string::size_type currentPos;
 	while ((currentPos = result.find(eraseBytes)) != string::npos)
 		result.erase(currentPos, eraseBytes.size());
 	return result;
@@ -120,7 +120,7 @@ std::string StringReplace::process(const std::string& bytes,
 	string result = bytes;
 	string replaceBytes = (*args)[0];
 	string replaceWith = (*args)[1];
-	unsigned int currentPos;
+	string::size_type currentPos;
 	while ((currentPos = result.find(replaceBytes)) != string::npos)
 		result.replace(currentPos, replaceBytes.size(), replaceWith);
 	return result;
