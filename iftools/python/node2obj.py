@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """Convert an Ionflux Tools node hierarchy to a python object hierarchy."""
 
-import IFTools
+import hashlib, IFTools
 
 def isIdentifier(text):
     """Check whether text is an identifier.
@@ -113,6 +113,15 @@ class Node:
         c.readConfig(fileName)
         r = c.getRoot()
         self.setFromIFToolsNode(r)
+    
+    def getMD5Hash(self):
+        """Get MD5 hash for the node."""
+        h = hashlib.md5()
+        for it in self.data:
+            h.update(str(it))
+        for cn in self.childNodes:
+            h.update(cn.getMD5Hash())
+        return h.hexdigest()
     
     def __str__(self):
         return "Node['" + str(self.name) + "', " + str(self.nodeID) + "]"

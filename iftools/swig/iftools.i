@@ -13,6 +13,7 @@
 #include "Tree.hpp"
 #include "Config.hpp"
 #include "ConfigTree.hpp"
+#include "Template.hpp"
 %}
 
 namespace Ionflux
@@ -401,6 +402,20 @@ class ConfigTree
 		virtual void set(const std::string& key, const std::string& value);
 		virtual void dump(Node *node);
 		static std::string escapeValue(const std::string& value);
+};
+
+class Template
+: public Tree
+{
+	public:
+		Template();
+		virtual ~Template();
+		virtual void readTemplate(const std::string& templateFileName);
+		virtual void setTemplate(const std::string& newTemplate);
+		virtual std::string process(const std::string& newTemplate = "",
+			Node* newConfig = 0);
+		virtual void setMaxNestingDepth(unsigned int newMaxNestingDepth);
+		virtual unsigned int getMaxNestingDepth();
 };
 
 }
