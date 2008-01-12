@@ -112,8 +112,7 @@ elif (platform == 'win32'):
 	libpthread = ['pthreadGC']
 	libext = ".dll"
 
-mainccflags = ['-Wall', '-Wno-deprecated', '-O3', 
-     '-funroll-loops', '-mtune=athlon-tbird'] + debugFlags + ccflags
+mainccflags = ['-Wall', '-Wno-deprecated', '-O2', ] + debugFlags + ccflags
 
 sigcppccflags = Split(os.popen('pkg-config --cflags sigc++-2.0').read())
 sigcpplibs = Split(os.popen('pkg-config --libs-only-l sigc++-2.0').read())
