@@ -1,8 +1,26 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-"""Convert an Ionflux Tools node hierarchy to a python object hierarchy."""
+"""Convert an Ionflux Tools node hierarchy to a python object hierarchy. Also 
+has some tools to do the reverse."""
 
 import hashlib, IFTools
+
+DATA_LIST_KEY = "__data"
+"""Dictionary entry to denote list of data entries."""
+
+class N2OError(Exception):
+    """Generic exception for Node2Object errors."""
+    value = ""
+    """Value which is reported with the exception."""
+    
+    def __init__(self, value = ""):
+        self.value = value
+    
+    def __str__(self):
+        return self.value
+    
+    def __repr__(self):
+        return "N2OError(" + repr(self.value) + ")"
 
 def isIdentifier(text):
     """Check whether text is an identifier.
@@ -143,4 +161,86 @@ class Node:
             i += 1
         r += "])\n"
         return r
+    
+    @classmethod
+    def getConfig(cls, fileName):
+        """Get IFTools configuration tree."""
+        c = IFTools.ConfigTree()
+        c.readConfig(fileName)
+        return c
+    
+    @classmethod
+    def initFromPyObject(cls, node, obj):
+        """Initialize IFTools node from Python object.
+        
+        Initialize an IFTools node hierarchy from a hierarchy of native 
+        python objects. This works as follows:
+        
+        If the object is a dictionary, it is treated as a set of named child 
+        nodes. If there is an entry with key DATA_LIST_KEY ("__data" by 
+        default) and a list value, this entry is treated as the vector of data 
+        entries sof the current node.
+        
+        If the object is a list, it is treated as a set of unnamed child 
+        nodes.
+        
+        If the object is either one of string, int or float, it is treated as 
+        a data entry.
+        
+        Nodes are processed recursively in this fashion to yield a hierarchy 
+        of nodes, with the specified node itself as the root node. Returns 
+        the root node."""
+        node.setAutoCreate(True)
+        node.setIndexMode(IFTools.Node.INDEX_MODE_NODE)
+        if (isinstance(obj, dict)):
+            # Dictionary of named child nodes and maybe a data entry list.
+            for k in obj:
+                it = obj[k]
+                if ((k == DATA_LIST_KEY)
+                    and isinstance(it, list)):
+                    # Data entry list.
+                    for i in range(0, len(it)):
+                        d = it[i]
+                        dataType = IFTools.Node.NODE_DATA_BLOB
+                        if (isinstance(d, int)):
+                            dataType = IFTools.Node.NODE_DATA_INT
+                        elif (isinstance(d, float)):
+                            dataType = IFTools.Node.NODE_DATA_DOUBLE
+                        else:
+                            raise N2OError("Unknown data type for item: " 
+                                + str(d))
+                        if (i == 0):
+                            # Set node data type on first item.
+                            node.setDataType(dataType)
+                        # Set data entry.
+                        if (dataType == IFTools.Node.NODE_DATA_BLOB):
+                            node.setData(i, d)
+                        elif (dataType == IFTools.Node.NODE_DATA_INT):
+                            node.setInt(i, d)
+                        elif (dataType == IFTools.Node.NODE_DATA_DOUBLE):
+                            node.setDouble(i, d)
+                else:
+                    # Named child node.
+                    cn = node.findChild(k)
+                    cls.initFromPyObject(cn, it)
+        elif (isinstance(obj, list)):
+            # List of unnamed child nodes.
+            for it in obj:
+                cn = node.addChild()
+                cls.initFromPyObject(cn, it)
+        else:
+            # Data entry.
+            if (isinstance(obj, str)):
+                node.setDataType(IFTools.Node.NODE_DATA_BLOB)
+                node.setData(0, obj)
+            elif (isinstance(obj, int)):
+                node.setDataType(IFTools.Node.NODE_DATA_INT)
+                node.setInt(0, obj)
+            elif (isinstance(obj, float)):
+                node.setDataType(IFTools.Node.NODE_DATA_DOUBLE)
+                node.setDouble(0, obj)
+            else:
+                raise N2OError("Unknown data type for item: " 
+                    + str(obj))
+        return node
 
