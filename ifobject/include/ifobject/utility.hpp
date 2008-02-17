@@ -90,18 +90,6 @@ bool isOneOf(char c, const std::string& testChars);
  */
 bool isNumber(const std::string &bytes);
 
-/** Check whether a string represents an alpha.
- *
- * Returns \c true if the string represents a (latin) alpha, \c false 
- * otherwise.
- *
- * \param bytes String to be checked.
- *
- * \return \c true if the string represents a (latin) alpha, \c false 
- * otherwise.
- */
-bool isAlpha(const std::string &bytes);
-
 /** Check whether a string represents an integer.
  *
  * Returns \c true if the string represents a (decimal) integer value 
@@ -179,6 +167,32 @@ std::string toLower(const std::string &text, unsigned int numChars = 0,
  */
 std::string trim(const std::string& bytes, bool leftTrim = true, 
 	bool rightTrim = true);
+
+/** Prefix check.
+ *
+ * Check whether the string of bytes has the specified prefix.
+ *
+ * \param bytes Data to be checked.
+ * \param prefix Prefix.
+ * \param ignoreCase Ignore case.
+ *
+ * \return \c true if the data has the prefix, \c false otherwise.
+ */
+bool hasPrefix(const std::string& bytes, const std::string& prefix, 
+    bool ignoreCase = true);
+
+/** Prefix check.
+ *
+ * Check whether the string of bytes has any of the specified prefixes.
+ *
+ * \param bytes Data to be checked.
+ * \param prefixes Vector of prefixes.
+ * \param ignoreCase Ignore case.
+ *
+ * \return \c true if the data has any of the prefixes, \c false otherwise.
+ */
+bool hasPrefix(const std::string& bytes, const std::vector<std::string>& 
+    prefixes, bool ignoreCase = true);
 
 }
 

@@ -28,7 +28,7 @@
 
 # You will have to set these to the correct paths yourself 
 # Sorry for the inconvenience!
-IFOBJECT_PREFIX=/home/ionflux/usr
+IFOBJECT_PREFIX=/home/ionflux/svn/iftools/trunk/ifobject
 PYTHON_INCLUDE_PATH=/usr/include/python2.5
 
 # You can usually leave those as they are if the prefix is correct.

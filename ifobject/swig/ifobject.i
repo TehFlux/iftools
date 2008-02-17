@@ -5,6 +5,7 @@
 %{
 #include "ifobject/IFClassInfo.hpp"
 #include "ifobject/IFObject.hpp"
+#include "ifobject/utility.hpp"
 %}
 
 namespace Ionflux
@@ -179,6 +180,30 @@ target, bool append = true);
 int unpack(const std::string& source, Ionflux::ObjectBase::IFObject*& 
 target, int offset = 0);
 
+const unsigned int READ_BUFFER_SIZE;
+
+bool readFile(const std::string& fileName, std::string& target, 
+    Ionflux::ObjectBase::IFObject* logTarget = 0);
+void explode(const std::string& bytes, const std::string& splitString, 
+	std::vector<std::string>& result);
+bool isOneOf(char c, const std::string& testChars);
+bool isNumber(const std::string &bytes);
+bool isInteger(const std::string &bytes);
+bool isFloat(const std::string &bytes);
+bool isIdentifier(const std::string &bytes);
+std::string toUpper(const std::string &text, unsigned int numChars = 0, 
+	unsigned int offset = 0);
+std::string toLower(const std::string &text, unsigned int numChars = 0, 
+	unsigned int offset = 0);
+std::string trim(const std::string& bytes, bool leftTrim = true, 
+	bool rightTrim = true);
+bool hasPrefix(const std::string& bytes, const std::string& prefix, 
+    bool ignoreCase = true);
+bool hasPrefix(const std::string& bytes, const std::vector<std::string>& 
+    prefixes, bool ignoreCase = true);
+
 }
 
 }
+
+%template(StringVector) std::vector<std::string>;

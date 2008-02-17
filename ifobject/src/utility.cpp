@@ -249,6 +249,39 @@ std::string trim(const std::string& bytes, bool leftTrim, bool rightTrim)
 	return result;
 }
 
+bool hasPrefix(const std::string& bytes, const std::string& prefix, 
+    bool ignoreCase)
+{
+    std::string checkBytes;
+    std::string checkPrefix;
+    if (ignoreCase)
+    {
+        checkBytes = toLower(bytes);
+        checkPrefix = toLower(prefix);
+    } else
+    {
+        checkBytes = bytes;
+        checkPrefix = prefix;
+    }
+    if (checkBytes.size() < checkPrefix.size())
+        return false;
+    if (checkBytes.substr(0, checkPrefix.size()) == checkPrefix)
+        return true;
+    return false;
+}
+
+bool hasPrefix(const std::string& bytes, const std::vector<std::string>& 
+    prefixes, bool ignoreCase)
+{
+    std::vector<std::string>::const_iterator i = prefixes.begin();
+    while (i != prefixes.end())
+    {
+        if (hasPrefix(bytes, *i, ignoreCase))
+            return true;
+    }
+    return false;
+}
+
 }
 
 }
