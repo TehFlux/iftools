@@ -278,6 +278,7 @@ bool hasPrefix(const std::string& bytes, const std::vector<std::string>&
     {
         if (hasPrefix(bytes, *i, ignoreCase))
             return true;
+        i++;
     }
     return false;
 }
