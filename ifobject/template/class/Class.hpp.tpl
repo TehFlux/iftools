@@ -193,7 +193,18 @@ struct {$st.name}
 		 *
 {swrap 75 "		 * "}\\return Current value of {$prop.desc|lowercase(1)}.{/swrap}
 		 */
-{swrap 75 "		"}virtual {$prop.type} get{$prop.name|uppercase(1)}() const;{/swrap}{/if}{/if}{/section}\#ifndef {$project.includeGuardPrefix}{$class.name|uppercase}
+{swrap 75 "		"}virtual {$prop.type} get{$prop.name|uppercase(1)}() const;{/swrap}{/if}{/if}{/section}{section declareGlobalFunc}
+
+/** {$func.shortDesc}.{if func.longDesc != ""}
+ *
+{$func.longDesc|swrap(72,' * ')}{/if}{foreach prm in func.param}{first}
+ *{/first}{single}
+ *{/single}
+{swrap 75 " * "}\\param {$prm.name} {$prm.desc}.{/swrap}{/foreach}{if func.return.value != ""}
+ *
+{swrap 75 " * "}\\return {$func.return.desc}.{/swrap}{/if}
+ */
+{swrap 75}{$func.type} {$func.name}({foreach prm in func.param}{$prm.type} {$prm.name}{if prm.default != ""} = {$prm.default}{/if}{first}, {/first}{mid}, {/mid}{/foreach}){if func.const == "true"} const{/if}{if func.pureVirtual == "true"} = 0{/if};{/swrap}{/section}\#ifndef {$project.includeGuardPrefix}{$class.name|uppercase}
 \#define {$project.includeGuardPrefix}{$class.name|uppercase}
 /* ==========================================================================
  * {$project.name}
@@ -418,23 +429,17 @@ class {$class.name}{if ( haveBaseIFObject == 1 ) || ( haveBaseOther == 1 )}
 		 * \\return Signal for the {$ins.desc} event.
 		 */
 		virtual Ionflux::ObjectBase::IFSignal* getSignal{$ins.name|uppercase(1)}Wrapper();{/foreach}{/foreach}
-\};{foreach func in function.global}
-
-/** {$func.shortDesc}.{if func.longDesc != ""}
- *
-{$func.longDesc|swrap(72,' * ')}{/if}{foreach prm in func.param}{first}
- *{/first}{single}
- *{/single}
-{swrap 75 " * "}\\param {$prm.name} {$prm.desc}.{/swrap}{/foreach}{if func.return.value != ""}
- *
-{swrap 75 " * "}\\return {$func.return.desc}.{/swrap}{/if}
- */
-{swrap 75}{$func.type} {$func.name}({foreach prm in func.param}{$prm.type} {$prm.name}{if prm.default != ""} = {$prm.default}{/if}{first}, {/first}{mid}, {/mid}{/foreach}){if func.const == "true"} const{/if}{if func.pureVirtual == "true"} = 0{/if};{/swrap}{/foreach}{if class.group.shortDesc != ""}
+\};{foreach func in function.global}{ref declareGlobalFunc}{/foreach}{if class.group.shortDesc != ""}
 
 /// @\}
 {/if}{foreach ns in namespace}
 
-\}{/foreach}
+\}{/foreach}{foreach func in function.externC}{first}
+
+extern "C"
+\{{/first}{ref declareGlobalFunc}{last}
+
+\}{/last}{/foreach}
 
 /** \\file {$class.name}.hpp
  * \\brief {$class.shortDesc} (header).

@@ -417,7 +417,13 @@ bool {$class.name}::opDispatch(const Ionflux::ObjectBase::IFOpName& opName,
 		std::cerr << "[{$class.name}::deserialize] ERROR: "
 			"Could not deserialize variable '{$var.name}'.";{/if}
 		return false;
-	\}{/section}/* ==========================================================================
+	\}{/section}{section defineGlobalFunc}
+
+{swrap 75}{$func.type} {$func.name}({foreach prm in func.param}{$prm.type} {$prm.name}{first}, {/first}{mid}, {/mid}{/foreach}){if func.const == "true"} const{/if}{/swrap}
+\{
+{if func.impl == ""}	// TODO: Implementation.{else}{$func.impl|swrap(75,'	')}{/if}
+{if func.return.value != ""}	return {$func.return.value};
+{/if}\}{/section}/* ==========================================================================
  * {$project.name}
  * Copyright © {$project.copyrightYear} {$project.author}
  * {$project.mail}
@@ -427,7 +433,9 @@ bool {$class.name}::opDispatch(const Ionflux::ObjectBase::IFOpName& opName,
 \#undef {$un}{/foreach}{foreach ud in using}{first}
 {/first}{single}
 {/single}
-using {$ud};{/foreach}{foreach ns in namespace}
+using {$ud};{/foreach}{if insert.impl.preNamespace != ""}
+
+{$insert.impl.preNamespace}{/if}{foreach ns in namespace}
 
 namespace {$ns.name}
 \{{/foreach}{foreach st in struct}{first}
@@ -572,15 +580,16 @@ Ionflux::ObjectBase::IFSignal* {$class.name}::getSignal{$ins.name|uppercase(1)}W
 		addLocalRef(signal{$ins.name|uppercase(1)}Wrapper);
 	\}
 	return signal{$ins.name|uppercase(1)}Wrapper;
-\}{/foreach}{/foreach}{foreach func in function.global}
+\}{/foreach}{/foreach}{foreach func in function.global}{ref defineGlobalFunc}{/foreach}{foreach ns in namespace}
 
-{swrap 75}{$func.type} {$func.name}({foreach prm in func.param}{$prm.type} {$prm.name}{first}, {/first}{mid}, {/mid}{/foreach}){if func.const == "true"} const{/if}{/swrap}
-\{
-{if func.impl == ""}	// TODO: Implementation.{else}{$func.impl|swrap(75,'	')}{/if}
-{if func.return.value != ""}	return {$func.return.value};
-{/if}\}{/foreach}{foreach ns in namespace}
+\}{/foreach}{if insert.impl.postNamespace != ""}
 
-\}{/foreach}
+{$insert.impl.postNamespace}{/if}{foreach func in function.externC}{first}
+
+extern "C"
+\{{/first}{ref defineGlobalFunc}{last}
+
+\}{/last}{/foreach}
 
 /** \\file {$class.name}.cpp
  * \\brief {$class.shortDesc} implementation.
