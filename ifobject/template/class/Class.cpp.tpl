@@ -36,7 +36,7 @@ This file is part of {$project.name}.
 You should have received a copy of the GNU General Public License along with {$project.name}; if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA{/swrap}
  * {/section}{section insertIncludes}
 
-\#include "{if project.includePrefix != ""}{$project.includePrefix}/{/if}{if class.includePrefix != ""}{$class.includePrefix}/{/if}{$class.name}.hpp"{if enableMutex == 1}
+\#include "{if class.overrideProjectPrefix != "true"}{if project.includePrefix != ""}{$project.includePrefix}/{/if}{/if}{if class.includePrefix != ""}{$class.includePrefix}/{/if}{$class.name}.hpp"{if enableMutex == 1}
 \#include "ifobject/IFMutex.hpp"{/if}{if enableGuards == 1}
 \#include "ifobject/IFGuard.hpp"{/if}{if enableLogMessage == 1}
 \#include "ifobject/IFLogMessage.hpp"{/if}{if enableSignal == 1}

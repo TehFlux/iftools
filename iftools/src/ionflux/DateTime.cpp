@@ -549,7 +549,7 @@ void DateTime::setTimeTicks(TimeTicks newTime)
 
 void DateTime::setTime(TimeTicks newTime)
 {
-    std::cerr << "[DateTime::setTimeTicks] WARNING: (DEPRECATED) "
+    std::cerr << "[DateTime::setTime] WARNING: (DEPRECATED) "
         "Use setTimeTicks() or setTimePosix() instead." << std::endl;
     setTimeTicks(newTime);
 }
