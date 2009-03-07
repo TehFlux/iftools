@@ -24,6 +24,8 @@
  * 
  * ========================================================================== */
 
+#include <cstring>
+
 #include "ionflux/tools.hpp"
 #include "ionflux/File.hpp"
 #include "ionflux/RegExp.hpp"

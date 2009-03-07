@@ -24,6 +24,8 @@
  * 
  * ========================================================================== */
 
+#include <cstdlib>
+
 #include "ionflux/StringManipulator.hpp"
 
 using namespace std;

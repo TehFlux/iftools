@@ -24,6 +24,8 @@
  * 
  * ========================================================================== */
 
+#include <cstdlib>
+
 #include "ionflux/color.hpp"
 
 using namespace std;

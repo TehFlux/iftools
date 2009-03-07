@@ -24,6 +24,8 @@
  * 
  * ========================================================================== */
 
+#include <cstring>
+
 #include "ionflux/TCPSocket.hpp"
 
 using namespace std;
