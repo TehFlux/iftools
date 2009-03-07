@@ -67,9 +67,10 @@ if (platform == 'linux'):
 	# build flags for Linux systems
 	cxx = 'g++'
 	ccflags = []
-	cpppath = ['include']
+    # Remove  the /home/flux/... paths or replace them with your own.
+	cpppath = ['include', '/home/flux/usr/include']
 	libs = []
-	libpath = []
+	libpath = ['/home/flux/usr/lib']
 	libsock = []
 	libmysql = ['mysqlclient']
 	libssl = ['ssl']

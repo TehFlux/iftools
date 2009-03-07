@@ -29,6 +29,8 @@
 #include "ifobject/IFLogMessage.hpp"
 #include "ifobject/IFSignal.hpp"
 #include "ifobject/IFObjectEvent.hpp"
+#include <climits>
+#include <cstdlib>
 #include <sstream>
 
 using namespace std;
@@ -67,7 +69,7 @@ IFObjectClassInfo::~IFObjectClassInfo()
 }
 
 // public member constants
-const std::string IFObject::LITERAL_PREFIX = "%";
+const std::string IFObject::LITERAL_PREFIX = "%%";
 const std::string IFObject::LITERAL_SEPARATOR = ":";
 const std::string IFObject::ENCODING_RAW = "raw";
 const std::string IFObject::ENCODING_UTF8 = "utf8";

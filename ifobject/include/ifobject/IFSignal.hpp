@@ -7,6 +7,7 @@
  * --------------------------------------------------------------------------
  * IFSignal.hpp                    Signal (header).
  * =========================================================================
+ *
  * This file is part of Ionflux Object Base System.
  * 
  * Ionflux Object Base System is free software; you can redistribute it 
