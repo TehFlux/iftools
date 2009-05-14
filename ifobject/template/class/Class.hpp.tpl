@@ -37,8 +37,8 @@ You should have received a copy of the GNU General Public License along with {$p
  * {/section}{section insertIncludes}{foreach inc in include.header}{first}
 {/first}{single}
 {/single}
-\#include {$inc}{/foreach}{foreach bc in base.ifobject}
-\#include "{if bc.include == ""}ifobject/{$bc.name}.hpp{else}{$bc.include}{/if}"{/foreach}{foreach bc in base.other}
+\#include {$inc}{/foreach}{foreach bc in class.base.ifobject}
+\#include "{if bc.include == ""}ifobject/{$bc.name}.hpp{else}{$bc.include}{/if}"{/foreach}{foreach bc in class.base.other}
 \#include "{if bc.include == ""}{$bc.name}.hpp{else}{$bc.include}{/if}"{/foreach}{/section}{section insertForwards}{foreach fwd in forward}{first}
 {/first}{single}
 {/single}
