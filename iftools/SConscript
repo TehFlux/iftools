@@ -69,7 +69,7 @@ toolsSources = ['extern/sha1/sha1.cpp',
      'build/ionflux/Reporter.cpp',
      'build/ionflux/RegExp.cpp',
      'build/ionflux/Database.cpp',
-#     'build/ionflux/MySQLDatabase.cpp',
+     'build/ionflux/MySQLDatabase.cpp',
      'build/ionflux/TokenTypeMap.cpp',
      'build/ionflux/Tokenizer.cpp',
      'build/ionflux/Utf8TokenTypeMap.cpp',
@@ -104,7 +104,7 @@ toolsSources = ['extern/sha1/sha1.cpp',
      'build/ionflux/SelectMultiplexer.cpp',
      'build/ionflux/ManagedObject.cpp',
      'build/ionflux/ObjectPool.cpp',
-#     'build/ionflux/BufferedTable.cpp',
+     'build/ionflux/BufferedTable.cpp',
      'build/ionflux/File.cpp',
      'build/ionflux/EMailAddress.cpp',
      'build/ionflux/color.cpp',
@@ -131,7 +131,7 @@ toolsHeaders = ['extern/sha1/sha1.h',
     'include/ionflux/MessageDump.hpp',
     'include/ionflux/Message.hpp',
     'include/ionflux/MessageHandler.hpp',
-#    'include/ionflux/MySQLDatabase.hpp',
+    'include/ionflux/MySQLDatabase.hpp',
     'include/ionflux/NodeDump.hpp',
     'include/ionflux/Node.hpp',
     'include/ionflux/NodeReference.hpp',
@@ -160,7 +160,7 @@ toolsHeaders = ['extern/sha1/sha1.h',
     'include/ionflux/TreeEval.hpp',
     'include/ionflux/ManagedObject.hpp',
     'include/ionflux/ObjectPool.hpp',
-#    'include/ionflux/BufferedTable.hpp',
+    'include/ionflux/BufferedTable.hpp',
     'include/ionflux/File.hpp',
     'include/ionflux/EMailAddress.hpp',
     'include/ionflux/color.hpp',
@@ -210,10 +210,10 @@ if (platform == 'linux'):
                'extern/sha1',
                'extern/Mersenne']
     libs = []
-    #libpath = ['/usr/local/lib/mysql']
+    libpath = ['/usr/local/lib/mysql']
     libpath = []
     libsock = []
-    #libmysql = ['mysqlclient']
+    libmysql = ['mysqlclient']
     libssl = ['ssl']
     libwinmm = []
     libpthread = ['pthread']
@@ -286,8 +286,8 @@ toolsenv = Environment(
 toolsLib = toolsenv.SharedLibrary('lib/libiftools',
     toolsSources,
     CPPPATH = cpppath,
-    #LIBS = ['bz2', 'pcre'] + libmysql + libsock,
-    LIBS = ['bz2', 'pcre'] + libsock,
+    LIBS = ['bz2', 'pcre'] + libmysql + libsock,
+    #LIBS = ['bz2', 'pcre'] + libsock,
     LIBPATH = ['lib'] + libpath)
 
 gtoolsLib = toolsenv.SharedLibrary('lib/libifgtools',
@@ -512,11 +512,11 @@ emailaddressTest = toolsenv.Program('test/bin/emailaddress',
     CPPPATH = cpppath,
     LIBS = ['iftools'] + libs,
     LIBPATH = ['lib'] + libpath)
-#databaseTest = toolsenv.Program('test/bin/database',
-#    ['test/build/database.cpp'],
-#    CPPPATH = cpppath,
-#    LIBS = ['iftools'] + libs,
-#    LIBPATH = ['lib'] + libpath)
+databaseTest = toolsenv.Program('test/bin/database',
+    ['test/build/database.cpp'],
+    CPPPATH = cpppath,
+    LIBS = ['iftools'] + libs,
+    LIBPATH = ['lib'] + libpath)
 colorTest = toolsenv.Program('test/bin/color',
     ['test/build/color.cpp'],
     CPPPATH = cpppath,
@@ -608,7 +608,7 @@ buildTest = ['test/bin/tokenizer',
      'test/bin/utf8unescape',
      'test/bin/utf8tokenizer',
      'test/bin/emailaddress',
-#     'test/bin/database',
+     'test/bin/database',
      'test/bin/color',
      'test/bin/vector3',
      'test/bin/matrix3',
