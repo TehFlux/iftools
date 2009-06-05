@@ -112,6 +112,15 @@ class IOMultiplexer
 		 */
 		virtual void removeEvent(IOHandler *handler, IOEvent event) = 0;
 		
+		/** Set timeout.
+		 *
+		 * Sets the timeout of the main loop.
+		 *
+		 * \param secs Seconds.
+		 * \param usecs Microseconds.
+		 */
+		virtual void setTimeout(int secs, int usecs) = 0;
+		
 		/** Main loop.
 		 *
 		 * Start the main loop to watch for registered events.

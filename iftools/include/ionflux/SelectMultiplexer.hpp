@@ -128,6 +128,15 @@ class SelectMultiplexer
 		 */
 		virtual void removeEvent(IOHandler *handler, IOEvent event);
 		
+		/** Set timeout.
+		 *
+		 * Sets the timeout of the main loop.
+		 *
+		 * \param secs Seconds.
+		 * \param usecs Microseconds.
+		 */
+		virtual void setTimeout(int secs, int usecs);
+		
 		/** Main loop.
 		 *
 		 * Watch for registered events.

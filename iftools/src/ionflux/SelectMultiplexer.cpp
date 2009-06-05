@@ -260,6 +260,11 @@ void SelectMultiplexer::removeEvent(IOHandler *handler, IOEvent event)
 	}
 }
 
+void SelectMultiplexer::setTimeout(int secs, int usecs)
+{
+    fds.setTimeout(secs, usecs);
+}
+
 void SelectMultiplexer::run()
 {
 	running = true;
