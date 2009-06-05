@@ -37,6 +37,7 @@ namespace Tools
 const int IOEvent::IO_READ = 1;
 const int IOEvent::IO_WRITE = 2;
 const int IOEvent::IO_EXCEPT = 4;
+const int IOEvent::IO_TIMEOUT = 8;
 
 }
 

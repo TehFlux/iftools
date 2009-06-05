@@ -112,8 +112,17 @@ int FDSet::select()
 	activeRead = masterRead;
 	activeWrite = masterWrite;
 	activeExcept = masterExcept;
-	return ::select(FD_SETSIZE, &activeRead, &activeWrite, &activeExcept, 
-		timeout);
+    timeval* cto = 0;
+    if (timeout != 0)
+    {
+        cto = new timeval();
+        *cto = *timeout;
+    }
+	int result = ::select(FD_SETSIZE, 
+        &activeRead, &activeWrite, &activeExcept, cto);
+    if (cto != 0)
+        delete cto;
+    return result;
 }
 
 void FDSet::setTimeout(int secs, int usecs)

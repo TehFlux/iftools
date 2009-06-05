@@ -133,7 +133,12 @@ void SelectMultiplexer::registerEvent(IOHandler *handler, IOEvent event)
 	status << "[SelectMultiplexer::registerEvent] DEBUG: Processing event: "
 		"fd = " << event.fd << ", handler = " << handler;
 	log.msg(status.str(), log.VL_DEBUG_INSANE);
-	// Check whether an event is already defined for his handler and FD.
+    // Set a flag if this is a timeout event.
+    bool timeoutEvent = false;
+    if ((event.type & IOEvent::IO_TIMEOUT) != 0)
+        timeoutEvent = true;
+	/* Check whether an event is already defined for his handler and FD.
+       If the event is a timeout event, the FD does not have to match. */
 	bool found = false;
 	unsigned int i = 0;
 	IOEventInfo *currentInfo;
@@ -141,7 +146,7 @@ void SelectMultiplexer::registerEvent(IOHandler *handler, IOEvent event)
 	{
 		currentInfo = events[i];
 		if ((currentInfo->handler == handler) 
-			&& (currentInfo->event.fd == event.fd))
+			&& ((currentInfo->event.fd == event.fd) || timeoutEvent))
 			found = true;
 		else
 			i++;
@@ -182,6 +187,14 @@ void SelectMultiplexer::registerEvent(IOHandler *handler, IOEvent event)
 		currentInfo->event.type |= IOEvent::IO_EXCEPT;
 		fds.addExceptFD(event.fd);
 	}
+	if (timeoutEvent)
+	{
+		status.str("");
+		status << "[SelectMultiplexer::registerEvent] DEBUG: "
+            "Registering IO_TIMEOUT event.";
+		log.msg(status.str(), log.VL_DEBUG_INSANE);
+		currentInfo->event.type |= IOEvent::IO_TIMEOUT;
+	}
 	if (!found)
 	{
 		if (running)
@@ -204,6 +217,10 @@ void SelectMultiplexer::removeEvent(IOHandler *handler, IOEvent event)
 	status << "[SelectMultiplexer::removeEvent] DEBUG: Processing event: "
 		"fd = " << event.fd << ", handler = " << handler;
 	log.msg(status.str(), log.VL_DEBUG_INSANE);
+    // Set a flag if this is a timeout event.
+    bool timeoutEvent = false;
+    if ((event.type & IOEvent::IO_TIMEOUT) != 0)
+        timeoutEvent = true;
 	IOEventInfo *currentInfo;
 	bool found = false;
 	unsigned int i = 0;
@@ -211,7 +228,7 @@ void SelectMultiplexer::removeEvent(IOHandler *handler, IOEvent event)
 	{
 		currentInfo = events[i];
 		if ((currentInfo->handler == handler) 
-			&& (currentInfo->event.fd == event.fd))
+			&& ((currentInfo->event.fd == event.fd) || timeoutEvent))
 			found = true;
 		else
 			i++;
@@ -241,6 +258,13 @@ void SelectMultiplexer::removeEvent(IOHandler *handler, IOEvent event)
 				<< event.fd << " for IO_EXCEPT.";
 			log.msg(status.str(), log.VL_DEBUG_INSANE);
 			fds.removeExceptFD(event.fd);
+		}
+		if (timeoutEvent)
+		{
+			status.str("");
+			status << "[SelectMultiplexer::removeEvent] DEBUG: "
+                "Removing IO_TIMEOUT event.";
+			log.msg(status.str(), log.VL_DEBUG_INSANE);
 		}
 		currentInfo->event.type &= (~event.type);
 		// Remove event only if all event types are cleared.
@@ -324,7 +348,36 @@ void SelectMultiplexer::run()
 				log.VL_DEBUG_INSANE);
 			clearEvents();
 			addEvents();
-		}
+		} else
+        {
+            // Handle timeout event.
+            bool haveHandler = false;
+			for (unsigned int i = 0; i < events.size(); i++)
+			{
+				currentEvent = events[i];
+				if (!log.assert(currentEvent != 0, "[SelectMultiplexer::run] "
+					"Current event is null."))
+					return;
+				if ((currentEvent->event.type & IOEvent::IO_TIMEOUT) != 0)
+				{
+                    reportEvent = currentEvent->event;
+                    if (currentEvent->handler != 0)
+                    {
+                        // Notify handler.
+                        haveHandler = true;
+                        currentEvent->handler->onIO(reportEvent);
+                    }
+				}
+            }
+            if (haveHandler)
+            {
+                // Update event vector.
+                log.msg("[SelectMultiplexer::run] DEBUG: "
+                    "Updating event vector.", log.VL_DEBUG_INSANE);
+                clearEvents();
+                addEvents();
+            }
+        }
 	}
 	log.msg("[SelectMultiplexer::run] DEBUG: Exiting from main loop.", 
 		log.VL_DEBUG_INSANE);

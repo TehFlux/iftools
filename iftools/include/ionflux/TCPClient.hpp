@@ -93,6 +93,12 @@ class TCPClient
 		 */
 		virtual void cleanupPeers();
 		
+		/** Handle timeout event.
+		 *
+		 * Handle a timeout event.
+		 */
+		virtual void onTimeout();
+		
 		/** Event handler for new connections.
 		 *
 		 * This is called by the main loop whenever a connection to a peer is
@@ -204,6 +210,14 @@ class TCPClient
 		 * \return \c true on success, \c false otherwise.
 		 */
 		virtual bool addConnection(const std::string &host, int port);
+		
+		/** Enable timeout.
+		 *
+		 * Enable or disable timeout events.
+         *
+         * \param newState New state to be set for timeout events.
+		 */
+		virtual void enableTimeout(bool newState = true);
 		
 		/** Broadcast bytes.
 		 *

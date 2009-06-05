@@ -246,13 +246,34 @@ bool TCPClient::addConnection(const std::string &host, int port)
 	return true;
 }
 
+void TCPClient::enableTimeout(bool newState)
+{
+	IOEvent newEvent;
+	newEvent.fd = 0;
+	newEvent.peer = 0;
+	newEvent.type = IOEvent::IO_TIMEOUT;
+    if (newState)
+        iomp->registerEvent(this, newEvent);
+    else
+        iomp->removeEvent(this, newEvent);
+}
+
+void TCPClient::onTimeout()
+{
+    // Do nothing.
+}
+
 void TCPClient::onIO(const IOEvent &event)
 {
 	if (!log.assert(iomp != 0, "[TCPClient::onIO] IO multiplexer is null."))
 		return;
+    if ((event.type & IOEvent::IO_TIMEOUT) != 0)
+    {
+        onTimeout();
+        return;
+    }
 	ostringstream status;
 	TCPRemotePeer *currentPeer = 0;
-	IOEvent currentEvent;
 	// Check for data on standard input.
 	if (interactive && (event.fd == STDIN_FILENO))
 	{

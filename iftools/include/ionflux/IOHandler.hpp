@@ -60,6 +60,8 @@ struct IOEvent
 	static const int IO_WRITE;
 	/// Event type: except.
 	static const int IO_EXCEPT;
+	/// Event type: timeout.
+	static const int IO_TIMEOUT;
 };
 
 /** IO event handler.
