@@ -28,6 +28,9 @@
 #include "IOHandler.hpp"
 #include "IOMultiplexer.hpp"
 #include "TCPClient.hpp"
+#include "TCPServer.hpp"
+#include "Database.hpp"
+#include "MySQLDatabase.hpp"
 #include "MersenneTwister.h"
 %}
 
@@ -895,6 +898,7 @@ struct IOEvent
 	static const int IO_READ;
 	static const int IO_WRITE;
 	static const int IO_EXCEPT;
+	static const int IO_TIMEOUT;
     
 	IOEvent();
 	int fd;
@@ -926,6 +930,7 @@ class IOMultiplexer
         virtual ~IOMultiplexer();
         virtual void registerEvent(IOHandler *handler, IOEvent event) = 0;
         virtual void removeEvent(IOHandler *handler, IOEvent event) = 0;
+		virtual void setTimeout(int secs, int usecs) = 0;
         virtual void run() = 0;
         virtual void quit() = 0;
         virtual bool isRunning() = 0;
@@ -946,6 +951,7 @@ class TCPClient
 		virtual void run();
 		virtual void cleanup();
 		virtual bool addConnection(const std::string &host, int port);
+		virtual void enableTimeout(bool newState = true);
 		virtual void broadcast(const std::string &bytes);
 		virtual void onIO(const IOEvent &event);
 		static void shutdownHandler(int signum);
@@ -953,6 +959,138 @@ class TCPClient
 
 };
 
+class TCPServer
+: public IOHandler
+{
+	public:
+		static const int DEFAULT_MAX_CLIENTS;
+		static const int REJECTED_REASON_MAX_CLIENTS;
+		
+		TCPServer();
+		TCPServer(IOMultiplexer *initIomp);
+		virtual ~TCPServer();
+        
+		virtual bool init();
+		virtual void run();
+		virtual void cleanup();
+		virtual void enableTimeout(bool newState = true);
+		virtual void broadcast(const std::string &bytes);
+		virtual void onIO(const IOEvent &event);
+		virtual void setMaxClients(unsigned int newMaxClients);
+		virtual void setPort(int newPort);
+		virtual unsigned int getMaxClients();
+		virtual int getPort();
+		static void shutdownHandler(int signum);
+		virtual Reporter &getLog();
+};
+
+typedef std::vector<std::string> DbRow;
+typedef std::map<std::string, std::string> DbRowMap;
+typedef std::vector<DbRow> DbResult;
+typedef std::vector<DbRowMap> DbResultMap;
+typedef std::vector<std::string> DbTables;
+typedef std::vector<std::string> DbColumns;
+
+struct DatabaseConfig
+{
+	std::string server;
+	unsigned int port;
+	std::string username;
+	std::string password;
+	std::string database;
+};
+
+struct DatabaseError
+{
+	unsigned int errNum;
+	std::string error;
+};
+
+class Database
+: public ManagedObject
+{
+	public:
+		static const int NODE_ORDER_ROWS;
+		static const int NODE_ORDER_NAMED_FIELDS;
+		static const int NODE_ORDER_COLUMNS;
+		
+		Database();
+		Database(const DatabaseConfig &initConfig);
+		virtual ~Database();
+        
+		virtual void setConfig(const DatabaseConfig &newConfig) = 0;
+		virtual void setConfig(Ionflux::Tools::Node &newConfig) = 0;
+		virtual DatabaseConfig getConfig() = 0;
+		virtual bool connect() = 0;
+		virtual void close() = 0;
+		virtual bool query(const std::string &command) = 0;
+		virtual bool listTables(DbTables &tables, 
+			const std::string &pattern = "") = 0;
+		virtual bool listColumns(DbColumns &columns, 
+			const std::string &table) = 0;
+		virtual unsigned int getNumRows(const std::string &table) = 0;
+		virtual unsigned int getNumRows() = 0;
+		virtual unsigned int getNumAffectedRows() = 0;
+		virtual bool fetchRow(DbRow &row) = 0;
+		virtual bool fetchRowMap(DbRowMap &rowMap) = 0;
+		virtual bool fetchRowTree(Node &rowNode) = 0;
+		virtual bool fetchResult(DbResult &result) = 0;
+		virtual bool fetchResultMap(DbResultMap &resultMap) = 0;
+		virtual bool fetchResultTree(Node &resultNode, int nodeOrder) = 0;
+		virtual std::string sqlEscape(const std::string &source) = 0;
+		virtual bool validateTable(const std::string& tableName, 
+			const std::string& createTemplate = "", 
+			Node* createConfig = 0) = 0;
+		virtual DatabaseError getError() = 0;
+		
+};
+
+class MySQLDatabase
+: public Database
+{
+	public:
+		static const std::string DEFAULT_SERVER;
+		static const unsigned int DEFAULT_PORT;
+		static const std::string DEFAULT_USERNAME;
+		static const std::string DEFAULT_PASSWORD;
+		static const std::string DEFAULT_DATABASE;
+		
+		MySQLDatabase();
+		MySQLDatabase(const DatabaseConfig &initConfig);
+        
+		virtual ~MySQLDatabase();
+		virtual void setConfig(const DatabaseConfig &newConfig);
+		virtual void setConfig(Ionflux::Tools::Node &newConfig);
+		virtual DatabaseConfig getConfig();
+		virtual bool connect();
+		virtual void close();
+		virtual bool query(const std::string &command);
+		virtual bool listTables(DbTables &tables, 
+			const std::string &pattern = "");
+		virtual bool listColumns(DbColumns &columns, 
+			const std::string &table);
+		virtual unsigned int getNumRows(const std::string &table);
+		virtual unsigned int getNumRows();
+		virtual unsigned int getNumAffectedRows();
+		virtual bool fetchRow(DbRow &row);
+		virtual bool fetchRowMap(DbRowMap &rowMap);
+		virtual bool fetchRowTree(Node &rowNode);
+		virtual bool fetchResult(DbResult &result);
+		virtual bool fetchResultMap(DbResultMap &resultMap);
+		virtual bool fetchResultTree(Node &resultNode, int nodeOrder);
+		virtual std::string sqlEscape(const std::string &source);
+		virtual bool validateTable(const std::string& tableName, 
+			const std::string& createTemplate = "", 
+			Node* createConfig = 0);
+		virtual DatabaseError getError();
+};
+
 }
 
 }
+
+%template(StringVector) std::vector<std::string>;
+%template(StringMap) std::map<std::string, std::string>;
+%template(DbResult) std::vector<Ionflux::Tools::DbRow>;
+%template(DbResultMap) std::vector<Ionflux::Tools::DbRowMap>;
+

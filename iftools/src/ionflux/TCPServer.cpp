@@ -212,6 +212,23 @@ void TCPServer::cleanup()
 		log.VL_DEBUG);
 }
 
+void TCPServer::enableTimeout(bool newState)
+{
+	IOEvent newEvent;
+	newEvent.fd = 0;
+	newEvent.peer = 0;
+	newEvent.type = IOEvent::IO_TIMEOUT;
+    if (newState)
+        iomp->registerEvent(this, newEvent);
+    else
+        iomp->removeEvent(this, newEvent);
+}
+
+void TCPServer::onTimeout()
+{
+    // Do nothing.
+}
+
 void TCPServer::onConnect(TCPRemotePeer &client)
 {
 	ostringstream status;
@@ -251,6 +268,11 @@ void TCPServer::onIO(const IOEvent &event)
 {
 	if (!log.assert(iomp != 0, "[TCPServer::onIO] IO multiplexer is null."))
 		return;
+    if ((event.type & IOEvent::IO_TIMEOUT) != 0)
+    {
+        onTimeout();
+        return;
+    }
 	ostringstream status;
 	int serverFD = serverSocket.getFD();
 	TCPRemotePeer *currentClient = 0;

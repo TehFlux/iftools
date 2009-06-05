@@ -95,6 +95,12 @@ class TCPServer
 		 */
 		virtual void cleanupClients();
 		
+		/** Handle timeout event.
+		 *
+		 * Handle a timeout event.
+		 */
+		virtual void onTimeout();
+		
 		/** Event handler for new connections.
 		 *
 		 * This is called by the main loop whenever a new client connects.
@@ -203,6 +209,14 @@ class TCPServer
 		 * server.
 		 */
 		virtual void cleanup();
+		
+		/** Enable timeout.
+		 *
+		 * Enable or disable timeout events.
+         *
+         * \param newState New state to be set for timeout events.
+		 */
+		virtual void enableTimeout(bool newState = true);
 		
 		/** Broadcast bytes.
 		 *
