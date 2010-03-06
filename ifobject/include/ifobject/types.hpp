@@ -74,6 +74,10 @@ typedef std::string IFOpName;
 typedef std::vector<IFOpParamInfo> IFOpParamInfoVector;
 typedef std::vector<IFOpResultInfo> IFOpResultInfoVector;
 typedef std::map<IFOpName, const IFOpInfo*> IFOpNameInfoMap;
+typedef std::vector<std::string> StringVector;
+typedef std::vector<double> DoubleVector;
+typedef std::vector<int> IntVector;
+typedef std::vector<unsigned int> UIntVector;
 
 }
 

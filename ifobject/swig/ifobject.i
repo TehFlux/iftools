@@ -48,6 +48,10 @@ typedef std::string IFOpName;
 typedef std::vector<IFOpParamInfo> IFOpParamInfoVector;
 typedef std::vector<IFOpResultInfo> IFOpResultInfoVector;
 typedef std::map<IFOpName, const IFOpInfo*> IFOpNameInfoMap;
+typedef std::vector<std::string> StringVector;
+typedef std::vector<double> DoubleVector;
+typedef std::vector<int> IntVector;
+typedef std::vector<unsigned int> UIntVector;
 
 class IFClassInfo;
 
@@ -207,3 +211,6 @@ bool hasPrefix(const std::string& bytes, const std::vector<std::string>&
 }
 
 %template(StringVector) std::vector<std::string>;
+%template(DoubleVector) std::vector<double>;
+%template(IntVector) std::vector<int>;
+%template(UIntVector) std::vector<unsigned int>;
