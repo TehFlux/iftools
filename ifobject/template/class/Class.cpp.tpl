@@ -1,6 +1,6 @@
 # ==========================================================================
 # Ionflux Object Base System
-# Copyright © 2006 Joern P. Meier
+# Copyright © 2006-2009 Joern P. Meier
 # mail@ionflux.org
 # --------------------------------------------------------------------------
 # Class.cpp.tpl              class template (implementation)
@@ -24,7 +24,7 @@
 # 02111-1307 USA
 # 
 # ==========================================================================
-{section checkFeatures}{$haveForwards = 0}{foreach fw in forward}{if fw != ""}{$haveForwards = 1}{/if}{/foreach}{$haveTypedefs = 0}{foreach td in typedef}{if td != ""}{$haveTypedefs = 1}{/if}{/foreach}{$haveEvents = 0}{foreach ev in event}{if ev.id != ""}{$haveEvents = 1}{/if}{/foreach}{$haveSignals = 0}{foreach si in signal}{if si.id != ""}{$haveSignals = 1}{/if}{/foreach}{$haveBaseIFObject = 0}{foreach bc in class.base.ifobject}{if bc.name != ""}{$haveBaseIFObject = 1}{/if}{/foreach}{$haveBaseOther = 0}{foreach bc in class.base.other}{if bc.name != ""}{$haveBaseOther = 1}{/if}{/foreach}{$enableClassInfo = 0}{if ( haveBaseIFObject == 1 ) || ( class.name == "IFObject" )}{$enableClassInfo = 1}{/if}{$enableMutex = 0}{$enableGuards = 0}{$enableAutoGuards = 0}{$enableLogMessage = 0}{$enableSignal = haveSignals}{$enableSerialize = 0}{foreach fe in class.features}{if fe == "mutex"}{$enableMutex = 1}{/if}{if fe == "guards"}{$enableMutex = 1}{$enableGuards = 1}{/if}{if fe == "autoguards"}{$enableMutex = 1}{$enableGuards = 1}{$enableAutoGuards = 1}{/if}{if fe == "logmessage"}{$enableLogMessage = 1}{/if}{if fe == "signal"}{$enableSignal = 1}{/if}{if fe == "serialize"}{$enableSerialize = 1}{/if}{if fe == "classinfo"}{$enableClassInfo = 1}{/if}{/foreach}{$haveOps = 0}{foreach op in operation}{if op.name != ""}{$haveOps = 1}{/if}{/foreach}{/section}{ref checkFeatures}{section insertGPLDisclaimer}
+{section checkFeatures}{$haveForwards = 0}{foreach fw in forward}{if fw != ""}{$haveForwards = 1}{/if}{/foreach}{$haveTypedefs = 0}{foreach td in typedef}{if td != ""}{$haveTypedefs = 1}{/if}{/foreach}{$haveEvents = 0}{foreach ev in event}{if ev.id != ""}{$haveEvents = 1}{/if}{/foreach}{$haveSignals = 0}{foreach si in signal}{if si.id != ""}{$haveSignals = 1}{/if}{/foreach}{$haveBaseIFObject = 0}{foreach bc in class.base.ifobject}{if bc.name != ""}{$haveBaseIFObject = 1}{/if}{/foreach}{$haveBaseOther = 0}{foreach bc in class.base.other}{if bc.name != ""}{$haveBaseOther = 1}{/if}{/foreach}{$enableClassInfo = 0}{if ( haveBaseIFObject == 1 ) || ( class.name == "IFObject" )}{$enableClassInfo = 1}{/if}{$enableMutex = 0}{$enableGuards = 0}{$enableAutoGuards = 0}{$enableLogMessage = 0}{$enableSignal = haveSignals}{$enableSerialize = 0}{$enablePersistence = 0}{$enableCopy = 0}{$enableUpcast = 0}{foreach fe in class.features}{if fe == "mutex"}{$enableMutex = 1}{/if}{if fe == "guards"}{$enableMutex = 1}{$enableGuards = 1}{/if}{if fe == "autoguards"}{$enableMutex = 1}{$enableGuards = 1}{$enableAutoGuards = 1}{/if}{if fe == "logmessage"}{$enableLogMessage = 1}{/if}{if fe == "signal"}{$enableSignal = 1}{/if}{if fe == "serialize"}{$enableSerialize = 1}{/if}{if fe == "classinfo"}{$enableClassInfo = 1}{/if}{if fe == "persistence"}{$enablePersistence = 1}{/if}{if fe == "copy"}{$enableCopy = 1}{/if}{if fe == "upcast"}{$enableUpcast = 1}{/if}{/foreach}{$haveOps = 0}{foreach op in operation}{if op.name != ""}{$haveOps = 1}{/if}{/foreach}{/section}{ref checkFeatures}{section insertGPLDisclaimer}
  * =========================================================================
 {swrap 75 " * "}
 This file is part of {$project.name}.
@@ -60,7 +60,7 @@ IF{$ev.id|uppercase(1)}Event* {$class.name}::create{$ev.id|uppercase(1)}Event()
 	return event;
 \}{/section}{section createPropertyAccessorImpl}{if prop.style == "vector"}
 
-{swrap 75}unsigned int {$class.name}::getNum{$prop.element.name|uppercase(1)}s() const{/swrap}
+{swrap 75}unsigned int {$class.name}::getNum{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if}() const{/swrap}
 \{{if enableGuards == 1}
 	IFGuard propertyGuard(guardMutex);{/if}
 	return {$prop.name}.size();
@@ -73,12 +73,36 @@ IF{$ev.id|uppercase(1)}Event* {$class.name}::create{$ev.id|uppercase(1)}Event()
 		return {$prop.name}[elementIndex];
 	return {if prop.element.defaultValue != ""}{$prop.element.defaultValue}{else}0{/if};
 \}
-{if prop.readOnly != "true"}
-{swrap 75}std::vector<{$prop.element.type}>& {$class.name}::get{$prop.name|uppercase(1)}(){/swrap}
+
+{swrap 75}int {$class.name}::find{$prop.element.name|uppercase(1)}({if prop.element.findType == ""}{$prop.element.type}{else}{$prop.element.findType}{/if} needle, unsigned int occurence) const{/swrap}
+\{{if enableGuards == 1}
+	IFGuard propertyGuard(guardMutex);{/if}
+	bool found = false;
+	{$prop.element.type} current{$prop.element.name|uppercase(1)} = {if prop.element.defaultValue != ""}{$prop.element.defaultValue}{else}0{/if};
+	unsigned int i = 0;
+	while (!found 
+		&& (i < {$prop.name}.size()))
+	\{
+		current{$prop.element.name|uppercase(1)} = {$prop.name}[i];
+		if (current{$prop.element.name|uppercase(1)} == needle)
+        \{
+            if (occurence == 1)
+			    found = true;
+            else
+                occurence--;
+		\} else
+			i++;
+	\}
+	if (found)
+        return i;
+	return -1;
+\}{if prop.readOnly != "true"}{if prop.hideImpl != "true"}
+
+{swrap 75}std::vector<{$prop.element.type}>& {$class.name}::get{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if}(){/swrap}
 \{{if enableGuards == 1}
 	IFGuard propertyGuard(guardMutex);{/if}
 	return {$prop.name};
-\}
+\}{/if}
 
 {swrap 75}void {$class.name}::add{$prop.element.name|uppercase(1)}({if prop.element.addType == ""}{$prop.element.type}{else}{$prop.element.addType}{/if} addElement){/swrap}
 \{{if enableGuards == 1}
@@ -110,7 +134,19 @@ IF{$ev.id|uppercase(1)}Event* {$class.name}::create{$ev.id|uppercase(1)}Event()
 	\}
 \}
 
-{swrap 75}void {$class.name}::clear{$prop.element.name|uppercase(1)}s(){/swrap}
+{swrap 75}void {$class.name}::remove{$prop.element.name|uppercase(1)}Index(unsigned int removeIndex){/swrap}
+\{{if enableGuards == 1}
+	IFGuard propertyGuard(guardMutex);{/if}
+    if (removeIndex > {$prop.name}.size())
+        return;{if prop.element.managed == "true"}
+	{$prop.element.type} e0 = {$prop.name}[removeIndex];
+    {$prop.name}.erase({$prop.name}.begin() + removeIndex);
+    if (e0 != {if prop.element.defaultValue != ""}{$prop.element.defaultValue}{else}0{/if})
+        removeLocalRef(e0);{else}
+    {$prop.name}.erase({$prop.name}.begin() + removeIndex);{/if}
+\}
+
+{swrap 75}void {$class.name}::clear{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if}(){/swrap}
 \{{if enableGuards == 1}
 	IFGuard propertyGuard(guardMutex);{/if}
 	{if prop.element.managed == "true"}std::vector<{$prop.element.type}>::iterator i;
@@ -120,7 +156,7 @@ IF{$ev.id|uppercase(1)}Event* {$class.name}::create{$ev.id|uppercase(1)}Event()
 	{/if}{$prop.name}.clear();
 \}{/if}{else}{if prop.style == "map"}
 
-{swrap 75}unsigned int {$class.name}::getNum{$prop.element.name|uppercase(1)}s() const{/swrap}
+{swrap 75}unsigned int {$class.name}::get{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if}() const{/swrap}
 \{{if enableGuards == 1}
 	IFGuard propertyGuard(guardMutex);{/if}
 	return {$prop.name}.size();
@@ -133,13 +169,13 @@ IF{$ev.id|uppercase(1)}Event* {$class.name}::create{$ev.id|uppercase(1)}Event()
 	if (i != {$prop.name}.end())
 		return (*i).second;
 	return {if prop.element.defaultValue != ""}{$prop.element.defaultValue}{else}0{/if};
-\}
-{if prop.readOnly != "true"}
+\}{if prop.readOnly != "true"}{if prop.hideImpl != "true"}
+
 {swrap 75}std::map<{$prop.key.type}, {$prop.element.type}>& {$class.name}::get{$prop.name|uppercase(1)}(){/swrap}
 \{{if enableGuards == 1}
 	IFGuard propertyGuard(guardMutex);{/if}
 	return {$prop.name};
-\}
+\}{/if}
 
 {swrap 75}void {$class.name}::add{$prop.element.name|uppercase(1)}({if prop.key.accessType != ""}{$prop.key.accessType}{else}{$prop.key.type}{/if} elementKey, {if prop.element.addType == ""}{$prop.element.type}{else}{$prop.element.addType}{/if} addElement){/swrap}
 \{{if enableGuards == 1}
@@ -163,7 +199,7 @@ IF{$ev.id|uppercase(1)}Event* {$class.name}::create{$ev.id|uppercase(1)}Event()
 	\}
 \}
 
-{swrap 75}void {$class.name}::clear{$prop.element.name|uppercase(1)}s(){/swrap}
+{swrap 75}void {$class.name}::clear{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if}(){/swrap}
 \{{if enableGuards == 1}
 	IFGuard propertyGuard(guardMutex);{/if}
 	{if prop.element.managed == "true"}std::map<{$prop.key.type}, {$prop.element.type}>::iterator i;
@@ -179,8 +215,10 @@ IF{$ev.id|uppercase(1)}Event* {$class.name}::create{$ev.id|uppercase(1)}Event()
 	if ({$prop.name} == new{$prop.name|uppercase(1)})
 		return;
 	if ({$prop.name} != 0)
-		removeLocalRef({$prop.name});{/if}
-	{$prop.name} = new{$prop.name|uppercase(1)};{if prop.managed == "true"}
+		removeLocalRef({$prop.name});{/if}{if prop.persistent != "true"}
+	{$prop.name} = new{$prop.name|uppercase(1)};{else}
+	if (persistent != 0)
+		persistent->{$prop.name} = new{$prop.name|uppercase(1)};{/if}{if prop.managed == "true"}
 	if ({$prop.name} != 0)
 		addLocalRef({$prop.name});{/if}{else}
 {$prop.impl.set|swrap(75, "	")}{/if}
@@ -189,10 +227,12 @@ IF{$ev.id|uppercase(1)}Event* {$class.name}::create{$ev.id|uppercase(1)}Event()
 {swrap 75}{$prop.type} {$class.name}::get{$prop.name|uppercase(1)}() const{/swrap}
 \{{if enableGuards == 1}
 	IFGuard propertyGuard(guardMutex);{/if}
-{if prop.impl.get == ""}	return {$prop.name};{else}{$prop.impl.get|swrap(75, "	")}{/if}
+{if prop.impl.get == ""}{if prop.persistent != "true"}	return {$prop.name};{else}	if (persistent != 0)
+		return persistent->{$prop.name};
+	return {$prop.notSetValue};{/if}{else}{$prop.impl.get|swrap(75, "	")}{/if}
 \}{/if}{/if}{/section}{section createFuncImpl}{if func.pureVirtual != "true"}
 
-{swrap 75}{$func.type} {$class.name}::{$func.name}({foreach prm in func.param}{$prm.type} {$prm.name}{first}, {/first}{mid}, {/mid}{/foreach}){if func.const == "true"} const{/if}{/swrap}
+{swrap 75}{$func.type} {$class.name}::{$func.name}({foreach prm in func.param}{$prm.type} {$prm.name}{first}, {/first}{mid}, {/mid}{/foreach}){if func.const == "true"} const{/if}{if func.throw != ""} throw({if func.throw != "<none>"}{$func.throw}{/if}){/if}{/swrap}
 \{{if ( enableGuards == 1 ) && ( func.spec != "static" )}
 	IFGuard functionGuard(guardMutex);{/if}
 {if func.impl == ""}	// TODO: Implementation.{else}{$func.impl|swrap(75,'	')}{/if}
@@ -423,7 +463,79 @@ bool {$class.name}::opDispatch(const Ionflux::ObjectBase::IFOpName& opName,
 \{
 {if func.impl == ""}	// TODO: Implementation.{else}{$func.impl|swrap(75,'	')}{/if}
 {if func.return.value != ""}	return {$func.return.value};
-{/if}\}{/section}/* ==========================================================================
+{/if}\}{/section}{section persistentDatabaseAccessorImpl}
+
+void {$class.name}::setDatabase({$class.persistence.namespace}::{$class.persistence.database}* newDatabase)
+\{
+	database = newDatabase;
+	if (persistent != 0)
+	\{
+		delete persistent;
+		persistent = 0;
+	\}
+	if (database != 0)
+		persistent = new {$class.persistence.namespace}::{$class.persistence.backend}(*database);
+\}
+
+{$class.persistence.namespace}::{$class.persistence.database}* {$class.name}::getDatabase() const
+\{
+	return database;
+\}{/section}{section createPersistenceFuncsImpl}
+
+void {$class.name}::update()
+\{
+	if (persistent != 0)
+		persistent->update();
+\}
+
+int {$class.name}::getPersistentID()
+\{
+	if (persistent != 0)
+		return persistent->id;
+    return -1;
+\}
+
+bool {$class.name}::setFromID(int objectID)
+\{
+	if ((database == 0) || (persistent == 0))
+		return false;
+	try \{
+		*persistent = litesql::select<{$class.persistence.namespace}::{$class.persistence.backend}>(*database, 
+			{$class.persistence.namespace}::{$class.persistence.backend}::Id == objectID).one();
+	\} catch (litesql::NotFound)
+	\{
+		return false;
+	\}
+	return true;
+\}{section createPersistentInitFuncImpl}
+
+{swrap 75}bool {$class.name}::setFrom{$prop.name|uppercase(1)}({$prop.setFromType} init{$prop.name|uppercase(1)}){/swrap}
+\{
+	if ((database == 0) || (persistent == 0))
+		return false;
+	try \{
+		*persistent = litesql::select<{$class.persistence.namespace}::{$class.persistence.backend}>(*database, 
+			{$class.persistence.namespace}::{$class.persistence.backend}::{$prop.name|uppercase(1)} == init{$prop.name|uppercase(1)}).one();
+	\} catch (litesql::NotFound)
+	\{
+		return false;
+	\}
+	return true;
+\}{/section}{foreach prop in property.protected}{if prop.persistentInit == "true"}{ref createPersistentInitFuncImpl}{/if}{/foreach}{foreach prop in property.private}{if prop.persistentInit == "true"}{ref createPersistentInitFuncImpl}{/if}{/foreach}{/section}{section createCopyFuncsImpl}
+
+{swrap 75}{foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}& {$class.name}::operator=(const {foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}& other){/swrap}
+\{{if enablePersistence == 1}
+	if ((database == 0) || (persistent == 0))
+		throw PersistenceError("Database not set.");{/if}{if function.copy.impl != ""}
+{swrap 75 "	"}{$function.copy.impl}{/swrap}{else}{foreach prop in property.protected}{if prop.copy == "true"}
+	set{$prop.name|uppercase(1)}(other.get{$prop.name|uppercase(1)}());{/if}{/foreach}
+	return *this;{/if}
+\}{/section}{section createUpcastFuncsImpl}
+
+{swrap 75}{foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}* {$class.name}::upcast(Ionflux::ObjectBase::IFObject* other){/swrap}
+\{
+    return dynamic_cast<{$class.name}*>(other);
+\}{/section}/* ==========================================================================
  * {$project.name}
  * Copyright © {$project.copyrightYear} {$project.author}
  * {$project.mail}
@@ -514,7 +626,8 @@ const Ionflux::ObjectBase::IFClassInfo* {$class.name}::CLASS_INFO = &{$class.nam
 : {/first}{single}
 : {/single}{$init.name}({$init.value}){notlast}, {/notlast}{/foreach}{foreach sig in signal}{foreach ins in sig.instance}{first}{if haveInitializer == 0}
 : {$haveInitializer = 1}{else}, {/if}{/first}{single}{if haveInitializer == 0}
-: {$haveInitializer = 1}{else}, {/if}{/single}signal{$ins.name|uppercase(1)}Wrapper(0){notlast}, {/notlast}{/foreach}{/foreach}
+: {$haveInitializer = 1}{else}, {/if}{/single}signal{$ins.name|uppercase(1)}Wrapper(0){notlast}, {/notlast}{/foreach}{/foreach}{if enablePersistence == 1}{if haveInitializer == 0}
+: {$haveInitializer = 1}{else}, {/if}database(0), persistent(0){/if}
 \{{if enableClassInfo == 1}
 	// NOTE: The following line is required for run-time type information.
 	theClass = CLASS_INFO;{/if}{if enableAutoGuards == 1}
@@ -522,7 +635,39 @@ const Ionflux::ObjectBase::IFClassInfo* {$class.name}::CLASS_INFO = &{$class.nam
 	setGuardEnabled(true);{/if}{if constructor.default.impl == ""}
 	// TODO: Nothing ATM. ;-){else}
 {$constructor.default.impl|swrap(75,'	')}{/if}
-\}{foreach con in constructor.public}
+\}{if enablePersistence == 1}
+
+{$class.name}::{$class.name}({$class.persistence.namespace}::{$class.persistence.database}* initDatabase, int objectID){$haveInitializer = 0}{foreach init in constructor.default.initializer}{$haveInitializer = 1}{first}
+: {/first}{single}
+: {/single}{$init.name}({$init.value}){notlast}, {/notlast}{/foreach}{foreach sig in signal}{foreach ins in sig.instance}{first}{if haveInitializer == 0}
+: {$haveInitializer = 1}{else}, {/if}{/first}{single}{if haveInitializer == 0}
+: {$haveInitializer = 1}{else}, {/if}{/single}signal{$ins.name|uppercase(1)}Wrapper(0){notlast}, {/notlast}{/foreach}{/foreach}{if enablePersistence == 1}{if haveInitializer == 0}
+: {$haveInitializer = 1}{else}, {/if}persistent(0){/if}
+\{{if enableClassInfo == 1}
+	// NOTE: The following line is required for run-time type information.
+	theClass = CLASS_INFO;{/if}{if enableAutoGuards == 1}
+	// NOTE: The following line is required for guards to work.
+	setGuardEnabled(true);{/if}
+	setDatabase(initDatabase);
+	if (objectID != -1)
+		setFromID(objectID);
+\}{/if}{if enableCopy == 1}
+
+{$class.name}::{$class.name}(const {foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}& other){$haveInitializer = 0}{foreach init in constructor.default.initializer}{$haveInitializer = 1}{first}
+: {/first}{single}
+: {/single}{$init.name}({$init.value}){notlast}, {/notlast}{/foreach}{foreach sig in signal}{foreach ins in sig.instance}{first}{if haveInitializer == 0}
+: {$haveInitializer = 1}{else}, {/if}{/first}{single}{if haveInitializer == 0}
+: {$haveInitializer = 1}{else}, {/if}{/single}signal{$ins.name|uppercase(1)}Wrapper(0){notlast}, {/notlast}{/foreach}{/foreach}{if enablePersistence == 1}{if haveInitializer == 0}
+: {$haveInitializer = 1}{else}, {/if}persistent(0){/if}
+\{{if enableClassInfo == 1}
+	// NOTE: The following line is required for run-time type information.
+	theClass = CLASS_INFO;{/if}{if enableAutoGuards == 1}
+	// NOTE: The following line is required for guards to work.
+	setGuardEnabled(true);{/if}{if enablePersistence == 1}
+	setDatabase(other.getDatabase());{/if}{if constructor.copy.impl == ""}
+	*this = other;{else}
+{swrap 75 "	"}{$constructor.copy.impl}{/swrap}{/if}
+\}{/if}{foreach con in constructor.public}
 
 {swrap 75}{$class.name}::{$class.name}({foreach prm in con.param}{$prm.type} {$prm.name}{first}, {/first}{mid}, {/mid}{/foreach}){foreach init in con.initializer}{first}
 : {/first}{single}
@@ -536,12 +681,15 @@ const Ionflux::ObjectBase::IFClassInfo* {$class.name}::CLASS_INFO = &{$class.nam
 {$con.impl|swrap(75,'	')}{/if}
 \}{/foreach}
 
-{$class.name}::~{$class.name}()
+{$class.name}::~{$class.name}(){if destructor.throw != ""} throw({if destructor.throw != "<none>"}{$destructor.throw}{/if}){/if}
 \{{foreach prop in property.protected}{if ( prop.style == "vector" ) || ( prop.style == "map" )}
-	clear{$prop.element.name|uppercase(1)}s();{/if}{/foreach}{if destructor.impl == ""}
-	// TODO: Nothing ATM. ;-){else}
+	clear{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if}();{/if}{/foreach}{if destructor.impl == ""}{if enablePersistence == 1}
+	if (persistent != 0)
+		delete persistent;
+	persistent = 0;{else}
+	// TODO: Nothing ATM. ;-){/if}{else}
 {$destructor.impl|swrap(75,'	')}{/if}
-\}{foreach func in function.private}{ref createFuncImpl}{/foreach}{foreach func in function.protected}{ref createFuncImpl}{/foreach}{foreach op in operation}{ref createOpProxyImpl}{/foreach}{if haveOps == 1}{ref createOpDispatchImpl}{/if}{foreach ev in event}{ref createEventHelperFunctionImpl}{/foreach}{foreach func in function.public}{ref createFuncImpl}{/foreach}{foreach prop in property.private}{ref createPropertyAccessorImpl}{/foreach}{foreach prop in property.protected}{ref createPropertyAccessorImpl}{/foreach}{if enableSerialize == 1}
+\}{foreach func in function.private}{ref createFuncImpl}{/foreach}{foreach func in function.protected}{ref createFuncImpl}{/foreach}{foreach op in operation}{ref createOpProxyImpl}{/foreach}{if haveOps == 1}{ref createOpDispatchImpl}{/if}{foreach ev in event}{ref createEventHelperFunctionImpl}{/foreach}{foreach func in function.public}{ref createFuncImpl}{/foreach}{foreach prop in property.private}{ref createPropertyAccessorImpl}{/foreach}{foreach prop in property.protected}{ref createPropertyAccessorImpl}{/foreach}{if enablePersistence == 1}{ref persistentDatabaseAccessorImpl}{/if}{if enableSerialize == 1}
 
 bool {$class.name}::serialize(std::string& target) const
 \{{if haveBaseIFObject == 1}{foreach bc in class.base.ifobject}
@@ -557,7 +705,7 @@ int {$class.name}::deserialize(const std::string& source, int offset)
 	if (offset < 0)
 		return false;{/foreach}{/if}{foreach prop in property.private}{if prop.serialize == "true"}{ref deserializeProp}{/if}{/foreach}{foreach prop in property.protected}{if prop.serialize == "true"}{ref deserializeProp}{/if}{/foreach}{foreach var in variable.private}{if var.serialize == "true"}{ref deserializeVar}{/if}{/foreach}{foreach var in variable.protected}{if var.serialize == "true"}{ref deserializeVar}{/if}{/foreach}{foreach var in variable.public}{if var.serialize == "true"}{ref deserializeVar}{/if}{/foreach}
 	return offset;
-\}{/if}{foreach sig in signal}{foreach ins in sig.instance}
+\}{/if}{if enablePersistence == 1}{ref createPersistenceFuncsImpl}{/if}{if enableCopy == 1}{ref createCopyFuncsImpl}{/if}{if enableUpcast == 1}{ref createUpcastFuncsImpl}{/if}{foreach sig in signal}{foreach ins in sig.instance}
 
 IF{$sig.id|uppercase(1)}Signal& {$class.name}::getSignal{$ins.name|uppercase(1)}()
 \{
