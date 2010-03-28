@@ -47,6 +47,7 @@ struct IFOpInfo;
 
 // other types
 typedef std::string IFObjectID;
+typedef std::string IFParamID;
 typedef int IFIDNum;
 typedef int IFEventType;
 typedef	std::set<Ionflux::ObjectBase::IFObject*> IFObjectSet;

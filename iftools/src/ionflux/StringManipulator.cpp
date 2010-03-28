@@ -534,9 +534,12 @@ std::string StringSWrap::process(const std::string& bytes,
 			{
 				// Current word does not fit on current line.
 				if (currentLine.size() == prefix.size())
+				{
 					/* Current word is too long to fit on one line, but since 
 					   this is a soft wrap, we have to add it anyway. */
 					currentLine.append(currentWord);
+					currentToken = tok.getNextToken();
+				}
 				result.append(currentLine);
 				// Remove whitespace after current word.
 				while (currentToken.typeID == Tokenizer::TT_WHITESPACE.typeID)
