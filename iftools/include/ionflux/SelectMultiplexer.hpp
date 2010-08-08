@@ -155,6 +155,13 @@ class SelectMultiplexer
 		 */
 		virtual bool isRunning();
 		
+        /** Log events.
+         *
+         * Output a list of the currently registered events to the logging 
+         * facility.
+         */
+        virtual void logEvents();
+        
 		/** Shutdown handler.
 		 *
 		 * Signal handler for signals that will cause the main loop to exit.

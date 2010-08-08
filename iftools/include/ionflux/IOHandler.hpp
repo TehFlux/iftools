@@ -44,8 +44,6 @@ namespace Tools
  */
 struct IOEvent
 {
-	/// Constructor.
-	IOEvent() : data(0), peer(0) { }
 	/// File descriptor on which the event occured.
 	int fd;
 	/// Type of event.
@@ -62,7 +60,25 @@ struct IOEvent
 	static const int IO_EXCEPT;
 	/// Event type: timeout.
 	static const int IO_TIMEOUT;
+    
+	/// Constructor.
+	IOEvent() : data(0), peer(0) { }
+    
+    /// Get string representation.
+    std::string getString() const;
 };
+
+/** Output operator.
+ *
+ * Output operator
+ *
+ * \param outputStream Output stream.
+ * \param event IO event.
+ *
+ * \return Output stream.
+ */
+std::ostream& operator<<(std::ostream& outputStream, const 
+    Ionflux::Tools::IOEvent& event);
 
 /** IO event handler.
  * \ingroup iomplex

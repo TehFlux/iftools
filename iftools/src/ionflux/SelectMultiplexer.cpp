@@ -389,6 +389,27 @@ bool SelectMultiplexer::isRunning()
 	return running;
 }
 
+void SelectMultiplexer::logEvents()
+{
+    std::ostringstream status;
+    status << "Registered events: ";
+    if (events.size() == 0)
+        status << "<none>";
+    else
+    {
+        for (std::vector<IOEventInfo*>::iterator i = events.begin(); 
+            i != events.end(); i++)
+        {
+            IOEventInfo* e0 = *i;
+            if (e0 != 0)
+                status << "\n  " << e0->event << " (" << e0->handler << ")";
+            else
+                status << "\n  <null>";
+        }
+    }
+    log.msg(status.str(), log.VL_DEBUG);
+}
+
 void SelectMultiplexer::quit()
 {
 	shutdown = 1;

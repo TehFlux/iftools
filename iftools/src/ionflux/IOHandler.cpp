@@ -39,6 +39,66 @@ const int IOEvent::IO_WRITE = 2;
 const int IOEvent::IO_EXCEPT = 4;
 const int IOEvent::IO_TIMEOUT = 8;
 
+std::string IOEvent::getString() const
+{
+    std::ostringstream status;
+    status << "IOEvent[" << fd;
+    bool first = true;
+    if ((type & IO_READ) != 0)
+    {
+        if (!first)
+            status << ", ";
+        else
+        {
+            status << "; ";
+            first = false;
+        }
+        status << "READ";
+    }
+    if ((type & IO_WRITE) != 0)
+    {
+        if (!first)
+            status << ", ";
+        else
+        {
+            status << "; ";
+            first = false;
+        }
+        status << "WRITE";
+    }
+    if ((type & IO_EXCEPT) != 0)
+    {
+        if (!first)
+            status << ", ";
+        else
+        {
+            status << "; ";
+            first = false;
+        }
+        status << "EXCEPT";
+    }
+    if ((type & IO_TIMEOUT) != 0)
+    {
+        if (!first)
+            status << ", ";
+        else
+        {
+            status << "; ";
+            first = false;
+        }
+        status << "TIMEOUT";
+    }
+    status << "]";
+    return status.str();
+}
+
+std::ostream& operator<<(std::ostream& outputStream, const 
+    Ionflux::Tools::IOEvent& event)
+{
+    outputStream << event.getString();
+    return outputStream;
+}
+
 }
 
 }

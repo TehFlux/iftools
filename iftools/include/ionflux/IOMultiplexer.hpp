@@ -54,6 +54,7 @@ struct IOEventInfo
 	IOEvent event;
 	/// IO handler.
 	IOHandler *handler;
+    
 };
 
 /** IO event multiplexer.
@@ -152,6 +153,13 @@ class IOMultiplexer
 		 */
 		virtual int getType();
 		
+        /** Log events.
+         *
+         * Output a list of the currently registered events to the logging 
+         * facility.
+         */
+        virtual void logEvents() = 0;
+        
 		/** Shutdown handler.
 		 *
 		 * Signal handler for signals that will cause the main loop to exit.

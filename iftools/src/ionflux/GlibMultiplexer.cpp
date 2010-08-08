@@ -464,6 +464,11 @@ void GlibMultiplexer::shutdownHandler(int signum)
 	Gtk::Main::quit();
 }
 
+void GlibMultiplexer::logEvents()
+{
+    // TODO: Implementation.
+}
+
 Reporter& GlibMultiplexer::getLog()
 {
 	return log;
