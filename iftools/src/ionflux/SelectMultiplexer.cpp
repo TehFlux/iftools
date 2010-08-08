@@ -392,7 +392,7 @@ bool SelectMultiplexer::isRunning()
 void SelectMultiplexer::logEvents()
 {
     std::ostringstream status;
-    status << "Registered events: ";
+    status << "[SelectMultiplexer::logEvents] Registered events: ";
     if (events.size() == 0)
         status << "<none>";
     else
