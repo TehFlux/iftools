@@ -139,7 +139,7 @@ bool TCPSocket::bind(unsigned int newAddress)
 	theSocket = ::socket(AF_INET, SOCK_STREAM, 0);
 	localHostAddress.sin_family = AF_INET;
 	localHostAddress.sin_port = htons(port);
-	localHostAddress.sin_addr.s_addr = htonl(newAddress);
+	localHostAddress.sin_addr.s_addr = newAddress;
 	int result = ::bind(theSocket,
 		reinterpret_cast<sockaddr *>(&localHostAddress),
 		sizeof(localHostAddress));
