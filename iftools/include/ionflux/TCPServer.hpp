@@ -72,6 +72,8 @@ class TCPServer
 		bool manageIomp;
 		/// IO event for the server socket.
 		IOEvent serverSocketEvent;
+        /// Bind address.
+        std::string address;
 		
 		/** Add client.
 		 *
@@ -248,6 +250,16 @@ class TCPServer
 		 */
 		virtual void setMaxClients(unsigned int newMaxClients);
 		
+		/** Set listening address.
+		 *
+		 * Sets the address (decimal dot notation) on which this server will 
+         * listen for incoming connections. If the address is set to an empty 
+         * string, the server will listen on any address.
+		 *
+		 * \param newAddress Address.
+		 */
+        virtual void setAddress(const std::string& newAddress);
+		        
 		/** Set port.
 		 *
 		 * Sets the port on which this server will listen for incoming 
@@ -268,6 +280,12 @@ class TCPServer
 		 * \return Listening port.
 		 */
 		virtual int getPort();
+		
+		/** Get listening address.
+		 *
+		 * \return Listening address.
+		 */
+        virtual std::string getAddress();
 		
 		/** Shutdown handler.
 		 *

@@ -40,19 +40,25 @@ int main(int argc, char* argv[])
 	CLOption *option = args.getOption("p");
 	if (option == 0)
 	{
-		cout << "Usage: tcpserver -p <port> [-m <maxClients>]" << endl;
+		cout << "Usage: tcpserver -p <port> [-m <maxClients>] "
+            "[-a <address>]" << endl;
 		return 0;
 	}
 	int port = strtol(option->value.c_str(), 0, 10);
 	int maxClients = 0;
+    std::string address;
 	option = args.getOption("m");
 	if (option != 0)
 		maxClients = strtol(option->value.c_str(), 0, 10);
+    option = args.getOption("a");
+    if (option != 0)
+        address = option->value;
 	TCPServer server;
 	signal(SIGINT, TCPServer::shutdownHandler);
 	signal(SIGTERM, TCPServer::shutdownHandler);
 	server.getLog().setVerbosityLevel(Reporter::VL_DEBUG_OPT);
 	server.setPort(port);
+    server.setAddress(address);
 	server.setMaxClients(maxClients);
 	server.init();
 	server.run();

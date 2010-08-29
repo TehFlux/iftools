@@ -138,7 +138,25 @@ bool TCPServer::init()
 	log.msg("[TCPServer::init] DEBUG: Server startup.", log.VL_DEBUG);
 	log.msg("[TCPServer::init] DEBUG: Bind to local interface.", 
 		log.VL_DEBUG_OPT);
-	if (!serverSocket.bind())
+    bool bindResult = false;
+    if (address.size() == 0)
+        // Bind to any address.
+        bindResult = serverSocket.bind();
+    else
+    {
+        // Bind to specific address.
+        in_addr address0;
+        if (::inet_pton(AF_INET, address.c_str(), &address0) != 1)
+        {
+            ostringstream status;
+            status << "[TCPServer::init] ERROR: Invalid bind address: " 
+                << address;
+            log.msg(status.str(), log.VL_ERROR);
+            return false;
+        }
+        bindResult = serverSocket.bind(address0.s_addr);
+    }
+	if (!bindResult)
 	{
 		log.msg("[TCPServer::init] ERROR: Bind failed.", log.VL_ERROR);
 		return false;
@@ -406,6 +424,16 @@ void TCPServer::setPort(int newPort)
 unsigned int TCPServer::getMaxClients()
 {
 	return maxClients;
+}
+
+std::string TCPServer::getAddress()
+{
+    return address;
+}
+
+void TCPServer::setAddress(const std::string& newAddress)
+{
+    address = newAddress;
 }
 
 int TCPServer::getPort()
