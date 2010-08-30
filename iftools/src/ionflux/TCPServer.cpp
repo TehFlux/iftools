@@ -42,6 +42,7 @@ TCPServer::TCPServer()
 {
 	serverSocket.getLog().redirect(&log);
 	iomp = new SelectMultiplexer();
+    manageIomp = true;
 	iomp->getLog().redirect(&log);
 }
 
