@@ -66,6 +66,95 @@ namespace Ionflux
 namespace Tools
 {
 
+/* tools.hpp */
+
+const std::string MODULE_NAME = "Ionflux Tools";
+const std::string MODULE_VERSION = "0.2.4";
+const int READ_BUFFER_SIZE = 1024;
+const int COMPRESS_BUFFER_SIZE = 1024;
+const int DIR_BUFFER_SIZE = 1024;
+const int DIR_BUFFER_SIZE_MAX = 65536;
+const char DIR_SEPARATOR = '/';
+
+std::string makeHex(const std::string& inputData);
+std::string makeReadable(const std::string& inputData, 
+	const std::string& replacement);
+std::string makeNiceHex(const std::string& hex, const std::string& readable, 
+	int bytesPerLine, int groupBytes);
+std::string sha1(const std::string& secret, bool hexOut = false);
+void explode(const std::string& bytes, const std::string& splitString, 
+	std::vector<std::string>& result);
+void explodeQuoted(const std::string& bytes, std::vector<std::string>& result);
+bool isOneOf(char c, const std::string& testChars);
+bool isNumber(const std::string &bytes);
+bool isAlpha(const std::string &bytes);
+bool isInteger(const std::string &bytes);
+bool isFloat(const std::string &bytes);
+bool isIdentifier(const std::string &bytes);
+std::string readFile(const std::string& fileName);
+bool writeFile(const std::string& fileName, const std::string& data, 
+	char writeMode);
+bool bz2Compress(const std::string& inputData, std::string &outputBuffer);
+bool bz2Decompress(const std::string& inputData, std::string &outputBuffer);
+std::string packInt(int data);
+std::string packDouble(double data);
+std::string packBool(bool data);
+int unpackInt(const std::string &data);
+double unpackDouble(const std::string &data);
+bool unpackBool(const std::string &data);
+void socketInit();
+void socketShutdown();
+void daemonize();
+std::string parseHex(const std::string &inputData);
+void getPassword(const std::string &prompt, std::string &password);
+void getRandomBytes(std::string &bytes, unsigned int n, MTRand *source);
+void getRandomIdentifier(std::string &bytes, unsigned int n, MTRand *source);
+bool readDir(const std::string &dirName, std::vector<std::string> &target, 
+	bool prependDirName = false, bool recursive = false);
+std::string getCurrentDir();
+bool getFileList(const std::vector<std::string>& pathList, 
+	std::vector<std::string>& target, bool recursive = false, 
+	const std::string& filterExpr = "");
+int getOpPrecedence(const std::string &op, bool unary = false);
+std::string escape(const std::string &source, 
+	const std::string& escapeWhat = " '\"");
+std::string toUpper(const std::string &text, unsigned int numChars = 0, 
+	unsigned int offset = 0);
+std::string toLower(const std::string &text, unsigned int numChars = 0, 
+	unsigned int offset = 0);
+bool toBool(const std::string &text);
+unsigned int utf8GetSize(unsigned char byte);
+unsigned int utf8GetSize(const std::string& bytes);
+bool utf8ToUInt(const std::string& bytes, unsigned int& target);
+bool utf8ToUInt(const std::string& bytes, std::vector<unsigned int>& target);
+std::string uintToUtf8(unsigned int uniChar);
+void uintToUtf8(const std::vector<unsigned int>& uniChars, 
+	std::string& target);
+std::string utf8Trim(const std::string& bytes, bool leftTrim = true, 
+	bool rightTrim = true);
+bool utf8IsOneOf(unsigned int c, const std::string& testChars);
+bool utf8IsOneOf(unsigned int c, const std::vector<unsigned int>& testChars);
+std::string utf8Escape(const std::string& source);
+std::string utf8Unescape(const std::string& source);
+std::string quote(const std::string& source, 
+	const unsigned char quoteChar = '\'');
+std::string unquote(const std::string& source, 
+	const std::string& addQuoteChars = "");
+std::string trim(const std::string& bytes, bool leftTrim = true, 
+	bool rightTrim = true);
+std::string urlEncode(const std::string& bytes);
+std::string urlDecode(const std::string& bytes);
+std::string appendDirSeparator(const std::string& path, 
+	unsigned char separator = DIR_SEPARATOR);
+std::string prependDirSeparator(const std::string& path, 
+	unsigned char separator = DIR_SEPARATOR);
+bool validatePath(const std::string& path, int mask = 0755);
+std::string xmlEscape(const std::string& bytes);
+MTRand& getRandomizer();
+
+
+/* Classes */
+
 class ClassInfo
 {
 	public:
@@ -978,8 +1067,10 @@ class TCPServer
 		virtual void onIO(const IOEvent &event);
 		virtual void setMaxClients(unsigned int newMaxClients);
 		virtual void setPort(int newPort);
+        virtual void setAddress(const std::string& newAddress);
 		virtual unsigned int getMaxClients();
 		virtual int getPort();
+        virtual std::string getAddress();
 		static void shutdownHandler(int signum);
 		virtual Reporter &getLog();
 };
