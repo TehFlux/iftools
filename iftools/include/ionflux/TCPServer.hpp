@@ -75,6 +75,15 @@ class TCPServer
         /// Bind address.
         std::string address;
 		
+		/** Create remote peer.
+		 *
+		 * Create a remote peer. Derived classes can override this to use 
+         * custom TCPRemotePeer subclasses.
+		 *
+		 * \param clientID Client ID.
+		 */
+        virtual Ionflux::Tools::TCPRemotePeer* createRemotePeer(int clientID);
+        
 		/** Add client.
 		 *
 		 * Add a remote client to the client vector.

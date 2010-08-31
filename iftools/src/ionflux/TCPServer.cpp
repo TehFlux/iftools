@@ -283,6 +283,17 @@ void TCPServer::onDisconnect(TCPRemotePeer &client)
 	log.msg(status.str(), log.VL_DEBUG_OPT);
 }
 
+Ionflux::Tools::TCPRemotePeer* TCPServer::createRemotePeer(int clientID)
+{
+    TCPRemotePeer* newPeer = new TCPRemotePeer(clientID);
+    if (newPeer == 0)
+    {
+        log.msg("[TCPServer::createRemotePeer] ERROR: "
+            "Could not allocate remote peer object.", log.VL_ERROR);
+    }
+    return newPeer;
+}
+
 void TCPServer::onIO(const IOEvent &event)
 {
 	if (!log.assert(iomp != 0, "[TCPServer::onIO] IO multiplexer is null."))
@@ -301,7 +312,7 @@ void TCPServer::onIO(const IOEvent &event)
 	{
 		log.msg("[TCPServer::onIO] DEBUG: Incoming connection.",
 			log.VL_DEBUG_OPT);
-		currentClient = new TCPRemotePeer(currentClientID);
+		currentClient = createRemotePeer(currentClientID);
 		if (!serverSocket.accept(currentClient->getSocket()))
 		{
 			log.msg("[TCPServer::onIO] ERROR: Failed to accept "
