@@ -82,6 +82,8 @@ std::string makeReadable(const std::string& inputData,
 std::string makeNiceHex(const std::string& hex, const std::string& readable, 
 	int bytesPerLine, int groupBytes);
 std::string sha1(const std::string& secret, bool hexOut = false);
+std::string hmac(const std::string& key, const std::string& message, 
+    bool hexOut = false);
 void explode(const std::string& bytes, const std::string& splitString, 
 	std::vector<std::string>& result);
 void explodeQuoted(const std::string& bytes, std::vector<std::string>& result);
