@@ -112,7 +112,7 @@ std::string sha1(const std::string& secret, bool hexOut)
 }
 
 std::string hmac(const std::string& key, const std::string& message, 
-    bool hexOut = false)
+    bool hexOut)
 {
     const unsigned int blockSize = 64;
     std::string tKey(key);
@@ -124,8 +124,8 @@ std::string hmac(const std::string& key, const std::string& message,
     std::string iKey;
     for (unsigned int i = 0; i < blockSize; i++)
     {
-        oKey.append(tKey[i] ^ '\x36');
-        iKey.append(tKey[i] ^ '\x5c');
+        oKey.append(1, tKey[i] ^ '\x36');
+        iKey.append(1, tKey[i] ^ '\x5c');
     }
     std::string t0(iKey);
     t0.append(message);
