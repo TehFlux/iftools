@@ -179,6 +179,21 @@ bool isNumber(const std::string &bytes)
 	return result;
 }
 
+bool isAlpha(const std::string &bytes)
+{
+	if (bytes.size() == 0)
+		return false;
+	bool result = true;
+	unsigned int i = 0;
+	while (result && (i < bytes.size()))
+	{
+		result = (result && isOneOf(bytes[i], "ABCDEFGHIJKLMNOPQRSTUVWXYZ" 
+            "abcdefghijklmnopqrstuvwxyz"));
+		i++;
+	}
+	return result;
+}
+
 bool isInteger(const std::string &bytes)
 {
 	if (bytes.size() == 0)
