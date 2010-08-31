@@ -111,6 +111,29 @@ std::string sha1(const std::string& secret, bool hexOut)
 	return string(reinterpret_cast<const char*>(sha1sum), 20);
 }
 
+std::string hmac(const std::string& key, const std::string& message, 
+    bool hexOut = false)
+{
+    const unsigned int blockSize = 64;
+    std::string tKey(key);
+    if (tKey.size() > blockSize)
+        tKey = sha1(tKey);
+    if (tKey.size() < blockSize)
+        tKey.append(blockSize - tKey.size(), '\x0');
+    std::string oKey;
+    std::string iKey;
+    for (unsigned int i = 0; i < blockSize; i++)
+    {
+        oKey.append(tKey[i] ^ '\x36');
+        iKey.append(tKey[i] ^ '\x5c');
+    }
+    std::string t0(iKey);
+    t0.append(message);
+    std::string result(oKey);
+    result.append(sha1(t0));
+    return sha1(result, hexOut);
+}
+
 void explode(const std::string& bytes, const std::string& splitString, 
 	std::vector<std::string>& result)
 {

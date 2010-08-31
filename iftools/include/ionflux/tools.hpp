@@ -131,7 +131,7 @@ std::string makeReadable(const std::string& inputData,
 std::string makeNiceHex(const std::string& hex, const std::string& readable, 
 	int bytesPerLine, int groupBytes);
 
-/** Calculate SHA-1 hash
+/** Calculate SHA-1 hash.
  *
  * Calculate the SHA-1 hash for a string.
  *
@@ -142,6 +142,20 @@ std::string makeNiceHex(const std::string& hex, const std::string& readable,
  * \return SHA-1 hash of the input secret.
  */
 std::string sha1(const std::string& secret, bool hexOut = false);
+
+/** Calculate HMAC-SHA hash.
+ *
+ * Calculate the HMAC-SHA hash for a key and a message.
+ *
+ * \param key The string containing the key.
+ * \param message The string containing the message.
+ * \param hexOut If set to \c true, the return value will be a hexadecimal 
+ * string.
+ *
+ * \return HMAC-SHA hash of the input key and message.
+ */
+std::string hmac(const std::string& key, const std::string& message, 
+    bool hexOut = false);
 
 /** Explode a string.
  *
