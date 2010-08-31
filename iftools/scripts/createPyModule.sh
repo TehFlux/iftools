@@ -27,7 +27,7 @@
 echo "Creating wrapper code..."
 swig -c++ -python -outdir swig/python swig/iftools.i &&
 echo "Building Python module..." &&
-g++ -shared -fPIC -o swig/python/_IFTools.so -I/usr/include/python2.6 \
+g++ -shared -fPIC -o swig/python/_IFTools.so -I/usr/local/Python-2.6/include/python2.6 \
     -Iinclude -Iinclude/ionflux -Iextern/sha1 -Iextern/Mersenne -lpython2.6 -liftools \
-    -Llib swig/iftools_wrap.cxx &&
+    -Llib -L/usr/local/Python-2.6/lib swig/iftools_wrap.cxx &&
 echo "All done."
