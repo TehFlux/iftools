@@ -28,20 +28,31 @@
 # ==========================================================================
 import os
 
-env = Environment(ENV = os.environ)
+env = Environment(ENV = os.environ, 
+    CPPPATH = ['include'], 
+    LIBPATH = ['lib'])
+
+if (ARGUMENTS.get('debug', 0)):
+    env.Append(CCFLAGS = '-g')
 
 env.VariantDir('build', 'src')
+env.VariantDir('test/build', 'test')
 
 config = env.Configure()
 if (not config.CheckLib("pthread")):
     print "pthread not found!"
     Exit(1)
-if (not config.CheckLib("iftools")):
-    print "iftools not found!"
-    Exit(1)
+
+buildIFClassgen = True
+if (not config.CheckLib("iftools", language = 'C++')):
+    print "*************************************************"
+    print "iftools not found - ifclassgen will NOT be built!"
+    print "*************************************************"
+    buildIFClassgen = False
+
 env = config.Finish()
 
-env.MergeFlags(['-Wall', '-Wno-deprecated', '-O2', '-Iinclude', '-Llib'
+env.MergeFlags(['-Wall', '-Wno-deprecated', '-O2', 
     '!/opt/local/bin/pkg-config --cflags --libs sigc++-2.0'])
 
 ifobjectLibSources = ['build/libb64.cpp',
@@ -61,15 +72,47 @@ ifobjectLibSources = ['build/libb64.cpp',
 	'build/IFThreadEvent.cpp',
 	'build/IFThreadSignalProxy.cpp']
 
+# ifobject shared library
 ifobjectLib = env.SharedLibrary(target = "lib/ifobject", 
     source = ifobjectLibSources)
 
+targetLibs = [ifobjectLib]
+
+# ifclassgen class generator
 ifclassgenBin = env.Program('bin/ifclassgen', 
 	['build/ifclassgen.cpp'], 
 	LIBS = ['iftools'])
 
-allTargets = [ifobjectLib, ifclassgenBin]
+targetBins = []
+if (buildIFClassgen):
+    targetBins += [ifclassgenBin]
 
-targetAll = Alias('all', allTargets)
+# tests
+testEnv = env.Clone()
+testEnv.Append(LIBS = ['ifobject'], CPPPATH = ['test/include', '.'])
+
+ifclassinfotestBin = testEnv.Program('test/bin/ifclassinfotest', 
+	['test/build/ifclassinfotest.cpp'])
+ifobjecttestBin = testEnv.Program('test/bin/ifobjecttest', 
+	['test/build/ifobjecttest.cpp'])
+ifthreadtestBin = testEnv.Program('test/bin/ifthreadtest', 
+	['test/build/ifthreadtest.cpp'])
+packtestBin = testEnv.Program('test/bin/packtest', 
+	['test/build/packtest.cpp'])
+ifexampleclasstestBin = testEnv.Program('test/bin/ifexampleclasstest',
+	['test/build/IFExampleClass.cpp', 
+		'test/build/IFExampleEvent.cpp',
+		'test/build/IFExampleSignalProxy.cpp', 
+		'test/build/ifexampleclasstest.cpp'])
+
+targetTests = [ifclassinfotestBin, ifobjecttestBin, ifthreadtestBin, 
+    packtestBin, ifexampleclasstestBin]
+
+allTargets = targetLibs + targetBins + targetTests
+
+aliasLibs = Alias('libs', targetLibs)
+aliasBins = Alias('programs', targetBins)
+aliasTests = Alias('tests', targetTests)
+aliasAll = Alias('all', allTargets)
 
 Default('all')
