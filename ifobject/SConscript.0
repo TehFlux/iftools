@@ -1,0 +1,240 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+# ==========================================================================
+# Ionflux Object Base System
+# Copyright © 2006 Joern P. Meier
+# mail@ionflux.org
+# --------------------------------------------------------------------------
+# SConscript                  SCons build script
+# ==========================================================================
+# 
+# This file is part of Ionflux Object Base System.
+# 
+# Ionflux Object Base System is free software; you can redistribute it 
+# and/or modify it under the terms of the GNU General Public License as 
+# published by the Free Software Foundation; either version 2 of the 
+# License, or (at  your option) any later version.
+# 
+# Ionflux Object Base System is distributed in the hope that it will be 
+# useful, but WITHOUT ANY WARRANTY; without even the implied warranty of 
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU 
+# General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with Ionflux Object Base System; if not, write to the Free 
+# Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
+# 02111-1307 USA
+# 
+# ==========================================================================
+
+import os
+
+Help("""
+Type 'scons' to build the default targets.
+Type 'scons install' to install to default location.
+Type 'scons <target>' to build a specific target.
+
+Targets:
+  (default)                    Everything.
+  all                          Everything
+  test                         Everything and tests
+  install                      Install everything
+
+Options:
+  prefix=<target directory>    Installation prefix
+                               (default: /usr/local)
+  platform=<platform>          Platform which to build for (valid values 
+                               currently are linux, freebsd and win32)
+							   (default: linux)
+							   NOTE: Win32 support is currently unmaintained.
+  debug=<yes|no>               Whether to use debug compiler flags 
+                               (default: yes)
+""")
+
+platform = ARGUMENTS.get('platform', 'linux')
+prefix = ARGUMENTS.get('prefix', '/usr/local')
+debug =  ARGUMENTS.get('debug', 'yes')
+
+if (debug == 'yes'):
+    debugFlags = ['-g']
+else:
+    debugFlags = []
+
+BuildDir('build', 'src')
+BuildDir('test/build', 'test')
+
+if (platform == 'linux'):
+	# build flags for Linux systems
+	cxx = 'g++'
+	ccflags = []
+    # Remove  the /home/flux/... paths or replace them with your own.
+	cpppath = ['include', '/home/flux/usr/include']
+	libs = []
+	libpath = ['/home/flux/usr/lib']
+	libsock = []
+	libmysql = ['mysqlclient']
+	libssl = ['ssl']
+	libwinmm = []
+	libpthread = ['pthread']
+	libext = ".so"
+elif (platform == 'freebsd'):
+	# build flags for FreeBSD systems
+	cxx = 'g++34'
+	ccflags = ['-pthread', '-DHAVE_INTTYPES']
+	cpppath = ['include',
+			   '/usr/local/include']
+	libs = []
+	libpath = ['/usr/local/lib/mysql']
+	libsock = []
+	libmysql = ['mysqlclient']
+	libssl = ['ssl']
+	libwinmm = []
+	libpthread = ['c_r']
+	libext = ".so"
+elif (platform == 'win32'):
+	# build flags for Windows systems 
+	cxx = 'g++'
+	ccflags = ['-DHAVE_WINSOCK', 
+               '-DHAVE_WIN32_SLEEP',
+			   '-DNO_LOCALTIME_R',
+			   '-DNO_FORK']
+	cpppath = ['include',
+	           'C:/Dev-Cpp/include',
+	           'C:/Dev-Cpp/include/c++',
+			   'C:/Dev-Cpp/include/c++/mingw32',
+			   'C:/Dev-Cpp/include/c++/backward',
+			   'C:/Dev-Cpp/include']
+	libs = []
+	libpath = ['C:/Dev-Cpp/lib']
+	libsock = ['wsock32']
+	libmysql = ['mySQL']
+	libssl = ['ssl32', 'eay32']
+	libwinmm = ['winmm']
+	libpthread = ['pthreadGC']
+	libext = ".dll"
+
+mainccflags = ['-Wall', '-Wno-deprecated', '-O2', ] + debugFlags + ccflags
+
+sigcppccflags = Split(os.popen('pkg-config --cflags sigc++-2.0').read())
+sigcpplibs = Split(os.popen('pkg-config --libs-only-l sigc++-2.0').read())
+sigcpplibpath = Split(os.popen('pkg-config --libs-only-L sigc++-2.0').read())
+
+ifobjectenv = Environment(
+    CXX = cxx,
+    CCFLAGS = mainccflags)
+
+# IFObject library
+ifobjectLibHeaders = ['include/libb64.hpp',
+	'include/ifobject/types.hpp',
+	'include/ifobject/log.hpp',
+	'include/ifobject/utf8.hpp',
+	'include/ifobject/serialize.hpp',
+	'include/ifobject/utility.hpp',
+	'include/ifobject/IFClassInfo.hpp',
+	'include/ifobject/IFObject.hpp',
+	'include/ifobject/IFObjectEvent.hpp',
+	'include/ifobject/IFObjectSignalProxy.hpp',
+	'include/ifobject/IFMutex.hpp',
+	'include/ifobject/IFGuard.hpp',
+	'include/ifobject/IFSignal.hpp',
+	'include/ifobject/IFLogMessage.hpp',
+	'include/ifobject/IFThread.hpp',
+	'include/ifobject/IFThreadEvent.hpp',
+	'include/ifobject/IFObjectSignalProxy.hpp']
+
+ifobjectLibSources = ['build/libb64.cpp',
+	'build/log.cpp',
+	'build/utf8.cpp',
+	'build/serialize.cpp',
+	'build/utility.cpp',
+	'build/IFClassInfo.cpp',
+	'build/IFObject.cpp',
+	'build/IFObjectEvent.cpp',
+	'build/IFObjectSignalProxy.cpp',
+	'build/IFMutex.cpp',
+	'build/IFGuard.cpp',
+	'build/IFSignal.cpp',
+	'build/IFLogMessage.cpp',
+	'build/IFThread.cpp',
+	'build/IFThreadEvent.cpp',
+	'build/IFThreadSignalProxy.cpp']
+
+ifobjectLib = ifobjectenv.SharedLibrary('lib/ifobject',
+    ifobjectLibSources,
+	CCFLAGS = mainccflags + sigcppccflags,
+	CPPPATH = cpppath,
+	LIBS = ['pthread'] + sigcpplibs,
+	LIBPATH = ['lib'] + libpath + sigcpplibpath)
+
+buildIFObjectLib = ['lib/libifobject' + libext]
+
+# applications
+ifclassgenBin = ifobjectenv.Program('bin/ifclassgen',
+	['build/ifclassgen.cpp'],
+	CPPPATH = cpppath,
+	LIBS = ['iftools'] + libs,
+	LIBPATH = ['lib'] + libpath)
+
+# tests
+ifclassinfotestBin = ifobjectenv.Program('test/bin/ifclassinfotest',
+	['test/build/ifclassinfotest.cpp'],
+	CPPPATH = cpppath + sigcppccflags,
+	LIBS = ['ifobject'] + libs,
+	LIBPATH = ['lib'] + libpath)
+ifobjecttestBin = ifobjectenv.Program('test/bin/ifobjecttest',
+	['test/build/ifobjecttest.cpp'],
+	CPPPATH = cpppath + sigcppccflags,
+	LIBS = ['ifobject'] + libs + sigcpplibs,
+	LIBPATH = ['lib'] + libpath + sigcpplibpath)
+ifthreadtestBin = ifobjectenv.Program('test/bin/ifthreadtest',
+	['test/build/ifthreadtest.cpp'],
+	CPPPATH = cpppath + sigcppccflags,
+	LIBS = ['ifobject'] + libs + sigcpplibs,
+	LIBPATH = ['lib'] + libpath + sigcpplibpath)
+packtestBin = ifobjectenv.Program('test/bin/packtest',
+	['test/build/packtest.cpp'],
+	CPPPATH = cpppath + sigcppccflags,
+	LIBS = ['ifobject'] + libs + sigcpplibs,
+	LIBPATH = ['lib'] + libpath + sigcpplibpath)
+ifexampleclasstestBin = ifobjectenv.Program('test/bin/ifexampleclasstest',
+	['test/build/IFExampleClass.cpp', 
+		'test/build/IFExampleEvent.cpp',
+		'test/build/IFExampleSignalProxy.cpp', 
+		'test/build/ifexampleclasstest.cpp'],
+	CPPPATH = ['test/include', '.'] + cpppath + sigcppccflags,
+	LIBS = ['ifobject'] + libs + sigcpplibs,
+	LIBPATH = ['lib'] + libpath + sigcpplibpath)
+
+# targets and collections of files
+allHeaders = [ifobjectLibHeaders]
+buildLibs = buildIFObjectLib
+targetLibs = [ifobjectLib]
+targetApps = [ifclassgenBin]
+buildApps = ['bin/ifclassgen']
+buildTest = ['test/bin/ifclassinfotest',
+	'test/bin/ifobjecttest',
+	'test/bin/ifthreadtest',
+	'test/bin/packtest',
+	'test/bin/ifexampleclasstest']
+
+# installation
+ifobjectenv.Install(prefix + '/include/ifobject', allHeaders)
+ifobjectenv.Install(prefix + '/lib', targetLibs)
+ifobjectenv.Install(prefix + '/bin', targetApps)
+
+installHeader = ifobjectenv.Alias('install-header',
+    prefix + '/include/ifobject')
+installLib = ifobjectenv.Alias('install-lib',
+    prefix + '/lib')
+installApps = ifobjectenv.Alias('install-bin',
+    prefix + '/bin')
+
+ifobjectenv.Alias('all',
+    buildLibs + buildApps + buildTest)
+
+ifobjectenv.Alias('install',
+    [installHeader,
+	 installLib,
+	 installApps])
+
+Default(targetLibs + targetApps)
