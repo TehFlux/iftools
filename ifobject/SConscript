@@ -28,12 +28,34 @@
 # ==========================================================================
 import os
 
+Help("""
+Type 'scons' to build the default targets.
+Type 'scons install' to install to default location.
+Type 'scons <target>' to build a specific target.
+
+Targets:
+  (default)                    Everything.
+  all                          Everything
+  libs                         Shared libraries.
+  programs                     Programs.
+  tests                        Test programs.
+  install                      Install headers, libraries and programs.
+
+Options:
+  prefix=<target directory>    Installation prefix
+                               (default: /usr/local)
+  debug=<yes|no>               Whether to use debug compiler flags 
+                               (default: yes)
+""")
+
 env = Environment(ENV = os.environ, 
     CPPPATH = ['include'], 
     LIBPATH = ['lib'])
 
-if (ARGUMENTS.get('debug', 0)):
+if (ARGUMENTS.get('debug', 'no') == 'yes'):
     env.Append(CCFLAGS = '-g')
+
+prefix = ARGUMENTS.get('prefix', '/usr/local')
 
 env.VariantDir('build', 'src')
 env.VariantDir('test/build', 'test')
@@ -54,6 +76,24 @@ env = config.Finish()
 
 env.MergeFlags(['-Wall', '-Wno-deprecated', '-O2', 
     '!/opt/local/bin/pkg-config --cflags --libs sigc++-2.0'])
+
+ifobjectLibHeaders = ['include/libb64.hpp',
+	'include/ifobject/types.hpp',
+	'include/ifobject/log.hpp',
+	'include/ifobject/utf8.hpp',
+	'include/ifobject/serialize.hpp',
+	'include/ifobject/utility.hpp',
+	'include/ifobject/IFClassInfo.hpp',
+	'include/ifobject/IFObject.hpp',
+	'include/ifobject/IFObjectEvent.hpp',
+	'include/ifobject/IFObjectSignalProxy.hpp',
+	'include/ifobject/IFMutex.hpp',
+	'include/ifobject/IFGuard.hpp',
+	'include/ifobject/IFSignal.hpp',
+	'include/ifobject/IFLogMessage.hpp',
+	'include/ifobject/IFThread.hpp',
+	'include/ifobject/IFThreadEvent.hpp',
+	'include/ifobject/IFObjectSignalProxy.hpp']
 
 ifobjectLibSources = ['build/libb64.cpp',
 	'build/log.cpp',
@@ -108,11 +148,18 @@ ifexampleclasstestBin = testEnv.Program('test/bin/ifexampleclasstest',
 targetTests = [ifclassinfotestBin, ifobjecttestBin, ifthreadtestBin, 
     packtestBin, ifexampleclasstestBin]
 
+allHeaders = ifobjectLibHeaders
+
+installHeaders = env.Install(prefix + '/include/ifobject', allHeaders)
+installLibs = env.Install(prefix + '/lib', targetLibs)
+installBins = env.Install(prefix + '/bin', targetBins)
+
 allTargets = targetLibs + targetBins + targetTests
 
 aliasLibs = Alias('libs', targetLibs)
 aliasBins = Alias('programs', targetBins)
 aliasTests = Alias('tests', targetTests)
 aliasAll = Alias('all', allTargets)
+aliasInstall = Alias('install', [installHeaders, installLibs, installBins])
 
 Default('all')
