@@ -26,7 +26,7 @@
 # 02111-1307 USA
 # 
 # ==========================================================================
-import os
+import os, subprocess
 
 Help("""
 Type 'scons' to build the default targets.
@@ -60,7 +60,20 @@ prefix = ARGUMENTS.get('prefix', '/usr/local')
 env.VariantDir('build', 'src')
 env.VariantDir('test/build', 'test')
 
-config = env.Configure()
+def checkProgram(ctx, cmd):
+    """Check for installed program."""
+    ctx.Message('Checking for ' + cmd + '...')
+    try:
+        subprocess.call(cmd, stdout=subprocess.PIPE, 
+            stderr=subprocess.STDOUT)
+        result = 1
+    except Exception:
+        result = 0
+    ctx.Result(result)
+    return result
+
+config = env.Configure(custom_tests = { "CheckProgram" : checkProgram })
+
 if (not config.CheckLib("pthread")):
     print "pthread not found!"
     Exit(1)
@@ -72,10 +85,19 @@ if (not config.CheckLib("iftools", language = 'C++')):
     print "*************************************************"
     buildIFClassgen = False
 
+haveIFClassgen = True
+if (not config.CheckProgram("ifclassgen")):
+    print "***************************************************"
+    print "ifclassgen not found - Not generating source files."
+    print "***************************************************"
+    haveIFClassgen = False
+
 env = config.Finish()
 
 env.MergeFlags(['-Wall', '-Wno-deprecated', '-O2', 
     '!/opt/local/bin/pkg-config --cflags --libs sigc++-2.0'])
+
+# TODO: Create an ifclassgen-based Builder for the source files.
 
 ifobjectLibHeaders = ['include/libb64.hpp',
 	'include/ifobject/types.hpp',
