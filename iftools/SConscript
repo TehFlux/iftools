@@ -35,7 +35,26 @@ if (not os.path.isfile('site_scons/local_config.py')):
 
 import local_config as lc
 
-# TODO: Help()
+Help("""
+Type 'scons' to build the default targets.
+Type 'scons install' to install to default location.
+Type 'scons <target>' to build a specific target.
+
+Targets:
+  (default)                    Everything.
+  all                          Everything
+  libs                         Shared libraries.
+  programs                     Programs.
+  tests                        Test programs.
+  install                      Install headers, libraries and programs.
+
+Options:
+  prefix=<target directory>    Installation prefix
+                               (default: /usr/local)
+  debug=<yes|no>               Whether to use debug compiler flags 
+                               (default: no)
+  gtools=<yes|no>              Whether to build the Glib tools (default: no).
+""")
 
 env = Environment(ENV = os.environ)
 env.Append(
@@ -47,7 +66,7 @@ if (ARGUMENTS.get('debug', 'no') == 'yes'):
     env.Append(CCFLAGS = '-g')
 
 prefix = ARGUMENTS.get('prefix', '/usr/local')
-gtools = ARGUMENTS.get('gtools', 'yes')
+gtools = ARGUMENTS.get('gtools', 'no')
 
 env.VariantDir('build', 'src')
 env.VariantDir('build/ionflux', 'src/ionflux')
