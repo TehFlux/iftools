@@ -1,6 +1,8 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 # ==========================================================================
 # Ionflux Tools
-# Copyright (c) 2004 Joern P. Meier
+# Copyright © 2004-2010 Joern P. Meier
 # mail@ionflux.org
 # --------------------------------------------------------------------------
 # SConscript                  SCons build script
@@ -26,91 +28,57 @@
 
 import os
 
-Help("""
-Type 'scons' to build the default targets.
-Type 'scons install' to install to default location.
-Type 'scons <target>' to build a specific target.
+# TODO: Help()
 
-Targets:
-  (default)                    Library and tools.
-  all                          Library, tools and tests.
-  test                         Library and tests.
-  install                      Install library and tools.
+env = Environment(ENV = os.environ)
+env.Append(CPPPATH = ['include'], LIBPATH = ['lib'])
+env.MergeFlags(['-Wall', '-Wno-deprecated', '-O2', '-pedantic'])
 
-Options:
-  prefix=<target directory>    Installation prefix.
-                               (default: /usr/local)
-  platform=<platform>          Platform which to build for (valid values 
-                               currently are linux, freebsd and win32).
-                               (default: linux)
-  debug=<yes|no>               Whether to use debug compiler flags. 
-                               (default: yes)
-  gtools=<yes|no>              Whether to build the Glib tools (default: yes).
-""")
+if (ARGUMENTS.get('debug', 'no') == 'yes'):
+    env.Append(CCFLAGS = '-g')
 
-platform = ARGUMENTS.get('platform', 'linux')
 prefix = ARGUMENTS.get('prefix', '/usr/local')
-debug =  ARGUMENTS.get('debug', 'yes')
 gtools = ARGUMENTS.get('gtools', 'yes')
 
-if (debug == 'yes'):
-    debugFlags = ['-g']
-else:
-    debugFlags = []
+env.VariantDir('build', 'src')
+env.VariantDir('build/ionflux', 'src/ionflux')
+env.VariantDir('test/build', 'test')
 
-BuildDir('build', 'src')
-BuildDir('build/ionflux', 'src/ionflux')
-BuildDir('test/build', 'test')
+toolsEnv = env.Clone()
 
-toolsSources = ['extern/sha1/sha1.cpp',
-     'build/ionflux/tools.cpp',
-     'build/ionflux/ClassInfo.cpp',
-     'build/ionflux/Object.cpp',
-     'build/ionflux/Reporter.cpp',
-     'build/ionflux/RegExp.cpp',
-     'build/ionflux/Database.cpp',
-     'build/ionflux/MySQLDatabase.cpp',
-     'build/ionflux/TokenTypeMap.cpp',
-     'build/ionflux/Tokenizer.cpp',
-     'build/ionflux/Utf8TokenTypeMap.cpp',
-     'build/ionflux/Utf8Tokenizer.cpp',
-     'build/ionflux/StringFilter.cpp',
-     'build/ionflux/StringManipulator.cpp',
-     'build/ionflux/DateTime.cpp',
-     'build/ionflux/TimeZone.cpp',
-     'build/ionflux/Node.cpp',
-     'build/ionflux/Tree.cpp',
-     'build/ionflux/NodeReference.cpp',
-     'build/ionflux/TreeResolver.cpp',
-     'build/ionflux/TreeEval.cpp',
-     'build/ionflux/Config.cpp',
-     'build/ionflux/ConfigMap.cpp',
-     'build/ionflux/ConfigTree.cpp',
-     'build/ionflux/Template.cpp',
-     'build/ionflux/CLArgs.cpp',
-     'build/ionflux/TCPSocket.cpp',
-     'build/ionflux/TCPRemotePeer.cpp',
-     'build/ionflux/TCPClient.cpp',
-     'build/ionflux/TCPServer.cpp',
-     'build/ionflux/TCPMessageClient.cpp',
-     'build/ionflux/TCPMessageServer.cpp',
-     'build/ionflux/TCPAuthClient.cpp',
-     'build/ionflux/TCPAuthServer.cpp',
-     'build/ionflux/FDSet.cpp',
-     'build/ionflux/AuthFile.cpp',
-     'build/ionflux/Message.cpp',
-     'build/ionflux/IOHandler.cpp',
-     'build/ionflux/IOMultiplexer.cpp',
-     'build/ionflux/SelectMultiplexer.cpp',
-     'build/ionflux/ManagedObject.cpp',
-     'build/ionflux/ObjectPool.cpp',
-     'build/ionflux/BufferedTable.cpp',
-     'build/ionflux/File.cpp',
-     'build/ionflux/EMailAddress.cpp',
-     'build/ionflux/color.cpp',
-     'build/ionflux/Vector3.cpp',
-     'build/ionflux/Matrix3.cpp',
-     'build/ionflux/Canvas.cpp']
+config = toolsEnv.Configure()
+
+missingDeps = []
+if (not config.CheckLib("bz2")):
+    missingDeps += ['bz2']
+if (not config.CheckLib("pcre")):
+    missingDeps += ['pcre']
+if (not config.CheckLib("mysqlclient")):
+    missingDeps += ['mysqlclient']
+
+if (len(missingDeps) > 0):
+    print "**********************************************************"
+    print "IFTools cannot be built because the following dependencies"
+    print "were not found:"
+    print " "
+    for it in missingDeps:
+        print "  " + it
+    print " "
+    print "**********************************************************"
+    Exit(1)
+
+toolsEnv.Append(LIBS = ['bz2', 'pcre', 'mysqlclient'])
+
+gtoolsEnv = None
+buildGTools = False
+if (gtools == "yes"):
+    buildGTools = True
+
+if (buildGTools):
+    gtoolsEnv = env.Clone()
+    gtoolsEnv.MergeFlags(['!pkg-config --cflags --libs gtkmm-2.4', 
+        '!pkg-config --cflags --libs cairo'])
+    gtoolsEnv.Append(LIBS = ['iftools'])
 
 toolsHeaders = ['extern/sha1/sha1.h',
     'extern/Mersenne/MersenneTwister.h',
@@ -168,22 +136,55 @@ toolsHeaders = ['extern/sha1/sha1.h',
     'include/ionflux/Matrix3.hpp',
     'include/ionflux/Canvas.hpp']
 
-gtoolsSources = ['build/ionflux/GlibMultiplexer.cpp',
-    'build/ionflux/CairoContext.cpp',
-    'build/ionflux/CairoMatrix.cpp',
-    'build/ionflux/CairoPattern.cpp',
-    'build/ionflux/CairoSolidPattern.cpp',
-    'build/ionflux/CairoSurfacePattern.cpp',
-    'build/ionflux/CairoGradient.cpp',
-    'build/ionflux/CairoLinearGradient.cpp',
-    'build/ionflux/CairoRadialGradient.cpp',
-    'build/ionflux/CairoSurface.cpp',
-    'build/ionflux/CairoImageSurface.cpp',
-    'build/ionflux/CairoPathData.cpp',
-    'build/ionflux/CairoPathIterator.cpp',
-    'build/ionflux/CairoPath.cpp',
-    'build/ionflux/CairoCanvas.cpp',
-    'build/ionflux/GtkCairoArea.cpp']
+toolsSources = ['extern/sha1/sha1.cpp',
+     'build/ionflux/tools.cpp',
+     'build/ionflux/ClassInfo.cpp',
+     'build/ionflux/Object.cpp',
+     'build/ionflux/Reporter.cpp',
+     'build/ionflux/RegExp.cpp',
+     'build/ionflux/Database.cpp',
+     'build/ionflux/MySQLDatabase.cpp',
+     'build/ionflux/TokenTypeMap.cpp',
+     'build/ionflux/Tokenizer.cpp',
+     'build/ionflux/Utf8TokenTypeMap.cpp',
+     'build/ionflux/Utf8Tokenizer.cpp',
+     'build/ionflux/StringFilter.cpp',
+     'build/ionflux/StringManipulator.cpp',
+     'build/ionflux/DateTime.cpp',
+     'build/ionflux/TimeZone.cpp',
+     'build/ionflux/Node.cpp',
+     'build/ionflux/Tree.cpp',
+     'build/ionflux/NodeReference.cpp',
+     'build/ionflux/TreeResolver.cpp',
+     'build/ionflux/TreeEval.cpp',
+     'build/ionflux/Config.cpp',
+     'build/ionflux/ConfigMap.cpp',
+     'build/ionflux/ConfigTree.cpp',
+     'build/ionflux/Template.cpp',
+     'build/ionflux/CLArgs.cpp',
+     'build/ionflux/TCPSocket.cpp',
+     'build/ionflux/TCPRemotePeer.cpp',
+     'build/ionflux/TCPClient.cpp',
+     'build/ionflux/TCPServer.cpp',
+     'build/ionflux/TCPMessageClient.cpp',
+     'build/ionflux/TCPMessageServer.cpp',
+     'build/ionflux/TCPAuthClient.cpp',
+     'build/ionflux/TCPAuthServer.cpp',
+     'build/ionflux/FDSet.cpp',
+     'build/ionflux/AuthFile.cpp',
+     'build/ionflux/Message.cpp',
+     'build/ionflux/IOHandler.cpp',
+     'build/ionflux/IOMultiplexer.cpp',
+     'build/ionflux/SelectMultiplexer.cpp',
+     'build/ionflux/ManagedObject.cpp',
+     'build/ionflux/ObjectPool.cpp',
+     'build/ionflux/BufferedTable.cpp',
+     'build/ionflux/File.cpp',
+     'build/ionflux/EMailAddress.cpp',
+     'build/ionflux/color.cpp',
+     'build/ionflux/Vector3.cpp',
+     'build/ionflux/Matrix3.cpp',
+     'build/ionflux/Canvas.cpp']
 
 gtoolsHeaders = ['include/ionflux/GlibMultiplexer.hpp',
     'include/ionflux/CairoContext.hpp',
@@ -202,456 +203,183 @@ gtoolsHeaders = ['include/ionflux/GlibMultiplexer.hpp',
     'include/ionflux/CairoCanvas.hpp',
     'include/ionflux/GtkCairoArea.hpp']
 
-if (platform == 'linux'):
-    # Build flags for Linux systems
-    cxx = 'g++'
-    ccflags = []
-    cpppath = ['include',
-               'extern/sha1',
-               'extern/Mersenne']
-    libs = []
-    libpath = ['/usr/local/lib/mysql']
-    libpath = []
-    libsock = []
-    libmysql = ['mysqlclient']
-    libssl = ['ssl']
-    libwinmm = []
-    libpthread = ['pthread']
-    libext = ".so"
-elif (platform == 'freebsd'):
-    # Build flags for FreeBSD systems
-    cxx = 'g++34'
-    ccflags = ['-pthread', '-DHAVE_INTTYPES']
-    cpppath = ['include',
-               'extern/sha1',
-               'extern/Mersenne',
-               '/usr/local/include']
-    libs = []
-    #libpath = ['/usr/local/lib/mysql']
-    libpath = []
-    libsock = []
-    #libmysql = ['mysqlclient']
-    libssl = ['ssl']
-    libwinmm = []
-    libpthread = ['c_r']
-    libext = ".so"
-elif (platform == 'win32'):
-    # Build flags for Windows systems 
-    cxx = 'g++'
-    ccflags = ['-DHAVE_WINSOCK', 
-               '-DHAVE_WIN32_SLEEP',
-               '-DNO_LOCALTIME_R',
-               '-DNO_FORK']
-    cpppath = ['include',
-               'extern/sha1',
-               'extern/Mersenne',
-               'C:/Dev-Cpp/include',
-               'C:/Dev-Cpp/include/c++',
-               'C:/Dev-Cpp/include/c++/mingw32',
-               'C:/Dev-Cpp/include/c++/backward',
-               'C:/Dev-Cpp/include']
-    libs = []
-    libpath = ['C:/Dev-Cpp/lib']
-    libsock = ['wsock32']
-    #libmysql = ['mySQL']
-    libssl = ['ssl32', 'eay32']
-    libwinmm = ['winmm']
-    libpthread = ['pthreadGC']
-    libext = ".dll"
+gtoolsSources = ['build/ionflux/GlibMultiplexer.cpp',
+    'build/ionflux/CairoContext.cpp',
+    'build/ionflux/CairoMatrix.cpp',
+    'build/ionflux/CairoPattern.cpp',
+    'build/ionflux/CairoSolidPattern.cpp',
+    'build/ionflux/CairoSurfacePattern.cpp',
+    'build/ionflux/CairoGradient.cpp',
+    'build/ionflux/CairoLinearGradient.cpp',
+    'build/ionflux/CairoRadialGradient.cpp',
+    'build/ionflux/CairoSurface.cpp',
+    'build/ionflux/CairoImageSurface.cpp',
+    'build/ionflux/CairoPathData.cpp',
+    'build/ionflux/CairoPathIterator.cpp',
+    'build/ionflux/CairoPath.cpp',
+    'build/ionflux/CairoCanvas.cpp',
+    'build/ionflux/GtkCairoArea.cpp']
 
-if (gtools == "yes"):
-    gtkmmccflags = Split(os.popen('pkg-config --cflags gtkmm-2.4').read())
-    gtkmmlibs = Split(os.popen('pkg-config --libs-only-l gtkmm-2.4').read())
-    gtkmmlibpath = Split(os.popen('pkg-config --libs-only-L gtkmm-2.4').read())
-    cairoccflags = Split(os.popen('pkg-config --cflags cairo').read())
-    cairolibs = Split(os.popen('pkg-config --libs-only-l cairo').read())
-    cairolibpath = Split(os.popen('pkg-config --libs-only-L cairo').read())
-else:
-    gtkmmccflags = []
-    gtkmmlibs = []
-    gtkmmlibpath = []
-    cairoccflags = []
-    cairolibs = []
-    cairolibpath = []
+# IFTools core library.
+toolsLib = toolsEnv.SharedLibrary('lib/iftools',
+    toolsSources)
 
-mainccflags = ['-Wall',
-    '-Wno-deprecated',
-    '-pedantic',
-    '-O2'] + debugFlags + ccflags
+targetLibs = [toolsLib]
 
-toolsenv = Environment(
-    CXX = cxx,
-    CCFLAGS = mainccflags)
+# Glib utility library.
+if (buildGTools):
+    gtoolsLib = gtoolsEnv.SharedLibrary('lib/ifgtools',
+        gtoolsSources)
+    targetLibs += [gtoolsLib]
 
-toolsLib = toolsenv.SharedLibrary('lib/libiftools',
-    toolsSources,
-    CPPPATH = cpppath,
-    LIBS = ['bz2', 'pcre'] + libmysql + libsock,
-    #LIBS = ['bz2', 'pcre'] + libsock,
-    LIBPATH = ['lib'] + libpath)
+# programs
+binEnv = toolsEnv.Clone()
+binEnv.Append(LIBS = ['iftools'])
 
-gtoolsLib = toolsenv.SharedLibrary('lib/libifgtools',
-    gtoolsSources,
-    CCFLAGS = mainccflags + gtkmmccflags + cairoccflags,
-    CPPPATH = cpppath,
-    LIBS = ['iftools'] + gtkmmlibs + cairolibs,
-    LIBPATH = ['lib'] + libpath + gtkmmlibpath + cairolibpath)
+iftplBin = binEnv.Program('bin/iftpl',
+    ['build/iftpl.cpp'])
+ifpasswdBin = binEnv.Program('bin/ifpasswd',
+    ['build/ifpasswd.cpp'])
+ifdateBin = binEnv.Program('bin/ifdate',
+    ['build/ifdate.cpp'])
+iflsBin = binEnv.Program('bin/ifls',
+    ['build/ifls.cpp'])
 
-buildToolsLib = ['lib/libiftools' + libext]
-buildGToolsLib = ['lib/libifgtools' + libext]
+targetBins = [iftplBin, ifpasswdBin, ifdateBin, iflsBin]
 
-if (gtools == "no"):
-    buildLibs = buildToolsLib
-else:
-    buildLibs = buildToolsLib + buildGToolsLib
+# Core tests
+testEnv = toolsEnv.Clone()
+testEnv.Append(LIBS = ['iftools'])
 
-iftplBin = toolsenv.Program('bin/iftpl',
-    ['build/iftpl.cpp'],
-    CPPPATH = cpppath,
-    LIBS = ['iftools'] + libs,
-    LIBPATH = ['lib'] + libpath)
-ifpasswdBin = toolsenv.Program('bin/ifpasswd',
-    ['build/ifpasswd.cpp'],
-    CPPPATH = cpppath,
-    LIBS = ['iftools'] + libs,
-    LIBPATH = ['lib'] + libpath)
-ifdateBin = toolsenv.Program('bin/ifdate',
-    ['build/ifdate.cpp'],
-    CPPPATH = cpppath,
-    LIBS = ['iftools'] + libs,
-    LIBPATH = ['lib'] + libpath)
-iflsBin = toolsenv.Program('bin/ifls',
-    ['build/ifls.cpp'],
-    CPPPATH = cpppath,
-    LIBS = ['iftools'] + libs,
-    LIBPATH = ['lib'] + libpath)
-
-buildBin = ['bin/iftpl',
-    'bin/ifpasswd',
-    'bin/ifdate',
-    'bin/ifls']
-
-tokenizerTest = toolsenv.Program('test/bin/tokenizer',
-    ['test/build/tokenizer.cpp'],
-    CPPPATH = cpppath,
-    LIBS = ['iftools'] + libs,
-    LIBPATH = ['lib'] + libpath)
+tokenizerTest = testEnv.Program('test/bin/tokenizer',
+    ['test/build/tokenizer.cpp'])
 stringfilterTest = toolsenv.Program('test/bin/stringfilter',
-    ['test/build/stringfilter.cpp'],
-    CPPPATH = cpppath,
-    LIBS = ['iftools'] + libs,
-    LIBPATH = ['lib'] + libpath)
+    ['test/build/stringfilter.cpp'])
 datetimeTest = toolsenv.Program('test/bin/datetime',
-    ['test/build/datetime.cpp'],
-    CPPPATH = cpppath,
-    LIBS = ['iftools'] + libs,
-    LIBPATH = ['lib'] + libpath)
+    ['test/build/datetime.cpp'])
 treeTest = toolsenv.Program('test/bin/tree',
-    ['test/build/tree.cpp'],
-    CPPPATH = cpppath,
-    LIBS = ['iftools'] + libs,
-    LIBPATH = ['lib'] + libpath)
+    ['test/build/tree.cpp'])
 treeresolverTest = toolsenv.Program('test/bin/treeresolver',
-    ['test/build/treeresolver.cpp'],
-    CPPPATH = cpppath,
-    LIBS = ['iftools'] + libs,
-    LIBPATH = ['lib'] + libpath)
+    ['test/build/treeresolver.cpp'])
 configtreeTest = toolsenv.Program('test/bin/configtree',
-    ['test/build/configtree.cpp'],
-    CPPPATH = cpppath,
-    LIBS = ['iftools'] + libs,
-    LIBPATH = ['lib'] + libpath)
+    ['test/build/configtree.cpp'])
 templateTest = toolsenv.Program('test/bin/template',
-    ['test/build/template.cpp'],
-    CPPPATH = cpppath,
-    LIBS = ['iftools'] + libs,
-    LIBPATH = ['lib'] + libpath)
+    ['test/build/template.cpp'])
 bz2compressTest = toolsenv.Program('test/bin/bz2compress',
-    ['test/build/bz2compress.cpp'],
-    CPPPATH = cpppath,
-    LIBS = ['iftools'] + libs,
-    LIBPATH = ['lib'] + libpath)
+    ['test/build/bz2compress.cpp'])
 packTest = toolsenv.Program('test/bin/pack',
-    ['test/build/pack.cpp'],
-    CPPPATH = cpppath,
-    LIBS = ['iftools'] + libs,
-    LIBPATH = ['lib'] + libpath)
+    ['test/build/pack.cpp'])
 clargsTest = toolsenv.Program('test/bin/clargs',
-    ['test/build/clargs.cpp'],
-    CPPPATH = cpppath,
-    LIBS = ['iftools'] + libs,
-    LIBPATH = ['lib'] + libpath)
+    ['test/build/clargs.cpp'])
 tcpserverTest = toolsenv.Program('test/bin/tcpserver',
-    ['test/build/tcpserver.cpp'],
-    CPPPATH = cpppath,
-    LIBS = ['iftools'] + libs,
-    LIBPATH = ['lib'] + libpath)
+    ['test/build/tcpserver.cpp'])
 echoserverTest = toolsenv.Program('test/bin/echoserver',
-    ['test/build/echoserver.cpp'],
-    CPPPATH = cpppath,
-    LIBS = ['iftools'] + libs,
-    LIBPATH = ['lib'] + libpath)
+    ['test/build/echoserver.cpp'])
 parsehexTest = toolsenv.Program('test/bin/parsehex',
-    ['test/build/parsehex.cpp'],
-    CPPPATH = cpppath,
-    LIBS = ['iftools'] + libs,
-    LIBPATH = ['lib'] + libpath)
+    ['test/build/parsehex.cpp'])
 authfileTest = toolsenv.Program('test/bin/authfile',
-    ['test/build/authfile.cpp'],
-    CPPPATH = cpppath,
-    LIBS = ['iftools'] + libs,
-    LIBPATH = ['lib'] + libpath)
+    ['test/build/authfile.cpp'])
 tcpclientTest = toolsenv.Program('test/bin/tcpclient',
-    ['test/build/tcpclient.cpp'],
-    CPPPATH = cpppath,
-    LIBS = ['iftools'] + libs,
-    LIBPATH = ['lib'] + libpath)
+    ['test/build/tcpclient.cpp'])
 messageTest = toolsenv.Program('test/bin/message',
-    ['test/build/message.cpp'],
-    CPPPATH = cpppath,
-    LIBS = ['iftools'] + libs,
-    LIBPATH = ['lib'] + libpath)
+    ['test/build/message.cpp'])
 msgclientTest = toolsenv.Program('test/bin/msgclient',
-    ['test/build/msgclient.cpp'],
-    CPPPATH = cpppath,
-    LIBS = ['iftools'] + libs,
-    LIBPATH = ['lib'] + libpath)
+    ['test/build/msgclient.cpp'])
 msgserverTest = toolsenv.Program('test/bin/msgserver',
-    ['test/build/msgserver.cpp'],
-    CPPPATH = cpppath,
-    LIBS = ['iftools'] + libs,
-    LIBPATH = ['lib'] + libpath)
+    ['test/build/msgserver.cpp'])
 authclientTest = toolsenv.Program('test/bin/authclient',
-    ['test/build/authclient.cpp'],
-    CPPPATH = cpppath,
-    LIBS = ['iftools'] + libs,
-    LIBPATH = ['lib'] + libpath)
+    ['test/build/authclient.cpp'])
 authserverTest = toolsenv.Program('test/bin/authserver',
-    ['test/build/authserver.cpp'],
-    CPPPATH = cpppath,
-    LIBS = ['iftools'] + libs,
-    LIBPATH = ['lib'] + libpath)
+    ['test/build/authserver.cpp'])
 readdirTest = toolsenv.Program('test/bin/readdir',
-    ['test/build/readdir.cpp'],
-    CPPPATH = cpppath,
-    LIBS = ['iftools'] + libs,
-    LIBPATH = ['lib'] + libpath)
+    ['test/build/readdir.cpp'])
 explodeqTest = toolsenv.Program('test/bin/explodeq',
-    ['test/build/explodeq.cpp'],
-    CPPPATH = cpppath,
-    LIBS = ['iftools'] + libs,
-    LIBPATH = ['lib'] + libpath)
+    ['test/build/explodeq.cpp'])
 numcheckTest = toolsenv.Program('test/bin/numcheck',
-    ['test/build/numcheck.cpp'],
-    CPPPATH = cpppath,
-    LIBS = ['iftools'] + libs,
-    LIBPATH = ['lib'] + libpath)
+    ['test/build/numcheck.cpp'])
 treeexprTest = toolsenv.Program('test/bin/treeexpr',
-    ['test/build/treeexpr.cpp'],
-    CPPPATH = cpppath,
-    LIBS = ['iftools'] + libs,
-    LIBPATH = ['lib'] + libpath)
+    ['test/build/treeexpr.cpp'])
 treeevalTest = toolsenv.Program('test/bin/treeeval',
-    ['test/build/treeeval.cpp'],
-    CPPPATH = cpppath,
-    LIBS = ['iftools'] + libs,
-    LIBPATH = ['lib'] + libpath)
-gtcpclientTest = toolsenv.Program('test/bin/gtcpclient',
-    ['test/build/gtcpclient.cpp'],
-    CCFLAGS = mainccflags + gtkmmccflags,
-    CPPPATH = cpppath,
-    LIBS = ['iftools', 'ifgtools'] + gtkmmlibs,
-    LIBPATH = ['lib'] + libpath + gtkmmlibpath)
+    ['test/build/treeeval.cpp'])
 combineTest = toolsenv.Program('test/bin/combine',
-    ['test/build/combine.cpp'],
-    CPPPATH = cpppath,
-    LIBS = ['iftools'] + libs,
-    LIBPATH = ['lib'] + libpath)
+    ['test/build/combine.cpp'])
 nodeindexTest = toolsenv.Program('test/bin/nodeindex',
-    ['test/build/nodeindex.cpp'],
-    CPPPATH = cpppath,
-    LIBS = ['iftools'] + libs,
-    LIBPATH = ['lib'] + libpath)
+    ['test/build/nodeindex.cpp'])
 mergeTest = toolsenv.Program('test/bin/merge',
-    ['test/build/merge.cpp'],
-    CPPPATH = cpppath,
-    LIBS = ['iftools'] + libs,
-    LIBPATH = ['lib'] + libpath)
+    ['test/build/merge.cpp'])
 toconfigTest = toolsenv.Program('test/bin/toconfig',
-    ['test/build/toconfig.cpp'],
-    CPPPATH = cpppath,
-    LIBS = ['iftools'] + libs,
-    LIBPATH = ['lib'] + libpath)
+    ['test/build/toconfig.cpp'])
 urlencodeTest = toolsenv.Program('test/bin/urlencode',
-    ['test/build/urlencode.cpp'],
-    CPPPATH = cpppath,
-    LIBS = ['iftools'] + libs,
-    LIBPATH = ['lib'] + libpath)
+    ['test/build/urlencode.cpp'])
 urldecodeTest = toolsenv.Program('test/bin/urldecode',
-    ['test/build/urldecode.cpp'],
-    CPPPATH = cpppath,
-    LIBS = ['iftools'] + libs,
-    LIBPATH = ['lib'] + libpath)
+    ['test/build/urldecode.cpp'])
 utf8decodeTest = toolsenv.Program('test/bin/utf8decode',
-    ['test/build/utf8decode.cpp'],
-    CPPPATH = cpppath,
-    LIBS = ['iftools'] + libs,
-    LIBPATH = ['lib'] + libpath)
+    ['test/build/utf8decode.cpp'])
 utf8encodeTest = toolsenv.Program('test/bin/utf8encode',
-    ['test/build/utf8encode.cpp'],
-    CPPPATH = cpppath,
-    LIBS = ['iftools'] + libs,
-    LIBPATH = ['lib'] + libpath)
+    ['test/build/utf8encode.cpp'])
 utf8trimTest = toolsenv.Program('test/bin/utf8trim',
-    ['test/build/utf8trim.cpp'],
-    CPPPATH = cpppath,
-    LIBS = ['iftools'] + libs,
-    LIBPATH = ['lib'] + libpath)
+    ['test/build/utf8trim.cpp'])
 emailaddressTest = toolsenv.Program('test/bin/emailaddress',
-    ['test/build/emailaddress.cpp'],
-    CPPPATH = cpppath,
-    LIBS = ['iftools'] + libs,
-    LIBPATH = ['lib'] + libpath)
+    ['test/build/emailaddress.cpp'])
 databaseTest = toolsenv.Program('test/bin/database',
-    ['test/build/database.cpp'],
-    CPPPATH = cpppath,
-    LIBS = ['iftools'] + libs,
-    LIBPATH = ['lib'] + libpath)
+    ['test/build/database.cpp'])
 colorTest = toolsenv.Program('test/bin/color',
-    ['test/build/color.cpp'],
-    CPPPATH = cpppath,
-    LIBS = ['iftools'] + libs,
-    LIBPATH = ['lib'] + libpath)
+    ['test/build/color.cpp'])
 vector3Test = toolsenv.Program('test/bin/vector3',
-    ['test/build/vector3.cpp'],
-    CPPPATH = cpppath,
-    LIBS = ['iftools'] + libs,
-    LIBPATH = ['lib'] + libpath)
+    ['test/build/vector3.cpp'])
 matrix3Test = toolsenv.Program('test/bin/matrix3',
-    ['test/build/matrix3.cpp'],
-    CPPPATH = cpppath,
-    LIBS = ['iftools'] + libs,
-    LIBPATH = ['lib'] + libpath)
+    ['test/build/matrix3.cpp'])
 validatepathTest = toolsenv.Program('test/bin/validatepath',
-    ['test/build/validatepath.cpp'],
-    CPPPATH = cpppath,
-    LIBS = ['iftools'] + libs,
-    LIBPATH = ['lib'] + libpath)
-cairoTest = toolsenv.Program('test/bin/cairo',
-    ['test/build/cairo.cpp'],
-    CCFLAGS = mainccflags + gtkmmccflags + cairoccflags,
-    CPPPATH = cpppath,
-    LIBS = ['iftools', 'ifgtools'] + libs + gtkmmlibs + cairolibs,
-    LIBPATH = ['lib'] + libpath + gtkmmlibpath + cairolibpath)
-cairopathTest = toolsenv.Program('test/bin/cairopath',
-    ['test/build/cairopath.cpp'],
-    CCFLAGS = mainccflags + gtkmmccflags + cairoccflags,
-    CPPPATH = cpppath,
-    LIBS = ['iftools', 'ifgtools'] + libs + gtkmmlibs + cairolibs,
-    LIBPATH = ['lib'] + libpath + gtkmmlibpath + cairolibpath)
+    ['test/build/validatepath.cpp'])
 utf8tokenizerTest = toolsenv.Program('test/bin/utf8tokenizer',
-    ['test/build/utf8tokenizer.cpp'],
-    CPPPATH = cpppath,
-    LIBS = ['iftools'] + libs,
-    LIBPATH = ['lib'] + libpath)
+    ['test/build/utf8tokenizer.cpp'])
 utf8escapeTest = toolsenv.Program('test/bin/utf8escape',
-    ['test/build/utf8escape.cpp'],
-    CPPPATH = cpppath,
-    LIBS = ['iftools'] + libs,
-    LIBPATH = ['lib'] + libpath)
+    ['test/build/utf8escape.cpp'])
 utf8unescapeTest = toolsenv.Program('test/bin/utf8unescape',
-    ['test/build/utf8unescape.cpp'],
-    CPPPATH = cpppath,
-    LIBS = ['iftools'] + libs,
-    LIBPATH = ['lib'] + libpath)
+    ['test/build/utf8unescape.cpp'])
 filelistTest = toolsenv.Program('test/bin/filelist',
-    ['test/build/filelist.cpp'],
-    CPPPATH = cpppath,
-    LIBS = ['iftools'] + libs,
-    LIBPATH = ['lib'] + libpath)
+    ['test/build/filelist.cpp'])
 
-buildTest = ['test/bin/tokenizer',
-     'test/bin/stringfilter',
-     'test/bin/datetime',
-     'test/bin/tree',
-     'test/bin/treeresolver',
-     'test/bin/configtree',
-     'test/bin/template',
-     'test/bin/bz2compress',
-     'test/bin/pack',
-     'test/bin/clargs',
-     'test/bin/tcpserver',
-     'test/bin/echoserver',
-     'test/bin/parsehex',
-     'test/bin/authfile',
-     'test/bin/tcpclient',
-     'test/bin/message',
-     'test/bin/msgclient',
-     'test/bin/msgserver',
-     'test/bin/authclient',
-     'test/bin/authserver',
-     'test/bin/readdir',
-     'test/bin/explodeq',
-     'test/bin/numcheck',
-     'test/bin/treeexpr',
-     'test/bin/treeeval',
-     'test/bin/combine',
-     'test/bin/nodeindex',
-     'test/bin/merge',
-     'test/bin/toconfig',
-     'test/bin/urlencode',
-     'test/bin/urldecode',
-     'test/bin/utf8decode',
-     'test/bin/utf8encode',
-     'test/bin/utf8trim',
-     'test/bin/utf8escape',
-     'test/bin/utf8unescape',
-     'test/bin/utf8tokenizer',
-     'test/bin/emailaddress',
-     'test/bin/database',
-     'test/bin/color',
-     'test/bin/vector3',
-     'test/bin/matrix3',
-     'test/bin/validatepath',
-     'test/bin/filelist']
+targetTests = [tokenizerTest, stringfilterTest, datetimeTest, treeTest, 
+    treeresolverTest, configtreeTest, templateTest, bz2compressTest, 
+    packTest, clargsTest, tcpserverTest, echoserverTest, parsehexTest, 
+    authfileTest, tcpclientTest, messageTest, msgclientTest, msgserverTest, 
+    authclientTest, authserverTest, readdirTest, explodeqTest, numcheckTest, 
+    treeexprTest, treeevalTest, combineTest, nodeindexTest, mergeTest, 
+    toconfigTest, urlencodeTest, urldecodeTest, utf8decodeTest, 
+    utf8encodeTest, utf8trimTest, emailaddressTest, databaseTest, 
+    colorTest, vector3Test, matrix3Test, validatepathTest, utf8tokenizerTest, 
+    utf8escapeTest, utf8unescapeTest, filelistTest]
 
-if (gtools == "no"):
-    targetLibs = [toolsLib]
-else:
-    targetLibs = [toolsLib, gtoolsLib]
-    buildTest += ['test/bin/gtcpclient',
-        'test/bin/cairo',
-        'test/bin/cairopath']
+# Glib utility tests.
+if (buildGTools):
+    gtestEnv = gtoolsEnv.Clone()
+    gtestEnv.Append(LIBS = ['iftools', 'ifgtools'])
+    
+    gtcpclientTest = gtestEnv.Program('test/bin/gtcpclient',
+        ['test/build/gtcpclient.cpp'])
+    cairoTest = gtestEnv.Program('test/bin/cairo',
+        ['test/build/cairo.cpp'])
+    cairopathTest = gtestEnv.Program('test/bin/cairopath',
+        ['test/build/cairopath.cpp'])
+    
+    targetTests += [gtcpclientTest, cairoTest, cairopathTest]
 
-if (gtools == "no"):
-    allHeaders = [toolsHeaders]
-else:
-    allHeaders = [toolsHeaders, gtoolsHeaders]
+allHeaders = [toolsHeaders]
 
-toolsenv.Install(prefix + '/include/ionflux', allHeaders)
-toolsenv.Install(prefix + '/lib', targetLibs)
-toolsenv.Install(prefix + '/bin', 
-    [ifpasswdBin,
-     iftplBin,
-     ifdateBin,
-     iflsBin])
+if (buildGTools):
+    allHeaders += [gtoolsHeaders]
 
-installHeader = toolsenv.Alias('install-header',
-    prefix + '/include/ionflux')
-installLib = toolsenv.Alias('install-lib',
-    prefix + '/lib')
-installBin = toolsenv.Alias('install-bin',
-    prefix + '/bin')
+installHeaders = toolsEnv.Install(prefix + '/include/ionflux', allHeaders)
+installLibs = toolsEnv.Install(prefix + '/lib', targetLibs)
+installBins = toolsEnv.Install(prefix + '/bin', targetBins)
 
-toolsenv.Alias('test',
-    buildLibs + buildTest)
+allTargets = targetLibs + targetBins + targetTests
 
-toolsenv.Alias('all',
-    buildLibs + buildBin + buildTest)
+aliasLibs = Alias('libs', targetLibs)
+aliasBins = Alias('programs', targetBins)
+aliasTests = Alias('tests', targetTests)
+aliasAll = Alias('all', allTargets)
+aliasInstall = Alias('install', [installHeaders, installLibs, installBins])
 
-toolsenv.Alias('install',
-    [installHeader,
-     installLib,
-     installBin])
-
-Default(targetLibs, iftplBin, ifpasswdBin, ifdateBin, iflsBin)
+Default('all')
