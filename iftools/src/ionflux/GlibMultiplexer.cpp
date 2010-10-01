@@ -368,6 +368,11 @@ void GlibMultiplexer::removeEvent(IOHandler* handler, IOEvent event)
 	}
 }
 
+void GlibMultiplexer::setTimeout(int secs, int usecs)
+{
+    // TODO: Implementation.
+}
+
 bool GlibMultiplexer::processEvent(GlibIOEventInfo* eventInfo, 
 	Glib::IOCondition ioCond)
 {

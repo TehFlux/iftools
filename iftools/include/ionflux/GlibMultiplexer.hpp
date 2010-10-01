@@ -210,6 +210,15 @@ class GlibMultiplexer
 		virtual bool processEvent(GlibIOEventInfo* eventInfo, 
 			Glib::IOCondition ioCond);
 		
+		/** Set timeout.
+		 *
+		 * Sets the timeout of the main loop.
+		 *
+		 * \param secs Seconds.
+		 * \param usecs Microseconds.
+		 */
+		virtual void setTimeout(int secs, int usecs);
+		
 		/** Main loop.
 		 *
 		 * Start the main loop to watch for registered events.

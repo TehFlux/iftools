@@ -26,13 +26,22 @@
 # 
 # ==========================================================================
 
-import os
+import os, shutil
+
+# Create a default local configuration file if it does not exist.
+if (not os.path.isfile('site_scons/local_config.py')):
+    shutil.copy('site_scons/local_config.py.default', 
+        'site_scons/local_config.py')
+
+import local_config as lc
 
 # TODO: Help()
 
 env = Environment(ENV = os.environ)
-env.Append(CPPPATH = ['include'], LIBPATH = ['lib'])
-env.MergeFlags(['-Wall', '-Wno-deprecated', '-O2', '-pedantic'])
+env.Append(
+    CPPPATH = ['include', 'extern/sha1', 'extern/Mersenne'] + lc.CPPPATH, 
+    LIBPATH = ['lib'] + lc.LIBPATH)
+env.MergeFlags(['-Wall', '-Wno-deprecated', '-O2'])
 
 if (ARGUMENTS.get('debug', 'no') == 'yes'):
     env.Append(CCFLAGS = '-g')
@@ -253,91 +262,91 @@ testEnv.Append(LIBS = ['iftools'])
 
 tokenizerTest = testEnv.Program('test/bin/tokenizer',
     ['test/build/tokenizer.cpp'])
-stringfilterTest = toolsenv.Program('test/bin/stringfilter',
+stringfilterTest = testEnv.Program('test/bin/stringfilter',
     ['test/build/stringfilter.cpp'])
-datetimeTest = toolsenv.Program('test/bin/datetime',
+datetimeTest = testEnv.Program('test/bin/datetime',
     ['test/build/datetime.cpp'])
-treeTest = toolsenv.Program('test/bin/tree',
+treeTest = testEnv.Program('test/bin/tree',
     ['test/build/tree.cpp'])
-treeresolverTest = toolsenv.Program('test/bin/treeresolver',
+treeresolverTest = testEnv.Program('test/bin/treeresolver',
     ['test/build/treeresolver.cpp'])
-configtreeTest = toolsenv.Program('test/bin/configtree',
+configtreeTest = testEnv.Program('test/bin/configtree',
     ['test/build/configtree.cpp'])
-templateTest = toolsenv.Program('test/bin/template',
+templateTest = testEnv.Program('test/bin/template',
     ['test/build/template.cpp'])
-bz2compressTest = toolsenv.Program('test/bin/bz2compress',
+bz2compressTest = testEnv.Program('test/bin/bz2compress',
     ['test/build/bz2compress.cpp'])
-packTest = toolsenv.Program('test/bin/pack',
+packTest = testEnv.Program('test/bin/pack',
     ['test/build/pack.cpp'])
-clargsTest = toolsenv.Program('test/bin/clargs',
+clargsTest = testEnv.Program('test/bin/clargs',
     ['test/build/clargs.cpp'])
-tcpserverTest = toolsenv.Program('test/bin/tcpserver',
+tcpserverTest = testEnv.Program('test/bin/tcpserver',
     ['test/build/tcpserver.cpp'])
-echoserverTest = toolsenv.Program('test/bin/echoserver',
+echoserverTest = testEnv.Program('test/bin/echoserver',
     ['test/build/echoserver.cpp'])
-parsehexTest = toolsenv.Program('test/bin/parsehex',
+parsehexTest = testEnv.Program('test/bin/parsehex',
     ['test/build/parsehex.cpp'])
-authfileTest = toolsenv.Program('test/bin/authfile',
+authfileTest = testEnv.Program('test/bin/authfile',
     ['test/build/authfile.cpp'])
-tcpclientTest = toolsenv.Program('test/bin/tcpclient',
+tcpclientTest = testEnv.Program('test/bin/tcpclient',
     ['test/build/tcpclient.cpp'])
-messageTest = toolsenv.Program('test/bin/message',
+messageTest = testEnv.Program('test/bin/message',
     ['test/build/message.cpp'])
-msgclientTest = toolsenv.Program('test/bin/msgclient',
+msgclientTest = testEnv.Program('test/bin/msgclient',
     ['test/build/msgclient.cpp'])
-msgserverTest = toolsenv.Program('test/bin/msgserver',
+msgserverTest = testEnv.Program('test/bin/msgserver',
     ['test/build/msgserver.cpp'])
-authclientTest = toolsenv.Program('test/bin/authclient',
+authclientTest = testEnv.Program('test/bin/authclient',
     ['test/build/authclient.cpp'])
-authserverTest = toolsenv.Program('test/bin/authserver',
+authserverTest = testEnv.Program('test/bin/authserver',
     ['test/build/authserver.cpp'])
-readdirTest = toolsenv.Program('test/bin/readdir',
+readdirTest = testEnv.Program('test/bin/readdir',
     ['test/build/readdir.cpp'])
-explodeqTest = toolsenv.Program('test/bin/explodeq',
+explodeqTest = testEnv.Program('test/bin/explodeq',
     ['test/build/explodeq.cpp'])
-numcheckTest = toolsenv.Program('test/bin/numcheck',
+numcheckTest = testEnv.Program('test/bin/numcheck',
     ['test/build/numcheck.cpp'])
-treeexprTest = toolsenv.Program('test/bin/treeexpr',
+treeexprTest = testEnv.Program('test/bin/treeexpr',
     ['test/build/treeexpr.cpp'])
-treeevalTest = toolsenv.Program('test/bin/treeeval',
+treeevalTest = testEnv.Program('test/bin/treeeval',
     ['test/build/treeeval.cpp'])
-combineTest = toolsenv.Program('test/bin/combine',
+combineTest = testEnv.Program('test/bin/combine',
     ['test/build/combine.cpp'])
-nodeindexTest = toolsenv.Program('test/bin/nodeindex',
+nodeindexTest = testEnv.Program('test/bin/nodeindex',
     ['test/build/nodeindex.cpp'])
-mergeTest = toolsenv.Program('test/bin/merge',
+mergeTest = testEnv.Program('test/bin/merge',
     ['test/build/merge.cpp'])
-toconfigTest = toolsenv.Program('test/bin/toconfig',
+toconfigTest = testEnv.Program('test/bin/toconfig',
     ['test/build/toconfig.cpp'])
-urlencodeTest = toolsenv.Program('test/bin/urlencode',
+urlencodeTest = testEnv.Program('test/bin/urlencode',
     ['test/build/urlencode.cpp'])
-urldecodeTest = toolsenv.Program('test/bin/urldecode',
+urldecodeTest = testEnv.Program('test/bin/urldecode',
     ['test/build/urldecode.cpp'])
-utf8decodeTest = toolsenv.Program('test/bin/utf8decode',
+utf8decodeTest = testEnv.Program('test/bin/utf8decode',
     ['test/build/utf8decode.cpp'])
-utf8encodeTest = toolsenv.Program('test/bin/utf8encode',
+utf8encodeTest = testEnv.Program('test/bin/utf8encode',
     ['test/build/utf8encode.cpp'])
-utf8trimTest = toolsenv.Program('test/bin/utf8trim',
+utf8trimTest = testEnv.Program('test/bin/utf8trim',
     ['test/build/utf8trim.cpp'])
-emailaddressTest = toolsenv.Program('test/bin/emailaddress',
+emailaddressTest = testEnv.Program('test/bin/emailaddress',
     ['test/build/emailaddress.cpp'])
-databaseTest = toolsenv.Program('test/bin/database',
+databaseTest = testEnv.Program('test/bin/database',
     ['test/build/database.cpp'])
-colorTest = toolsenv.Program('test/bin/color',
+colorTest = testEnv.Program('test/bin/color',
     ['test/build/color.cpp'])
-vector3Test = toolsenv.Program('test/bin/vector3',
+vector3Test = testEnv.Program('test/bin/vector3',
     ['test/build/vector3.cpp'])
-matrix3Test = toolsenv.Program('test/bin/matrix3',
+matrix3Test = testEnv.Program('test/bin/matrix3',
     ['test/build/matrix3.cpp'])
-validatepathTest = toolsenv.Program('test/bin/validatepath',
+validatepathTest = testEnv.Program('test/bin/validatepath',
     ['test/build/validatepath.cpp'])
-utf8tokenizerTest = toolsenv.Program('test/bin/utf8tokenizer',
+utf8tokenizerTest = testEnv.Program('test/bin/utf8tokenizer',
     ['test/build/utf8tokenizer.cpp'])
-utf8escapeTest = toolsenv.Program('test/bin/utf8escape',
+utf8escapeTest = testEnv.Program('test/bin/utf8escape',
     ['test/build/utf8escape.cpp'])
-utf8unescapeTest = toolsenv.Program('test/bin/utf8unescape',
+utf8unescapeTest = testEnv.Program('test/bin/utf8unescape',
     ['test/build/utf8unescape.cpp'])
-filelistTest = toolsenv.Program('test/bin/filelist',
+filelistTest = testEnv.Program('test/bin/filelist',
     ['test/build/filelist.cpp'])
 
 targetTests = [tokenizerTest, stringfilterTest, datetimeTest, treeTest, 
