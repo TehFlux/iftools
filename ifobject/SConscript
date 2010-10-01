@@ -62,7 +62,7 @@ env.VariantDir('test/build', 'test')
 
 def checkProgram(ctx, cmd):
     """Check for installed program."""
-    ctx.Message('Checking for ' + cmd + '...')
+    ctx.Message('Checking for ' + cmd + '... ')
     try:
         subprocess.call(cmd, stdout=subprocess.PIPE, 
             stderr=subprocess.STDOUT)
