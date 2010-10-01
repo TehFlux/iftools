@@ -26,7 +26,14 @@
 # 02111-1307 USA
 # 
 # ==========================================================================
-import os, subprocess
+import os, subprocess, shutil
+
+# Create a default local configuration file if it does not exist.
+if (not os.path.isfile('site_scons/local_config.py')):
+    shutil.copy('site_scons/local_config.py.default', 
+        'site_scons/local_config.py')
+
+import local_config as lc
 
 Help("""
 Type 'scons' to build the default targets.
@@ -49,8 +56,8 @@ Options:
 """)
 
 env = Environment(ENV = os.environ, 
-    CPPPATH = ['include'], 
-    LIBPATH = ['lib'])
+    CPPPATH = ['include'] + lc.CPPPATH, 
+    LIBPATH = ['lib'] + lc.LIBPATH)
 
 if (ARGUMENTS.get('debug', 'no') == 'yes'):
     env.Append(CCFLAGS = '-g')
@@ -84,12 +91,30 @@ if (not config.CheckLib("iftools", language = 'C++')):
     print "iftools not found - ifclassgen will NOT be built!"
     print "*************************************************"
     buildIFClassgen = False
+else:
+    missingDeps = []
+    if (not config.CheckLib("pcre")):
+        missingDeps += ['pcre']
+    
+    if (len(missingDeps) > 0):
+        print "*************************************************************"
+        print "ifclassgen cannot be built because the following dependencies"
+        print "were not found:"
+        print " "
+        for it in missingDeps:
+            print "  " + it
+        print " "
+        print "*************************************************************"
+        buildIFClassgen = False
+    else:
+        env.Append(LIBS = ['pcre'])
+
 
 haveIFClassgen = True
 if (not config.CheckProgram("ifclassgen")):
-    print "***************************************************"
-    print "ifclassgen not found - Not generating source files."
-    print "***************************************************"
+    print "**********************************************************"
+    print "ifclassgen not found - source files will NOT be generated!"
+    print "**********************************************************"
     haveIFClassgen = False
 
 env = config.Finish()
@@ -97,7 +122,8 @@ env = config.Finish()
 env.MergeFlags(['-Wall', '-Wno-deprecated', '-O2', 
     '!/opt/local/bin/pkg-config --cflags --libs sigc++-2.0'])
 
-# TODO: Create an ifclassgen-based Builder for the source files.
+# TODO: Create an ifclassgen-based Builder for the source files and add a 
+#       'source' target.
 
 ifobjectLibHeaders = ['include/libb64.hpp',
 	'include/ifobject/types.hpp',

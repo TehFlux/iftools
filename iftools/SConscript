@@ -25,7 +25,6 @@
 # Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 # 
 # ==========================================================================
-
 import os, shutil
 
 # Create a default local configuration file if it does not exist.
@@ -39,6 +38,8 @@ Help("""
 Type 'scons' to build the default targets.
 Type 'scons install' to install to default location.
 Type 'scons <target>' to build a specific target.
+
+You can add local configuration to site_scons/local_config.py.
 
 Targets:
   (default)                    Everything.
