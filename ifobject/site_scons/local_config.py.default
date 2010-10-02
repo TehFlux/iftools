@@ -15,5 +15,6 @@ swigInterfaceTemplateFile = 'template/ifobject.i.tpl'
 swigInterfaceFile = 'swig/ifobject.i'
 
 # Paths.
+PATH = 'bin'
 CPPPATH = ['/usr/include/python2.6']
 LIBPATH = []
