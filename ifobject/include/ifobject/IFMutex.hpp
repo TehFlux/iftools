@@ -26,8 +26,8 @@
  * 
  * ========================================================================== */
 
-#include "ifobject/IFObject.hpp"
 #include <pthread.h>
+#include "ifobject/IFObject.hpp"
 
 namespace Ionflux
 {

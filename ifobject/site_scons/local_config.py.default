@@ -9,6 +9,11 @@ directory.
 If you do not want to use any local configuration, a default copy will be 
 created for you automatically."""
 
+# The SWIG interface template file.
+swigInterfaceTemplateFile = 'template/ifobject.i.tpl'
+# The SWIG interface file.
+swigInterfaceFile = 'swig/ifobject.i'
+
 # Paths.
-CPPPATH = []
+CPPPATH = ['/usr/include/python2.6']
 LIBPATH = []
