@@ -126,6 +126,13 @@ if (not config.CheckProgram("ifclassgen")):
 haveIFTpl = True
 if (not config.CheckProgram("iftpl")):
     haveIFTpl = False
+haveSWIG = True
+if (not config.CheckProgram("swig")):
+    print "*************************************************"
+    print "SWIG not found - Python module will NOT be built!"
+    print "*************************************************"
+    haveSWIG = False
+    buildPyModule = False
 
 env = config.Finish()
 
