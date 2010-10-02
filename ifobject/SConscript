@@ -122,8 +122,25 @@ env = config.Finish()
 env.MergeFlags(['-Wall', '-Wno-deprecated', '-O2', 
     '!/opt/local/bin/pkg-config --cflags --libs sigc++-2.0'])
 
-# TODO: Create an ifclassgen-based Builder for the source files and add a 
-#       'source' target.
+def buildSource(source, target, env):
+    """Builder function to build source files from class configuration."""
+    classNames = []
+    for it in source:
+        cn, ext = os.path.splitext(os.path.basename(it.path))
+        classNames += [cn]
+    for cn in classNames:
+        c0 = ("ifclassgen -t template/class -c conf/class "
+            "-m conf/main.conf -i include/ifobject -s src " + cn)
+        print c0
+        sp0 = subprocess.call(['ifclassgen', '-t', 'template/class'])
+        #sp0 = subprocess.call(c0, stdout = subprocess.PIPE, 
+        #    stderr = subprocess.STDOUT)
+
+sourceBuilder = Builder(action = buildSource)
+
+testBuilder = Builder(action = 'cp $SOURCES $TARGET')
+
+env.Append(BUILDERS = { 'Source' : sourceBuilder, 'Test' : testBuilder })
 
 ifobjectLibHeaders = ['include/libb64.hpp',
 	'include/ifobject/types.hpp',
@@ -159,6 +176,12 @@ ifobjectLibSources = ['build/libb64.cpp',
 	'build/IFThread.cpp',
 	'build/IFThreadEvent.cpp',
 	'build/IFThreadSignalProxy.cpp']
+
+# Source files.
+sources = env.Source(target = 'include/ifobject/IFClassInfo.hpp',
+    source = 'conf/class/IFClassInfo.conf')
+
+test01 = env.Test('test01', 'README')
 
 # ifobject shared library
 ifobjectLib = env.SharedLibrary(target = "lib/ifobject", 
