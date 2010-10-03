@@ -83,7 +83,7 @@ def checkProgram(ctx, cmd):
     """Check for installed program."""
     ctx.Message('Checking for ' + cmd + '... ')
     try:
-        subprocess.call(cmd)
+        subprocess.call(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         result = 1
     except Exception:
         result = 0
@@ -101,7 +101,8 @@ if (not config.CheckLib("mysqlclient")):
     missingDeps += ['mysqlclient']
 
 buildPyModule = True
-if (not config.CheckHeader("Python.h")):
+if (not config.CheckLibWithHeader("python" + lc.pythonVersion, 
+    "Python.h", 'C', autoadd = 0)):
     print "***************************************************"
     print "Python not found - Python module will NOT be built!"
     print "***************************************************"
@@ -437,11 +438,12 @@ iftoolsWrapper = toolsEnv.SWIGPython(target = [ 'swig/iftools_wrap.cxx',
     source = 'swig/iftools.i')
 
 iftoolsPyModuleEnv = toolsEnv.Clone()
-iftoolsPyModuleEnv.Append(LIBS = ['iftools'], CPPPATH = ['include/ionflux'])
+iftoolsPyModuleEnv.Append(LIBS = ['iftools', 'python' + lc.pythonVersion],
+    CPPPATH = ['include/ionflux'])
 
 iftoolsPyModule = iftoolsPyModuleEnv.SharedLibrary(
     target = 'swig/python/_IFTools', 
-    source = 'swig/iftools_wrap.cxx', SHLIBPREFIX = '')
+    source = 'swig/iftools_wrap.cxx', SHLIBPREFIX = '', SHLIBSUFFIX = '.so')
 
 allHeaders = [toolsHeaders]
 

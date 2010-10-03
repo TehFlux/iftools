@@ -94,7 +94,8 @@ if (not config.CheckLib("pthread")):
     Exit(1)
 
 buildPyModule = True
-if (not config.CheckHeader("Python.h")):
+if (not config.CheckLibWithHeader("python" + lc.pythonVersion, 
+    "Python.h", 'C', autoadd = 0)):
     print "***************************************************"
     print "Python not found - Python module will NOT be built!"
     print "***************************************************"
@@ -324,11 +325,11 @@ ifobjectWrapper = env.SWIGPython(target = [ 'swig/ifobject_wrap.cxx',
     source = 'swig/ifobject.i')
 
 ifobjectPyModuleEnv = env.Clone()
-ifobjectPyModuleEnv.Append(LIBS = ['ifobject'])
+ifobjectPyModuleEnv.Append(LIBS = ['ifobject', 'python' + lc.pythonVersion])
 
 ifobjectPyModule = ifobjectPyModuleEnv.SharedLibrary(
     target = 'swig/python/_IFObjectBase', 
-    source = 'swig/ifobject_wrap.cxx', SHLIBPREFIX = '')
+    source = 'swig/ifobject_wrap.cxx', SHLIBPREFIX = '', SHLIBSUFFIX = '.so')
 
 targetTests = [ifclassinfotestBin, ifobjecttestBin, ifthreadtestBin, 
     packtestBin, ifexampleclasstestBin]

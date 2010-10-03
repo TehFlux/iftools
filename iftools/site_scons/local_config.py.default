@@ -11,6 +11,8 @@ created for you automatically."""
 
 # Python site packages path.
 pythonSitePackagesPath = '/lib/python2.6/site-packages'
+# Python version.
+pythonVersion = "2.7"
 
 # Paths.
 PATH = ['bin']
