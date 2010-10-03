@@ -13,6 +13,8 @@ created for you automatically."""
 swigInterfaceTemplateFile = 'template/ifobject.i.tpl'
 # The SWIG interface file.
 swigInterfaceFile = 'swig/ifobject.i'
+# Python site packages path.
+pythonSitePackagesPath = 'lib/python2.6/site-packages'
 
 # Paths.
 PATH = 'bin'

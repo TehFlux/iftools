@@ -319,7 +319,8 @@ ifexampleclasstestBin = testEnv.Program('test/bin/ifexampleclasstest',
 		'test/build/ifexampleclasstest.cpp'])
 
 # Python module.
-ifobjectWrapper = env.SWIGPython(target = 'swig/ifobject_wrap.cxx', 
+ifobjectWrapper = env.SWIGPython(target = [ 'swig/ifobject_wrap.cxx', 
+        'swig/python/IFObjectBase.py'], 
     source = 'swig/ifobject.i')
 
 ifobjectPyModuleEnv = env.Clone()
@@ -337,16 +338,23 @@ allHeaders = ifobjectLibHeaders
 installHeaders = env.Install(prefix + '/include/ifobject', allHeaders)
 installLibs = env.Install(prefix + '/lib', targetLibs)
 installBins = env.Install(prefix + '/bin', targetBins)
+if (buildPyModule):
+    installPyModule = env.Install(prefix + lc.pythonSitePackagesPath, 
+        ['swig/python/IFObjectBase.py', ifobjectPyModule])
 
 allTargets += (targetLibs + targetBins + targetTests)
 if (buildPyModule):
     allTargets += [ifobjectPyModule]
 
+installTargets = [installHeaders, installLibs, installBins]
+if (buildPyModule):
+    installTargets += [installPyModule]
+
 aliasLibs = Alias('libs', targetLibs)
 aliasBins = Alias('programs', targetBins)
 aliasTests = Alias('tests', targetTests)
 aliasAll = Alias('all', allTargets)
-aliasInstall = Alias('install', [installHeaders, installLibs, installBins])
+aliasInstall = Alias('install', installTargets)
 if (haveIFClassgen):
     aliasSources = Alias('sources', sources)
 if (haveIFTpl):

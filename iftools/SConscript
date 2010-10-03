@@ -432,7 +432,8 @@ if (buildGTools):
     targetTests += [gtcpclientTest, cairoTest, cairopathTest]
 
 # Python module.
-iftoolsWrapper = toolsEnv.SWIGPython(target = 'swig/iftools_wrap.cxx', 
+iftoolsWrapper = toolsEnv.SWIGPython(target = [ 'swig/iftools_wrap.cxx', 
+        'swig/python/IFTools.py'], 
     source = 'swig/iftools.i')
 
 iftoolsPyModuleEnv = toolsEnv.Clone()
@@ -450,16 +451,23 @@ if (buildGTools):
 installHeaders = toolsEnv.Install(prefix + '/include/ionflux', allHeaders)
 installLibs = toolsEnv.Install(prefix + '/lib', targetLibs)
 installBins = toolsEnv.Install(prefix + '/bin', targetBins)
+if (buildPyModule):
+    installPyModule = env.Install(prefix + lc.pythonSitePackagesPath, 
+        ['swig/python/IFTools.py', iftoolsPyModule])
 
 allTargets = targetLibs + targetBins + targetTests
 if (buildPyModule):
     allTargets += [iftoolsPyModule]
 
+installTargets = [installHeaders, installLibs, installBins]
+if (buildPyModule):
+    installTargets += [installPyModule]
+
 aliasLibs = Alias('libs', targetLibs)
 aliasBins = Alias('programs', targetBins)
 aliasTests = Alias('tests', targetTests)
 aliasAll = Alias('all', allTargets)
-aliasInstall = Alias('install', [installHeaders, installLibs, installBins])
+aliasInstall = Alias('install', installTargets)
 if (buildPyModule):
     aliasPyModule = Alias('pymodule', iftoolsPyModule)
 
