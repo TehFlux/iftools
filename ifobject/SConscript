@@ -325,8 +325,9 @@ ifobjectWrapper = env.SWIGPython(target = 'swig/ifobject_wrap.cxx',
 ifobjectPyModuleEnv = env.Clone()
 ifobjectPyModuleEnv.Append(LIBS = ['ifobject'])
 
-ifobjectPyModule = env.SharedLibrary(target = 'swig/python/_IFObjectBase', 
-    source = 'swig/ifobject_wrap.cxx')
+ifobjectPyModule = ifobjectPyModuleEnv.SharedLibrary(
+    target = 'swig/python/_IFObjectBase', 
+    source = 'swig/ifobject_wrap.cxx', SHLIBPREFIX = '')
 
 targetTests = [ifclassinfotestBin, ifobjecttestBin, ifthreadtestBin, 
     packtestBin, ifexampleclasstestBin]
