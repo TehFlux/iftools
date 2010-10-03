@@ -336,9 +336,13 @@ targetTests = [ifclassinfotestBin, ifobjecttestBin, ifthreadtestBin,
 
 allHeaders = ifobjectLibHeaders
 
+installBinTargets = [targetBins]
+if (buildIFClassgen):
+    installBinTargets += [ifclassgenBin]
+
 installHeaders = env.Install(prefix + '/include/ifobject', allHeaders)
 installLibs = env.Install(prefix + '/lib', targetLibs)
-installBins = env.Install(prefix + '/bin', targetBins)
+installBins = env.Install(prefix + '/bin', installBinTargets)
 if (buildPyModule):
     installPyModule = env.Install(prefix + lc.pythonSitePackagesPath, 
         ['swig/python/IFObjectBase.py', ifobjectPyModule])
