@@ -102,7 +102,7 @@ if (not config.CheckLibWithHeader("python" + lc.pythonVersion,
     buildPyModule = False
 
 buildIFClassgen = True
-if (not config.CheckLib("iftools", language = 'C++')):
+if (not config.CheckLib("iftools", language = 'C++', autoadd = 0)):
     print "*************************************************"
     print "iftools not found - ifclassgen will NOT be built!"
     print "*************************************************"
