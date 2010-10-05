@@ -993,11 +993,11 @@ void IFObject::setLogTarget(Ionflux::ObjectBase::IFObject* newLogTarget)
 {
 	if (logTarget == newLogTarget)
 		return;
+    if (newLogTarget != 0)
+        addLocalRef(newLogTarget);
 	if (logTarget != 0)
 		removeLocalRef(logTarget);
 	logTarget = newLogTarget;
-	if (logTarget != 0)
-		addLocalRef(logTarget);
 }
 
 Ionflux::ObjectBase::IFObject* IFObject::getLogTarget() const

@@ -24,7 +24,7 @@
 # 02111-1307 USA
 # 
 # ==========================================================================
-{section checkFeatures}{$haveForwards = 0}{foreach fw in forward}{if fw != ""}{$haveForwards = 1}{/if}{/foreach}{$haveTypedefs = 0}{foreach td in typedef}{if td != ""}{$haveTypedefs = 1}{/if}{/foreach}{$haveEvents = 0}{foreach ev in event}{if ev.id != ""}{$haveEvents = 1}{/if}{/foreach}{$haveSignals = 0}{foreach si in signal}{if si.id != ""}{$haveSignals = 1}{/if}{/foreach}{$haveBaseIFObject = 0}{foreach bc in class.base.ifobject}{if bc.name != ""}{$haveBaseIFObject = 1}{/if}{/foreach}{$haveBaseOther = 0}{foreach bc in class.base.other}{if bc.name != ""}{$haveBaseOther = 1}{/if}{/foreach}{$enableClassInfo = 0}{if ( haveBaseIFObject == 1 ) || ( class.name == "IFObject" )}{$enableClassInfo = 1}{/if}{$enableMutex = 0}{$enableGuards = 0}{$enableAutoGuards = 0}{$enableLogMessage = 0}{$enableSignal = haveSignals}{$enableSerialize = 0}{$enablePersistence = 0}{$enableCopy = 0}{$enableUpcast = 0}{foreach fe in class.features}{if fe == "mutex"}{$enableMutex = 1}{/if}{if fe == "guards"}{$enableMutex = 1}{$enableGuards = 1}{/if}{if fe == "autoguards"}{$enableMutex = 1}{$enableGuards = 1}{$enableAutoGuards = 1}{/if}{if fe == "logmessage"}{$enableLogMessage = 1}{/if}{if fe == "signal"}{$enableSignal = 1}{/if}{if fe == "serialize"}{$enableSerialize = 1}{/if}{if fe == "classinfo"}{$enableClassInfo = 1}{/if}{if fe == "persistence"}{$enablePersistence = 1}{/if}{if fe == "copy"}{$enableCopy = 1}{/if}{if fe == "upcast"}{$enableUpcast = 1}{/if}{/foreach}{$haveOps = 0}{foreach op in operation}{if op.name != ""}{$haveOps = 1}{/if}{/foreach}{/section}{ref checkFeatures}{section insertGPLDisclaimer}
+{section checkFeatures}{$haveForwards = 0}{foreach fw in forward}{if fw != ""}{$haveForwards = 1}{/if}{/foreach}{$haveTypedefs = 0}{foreach td in typedef}{if td != ""}{$haveTypedefs = 1}{/if}{/foreach}{$haveEvents = 0}{foreach ev in event}{if ev.id != ""}{$haveEvents = 1}{/if}{/foreach}{$haveSignals = 0}{foreach si in signal}{if si.id != ""}{$haveSignals = 1}{/if}{/foreach}{$haveBaseIFObject = 0}{foreach bc in class.base.ifobject}{if bc.name != ""}{$haveBaseIFObject = 1}{/if}{/foreach}{$haveBaseOther = 0}{foreach bc in class.base.other}{if bc.name != ""}{$haveBaseOther = 1}{/if}{/foreach}{$enableClassInfo = 0}{if ( haveBaseIFObject == 1 ) || ( class.name == "IFObject" )}{$enableClassInfo = 1}{/if}{$abstractClass = 0}{foreach func in function.public}{if func.pureVirtual == "true"}{$abstractClass = 1}{/if}{/foreach}{foreach func in function.protected}{if func.pureVirtual == "true"}{$abstractClass = 1}{/if}{/foreach}{$enableMutex = 0}{$enableGuards = 0}{$enableAutoGuards = 0}{$enableLogMessage = 0}{$enableSignal = haveSignals}{$enableSerialize = 0}{$enablePersistence = 0}{$enableCopy = 0}{$enableUpcast = 0}{$enableCreate = 0}{$enableParam = 0}{foreach fe in class.features}{if fe == "mutex"}{$enableMutex = 1}{/if}{if fe == "guards"}{$enableMutex = 1}{$enableGuards = 1}{/if}{if fe == "autoguards"}{$enableMutex = 1}{$enableGuards = 1}{$enableAutoGuards = 1}{/if}{if fe == "logmessage"}{$enableLogMessage = 1}{/if}{if fe == "signal"}{$enableSignal = 1}{/if}{if fe == "serialize"}{$enableSerialize = 1}{/if}{if fe == "classinfo"}{$enableClassInfo = 1}{/if}{if fe == "persistence"}{$enablePersistence = 1}{/if}{if fe == "copy"}{$enableCopy = 1}{/if}{if fe == "upcast"}{$enableUpcast = 1}{/if}{if fe == "create"}{$enableCreate = 1}{/if}{if fe == "param"}{$enableParam = 1}{/if}{/foreach}{$haveOps = 0}{foreach op in operation}{if op.name != ""}{$haveOps = 1}{/if}{/foreach}{/section}{ref checkFeatures}{section insertGPLDisclaimer}
  * =========================================================================
  *
 {swrap 75 " * "}This file is part of {$project.name}.
@@ -268,7 +268,15 @@ struct {$st.name}
 		 *
 		 * \return The object itself.
 		 */
-{swrap 75 "		"}virtual {foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}& operator=(const {foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}& other);{/swrap}{/section}{section declareUpcastFuncs}
+{swrap 75 "		"}virtual {foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}& operator=(const {foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}& other);{/swrap}{if abstractClass == 0}
+		
+		/** Copy.
+		 *
+		 * Create a copy of the object.
+		 *
+		 * \return Newly allocated copy of the object.
+		 */
+{swrap 75 "		"}virtual {foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}* copy() const;{/swrap}{/if}{/section}{section declareUpcastFuncs}
 		
 		/** Upcast.
 		 *
@@ -278,7 +286,36 @@ struct {$st.name}
 		 *
 		 * \return The more specific object, or 0 if the cast failed.
 		 */
-{swrap 75 "		"}static {foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}* upcast(Ionflux::ObjectBase::IFObject* other);{/swrap}{/section}{section declareFunc}
+{swrap 75 "		"}static {foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}* upcast(Ionflux::ObjectBase::IFObject* other);{/swrap}{/section}{section declareCreateFuncs}
+		
+		/** Create instance.
+		 *
+		 * Create a new instance of the class. If the optional parent object 
+		 * is specified, a local reference for the new object will be added 
+		 * to the parent object.
+		 *
+		 * \param parentObject Parent object.
+		 *
+		 * \return Pointer to the new instance.
+		 */
+{swrap 75 "		"}static {foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}* create(Ionflux::ObjectBase::IFObject* parentObject = 0);{/swrap}{/section}{section declareParamFuncs}{foreach prm in class.param}
+		
+		/** Set parameter.
+		 *
+		 * Set the parameter with the specified ID.
+		 *
+		 * \param paramID Parameter ID.
+		 * \param paramValue Parameter value.
+		 */
+{swrap 75 "		"}virtual void set{$prm.name|uppercase(1)}(Ionflux::ObjectBase::IFParamID paramID, {$prm.type} paramValue);{/swrap}
+		
+		/** Get parameter.
+		 *
+		 * Get the parameter with the specified ID.
+		 *
+		 * \param paramID Parameter ID.
+		 */
+{swrap 75 "		"}virtual {$prm.type} get{$prm.name|uppercase(1)}(Ionflux::ObjectBase::IFParamID paramID);{/swrap}{/foreach}{/section}{section declareFunc}
 		
 		/** {$func.shortDesc}.{if func.longDesc != ""}
 		 *
@@ -485,7 +522,7 @@ class {$class.name}{if ( haveBaseIFObject == 1 ) || ( haveBaseOther == 1 )}
 		 *
 		 * \\sa serialize()
 		 */
-		virtual int deserialize(const std::string& source, int offset = 0);{/if}{if enablePersistence == 1}{ref declarePersistenceFuncs}{/if}{if enableCopy == 1}{ref declareCopyFuncs}{/if}{if enableUpcast == 1}{ref declareUpcastFuncs}{/if}{foreach prop in property.private}{ref createPropertyAccessorDecl}{/foreach}{foreach prop in property.protected}{ref createPropertyAccessorDecl}{/foreach}{if enablePersistence == 1}{$prop.name = "database"}{$prop.desc = "Database"}{$prop.type = class.persistence.namespace + "::" + class.persistence.database + "*"}{$prop.setFromType = class.persistence.namespace + "::" + class.persistence.database + "*"}{ref createPropertyAccessorDecl}{/if}{foreach sig in signal}{foreach ins in sig.instance}
+		virtual int deserialize(const std::string& source, int offset = 0);{/if}{if enablePersistence == 1}{ref declarePersistenceFuncs}{/if}{if enableCopy == 1}{ref declareCopyFuncs}{/if}{if enableUpcast == 1}{ref declareUpcastFuncs}{/if}{if enableCreate == 1}{ref declareCreateFuncs}{/if}{if enableParam == 1}{ref declareParamFuncs}{/if}{foreach prop in property.private}{ref createPropertyAccessorDecl}{/foreach}{foreach prop in property.protected}{ref createPropertyAccessorDecl}{/foreach}{if enablePersistence == 1}{$prop.name = "database"}{$prop.desc = "Database"}{$prop.type = class.persistence.namespace + "::" + class.persistence.database + "*"}{$prop.setFromType = class.persistence.namespace + "::" + class.persistence.database + "*"}{ref createPropertyAccessorDecl}{/if}{foreach sig in signal}{foreach ins in sig.instance}
 		
 		/** Get signal: {$ins.desc}.
 		 *

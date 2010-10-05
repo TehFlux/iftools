@@ -345,13 +345,13 @@ Blah* IFExampleClass::getSpecialBlah() const
 unsigned int IFExampleClass::getNumBlupps() const
 {
 	IFGuard propertyGuard(guardMutex);
-	return blupps.size();
+    return blupps.size();
 }
 
 Blupp* IFExampleClass::getBlupp(unsigned int elementIndex) const
 {
 	IFGuard propertyGuard(guardMutex);
-	if (elementIndex < blupps.size())
+    if (elementIndex < blupps.size())
 		return blupps[elementIndex];
 	return 0;
 }
@@ -359,7 +359,7 @@ Blupp* IFExampleClass::getBlupp(unsigned int elementIndex) const
 int IFExampleClass::findBlupp(Blupp* needle, unsigned int occurence) const
 {
 	IFGuard propertyGuard(guardMutex);
-	bool found = false;
+    bool found = false;
 	Blupp* currentBlupp = 0;
 	unsigned int i = 0;
 	while (!found 
@@ -383,7 +383,7 @@ int IFExampleClass::findBlupp(Blupp* needle, unsigned int occurence) const
 std::vector<Blupp*>& IFExampleClass::getBlupps()
 {
 	IFGuard propertyGuard(guardMutex);
-	return blupps;
+    return blupps;
 }
 
 void IFExampleClass::addBlupp(Blupp* addElement)
@@ -395,7 +395,7 @@ void IFExampleClass::addBlupp(Blupp* addElement)
 void IFExampleClass::removeBlupp(Blupp* removeElement)
 {
 	IFGuard propertyGuard(guardMutex);
-	bool found = false;
+    bool found = false;
 	Blupp* currentBlupp = 0;
 	unsigned int i = 0;
 	while (!found 
@@ -424,7 +424,7 @@ void IFExampleClass::removeBluppIndex(unsigned int removeIndex)
 void IFExampleClass::clearBlupps()
 {
 	IFGuard propertyGuard(guardMutex);
-	blupps.clear();
+    blupps.clear();
 }
 
 unsigned int IFExampleClass::getBlahs() const

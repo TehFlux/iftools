@@ -24,7 +24,7 @@
 # 02111-1307 USA
 # 
 # ==========================================================================
-{section checkFeatures}{$haveForwards = 0}{foreach fw in forward}{if fw != ""}{$haveForwards = 1}{/if}{/foreach}{$haveTypedefs = 0}{foreach td in typedef}{if td != ""}{$haveTypedefs = 1}{/if}{/foreach}{$haveEvents = 0}{foreach ev in event}{if ev.id != ""}{$haveEvents = 1}{/if}{/foreach}{$haveSignals = 0}{foreach si in signal}{if si.id != ""}{$haveSignals = 1}{/if}{/foreach}{$haveBaseIFObject = 0}{foreach bc in class.base.ifobject}{if bc.name != ""}{$haveBaseIFObject = 1}{/if}{/foreach}{$haveBaseOther = 0}{foreach bc in class.base.other}{if bc.name != ""}{$haveBaseOther = 1}{/if}{/foreach}{$enableClassInfo = 0}{if ( haveBaseIFObject == 1 ) || ( class.name == "IFObject" )}{$enableClassInfo = 1}{/if}{$enableMutex = 0}{$enableGuards = 0}{$enableAutoGuards = 0}{$enableLogMessage = 0}{$enableSignal = haveSignals}{$enableSerialize = 0}{$enablePersistence = 0}{$enableCopy = 0}{$enableUpcast = 0}{foreach fe in class.features}{if fe == "mutex"}{$enableMutex = 1}{/if}{if fe == "guards"}{$enableMutex = 1}{$enableGuards = 1}{/if}{if fe == "autoguards"}{$enableMutex = 1}{$enableGuards = 1}{$enableAutoGuards = 1}{/if}{if fe == "logmessage"}{$enableLogMessage = 1}{/if}{if fe == "signal"}{$enableSignal = 1}{/if}{if fe == "serialize"}{$enableSerialize = 1}{/if}{if fe == "classinfo"}{$enableClassInfo = 1}{/if}{if fe == "persistence"}{$enablePersistence = 1}{/if}{if fe == "copy"}{$enableCopy = 1}{/if}{if fe == "upcast"}{$enableUpcast = 1}{/if}{/foreach}{$haveOps = 0}{foreach op in operation}{if op.name != ""}{$haveOps = 1}{/if}{/foreach}{/section}{ref checkFeatures}{section insertGPLDisclaimer}
+{section checkFeatures}{$haveForwards = 0}{foreach fw in forward}{if fw != ""}{$haveForwards = 1}{/if}{/foreach}{$haveTypedefs = 0}{foreach td in typedef}{if td != ""}{$haveTypedefs = 1}{/if}{/foreach}{$haveEvents = 0}{foreach ev in event}{if ev.id != ""}{$haveEvents = 1}{/if}{/foreach}{$haveSignals = 0}{foreach si in signal}{if si.id != ""}{$haveSignals = 1}{/if}{/foreach}{$haveBaseIFObject = 0}{foreach bc in class.base.ifobject}{if bc.name != ""}{$haveBaseIFObject = 1}{/if}{/foreach}{$haveBaseOther = 0}{foreach bc in class.base.other}{if bc.name != ""}{$haveBaseOther = 1}{/if}{/foreach}{$enableClassInfo = 0}{if ( haveBaseIFObject == 1 ) || ( class.name == "IFObject" )}{$enableClassInfo = 1}{/if}{$abstractClass = 0}{foreach func in function.public}{if func.pureVirtual == "true"}{$abstractClass = 1}{/if}{/foreach}{foreach func in function.protected}{if func.pureVirtual == "true"}{$abstractClass = 1}{/if}{/foreach}{$enableMutex = 0}{$enableGuards = 0}{$enableAutoGuards = 0}{$enableLogMessage = 0}{$enableSignal = haveSignals}{$enableSerialize = 0}{$enablePersistence = 0}{$enableCopy = 0}{$enableUpcast = 0}{$enableCreate = 0}{$enableParam = 0}{foreach fe in class.features}{if fe == "mutex"}{$enableMutex = 1}{/if}{if fe == "guards"}{$enableMutex = 1}{$enableGuards = 1}{/if}{if fe == "autoguards"}{$enableMutex = 1}{$enableGuards = 1}{$enableAutoGuards = 1}{/if}{if fe == "logmessage"}{$enableLogMessage = 1}{/if}{if fe == "signal"}{$enableSignal = 1}{/if}{if fe == "serialize"}{$enableSerialize = 1}{/if}{if fe == "classinfo"}{$enableClassInfo = 1}{/if}{if fe == "persistence"}{$enablePersistence = 1}{/if}{if fe == "copy"}{$enableCopy = 1}{/if}{if fe == "upcast"}{$enableUpcast = 1}{/if}{if fe == "create"}{$enableCreate = 1}{/if}{if fe == "param"}{$enableParam = 1}{/if}{/foreach}{$haveOps = 0}{foreach op in operation}{if op.name != ""}{$haveOps = 1}{/if}{/foreach}{/section}{ref checkFeatures}{section insertGPLDisclaimer}
  * =========================================================================
 {swrap 75 " * "}
 This file is part of {$project.name}.
@@ -62,22 +62,31 @@ IF{$ev.id|uppercase(1)}Event* {$class.name}::create{$ev.id|uppercase(1)}Event()
 
 {swrap 75}unsigned int {$class.name}::getNum{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if}() const{/swrap}
 \{{if enableGuards == 1}
-	IFGuard propertyGuard(guardMutex);{/if}
-	return {$prop.name}.size();
+	IFGuard propertyGuard(guardMutex);{/if}{if prop.proxy.target != ""}{if prop.proxy.nullError != ""}
+    if ({$prop.proxy.target} == 0)
+        throw {$prop.proxy.nullError};{/if}
+    return {$prop.proxy.target}->getNum{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if}();{else}
+    return {$prop.name}.size();{/if}
 \}
 
 {swrap 75}{$prop.element.type} {$class.name}::get{$prop.element.name|uppercase(1)}(unsigned int elementIndex) const{/swrap}
 \{{if enableGuards == 1}
-	IFGuard propertyGuard(guardMutex);{/if}
-	if (elementIndex < {$prop.name}.size())
+	IFGuard propertyGuard(guardMutex);{/if}{if prop.proxy.target != ""}{if prop.proxy.nullError != ""}
+    if ({$prop.proxy.target} == 0)
+        throw {$prop.proxy.nullError};{/if}
+    return {$prop.proxy.target}->get{$prop.element.name|uppercase(1)}(elementIndex);{else}
+    if (elementIndex < {$prop.name}.size())
 		return {$prop.name}[elementIndex];
-	return {if prop.element.defaultValue != ""}{$prop.element.defaultValue}{else}0{/if};
+	return {if prop.element.defaultValue != ""}{$prop.element.defaultValue}{else}0{/if};{/if}
 \}
 
 {swrap 75}int {$class.name}::find{$prop.element.name|uppercase(1)}({if prop.element.findType == ""}{$prop.element.type}{else}{$prop.element.findType}{/if} needle, unsigned int occurence) const{/swrap}
 \{{if enableGuards == 1}
-	IFGuard propertyGuard(guardMutex);{/if}
-	bool found = false;
+	IFGuard propertyGuard(guardMutex);{/if}{if prop.proxy.target != ""}{if prop.proxy.nullError != ""}
+    if ({$prop.proxy.target} == 0)
+        throw {$prop.proxy.nullError};{/if}
+    return {$prop.proxy.target}->find{$prop.element.name|uppercase(1)}(needle, occurence);{else}
+    bool found = false;
 	{$prop.element.type} current{$prop.element.name|uppercase(1)} = {if prop.element.defaultValue != ""}{$prop.element.defaultValue}{else}0{/if};
 	unsigned int i = 0;
 	while (!found 
@@ -95,26 +104,37 @@ IF{$ev.id|uppercase(1)}Event* {$class.name}::create{$ev.id|uppercase(1)}Event()
 	\}
 	if (found)
         return i;
-	return -1;
+	return -1;{/if}
 \}{if prop.readOnly != "true"}{if prop.hideImpl != "true"}
 
 {swrap 75}std::vector<{$prop.element.type}>& {$class.name}::get{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if}(){/swrap}
 \{{if enableGuards == 1}
-	IFGuard propertyGuard(guardMutex);{/if}
-	return {$prop.name};
+	IFGuard propertyGuard(guardMutex);{/if}{if prop.proxy.target != ""}{if prop.proxy.nullError != ""}
+    if ({$prop.proxy.target} == 0)
+        throw {$prop.proxy.nullError};{/if}
+    return {$prop.proxy.target}->get{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if}();{else}
+    return {$prop.name};{/if}
 \}{/if}
 
 {swrap 75}void {$class.name}::add{$prop.element.name|uppercase(1)}({if prop.element.addType == ""}{$prop.element.type}{else}{$prop.element.addType}{/if} addElement){/swrap}
 \{{if enableGuards == 1}
-	IFGuard propertyGuard(guardMutex);{/if}
+	IFGuard propertyGuard(guardMutex);{/if}{if prop.proxy.target != ""}{if prop.proxy.nullError != ""}
+    if ({$prop.proxy.target} == 0)
+        throw {$prop.proxy.nullError};{/if}
+    return {$prop.proxy.target}->add{$prop.element.name|uppercase(1)}(addElement);{else}{if prop.check.maxSize != ""}
+	if ({$prop.name}.size() >= {$prop.check.maxSize})
+	    throw {$prop.check.sizeError};{/if}
 	{if prop.element.managed == "true"}addLocalRef(addElement);
-	{/if}{$prop.name}.push_back(addElement);
+	{/if}{$prop.name}.push_back(addElement);{/if}
 \}
 
 {swrap 75}void {$class.name}::remove{$prop.element.name|uppercase(1)}({if prop.element.removeType == ""}{$prop.element.type}{else}{$prop.element.removeType}{/if} removeElement){/swrap}
 \{{if enableGuards == 1}
-	IFGuard propertyGuard(guardMutex);{/if}
-	bool found = false;
+	IFGuard propertyGuard(guardMutex);{/if}{if prop.proxy.target != ""}{if prop.proxy.nullError != ""}
+    if ({$prop.proxy.target} == 0)
+        throw {$prop.proxy.nullError};{/if}
+    return {$prop.proxy.target}->remove{$prop.element.name|uppercase(1)}(removeElement);{else}
+    bool found = false;
 	{$prop.element.type} current{$prop.element.name|uppercase(1)} = {if prop.element.defaultValue != ""}{$prop.element.defaultValue}{else}0{/if};
 	unsigned int i = 0;
 	while (!found 
@@ -131,29 +151,35 @@ IF{$ev.id|uppercase(1)}Event* {$class.name}::create{$ev.id|uppercase(1)}Event()
 		{$prop.name}.erase({$prop.name}.begin() + i);{if prop.element.managed == "true"}
 		if (current{$prop.element.name|uppercase(1)} != {if prop.element.defaultValue != ""}{$prop.element.defaultValue}{else}0{/if})
 			removeLocalRef(current{$prop.element.name|uppercase(1)});{/if}
-	\}
+	\}{/if}
 \}
 
 {swrap 75}void {$class.name}::remove{$prop.element.name|uppercase(1)}Index(unsigned int removeIndex){/swrap}
 \{{if enableGuards == 1}
-	IFGuard propertyGuard(guardMutex);{/if}
+	IFGuard propertyGuard(guardMutex);{/if}{if prop.proxy.target != ""}{if prop.proxy.nullError != ""}
+    if ({$prop.proxy.target} == 0)
+        throw {$prop.proxy.nullError};{/if}
+    return {$prop.proxy.target}->remove{$prop.element.name|uppercase(1)}Index(removeIndex);{else}
     if (removeIndex > {$prop.name}.size())
         return;{if prop.element.managed == "true"}
 	{$prop.element.type} e0 = {$prop.name}[removeIndex];
     {$prop.name}.erase({$prop.name}.begin() + removeIndex);
     if (e0 != {if prop.element.defaultValue != ""}{$prop.element.defaultValue}{else}0{/if})
         removeLocalRef(e0);{else}
-    {$prop.name}.erase({$prop.name}.begin() + removeIndex);{/if}
+    {$prop.name}.erase({$prop.name}.begin() + removeIndex);{/if}{/if}
 \}
 
 {swrap 75}void {$class.name}::clear{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if}(){/swrap}
 \{{if enableGuards == 1}
-	IFGuard propertyGuard(guardMutex);{/if}
-	{if prop.element.managed == "true"}std::vector<{$prop.element.type}>::iterator i;
+	IFGuard propertyGuard(guardMutex);{/if}{if prop.proxy.target != ""}{if prop.proxy.nullError != ""}
+    if ({$prop.proxy.target} == 0)
+        throw {$prop.proxy.nullError};{/if}
+    return {$prop.proxy.target}->clear{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if}();{else}
+    {if prop.element.managed == "true"}std::vector<{$prop.element.type}>::iterator i;
 	for (i = {$prop.name}.begin(); i != {$prop.name}.end(); i++)
 		if (*i != {if prop.element.defaultValue != ""}{$prop.element.defaultValue}{else}0{/if})
 			removeLocalRef(*i);
-	{/if}{$prop.name}.clear();
+	{/if}{$prop.name}.clear();{/if}
 \}{/if}{else}{if prop.style == "map"}
 
 {swrap 75}unsigned int {$class.name}::get{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if}() const{/swrap}
@@ -179,7 +205,9 @@ IF{$ev.id|uppercase(1)}Event* {$class.name}::create{$ev.id|uppercase(1)}Event()
 
 {swrap 75}void {$class.name}::add{$prop.element.name|uppercase(1)}({if prop.key.accessType != ""}{$prop.key.accessType}{else}{$prop.key.type}{/if} elementKey, {if prop.element.addType == ""}{$prop.element.type}{else}{$prop.element.addType}{/if} addElement){/swrap}
 \{{if enableGuards == 1}
-	IFGuard propertyGuard(guardMutex);{/if}
+	IFGuard propertyGuard(guardMutex);{/if}{if prop.check.maxSize != ""}
+	if ({$prop.name}.size() >= {$prop.check.maxSize})
+	    throw {$prop.check.sizeError};{/if}
 	{$prop.element.type} the{$prop.element.name|uppercase(1)} = get{$prop.element.name|uppercase(1)}(elementKey);
 	if (the{$prop.element.name|uppercase(1)} != {if prop.element.defaultValue != ""}{$prop.element.defaultValue}{else}0{/if})
 		return;
@@ -214,13 +242,13 @@ IF{$ev.id|uppercase(1)}Event* {$class.name}::create{$ev.id|uppercase(1)}Event()
 	IFGuard propertyGuard(guardMutex);{/if}{if prop.impl.set == ""}{if prop.managed == "true"}
 	if ({$prop.name} == new{$prop.name|uppercase(1)})
 		return;
+    if (new{$prop.name|uppercase(1)} != 0)
+        addLocalRef(new{$prop.name|uppercase(1)});
 	if ({$prop.name} != 0)
 		removeLocalRef({$prop.name});{/if}{if prop.persistent != "true"}
 	{$prop.name} = new{$prop.name|uppercase(1)};{else}
 	if (persistent != 0)
-		persistent->{$prop.name} = new{$prop.name|uppercase(1)};{/if}{if prop.managed == "true"}
-	if ({$prop.name} != 0)
-		addLocalRef({$prop.name});{/if}{else}
+		persistent->{$prop.name} = new{$prop.name|uppercase(1)};{/if}{else}
 {$prop.impl.set|swrap(75, "	")}{/if}
 \}{/if}
 
@@ -528,14 +556,57 @@ bool {$class.name}::setFromID(int objectID)
 	if ((database == 0) || (persistent == 0))
 		throw PersistenceError("Database not set.");{/if}{if function.copy.impl != ""}
 {swrap 75 "	"}{$function.copy.impl}{/swrap}{else}{foreach prop in property.protected}{if prop.copy == "true"}
-	set{$prop.name|uppercase(1)}(other.get{$prop.name|uppercase(1)}());{/if}{/foreach}
-	return *this;{/if}
-\}{/section}{section createUpcastFuncsImpl}
+	set{$prop.name|uppercase(1)}(other.get{$prop.name|uppercase(1)}());{/if}{/foreach}{/if}
+	return *this;
+\}{if abstractClass == 0}
+
+{swrap 75}{foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}* {$class.name}::copy() const{/swrap}
+\{{if enableCreate == 1}
+    {$class.name}* new{$class.name|uppercase(1)} = create();{else}
+    {$class.name}* new{$class.name|uppercase(1)} = 
+        new {$class.name}();{if class.copy.allocationError != ""}
+    if (new{$class.name|uppercase(1)} == 0)
+        throw {$class.copy.allocationError};{/if}{/if}
+    *new{$class.name|uppercase(1)} = *this;
+    return new{$class.name|uppercase(1)};
+\}{/if}{/section}{section createUpcastFuncsImpl}
 
 {swrap 75}{foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}* {$class.name}::upcast(Ionflux::ObjectBase::IFObject* other){/swrap}
 \{
     return dynamic_cast<{$class.name}*>(other);
-\}{/section}/* ==========================================================================
+\}{/section}{section createCreateFuncsImpl}
+
+{swrap 75}{foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}* {$class.name}::create(Ionflux::ObjectBase::IFObject* parentObject){/swrap}
+\{
+    {$class.name}* newObject = new {$class.name}();
+    if (newObject == 0)
+    \{{if class.create.allocationError != ""}
+        throw {$class.create.allocationError};{else}
+        return 0;{/if}
+    \}
+    if (parentObject != 0)
+        parentObject->addLocalRef(newObject);
+    return newObject;
+\}{/section}{section createParamFuncsImpl}{foreach prm in class.param}
+
+{swrap 75}void {$class.name}::set{$prm.name}(Ionflux::ObjectBase::IFParamID paramID, {$prm.type} paramValue){/swrap}
+\{{if prm.impl.set != ""}
+    {$prm.impl.set}{/if}{foreach prop in property.protected}{if prop.type == prm.type}
+    if (paramID == "{$prop.name}")
+    \{
+        set{$prop.name|uppercase(1)}(paramValue);
+        return;
+    \}{/if}{/foreach}{if prm.notExistsError != ""}
+    throw {$prm.notExistsError};{/if}
+\}
+
+{swrap 75}{$prm.type} {$class.name}::get{$prm.name}(Ionflux::ObjectBase::IFParamID paramID){/swrap}
+\{{if prm.impl.get != ""}
+    {$prm.impl.get}{/if}{foreach prop in property.protected}{if prop.type == prm.type}
+    if (paramID == "{$prop.name}")
+        return get{$prop.name|uppercase(1)}();{/if}{/foreach}{if prm.notExistsError != ""}
+    throw {$prm.notExistsError};{/if}
+\}{/foreach}{/section}/* ==========================================================================
  * {$project.name}
  * Copyright © {$project.copyrightYear} {$project.author}
  * {$project.mail}
@@ -682,8 +753,8 @@ const Ionflux::ObjectBase::IFClassInfo* {$class.name}::CLASS_INFO = &{$class.nam
 \}{/foreach}
 
 {$class.name}::~{$class.name}(){if destructor.throw != ""} throw({if destructor.throw != "<none>"}{$destructor.throw}{/if}){/if}
-\{{foreach prop in property.protected}{if ( prop.style == "vector" ) || ( prop.style == "map" )}
-	clear{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if}();{/if}{/foreach}{if destructor.impl == ""}{if enablePersistence == 1}
+\{{foreach prop in property.protected}{if ( prop.style == "vector" ) || ( prop.style == "map" )}{if prop.proxy != "true"}
+	clear{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if}();{/if}{/if}{/foreach}{if destructor.impl == ""}{if enablePersistence == 1}
 	if (persistent != 0)
 		delete persistent;
 	persistent = 0;{else}
@@ -705,7 +776,7 @@ int {$class.name}::deserialize(const std::string& source, int offset)
 	if (offset < 0)
 		return false;{/foreach}{/if}{foreach prop in property.private}{if prop.serialize == "true"}{ref deserializeProp}{/if}{/foreach}{foreach prop in property.protected}{if prop.serialize == "true"}{ref deserializeProp}{/if}{/foreach}{foreach var in variable.private}{if var.serialize == "true"}{ref deserializeVar}{/if}{/foreach}{foreach var in variable.protected}{if var.serialize == "true"}{ref deserializeVar}{/if}{/foreach}{foreach var in variable.public}{if var.serialize == "true"}{ref deserializeVar}{/if}{/foreach}
 	return offset;
-\}{/if}{if enablePersistence == 1}{ref createPersistenceFuncsImpl}{/if}{if enableCopy == 1}{ref createCopyFuncsImpl}{/if}{if enableUpcast == 1}{ref createUpcastFuncsImpl}{/if}{foreach sig in signal}{foreach ins in sig.instance}
+\}{/if}{if enablePersistence == 1}{ref createPersistenceFuncsImpl}{/if}{if enableCopy == 1}{ref createCopyFuncsImpl}{/if}{if enableUpcast == 1}{ref createUpcastFuncsImpl}{/if}{if enableCreate == 1}{ref createCreateFuncsImpl}{/if}{if enableParam == 1}{ref createParamFuncsImpl}{/if}{foreach sig in signal}{foreach ins in sig.instance}
 
 IF{$sig.id|uppercase(1)}Signal& {$class.name}::getSignal{$ins.name|uppercase(1)}()
 \{
