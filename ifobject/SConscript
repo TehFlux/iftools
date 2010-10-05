@@ -150,7 +150,8 @@ def buildSource(source, target, env):
     classNames = []
     for it in source:
         cn, ext = os.path.splitext(os.path.basename(it.path))
-        classNames += [cn]
+        if (ext == '.conf'):
+            classNames += [cn]
     for cn in classNames:
         c0 = ("ifclassgen -t template/class -c conf/class "
             "-m conf/main.conf -i include/" + lc.baseName + " -s src " + cn)
@@ -163,7 +164,8 @@ def buildClassInterface(source, target, env):
     classNames = []
     for it in source:
         cn, ext = os.path.splitext(os.path.basename(it.path))
-        classNames += [cn]
+        if (ext == '.conf'):
+            classNames += [cn]
     for cn in classNames:
         c0 = ("iftpl template/interface.i.tpl conf/class/"
             + cn + ".conf conf/main.conf")
@@ -265,7 +267,9 @@ if (haveIFClassgen):
             env.Source(target = [
                     'include/ifobject/' + it + '.hpp', 
                     'src/' + it + '.cpp'], 
-                source = 'conf/class/' + it + '.conf')
+                source = ['conf/class/' + it + '.conf',
+                    'template/class/Class.hpp.tpl', 
+                    'template/class/Class.cpp.tpl'])
         ]
     allTargets += sources
 else:
@@ -282,7 +286,8 @@ if (haveIFTpl):
         interfaceTargets += [t0]
         classInterfaces += [ 
             env.ClassInterface(target = [ t0 ], 
-                source = 'conf/class/' + it + '.conf')
+                source = ['conf/class/' + it + '.conf',
+                    'template/interface.i.tpl'])
         ]
     interfaces = env.Interface(target = lc.swigInterfaceFile, 
         source = interfaceTargets + [lc.swigInterfaceTemplateFile])
