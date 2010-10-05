@@ -9,17 +9,19 @@ directory.
 If you do not want to use any local configuration, a default copy will be 
 created for you automatically."""
 
+# Base name.
+baseName = 'ifobject'
 # Python site packages path.
 pythonSitePackagesPath = '/lib/python2.7/site-packages'
 # Python version.
 pythonVersion = "2.7"
 
 # The SWIG interface template file.
-swigInterfaceTemplateFile = 'template/ifobject.i.tpl'
+swigInterfaceTemplateFile = 'template/' + baseName + '.i.tpl'
 # The SWIG interface file.
-swigInterfaceFile = 'swig/ifobject.i'
+swigInterfaceFile = 'swig/' + baseName + '.i'
 
 # Paths.
 PATH = 'bin'
-CPPPATH = ['/usr/include/python2.6']
+CPPPATH = ['/usr/include/python2.7']
 LIBPATH = []

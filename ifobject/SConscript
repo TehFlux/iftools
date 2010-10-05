@@ -153,7 +153,7 @@ def buildSource(source, target, env):
         classNames += [cn]
     for cn in classNames:
         c0 = ("ifclassgen -t template/class -c conf/class "
-            "-m conf/main.conf -i include/ifobject -s src " + cn)
+            "-m conf/main.conf -i include/" + lc.baseName + " -s src " + cn)
         print c0
         sp0 = subprocess.call(shlex.split(c0))
 
@@ -319,6 +319,9 @@ ifexampleclasstestBin = testEnv.Program('test/bin/ifexampleclasstest',
 		'test/build/IFExampleSignalProxy.cpp', 
 		'test/build/ifexampleclasstest.cpp'])
 
+targetTests = [ifclassinfotestBin, ifobjecttestBin, ifthreadtestBin, 
+    packtestBin, ifexampleclasstestBin]
+
 # Python module.
 ifobjectWrapper = env.SWIGPython(target = [ 'swig/ifobject_wrap.cxx', 
         'swig/python/IFObjectBase.py'], 
@@ -331,10 +334,7 @@ ifobjectPyModule = ifobjectPyModuleEnv.SharedLibrary(
     target = 'swig/python/_IFObjectBase', 
     source = 'swig/ifobject_wrap.cxx', SHLIBPREFIX = '', SHLIBSUFFIX = '.so')
 
-targetTests = [ifclassinfotestBin, ifobjecttestBin, ifthreadtestBin, 
-    packtestBin, ifexampleclasstestBin]
-
-allHeaders = ifobjectLibHeaders
+allHeaders = ifobjectLibHeaders + [lc.swigInterfaceFile]
 
 installBinTargets = [targetBins]
 if (buildIFClassgen):
