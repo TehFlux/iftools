@@ -70,7 +70,11 @@ env = Environment(ENV = env0,
 if (ARGUMENTS.get('debug', 'no') == 'yes'):
     env.Append(CCFLAGS = '-g')
 
-prefix = ARGUMENTS.get('prefix', '/usr/local')
+if (hasattr(lc, 'prefix')):
+    defaultPrefix = lc.prefix
+else:
+    defaultPrefix = '/usr/local'
+prefix = ARGUMENTS.get('prefix', defaultPrefix)
 
 env.VariantDir('build', 'src')
 env.VariantDir('test/build', 'test')
