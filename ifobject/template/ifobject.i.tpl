@@ -6,6 +6,7 @@
 #include "ifobject/IFObject.hpp"
 #include "ifobject/utility.hpp"
 #include "ifobject/types.hpp"
+#include <assert.h>
 %}
 
 namespace Ionflux
