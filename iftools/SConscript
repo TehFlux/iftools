@@ -70,7 +70,12 @@ env.MergeFlags(['-Wall', '-Wno-deprecated', '-O2'])
 if (ARGUMENTS.get('debug', 'no') == 'yes'):
     env.Append(CCFLAGS = '-g')
 
-prefix = ARGUMENTS.get('prefix', '/usr/local')
+if (hasattr(lc, 'prefix')):
+    defaultPrefix = lc.prefix
+else:
+    defaultPrefix = '/usr/local'
+prefix = ARGUMENTS.get('prefix', defaultPrefix)
+
 gtools = ARGUMENTS.get('gtools', 'no')
 
 env.VariantDir('build', 'src')

@@ -32,6 +32,7 @@
 #include "Database.hpp"
 #include "MySQLDatabase.hpp"
 #include "MersenneTwister.h"
+#include <assert.h>
 %}
 
 class MTRand

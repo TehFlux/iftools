@@ -9,12 +9,17 @@ directory.
 If you do not want to use any local configuration, a default copy will be 
 created for you automatically."""
 
-# Python site packages path.
-pythonSitePackagesPath = '/lib/python2.7/site-packages'
+## Prefix.
+## Set this if you do not want to use the default or the SCons command line 
+## parameter.
+#prefix = '/usr/local'
+
 # Python version.
 pythonVersion = "2.7"
+# Python site packages path.
+pythonSitePackagesPath = '/lib/python' + pythonVersion + '/site-packages'
 
 # Paths.
-PATH = ['bin']
-CPPPATH = ['/usr/include/python2.6']
+PATH = 'bin'
+CPPPATH = ['/usr/include/python' + pythonVersion]
 LIBPATH = []
