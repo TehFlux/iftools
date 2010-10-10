@@ -6,6 +6,12 @@ mail@ionflux.org
 Readme
 ================================================================================
 
+********************************************************************************
+
+           This project has been discontinued. Use Python instead.
+
+********************************************************************************
+
 Ionflux Value (ifvalue) is a library which provides simple types based on the 
 Ionflux Object Base System, and a special type (IFValue) which allows to 
 construct arbitrarily complex data objects out of IFObject based types. It 

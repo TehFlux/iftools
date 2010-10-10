@@ -1,6 +1,6 @@
 ================================================================================
 Ionflux Tools
-Copyright (c) 2004-2006 Joern P. Meier
+Copyright (c) 2004-2010 Joern P. Meier
 mail@ionflux.org
 --------------------------------------------------------------------------------
 Install
@@ -17,29 +17,20 @@ following libraries:
 If you do not want to build the Ionflux Tools Class Library with Gtkmm 
 features, you can specify gtools=no after the build and install commands.
 
+If you want to use custom configuration for the build process (for 
+example, Python and library paths), copy 
+site_scons/local_config.py.default to site_scons/local_config.py and 
+adjust the settings as required.
+
 You can then (on Linux and FreeBSD systems) build everything with:
 
 scons
-
-or
-
-scons platform=<your platform>
-
-where <your platform> is one of:
-
-linux
-freebsd
-win32
 
 Type
 
 scons -h
 
 for a list of build options.
-
-The Win32 build script assumes that you have MinGW/Dev-Cpp and the required 
-libraries properly installed and configured. Infortunately, this is currently 
-not tested very well. Please let me know if you encounter any problems.
 
 To install, type:
 
@@ -49,6 +40,8 @@ You must be root to install to default locations. If you want to install to a
 different directory, you can specify a prefix with:
 
 scons install prefix=<target directory>
+
+You can also
 
 Have fun!
 

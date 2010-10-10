@@ -1,6 +1,6 @@
 ================================================================================
 Ionflux Object Base System
-Copyright © 2006 Joern P. Meier
+Copyright © 2006-2010 Joern P. Meier
 mail@ionflux.org
 --------------------------------------------------------------------------------
 Install
@@ -16,14 +16,13 @@ installed on your target system:
 • iftools (http://iftools.sourceforge.net/), required for ifclassgen
   (this will change in the future)
 
-Then, just change to a directory of yout choice and untar the distribution, 
-for example:
-
-  tar xvfj ifobject-0.0.1.tar.bz2
-
+If you want to use custom configuration for the build process (for 
+example, Python and library paths), copy 
+site_scons/local_config.py.default to site_scons/local_config.py and 
+adjust the settings as required.
 Start the build with
 
-  scons all
+  scons
 
 Install with
 

@@ -1,16 +1,16 @@
 ================================================================================
 Ionflux Tools
-Copyright (c) 2004-2006 Joern P. Meier
+Copyright (c) 2004-2010 Joern P. Meier
 mail@ionflux.org
 --------------------------------------------------------------------------------
 Readme
 ================================================================================
 
-Thank you for your interest in the Ionflux Tools Class Library project!
-
-The Ionflux Tools Class Library is a lightweight multi-platform C++ framework designed for rapid development of applications in a client/server architecture. It features a set of useful classes and tools, such as a powerful template engine and a universal hierarchical type. The Ionflux Tools Class 
-Library is released under the GNU General Public License, meaning it is free 
-software! (See LICENSE in the distribution for more information.)
+The Ionflux Tools Class Library is a lightweight multi-platform C++ framework. 
+It features a set of useful classes and tools, such as a template engine and a 
+universal hierarchical type. The Ionflux Tools Class Library is released under 
+the GNU General Public License, meaning it is free software! (See LICENSE in 
+the distribution for more information.)
 
 Features include:
 
