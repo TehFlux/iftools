@@ -170,13 +170,13 @@ struct {$st.name}
 		 *
 {swrap 75 "		 * "}\\return {$prop.element.name|uppercase(1)} with specified key.{/swrap}
 		 */
-{swrap 75 "		"}virtual {$prop.element.type} get{$prop.element.name|uppercase(1)}({if prop.key.accessType != ""}{$prop.key.accessType}{else}{$prop.key.type}{/if} elementKey) const;{/swrap}{if prop.readOnly != "true"}{if prop.hideImpl != "true"}
+{swrap 75 "		"}virtual {$prop.element.type} get{$prop.element.name|uppercase(1)}({if prop.key.accessType != ""}{$prop.key.accessType}{else}{$prop.key.type}{/if} elementKey);{/swrap}{if prop.readOnly != "true"}{if prop.hideImpl != "true"}
         
 		/** Get {$prop.desc|lowercase(1)}.
 		 *
 {swrap 75 "		 * "}\\return {$prop.desc|lowercase(1)}.{/swrap}
 		 */
-{swrap 75 "		"}virtual std::map<{$prop.key.type}, {$prop.element.type}>& getget{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if}();{/swrap}{/if}
+{swrap 75 "		"}virtual std::map<{$prop.key.type}, {$prop.element.type}>& get{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if}();{/swrap}{/if}
 		
 		/** Add {$prop.element.name|lowercase(1)}.
 		 *

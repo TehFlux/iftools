@@ -182,13 +182,13 @@ IF{$ev.id|uppercase(1)}Event* {$class.name}::create{$ev.id|uppercase(1)}Event()
 	{/if}{$prop.name}.clear();{/if}
 \}{/if}{else}{if prop.style == "map"}
 
-{swrap 75}unsigned int {$class.name}::get{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if}() const{/swrap}
+{swrap 75}unsigned int {$class.name}::getNum{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if}() const{/swrap}
 \{{if enableGuards == 1}
 	IFGuard propertyGuard(guardMutex);{/if}
 	return {$prop.name}.size();
 \}
 
-{swrap 75}{$prop.element.type} {$class.name}::get{$prop.element.name|uppercase(1)}({if prop.key.accessType != ""}{$prop.key.accessType}{else}{$prop.key.type}{/if} elementKey) const{/swrap}
+{swrap 75}{$prop.element.type} {$class.name}::get{$prop.element.name|uppercase(1)}({if prop.key.accessType != ""}{$prop.key.accessType}{else}{$prop.key.type}{/if} elementKey){/swrap}
 \{{if enableGuards == 1}
 	IFGuard propertyGuard(guardMutex);{/if}
 	std::map<{$prop.key.type}, {$prop.element.type}>::const_iterator i = {$prop.name}.find(elementKey);
@@ -197,7 +197,7 @@ IF{$ev.id|uppercase(1)}Event* {$class.name}::create{$ev.id|uppercase(1)}Event()
 	return {if prop.element.defaultValue != ""}{$prop.element.defaultValue}{else}0{/if};
 \}{if prop.readOnly != "true"}{if prop.hideImpl != "true"}
 
-{swrap 75}std::map<{$prop.key.type}, {$prop.element.type}>& {$class.name}::get{$prop.name|uppercase(1)}(){/swrap}
+{swrap 75}std::map<{$prop.key.type}, {$prop.element.type}>& {$class.name}::get{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if}(){/swrap}
 \{{if enableGuards == 1}
 	IFGuard propertyGuard(guardMutex);{/if}
 	return {$prop.name};
