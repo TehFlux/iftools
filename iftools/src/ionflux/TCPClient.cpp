@@ -35,7 +35,8 @@ namespace Tools
 {
 
 TCPClient::TCPClient()
-: interactive(true), currentPeerID(0), iomp(0), manageIomp(true)
+: interactive(true), currentPeerID(0), iomp(0), manageIomp(true), 
+timeoutEvent(0)
 {
 	iomp = new SelectMultiplexer();
 	iomp->getLog().redirect(&log);
@@ -44,7 +45,8 @@ TCPClient::TCPClient()
 }
 
 TCPClient::TCPClient(bool initInteractive)
-: interactive(initInteractive), currentPeerID(0), iomp(0), manageIomp(true)
+: interactive(initInteractive), currentPeerID(0), iomp(0), manageIomp(true), 
+timeoutEvent(0)
 {
 	iomp = new SelectMultiplexer();
 	iomp->getLog().redirect(&log);
@@ -72,6 +74,11 @@ TCPClient::~TCPClient()
 	if (manageIomp && (iomp != 0))
 		delete iomp;
 	iomp = 0;
+	/* NOTE: Is this a good idea? The timeout event should have been 
+	         removed by cleanup(). */
+	if (timeoutEvent != 0)
+	    delete timeoutEvent;
+	timeoutEvent = 0;
 }
 
 void TCPClient::addPeer(TCPRemotePeer *peer)
@@ -191,6 +198,7 @@ void TCPClient::cleanup()
 	log.msg("[TCPClient::cleanup] DEBUG: Client cleanup.", log.VL_DEBUG);
 	if (!log.assert(iomp != 0, "[TCPClient::cleanup] IO multiplexer is null."))
 		return;
+	enableTimeout(false);
 	if (interactive)
 		iomp->removeEvent(this, stdinEvent);
 	log.msg("[TCPClient::cleanup] DEBUG: Cleaning up peer vector.", 
@@ -248,14 +256,22 @@ bool TCPClient::addConnection(const std::string &host, int port)
 
 void TCPClient::enableTimeout(bool newState)
 {
-	IOEvent newEvent;
-	newEvent.fd = 0;
-	newEvent.peer = 0;
-	newEvent.type = IOEvent::IO_TIMEOUT;
-    if (newState)
-        iomp->registerEvent(this, newEvent);
-    else
-        iomp->removeEvent(this, newEvent);
+    if (!newState)
+    {
+        if (timeoutEvent == 0)
+            // Timeout event not registered.
+            return;
+        iomp->removeEvent(this, *timeoutEvent);
+        delete timeoutEvent;
+        timeoutEvent = 0;
+        return;
+    }
+    // Register new timeout event.
+    timeoutEvent = new IOEvent();
+    timeoutEvent->fd = 0;
+    timeoutEvent->peer = 0;
+    timeoutEvent->type = IOEvent::IO_TIMEOUT;
+    iomp->registerEvent(this, *timeoutEvent);
 }
 
 void TCPClient::onTimeout()

@@ -38,7 +38,7 @@ const int TCPServer::DEFAULT_MAX_CLIENTS = 0;
 const int TCPServer::REJECTED_REASON_MAX_CLIENTS = 0;
 
 TCPServer::TCPServer()
-: maxClients(DEFAULT_MAX_CLIENTS), iomp(0), manageIomp(true)
+: maxClients(DEFAULT_MAX_CLIENTS), iomp(0), manageIomp(true), timeoutEvent(0)
 {
 	serverSocket.getLog().redirect(&log);
 	iomp = new SelectMultiplexer();
@@ -47,7 +47,8 @@ TCPServer::TCPServer()
 }
 
 TCPServer::TCPServer(IOMultiplexer *initIomp)
-: maxClients(DEFAULT_MAX_CLIENTS), iomp(initIomp), manageIomp(false)
+: maxClients(DEFAULT_MAX_CLIENTS), iomp(initIomp), manageIomp(false), 
+timeoutEvent(0)
 {
 	serverSocket.getLog().redirect(&log);
 	if (iomp == 0)
@@ -64,6 +65,11 @@ TCPServer::~TCPServer()
 	if (manageIomp && (iomp != 0))
 		delete iomp;
 	iomp = 0;
+	/* NOTE: Is this a good idea? The timeout event should have been 
+	         removed by cleanup(). */
+	if (timeoutEvent != 0)
+	    delete timeoutEvent;
+	timeoutEvent = 0;
 }
 
 void TCPServer::addClient(TCPRemotePeer *client)
@@ -195,6 +201,7 @@ void TCPServer::cleanup()
 	log.msg("[TCPServer::cleanup] DEBUG: Server cleanup.", log.VL_DEBUG);
 	if (!log.assert(iomp != 0, "[TCPServer::cleanup] IO multiplexer is null."))
 		return;
+	enableTimeout(false);
 	if (serverSocket.isBound())
 	{
 		log.msg("[TCPServer::cleanup] DEBUG: Taking down server socket.", 
@@ -233,14 +240,22 @@ void TCPServer::cleanup()
 
 void TCPServer::enableTimeout(bool newState)
 {
-	IOEvent newEvent;
-	newEvent.fd = 0;
-	newEvent.peer = 0;
-	newEvent.type = IOEvent::IO_TIMEOUT;
-    if (newState)
-        iomp->registerEvent(this, newEvent);
-    else
-        iomp->removeEvent(this, newEvent);
+    if (!newState)
+    {
+        if (timeoutEvent == 0)
+            // Timeout event not registered.
+            return;
+        iomp->removeEvent(this, *timeoutEvent);
+        delete timeoutEvent;
+        timeoutEvent = 0;
+        return;
+    }
+    // Register new timeout event.
+    timeoutEvent = new IOEvent();
+    timeoutEvent->fd = 0;
+    timeoutEvent->peer = 0;
+    timeoutEvent->type = IOEvent::IO_TIMEOUT;
+    iomp->registerEvent(this, *timeoutEvent);
 }
 
 void TCPServer::onTimeout()

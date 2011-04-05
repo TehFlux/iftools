@@ -70,6 +70,8 @@ class TCPClient
 		bool manageIomp;
 		/// IO event for standard input.
 		IOEvent stdinEvent;
+		/// IO event for timeout.
+		IOEvent* timeoutEvent;
 		
 		/** Add peer.
 		 *

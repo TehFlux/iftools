@@ -70,6 +70,8 @@ class TCPServer
 		IOMultiplexer *iomp;
 		/// IO multiplexer memory management flag.
 		bool manageIomp;
+		/// IO event for timeout.
+		IOEvent* timeoutEvent;
 		/// IO event for the server socket.
 		IOEvent serverSocketEvent;
         /// Bind address.
