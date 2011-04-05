@@ -124,8 +124,8 @@ std::string hmac(const std::string& key, const std::string& message,
     std::string iKey;
     for (unsigned int i = 0; i < blockSize; i++)
     {
-        oKey.append(1, tKey[i] ^ '\x36');
-        iKey.append(1, tKey[i] ^ '\x5c');
+        oKey.append(1, tKey[i] ^ '\x5c');
+        iKey.append(1, tKey[i] ^ '\x36');
     }
     std::string t0(iKey);
     t0.append(message);
