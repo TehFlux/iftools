@@ -31,6 +31,7 @@
 #include "TCPServer.hpp"
 #include "Database.hpp"
 #include "MySQLDatabase.hpp"
+#include "RegExp.hpp"
 #include "MersenneTwister.h"
 #include <assert.h>
 %}
@@ -1177,6 +1178,63 @@ class MySQLDatabase
 			const std::string& createTemplate = "", 
 			Node* createConfig = 0);
 		virtual DatabaseError getError();
+};
+
+typedef std::vector<std::string> ReMatch;
+typedef std::vector<ReMatch> ReMatchSet;
+
+class RegExp
+{
+	public:
+		RegExp();
+		RegExp(const std::string& initPattern);
+		RegExp(const std::string& initPattern, int initOptions);
+		virtual ~RegExp();
+		virtual void setPattern(const std::string& newPattern);
+		virtual std::string getPattern();
+		virtual void setOptions(int newOptions);
+		virtual int getOptions();
+		virtual void setMaxSubpatterns(unsigned int newMaxSubpatterns);
+		virtual unsigned int getMaxSubpatterns();
+		virtual bool match(const std::string& haystack, 
+			ReMatch* subPatterns = 0);
+		virtual unsigned int matchAll(const std::string& haystack, 
+			ReMatchSet* subPatterns);
+		virtual bool match(const std::string& needle, 
+			const std::string& haystack, ReMatch* subPatterns);
+		virtual unsigned int matchAll(const std::string& needle, 
+			const std::string& haystack, ReMatchSet* subPatterns);
+		virtual void replace(std::string& haystack, 
+			const std::string& replacement);
+		virtual void replaceSubpatterns(std::string& haystack, 
+			const std::vector<std::string>& replacement);
+		virtual void replaceAll(std::string& haystack, 
+			const std::string& replacement);
+		virtual void replaceAllSubpatterns(std::string& haystack, 
+			const std::vector<std::string>& replacement);
+		virtual void replace(const std::string& needle, std::string& haystack, 
+			const std::string& replacement);
+		virtual void replaceSubpatterns(const std::string& needle, 
+			std::string& haystack, const std::vector<std::string>& replacement);
+		virtual void replaceAll(const std::string& needle, 
+			std::string& haystack, const std::string& replacement);
+		virtual void replaceAllSubpatterns(const std::string& needle, 
+			std::string& haystack, const std::vector<std::string>& replacement);
+		static void createMatchMap(const ReMatch& match, 
+			const std::string& fields, const std::string& separator, 
+			const std::string& undefinedPrefix, 
+			std::map<std::string, std::string>& record);
+		static void createMatchMap(const ReMatch& match, 
+			const std::vector<std::string>& fields, 
+			const std::string& undefinedPrefix, 
+			std::map<std::string, std::string>& record);
+		static void createMatchTree(const ReMatch& match, 
+			const std::string& fields, const std::string& separator, 
+			const std::string& undefinedPrefix, Node& record);
+		static void createMatchTree(const ReMatch& match, 
+			const std::vector<std::string>& fields, 
+			const std::string& undefinedPrefix, Node& record);
+		
 };
 
 }

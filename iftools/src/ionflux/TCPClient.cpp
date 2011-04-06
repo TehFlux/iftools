@@ -24,6 +24,7 @@
  * 
  * ========================================================================== */
 
+#include <algorithm>
 #include "ionflux/TCPClient.hpp"
 
 using namespace std;
@@ -300,6 +301,14 @@ void TCPClient::onIO(const IOEvent &event)
 	{
 		// Check for incoming data.
 		currentPeer = event.peer;
+	    std::vector<TCPRemotePeer*>::iterator i = find(peers.begin(), 
+	        peers.end(), currentPeer);
+	    if (i == peers.end())
+	    {
+            status.str("");
+            status << "[TCPClient::onIO] WARNING: Peer does not exist!";
+            log.msg(status.str(), log.VL_WARNING);
+	    } else
 		if (currentPeer != 0)
 		{
 			if ((event.type & IOEvent::IO_READ) != 0)
@@ -338,6 +347,11 @@ void TCPClient::disconnect(TCPRemotePeer *peer)
 	if (!log.assert(iomp != 0, "[TCPClient::disconnect] "
 		"IO multiplexer is null."))
 		return;
+    /* <---- DEBUG ----- //
+    std::ostringstream status;
+    status << "[TCPClient::disconnect] DEBUG: peer = " << peer;
+    log.msg(status.str(), log.VL_DEBUG_OPT);
+    // ----- DEBUG ----> */
 	if (peer == 0)
 	{
 		log.msg("[TCPClient::disconnect] WARNING: Ignoring attempt to "
