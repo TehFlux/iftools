@@ -146,6 +146,11 @@ std::string unquote(const std::string& source,
 	const std::string& addQuoteChars = "");
 std::string trim(const std::string& bytes, bool leftTrim = true, 
 	bool rightTrim = true);
+std::string collapseWhitespace(const std::string& bytes, 
+    char replaceChar = ' ');
+bool getLine(const std::string& bytes, std::string& line, 
+    unsigned int startPos = 0, unsigned int* endPos = 0, 
+    char lineTerm = '\n');
 std::string urlEncode(const std::string& bytes);
 std::string urlDecode(const std::string& bytes);
 std::string appendDirSeparator(const std::string& path, 

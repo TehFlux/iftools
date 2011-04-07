@@ -715,6 +715,41 @@ std::string unquote(const std::string& source,
 std::string trim(const std::string& bytes, bool leftTrim = true, 
 	bool rightTrim = true);
 
+/** Collapse whitespace.
+ *
+ * Replace any sequence of one or more whitespace characters with a single 
+ * replacement character.
+ *
+ * \param bytes Byte string.
+ * \param replaceChar Replacement character.
+ *
+ * \return String with whitespace collapsed.
+ */
+std::string collapseWhitespace(const std::string& bytes, 
+    char replaceChar = ' ');
+
+/** Get line.
+ *
+ * Get a line from the input bytes. The line will be extracted starting from 
+ * the specified start position. The end position of the line is stored in 
+ * the optional \c endPos parameter. The end position is the position of 
+ * the first char after the line terminator. Thus the line length (including 
+ * the line terminator) can be calculated as \c endPos - \c startPos after 
+ * the call. If there is no complete line starting at the start position, the 
+ * function returns \c false.
+ *
+ * \param bytes Byte string.
+ * \param line Where to store the line data.
+ * \param startPos Start position.
+ * \param endPos End position.
+ * \param lineTerm Line terminator character.
+ *
+ * \return \c true if a complete line has been extracted, \c false otherwise.
+ */
+bool getLine(const std::string& bytes, std::string& line, 
+    unsigned int startPos = 0, unsigned int* endPos = 0, 
+    char lineTerm = '\n');
+
 /** Get character type lookup map.
  *
  * Get a static character type lookup map.

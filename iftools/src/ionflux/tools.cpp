@@ -1294,6 +1294,57 @@ std::string trim(const std::string& bytes, bool leftTrim, bool rightTrim)
 	return result;
 }
 
+std::string collapseWhitespace(const std::string& bytes, 
+    char replaceChar)
+{
+    std::string result;
+    bool ws = false;
+    for (unsigned int k = 0; k < bytes.size(); k++)
+    {
+        char c = bytes[k];
+        if (!isOneOf(c, "\r\n\t "))
+        {
+            result.append(1, c);
+            ws = false;
+        } else
+        if (!ws)
+        {
+            result.append(1, replaceChar);
+            ws = true;
+        }
+    }
+    return result;
+}
+
+bool getLine(const std::string& bytes, std::string& line, 
+    unsigned int startPos, unsigned int* endPos, char lineTerm)
+{
+    unsigned int numBytes = bytes.size();
+    if (startPos >= numBytes)
+        return "";
+    unsigned int cPos = startPos;
+    bool lineFound = false;
+    while (!lineFound 
+        && (cPos < numBytes))
+    {
+        char c = bytes[cPos];
+        if (c == lineTerm)
+            lineFound = true;
+        cPos++;
+    }
+    if (!lineFound)
+    {
+        line = "";
+        if (endPos != 0)
+            *endPos = startPos;
+        return false;
+    }
+    if (endPos != 0)
+        *endPos = cPos;
+    line = bytes.substr(startPos, cPos - startPos);
+    return true;
+}
+
 const CharTypeMap& getCharTypes()
 {
 	static CharTypeMap charTypes;
