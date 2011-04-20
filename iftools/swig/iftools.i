@@ -159,6 +159,8 @@ std::string prependDirSeparator(const std::string& path,
 	unsigned char separator = DIR_SEPARATOR);
 bool validatePath(const std::string& path, int mask = 0755);
 std::string xmlEscape(const std::string& bytes);
+bool hasPrefix(const std::string& bytes, const std::string& prefix);
+bool hasSuffix(const std::string& bytes, const std::string& suffix);
 MTRand& getRandomizer();
 
 

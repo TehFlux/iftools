@@ -820,9 +820,31 @@ bool validatePath(const std::string& path, int mask = 0755);
  *
  * \param bytes Bytes to be escaped.
  *
- * \return escaped String;
+ * \return escaped string
  */
 std::string xmlEscape(const std::string& bytes);
+
+/** Prefix check.
+ *
+ * Check if a byte string has the specified prefix.
+ *
+ * \param bytes String.
+ * \param prefix Prefix.
+ * 
+ * \c true if the source string has the prefix, \c false otherwise.
+ */
+bool hasPrefix(const std::string& bytes, const std::string& prefix);
+
+/** Suffix check.
+ *
+ * Check if a byte string has the specified suffix.
+ *
+ * \param bytes String.
+ * \param prefix suffix.
+ * 
+ * \c true if the source string has the suffix, \c false otherwise.
+ */
+bool hasSuffix(const std::string& bytes, const std::string& suffix);
 
 /** Get randomizer.
  *

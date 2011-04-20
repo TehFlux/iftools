@@ -36,6 +36,7 @@ namespace Tools
 
 const int TCPServer::DEFAULT_MAX_CLIENTS = 0;
 const int TCPServer::REJECTED_REASON_MAX_CLIENTS = 0;
+const int TCPServer::REJECTED_REASON_VERIFICATION_FAILED = 1;
 
 TCPServer::TCPServer()
 : maxClients(DEFAULT_MAX_CLIENTS), iomp(0), manageIomp(true), timeoutEvent(0)
@@ -258,6 +259,16 @@ void TCPServer::enableTimeout(bool newState)
     iomp->registerEvent(this, *timeoutEvent);
 }
 
+bool TCPServer::verifyConnect(TCPRemotePeer& client)
+{
+	ostringstream status;
+	status << "[TCPServer::verifyConnect] DEBUG: Accepting client " 
+	    << client.getID() << " (" << client.getSocket().getClientIP() 
+	    << ").";
+	log.msg(status.str(), log.VL_DEBUG_OPT);
+	return true;
+}
+
 void TCPServer::onTimeout()
 {
     // Do nothing.
@@ -274,7 +285,7 @@ void TCPServer::onConnect(TCPRemotePeer &client)
 void TCPServer::onReject(TCPRemotePeer &client, int reason)
 {
 	ostringstream status;
-	status << "[TCPServer::onConnect] DEBUG: Connection for client " 
+	status << "[TCPServer::onReject] DEBUG: Connection for client " 
 		<< client.getID() << " rejected. (Reason: " << reason << ")";
 	log.msg(status.str(), log.VL_DEBUG_OPT);
 }
@@ -282,7 +293,7 @@ void TCPServer::onReject(TCPRemotePeer &client, int reason)
 void TCPServer::onReceive(TCPRemotePeer &client)
 {
 	ostringstream status;
-	status << "[TCPServer::onConnect] DEBUG: From client " << client.getID() 
+	status << "[TCPServer::onReceive] DEBUG: From client " << client.getID() 
 		<< ":" << endl << makeNiceHex(makeHex(client.getRecvBuf()), 
 			makeReadable(client.getRecvBuf(), "."), 16, 8);
 	log.msg(status.str(), log.VL_DEBUG_OPT);
@@ -336,7 +347,22 @@ void TCPServer::onIO(const IOEvent &event)
 			currentClient = 0;
 		} else
 		{
-			if ((maxClients == 0) || (clients.size() < maxClients))
+		    bool accepted = true;
+		    int reason = 0;
+		    std::string msgReason;
+		    if ((maxClients > 0) && (clients.size() >= maxClients))
+		    {
+		        msgReason = "Maximum number of clients connected.";
+				reason = REJECTED_REASON_MAX_CLIENTS;
+		        accepted = false;
+		    } else
+            if (!verifyConnect(*currentClient))
+            {
+                msgReason = "Verification failed.";
+				log.msg(status.str(), log.VL_DEBUG_OPT);
+		        accepted = false;
+            }
+			if (accepted)
 			{
 				currentEvent.fd = currentClient->getSocket().getFD();
 				currentEvent.peer = currentClient;
@@ -358,9 +384,9 @@ void TCPServer::onIO(const IOEvent &event)
 					"connection for client " << currentClient->getID() 
 					<< " from " << currentClient->getSocket().getClientIP() 
 					<< " (fd = " << currentClient->getSocket().getFD() 
-					<< "): Maximum number of clients connected.";
+					<< "): " << msgReason;
 				log.msg(status.str(), log.VL_DEBUG_OPT);
-				onReject(*currentClient, REJECTED_REASON_MAX_CLIENTS);
+				onReject(*currentClient, reason);
 				currentClient->getSocket().close();
 				delete currentClient;
 				currentClient = 0;

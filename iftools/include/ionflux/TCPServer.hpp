@@ -108,6 +108,15 @@ class TCPServer
 		 */
 		virtual void cleanupClients();
 		
+		/** Verify connected client.
+		 *
+		 * Verify a client that has established a new connection.
+		 * 
+		 * \return \c true if the client is allowed to connect, \c false 
+		 * otherwise.
+		 */
+		virtual bool verifyConnect(TCPRemotePeer& client);
+		
 		/** Handle timeout event.
 		 *
 		 * Handle a timeout event.
@@ -178,6 +187,8 @@ class TCPServer
 		static const int DEFAULT_MAX_CLIENTS;
 		/// Connection rejected: Maximum number of clients connected.
 		static const int REJECTED_REASON_MAX_CLIENTS;
+		/// Connection rejected: Verification failed.
+		static const int REJECTED_REASON_VERIFICATION_FAILED;
 		
 		/** Constructor.
 		 *

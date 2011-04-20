@@ -1481,6 +1481,34 @@ std::string xmlEscape(const std::string& bytes)
 	return result;
 }
 
+bool hasPrefix(const std::string& bytes, const std::string& prefix)
+{
+    if (bytes.size() < prefix.size())
+        return false;
+    unsigned int i = 0;
+    while (i < prefix.size())
+    {
+        if (bytes[i] != prefix[i])
+            return false;
+        i++;
+    }
+    return true;
+}
+
+bool hasSuffix(const std::string& bytes, const std::string& suffix)
+{
+    if (bytes.size() < suffix.size())
+        return false;
+    unsigned int i = bytes.size() - suffix.size();
+    while (i < bytes.size())
+    {
+        if (bytes[i] != suffix[i])
+            return false;
+        i++;
+    }
+    return true;
+}
+
 MTRand& getRandomizer()
 {
 	static MTRand randomizer(time(0));
