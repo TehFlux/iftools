@@ -86,6 +86,15 @@ class TCPServer
 		 */
         virtual Ionflux::Tools::TCPRemotePeer* createRemotePeer(int clientID);
         
+		/** Destroy peer.
+		 *
+		 * Destroy a remote peer object. Derived classes can override this 
+		 * to free resources associated with the remote peer.
+		 *
+		 * \param peer Remote peer object.
+		 */
+		virtual void destroyRemotePeer(Ionflux::Tools::TCPRemotePeer* peer);
+		
 		/** Add client.
 		 *
 		 * Add a remote client to the client vector.

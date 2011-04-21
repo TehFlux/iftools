@@ -82,6 +82,16 @@ TCPClient::~TCPClient()
 	timeoutEvent = 0;
 }
 
+TCPRemotePeer* TCPClient::createPeer(int peerID)
+{
+    return createPeer(peerID);
+}
+
+void TCPClient::destroyPeer(TCPRemotePeer *peer)
+{
+    delete peer;
+}
+
 void TCPClient::addPeer(TCPRemotePeer *peer)
 {
 	if (peer == 0)
@@ -124,7 +134,7 @@ void TCPClient::removePeer(TCPRemotePeer *peer)
 			<< peer->getID() << " removed from peer vector. (" 
 			<< peers.size() << " peers connected)";
 		log.msg(status.str(), log.VL_DEBUG_OPT);
-		delete peer;
+		destroyPeer(peer);
 		peer = 0;
 	} else
 	{
@@ -221,7 +231,7 @@ void TCPClient::cleanup()
 				onDisconnect(*currentPeer);
 				currentPeer->getSocket().close();
 			}
-			delete peers[i];
+			destroyPeer(peers[i]);
 			peers[i] = 0;
 		}
 	}
@@ -242,7 +252,7 @@ bool TCPClient::addConnection(const std::string &host, int port)
 	socket.setPort(port);
 	if (!socket.connect())
 	{
-		delete newPeer;
+		destroyPeer(newPeer);
 		return false;
 	}
 	IOEvent newEvent;

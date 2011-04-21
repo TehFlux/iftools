@@ -34,6 +34,7 @@
 #include "ionflux/Message.hpp"
 #include "ionflux/MessageDump.hpp"
 #include "ionflux/MessageHandler.hpp"
+#include "ionflux/TCPSocketIOHandler.hpp"
 
 namespace Ionflux
 {
@@ -87,6 +88,8 @@ class TCPRemotePeer
 		 * arbitrary data).
 		 */
 		Node *cache;
+		/// Socket I/O handler used for delegating recieve/send operations.
+		TCPSocketIOHandler* socketIOHandler;
 		
 	public:
 		/// Peer ID: Not set.
@@ -161,6 +164,28 @@ class TCPRemotePeer
 		 * \param newMessageHandler Pointer to a message handler.
 		 */
 		virtual void setMessageHandler(MessageHandler *newMessageHandler);
+		
+		/** Set socket I/O handler.
+		 *
+		 * Set the handler used for socket I/O.
+		 *
+		 * \note If you set this to a non-null value, all send and receive 
+		 * operations will be delegated to the handler.
+		 *
+		 * \param newSocketIOHandler Pointer to a TCP socket I/O handler.
+		 */
+		virtual void setSocketIOHandler(TCPSocketIOHandler* 
+		    newSocketIOHandler);
+		
+		/** Set data.
+		 * 
+		 * Set the data associated with this peer.
+		 * 
+		 * \param newData Data.
+		 * \param newDataSize Size of data.
+		 */
+		virtual void setData(void* newData = 0, 
+		    unsigned int newDataSize = 0);
 		
 		/** Get ID of the peer.
 		 *

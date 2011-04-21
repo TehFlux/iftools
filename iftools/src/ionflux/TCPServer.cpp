@@ -115,7 +115,7 @@ void TCPServer::removeClient(TCPRemotePeer *client)
 			<< client->getID() << " removed from client vector. (" 
 			<< clients.size() << " clients connected)";
 		log.msg(status.str(), log.VL_DEBUG_OPT);
-		delete client;
+		destroyRemotePeer(client);
 		client = 0;
 	} else
 	{
@@ -229,7 +229,7 @@ void TCPServer::cleanup()
 				onDisconnect(*currentClient);
 				currentClient->getSocket().close();
 			}
-			delete clients[i];
+			destroyRemotePeer(clients[i]);
 			clients[i] = 0;
 		}
 	}
@@ -320,6 +320,11 @@ Ionflux::Tools::TCPRemotePeer* TCPServer::createRemotePeer(int clientID)
     return newPeer;
 }
 
+void TCPServer::destroyRemotePeer(Ionflux::Tools::TCPRemotePeer* peer)
+{
+    delete peer;
+}
+
 void TCPServer::onIO(const IOEvent &event)
 {
 	if (!log.assert(iomp != 0, "[TCPServer::onIO] IO multiplexer is null."))
@@ -343,7 +348,7 @@ void TCPServer::onIO(const IOEvent &event)
 		{
 			log.msg("[TCPServer::onIO] ERROR: Failed to accept "
 				"client connection", log.VL_ERROR);
-			delete currentClient;
+			destroyRemotePeer(currentClient);
 			currentClient = 0;
 		} else
 		{
@@ -388,7 +393,7 @@ void TCPServer::onIO(const IOEvent &event)
 				log.msg(status.str(), log.VL_DEBUG_OPT);
 				onReject(*currentClient, reason);
 				currentClient->getSocket().close();
-				delete currentClient;
+				destroyRemotePeer(currentClient);
 				currentClient = 0;
 			}
 		}

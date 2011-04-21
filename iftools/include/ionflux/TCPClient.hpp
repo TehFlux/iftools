@@ -73,6 +73,21 @@ class TCPClient
 		/// IO event for timeout.
 		IOEvent* timeoutEvent;
 		
+		/** Create peer.
+		 *
+		 * Create a remote peer. Derived classes can override this to use 
+         * custom TCPRemotePeer subclasses.
+		 */
+		virtual Ionflux::Tools::TCPRemotePeer* createPeer(int peerID);
+		
+		/** Destroy peer.
+		 *
+		 * Destroy a remote peer object.
+		 *
+		 * \param peer Remote peer object.
+		 */
+		virtual void destroyPeer(Ionflux::Tools::TCPRemotePeer* peer);
+		
 		/** Add peer.
 		 *
 		 * Add a remote peer to the peer vector.

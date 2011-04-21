@@ -39,14 +39,16 @@ const int TCPRemotePeer::PROTOCOL_STATE_UNDEFINED = -1;
 
 TCPRemotePeer::TCPRemotePeer()
 : id(ID_NOT_SET), recvBuf(""), protocolState(PROTOCOL_STATE_UNDEFINED), 
-  data(0), dataSize(0), message(0), messageHandler(0), cache(0)
+  data(0), dataSize(0), message(0), messageHandler(0), cache(0), 
+  socketIOHandler(0)
 {
 	// TODO: Nothing ATM. ;-)
 }
 
 TCPRemotePeer::TCPRemotePeer(int initID)
 : id(initID), recvBuf(""), protocolState(PROTOCOL_STATE_UNDEFINED), 
-  data(0), dataSize(0), message(0), messageHandler(0), cache(0)
+  data(0), dataSize(0), message(0), messageHandler(0), cache(0), 
+  socketIOHandler(0)
 {
 	// TODO: Nothing ATM. ;-)
 }
@@ -69,7 +71,10 @@ bool TCPRemotePeer::receive()
 {
 	string bytes;
 	bool result;
-	result = socket.readBytes(bytes);
+	if (socketIOHandler == 0)
+	    result = socket.readBytes(bytes);
+	else
+	    result = socketIOHandler->readBytes(socket, bytes);
 	if (result)
 	{
 		if ((message == 0) || (messageHandler == 0))
@@ -85,7 +90,12 @@ bool TCPRemotePeer::receive()
 
 bool TCPRemotePeer::send(const std::string &bytes)
 {
-	return socket.sendBytes(bytes);
+	bool result;
+	if (socketIOHandler == 0)
+	    result = socket.sendBytes(bytes);
+	else
+	    result = socketIOHandler->sendBytes(socket, bytes);
+	return result;
 }
 
 void TCPRemotePeer::setID(int newID)
@@ -106,6 +116,18 @@ void TCPRemotePeer::setMessageHandler(MessageHandler *newMessageHandler)
 		message = new Message();
 		message->setTarget(this);
 	}
+}
+
+void TCPRemotePeer::setSocketIOHandler(TCPSocketIOHandler* 
+    newSocketIOHandler)
+{
+    socketIOHandler = newSocketIOHandler;
+}
+
+void TCPRemotePeer::setData(void* newData, unsigned int newDataSize)
+{
+    data = newData;
+    dataSize = newDataSize;
 }
 
 int TCPRemotePeer::getID()
