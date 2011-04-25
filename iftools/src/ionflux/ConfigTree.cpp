@@ -485,13 +485,13 @@ void ConfigTree::clear()
 	root.node->clearData(false);
 }
 
-void ConfigTree::readConfig(const std::string& configFile)
+bool ConfigTree::readConfig(const std::string& configFile)
 {
 	if (configFile == "")
 	{
 		log.msg("[ConfigTree::readConfig] ERROR: File name is empty string.",
 			log.VL_ERROR);
-		return;
+		return false;
 	}
 	string inputFileData = readFile(configFile);
 	if (inputFileData == "")
@@ -499,11 +499,12 @@ void ConfigTree::readConfig(const std::string& configFile)
 		log.msg(string("[ConfigTree::readConfig] ERROR: "
 			"Could not read from file '") + configFile + "', or file "
 			"does not contain any data!", log.VL_ERROR);
-		return;
+		return false;
 	}
 	clear();
 	inputFile = configFile;
 	parseConfig(inputFileData);
+	return true;
 }
 
 void ConfigTree::writeConfig(const std::string& configFile)

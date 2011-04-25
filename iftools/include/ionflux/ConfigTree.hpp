@@ -160,7 +160,7 @@ class ConfigTree
 		 *
 		 * \param configFile Name of the configuration file
 		 */
-		virtual void readConfig(const std::string& configFile);
+		virtual bool readConfig(const std::string& configFile);
 		
 		/** Write configuration to a file.
 		 *

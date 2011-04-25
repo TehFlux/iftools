@@ -113,14 +113,14 @@ ConfigOption ConfigMap::parseConfigLine(const std::string& configLine)
 	return option;
 }
 
-void ConfigMap::readConfig(const std::string& configFile)
+bool ConfigMap::readConfig(const std::string& configFile)
 {
 	ifstream configFileStream(configFile.c_str());
 	if (!configFileStream)
 	{
 		cout << "[ConfigMap::readConfig] Error: Could not read from file '" 
 			<< configFile << "'" << endl;
-		return;
+		return false;
 	}
 	clear();
 	inputFile = configFile;
@@ -143,6 +143,7 @@ void ConfigMap::readConfig(const std::string& configFile)
 		if (option.key != "")
 			config[option.key] = option.value;
 	}
+	return true;
 }
 
 void ConfigMap::writeConfig()

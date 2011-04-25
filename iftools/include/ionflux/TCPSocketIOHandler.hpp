@@ -67,9 +67,9 @@ class TCPSocketIOHandler
 	    virtual bool readBytes(Ionflux::Tools::TCPSocket& socket, 
 	        std::string& bytes);
 	    
-		/** .
+		/** Send bytes.
 		 *
-		 * Read bytes from a socket.
+		 * Send bytes over a socket.
 		 *
 		 * \param socket TCP socket.
 		 * \param bytes Bytes to be sent.

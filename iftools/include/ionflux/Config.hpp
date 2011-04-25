@@ -122,7 +122,7 @@ class Config
 		 *
 		 * \param configFile Name of the configuration file
 		 */
-		virtual void readConfig(const std::string& configFile) = 0;
+		virtual bool readConfig(const std::string& configFile) = 0;
 		
 		/** Write configuration to a file.
 		 *

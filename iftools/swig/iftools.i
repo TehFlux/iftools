@@ -809,7 +809,7 @@ class Config
 		Config();
 		virtual ~Config();
 		virtual void clear() = 0;
-		virtual void readConfig(const std::string& configFile) = 0;
+		virtual bool readConfig(const std::string& configFile) = 0;
 		virtual void writeConfig(const std::string& configFile) = 0;
 		virtual void writeConfig() = 0;
 		virtual std::string get(const std::string& key) = 0;
@@ -839,7 +839,7 @@ class ConfigTree
 		virtual ~ConfigTree();
 		virtual void clear();
 		virtual void parseConfig(const std::string& configData);
-		virtual void readConfig(const std::string& configFile);
+		virtual bool readConfig(const std::string& configFile);
 		virtual void writeConfig(const std::string& configFile);
 		virtual void writeConfig();
 		virtual std::string get(const std::string& key);
