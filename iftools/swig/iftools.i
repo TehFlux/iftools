@@ -21,6 +21,7 @@
 #include "ConfigTree.hpp"
 #include "Template.hpp"
 #include "TCPSocket.hpp"
+#include "TCPSocketIOHandler.hpp"
 #include "MessageDump.hpp"
 #include "Message.hpp"
 #include "MessageHandler.hpp"
@@ -899,6 +900,17 @@ class TCPSocket
         virtual bool isListening();
         virtual std::string getClientIP();
         virtual Reporter &getLog();
+};
+
+class TCPSocketIOHandler
+{
+	public:
+		
+		virtual ~TCPSocketIOHandler() { };
+	    virtual bool readBytes(Ionflux::Tools::TCPSocket& socket, 
+	        std::string& bytes);
+	    virtual bool sendBytes(Ionflux::Tools::TCPSocket& socket, 
+	        const std::string& bytes);
 };
 
 class Message;
