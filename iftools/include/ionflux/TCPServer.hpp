@@ -183,6 +183,18 @@ class TCPServer
 		 */
 		virtual void onDisconnect(TCPRemotePeer &client);
 		
+		/** Receive data from peer.
+		 *
+		 * Receive data from a remote peer. This function can be overridden 
+		 * by derived classes to modify the behaviour of the server on 
+		 * incoming data.
+		 *
+		 * \param peer Remote peer.
+		 *
+		 * \return \c true on success, \c false otherwise.
+		 */
+		virtual bool receive(TCPRemotePeer *peer);
+		
 		/** Disconnect peer.
 		 *
 		 * Causes the specified remote peer to be disconnected.

@@ -405,7 +405,7 @@ void TCPServer::onIO(const IOEvent &event)
 		{
 			if ((event.type & IOEvent::IO_READ) != 0)
 			{
-				if (!currentClient->receive())
+				if (!receive(currentClient))
 				{
 					status.str("");
 					status << "[TCPServer::onIO] DEBUG: Client "
@@ -432,6 +432,11 @@ void TCPServer::onIO(const IOEvent &event)
 			iomp->quit();
 		}
 	}
+}
+
+bool TCPServer::receive(TCPRemotePeer *peer)
+{
+    return peer->receive();
 }
 
 void TCPServer::disconnect(TCPRemotePeer *peer)
