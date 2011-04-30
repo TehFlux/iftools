@@ -162,6 +162,9 @@ bool validatePath(const std::string& path, int mask = 0755);
 std::string xmlEscape(const std::string& bytes);
 bool hasPrefix(const std::string& bytes, const std::string& prefix);
 bool hasSuffix(const std::string& bytes, const std::string& suffix);
+std::string convertCharset(const std::string& bytes, 
+    const std::string& fromCharset = "iso-8859-1", 
+    const std::string& toCharset = "utf-8");
 MTRand& getRandomizer();
 
 

@@ -24,8 +24,8 @@
  * 
  * ========================================================================== */
 
+#include <iconv.h>
 #include <cstring>
-
 #include "ionflux/tools.hpp"
 #include "ionflux/File.hpp"
 #include "ionflux/RegExp.hpp"
@@ -1507,6 +1507,35 @@ bool hasSuffix(const std::string& bytes, const std::string& suffix)
         i++;
     }
     return true;
+}
+
+std::string convertCharset(const std::string& bytes, 
+    const std::string& fromCharset, const std::string& toCharset)
+{
+    std::string result;
+    iconv_t ic0 = iconv_open(toCharset.c_str(), fromCharset.c_str());
+    size_t inSize = bytes.size();
+    size_t outSize = 4 * bytes.size();
+    size_t inSizeLeft = inSize;
+    size_t outSizeLeft = outSize;
+    char* inBuf = new char[inSize];
+    char* outBuf = new char[outSize];
+    char* outBuf0 = outBuf;
+    char* inBuf0 = inBuf;
+    for (size_t i = 0; i < bytes.size(); i++)
+        inBuf[i] = bytes[i];
+    int r0 = iconv(ic0, &inBuf0, &inSizeLeft, &outBuf0, &outSizeLeft);
+    iconv_close(ic0);
+    if (r0 == -1)
+    {
+        delete[] inBuf;
+        delete[] outBuf;
+        return "";
+    }
+    result.assign(outBuf, outSize - outSizeLeft);
+    delete[] inBuf;
+    delete[] outBuf;
+    return result;
 }
 
 MTRand& getRandomizer()

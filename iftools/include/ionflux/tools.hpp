@@ -846,6 +846,20 @@ bool hasPrefix(const std::string& bytes, const std::string& prefix);
  */
 bool hasSuffix(const std::string& bytes, const std::string& suffix);
 
+/** Convert character set.
+ *
+ * Convert a string encoded in one character set to another character set.
+ * 
+ * \param bytes String.
+ * \param fromCharset Source character set.
+ * \param toCharset Target character set.
+ *
+ * \return Result of the conversion.
+ */
+std::string convertCharset(const std::string& bytes, 
+    const std::string& fromCharset = "iso-8859-1", 
+    const std::string& toCharset = "utf-8");
+
 /** Get randomizer.
  *
  * Get a (static) MT randomizer.
