@@ -452,7 +452,7 @@ iftoolsPyModule = iftoolsPyModuleEnv.SharedLibrary(
     target = 'swig/python/_IFTools', 
     source = 'swig/iftools_wrap.cxx', SHLIBPREFIX = '', SHLIBSUFFIX = '.so')
 
-allHeaders = [toolsHeaders]
+allHeaders = toolsHeaders + ['swig/iftools.i']
 
 if (buildGTools):
     allHeaders += [gtoolsHeaders]
