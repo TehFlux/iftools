@@ -80,6 +80,20 @@ typedef std::vector<double> DoubleVector;
 typedef std::vector<int> IntVector;
 typedef std::vector<unsigned int> UIntVector;
 
+struct IFCacheEntry
+{
+    /// Item ID.
+    std::string itemID;
+    /// Time the entry was created.
+    Ionflux::ObjectBase::UInt64 cTime;
+    /// Time of the last hit.
+    Ionflux::ObjectBase::UInt64 hTime;
+    /// Number of hits.
+    Ionflux::ObjectBase::UInt64 hits;
+    /// Item.
+    Ionflux::ObjectBase::IFObject* item;
+};
+
 }
 
 }

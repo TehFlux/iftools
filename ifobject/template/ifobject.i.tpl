@@ -6,8 +6,20 @@
 #include "ifobject/IFObject.hpp"
 #include "ifobject/utility.hpp"
 #include "ifobject/types.hpp"
+#include "ifobject/IFError.hpp"
+#include "ifobject/IFCache.hpp"
 #include <assert.h>
 %}
+
+%exception {
+    try
+    {
+        $$function
+    } catch(Ionflux::ObjectBase::IFError& e)
+    {
+        SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+}
 
 namespace Ionflux
 {
@@ -64,6 +76,15 @@ typedef std::vector<std::string> StringVector;
 typedef std::vector<double> DoubleVector;
 typedef std::vector<int> IntVector;
 typedef std::vector<unsigned int> UIntVector;
+
+struct IFCacheEntry
+{
+    std::string itemID;
+    Ionflux::ObjectBase::UInt64 cTime;
+    Ionflux::ObjectBase::UInt64 hTime;
+    Ionflux::ObjectBase::UInt64 hits;
+    Ionflux::ObjectBase::IFObject* item;
+};
 
 }
 
@@ -143,6 +164,7 @@ class IFObject
 		virtual bool lock() const;
 		virtual bool tryLock() const;
 		virtual bool unlock() const;
+		virtual Ionflux::ObjectBase::UInt64 getSize() const;
 		virtual bool serialize(std::string& target) const;
 		virtual int deserialize(const std::string& source, int offset = 0);
 		virtual void setLogTarget(Ionflux::ObjectBase::IFObject* newLogTarget);
@@ -181,10 +203,14 @@ bool hasPrefix(const std::string& bytes, const std::string& prefix,
     bool ignoreCase = true);
 bool hasPrefix(const std::string& bytes, const std::vector<std::string>& 
     prefixes, bool ignoreCase = true);
+Ionflux::ObjectBase::UInt64 getTimeTicks();
 
 }
 
 }
+
+$IFError
+$IFCache
 
 %template(StringVector) std::vector<std::string>;
 %template(DoubleVector) std::vector<double>;

@@ -28,6 +28,7 @@
 
 #include <string>
 #include <vector>
+#include "ifobject/types.hpp"
 
 namespace Ionflux
 {
@@ -193,6 +194,14 @@ bool hasPrefix(const std::string& bytes, const std::string& prefix,
  */
 bool hasPrefix(const std::string& bytes, const std::vector<std::string>& 
     prefixes, bool ignoreCase = true);
+
+/** Get time ticks.
+ *
+ * Get a time tick value.
+ *
+ * \return Time tick value.
+ */
+Ionflux::ObjectBase::UInt64 getTimeTicks();
 
 }
 

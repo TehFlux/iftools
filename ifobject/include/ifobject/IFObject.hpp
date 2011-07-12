@@ -206,6 +206,8 @@ class IFObject
 		static const std::string ENCODING_UTF8;
 		/// encoding: base64.
 		static const std::string ENCODING_BASE64;
+		/// Default object size.
+		static const Ionflux::ObjectBase::UInt64 DEFAULT_SIZE;
 		/// ID number: undefined.
 		static const IFIDNum ID_NUM_UNDEFINED;
 		/// Signal type: object.
@@ -578,6 +580,17 @@ class IFObject
 		 * \return \c true on success, \c false otherwise.
 		 */
 		virtual bool unlock() const;
+		
+		/** Get size.
+		 *
+		 * Get the size of the object.
+		 * 
+		 * \note This will always yield DEFAULT_SIZE unless overridden by 
+		 * derived classes.
+		 *
+		 * \return Size of the object.
+		 */
+		virtual Ionflux::ObjectBase::UInt64 getSize() const;
 		
 		/** Serialize.
 		 *

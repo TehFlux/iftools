@@ -24,11 +24,13 @@
  * 
  * ========================================================================== */
 
+#include <sys/time.h>
 #include <sstream>
 #include <fstream>
 #include "ifobject/utility.hpp"
 #include "ifobject/IFObject.hpp"
 #include "ifobject/IFLogMessage.hpp"
+#include "ifobject/IFError.hpp"
 
 using namespace std;
 
@@ -281,6 +283,16 @@ bool hasPrefix(const std::string& bytes, const std::vector<std::string>&
         i++;
     }
     return false;
+}
+
+Ionflux::ObjectBase::UInt64 getTimeTicks()
+{
+    timeval t0;
+    if (::gettimeofday(&t0, 0) == -1)
+        throw IFError("[getTimeTicks] Failed to get time value!");
+    UInt64 ct = static_cast<UInt64>(t0.tv_sec)
+        * 1000000 + t0.tv_usec;
+    return ct;
 }
 
 }

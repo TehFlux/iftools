@@ -212,6 +212,8 @@ ifobjectLibHeaders = ['include/libb64.hpp',
 	'include/ifobject/utf8.hpp',
 	'include/ifobject/serialize.hpp',
 	'include/ifobject/utility.hpp',
+	'include/ifobject/cachehelpers.hpp',
+	'include/ifobject/ifobjectbase.hpp',
 	'include/ifobject/IFClassInfo.hpp',
 	'include/ifobject/IFObject.hpp',
 	'include/ifobject/IFObjectEvent.hpp',
@@ -219,10 +221,13 @@ ifobjectLibHeaders = ['include/libb64.hpp',
 	'include/ifobject/IFMutex.hpp',
 	'include/ifobject/IFGuard.hpp',
 	'include/ifobject/IFSignal.hpp',
-	'include/ifobject/IFLogMessage.hpp',
-	'include/ifobject/IFThread.hpp',
-	'include/ifobject/IFThreadEvent.hpp',
-	'include/ifobject/IFObjectSignalProxy.hpp']
+	'include/ifobject/IFLogMessage.hpp', 
+	'include/ifobject/IFThread.hpp', 
+	'include/ifobject/IFThreadEvent.hpp', 
+	'include/ifobject/IFObjectSignalProxy.hpp', 
+    'include/ifobject/IFCache.hpp', 
+    'include/ifobject/IFError.hpp'
+]
 
 ifobjectLibSources = ['build/libb64.cpp',
 	'build/log.cpp',
@@ -239,7 +244,10 @@ ifobjectLibSources = ['build/libb64.cpp',
 	'build/IFLogMessage.cpp',
 	'build/IFThread.cpp',
 	'build/IFThreadEvent.cpp',
-	'build/IFThreadSignalProxy.cpp']
+	'build/IFThreadSignalProxy.cpp', 
+	'build/IFCache.cpp', 
+	'build/IFError.cpp' 
+]
 
 ifobjectLibClasses = [
     'IFClassInfo', 
@@ -249,7 +257,9 @@ ifobjectLibClasses = [
     'IFMutex', 
     'IFObject', 
     'IFSignal', 
-    'IFThread'
+    'IFThread', 
+    'IFCache', 
+    'IFError'
 ]
 
 allTargets = []

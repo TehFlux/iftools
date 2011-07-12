@@ -90,6 +90,7 @@ class IFObject
 		static const std::string ENCODING_RAW;
 		static const std::string ENCODING_UTF8;
 		static const std::string ENCODING_BASE64;
+		static const Ionflux::ObjectBase::UInt64 DEFAULT_SIZE;
 		static const IFIDNum ID_NUM_UNDEFINED;
         static const Ionflux::ObjectBase::IFSignalType SIGNAL_TYPE_OBJECT;
         static const std::string SIGNAL_NAME_OBJECT_CHANGED;
@@ -142,6 +143,7 @@ class IFObject
         virtual bool lock() const;
         virtual bool tryLock() const;
         virtual bool unlock() const;
+        virtual Ionflux::ObjectBase::UInt64 getSize() const;
         virtual bool serialize(std::string& target) const;
         virtual int deserialize(const std::string& source, int offset = 0);
         virtual void setLogTarget(Ionflux::ObjectBase::IFObject* 

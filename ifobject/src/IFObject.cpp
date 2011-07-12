@@ -74,6 +74,7 @@ const std::string IFObject::LITERAL_SEPARATOR = ":";
 const std::string IFObject::ENCODING_RAW = "raw";
 const std::string IFObject::ENCODING_UTF8 = "utf8";
 const std::string IFObject::ENCODING_BASE64 = "base64";
+const Ionflux::ObjectBase::UInt64 IFObject::DEFAULT_SIZE = 1;
 const IFIDNum IFObject::ID_NUM_UNDEFINED = -1;
 
 // signal type and instance name constants
@@ -987,6 +988,12 @@ bool IFObject::unlock() const
 	if (guardMutex != 0)
 		return guardMutex->unlock();
 	return true;
+}
+
+Ionflux::ObjectBase::UInt64 IFObject::getSize() const
+{
+	// TODO: Implementation.
+	return DEFAULT_SIZE;
 }
 
 void IFObject::setLogTarget(Ionflux::ObjectBase::IFObject* newLogTarget)

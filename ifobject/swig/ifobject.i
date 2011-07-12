@@ -6,8 +6,20 @@
 #include "ifobject/IFObject.hpp"
 #include "ifobject/utility.hpp"
 #include "ifobject/types.hpp"
+#include "ifobject/IFError.hpp"
+#include "ifobject/IFCache.hpp"
 #include <assert.h>
 %}
+
+%exception {
+    try
+    {
+        $function
+    } catch(Ionflux::ObjectBase::IFError& e)
+    {
+        SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+}
 
 namespace Ionflux
 {
@@ -64,6 +76,15 @@ typedef std::vector<std::string> StringVector;
 typedef std::vector<double> DoubleVector;
 typedef std::vector<int> IntVector;
 typedef std::vector<unsigned int> UIntVector;
+
+struct IFCacheEntry
+{
+    std::string itemID;
+    Ionflux::ObjectBase::UInt64 cTime;
+    Ionflux::ObjectBase::UInt64 hTime;
+    Ionflux::ObjectBase::UInt64 hits;
+    Ionflux::ObjectBase::IFObject* item;
+};
 
 }
 
@@ -230,6 +251,7 @@ class IFObject
 		virtual bool lock() const;
 		virtual bool tryLock() const;
 		virtual bool unlock() const;
+		virtual Ionflux::ObjectBase::UInt64 getSize() const;
 		virtual bool serialize(std::string& target) const;
 		virtual int deserialize(const std::string& source, int offset = 0);
 		virtual void setLogTarget(Ionflux::ObjectBase::IFObject* newLogTarget);
@@ -268,10 +290,150 @@ bool hasPrefix(const std::string& bytes, const std::string& prefix,
     bool ignoreCase = true);
 bool hasPrefix(const std::string& bytes, const std::vector<std::string>& 
     prefixes, bool ignoreCase = true);
+Ionflux::ObjectBase::UInt64 getTimeTicks();
 
 }
 
 }
+
+/* ==========================================================================
+ * Ionflux Object Base System
+ * Copyright © 2006 Joern P. Meier
+ * mail@ionflux.org
+ * --------------------------------------------------------------------------
+ * IFError.i                       Error (interface).
+ * =========================================================================
+
+ * This file is part of Ionflux Object Base System.
+ * 
+ * Ionflux Object Base System is free software; you can redistribute it 
+ * and/or modify it under the terms of the GNU General Public License as 
+ * published by the Free Software Foundation; either version 2 of the 
+ * License, or (at your option) any later version.
+ * 
+ * Ionflux Object Base System is distributed in the hope that it will be 
+ * useful, but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU 
+ * General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along 
+ * with Ionflux Object Base System; if not, write to the Free Software 
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ * 
+ * ========================================================================== */
+%{
+#include "ifobject/IFError.hpp"
+%}
+
+namespace Ionflux
+{
+
+namespace ObjectBase
+{
+
+class IFError
+: public std::exception
+{
+    public:
+        
+        IFError();
+		IFError(const Ionflux::ObjectBase::IFError& other);
+        IFError(const std::string& initReason);
+        virtual ~IFError() throw();
+        virtual std::string getString() const;
+        virtual const char* what() const throw();
+		virtual Ionflux::ObjectBase::IFError* copy() const;
+        virtual void setReason(const std::string& newReason);
+        virtual std::string getReason() const;
+};
+
+}
+
+}
+
+/* ==========================================================================
+ * Ionflux Object Base System
+ * Copyright © 2006 Joern P. Meier
+ * mail@ionflux.org
+ * --------------------------------------------------------------------------
+ * IFCache.i                       Cache (interface).
+ * =========================================================================
+
+ * This file is part of Ionflux Object Base System.
+ * 
+ * Ionflux Object Base System is free software; you can redistribute it 
+ * and/or modify it under the terms of the GNU General Public License as 
+ * published by the Free Software Foundation; either version 2 of the 
+ * License, or (at your option) any later version.
+ * 
+ * Ionflux Object Base System is distributed in the hope that it will be 
+ * useful, but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU 
+ * General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along 
+ * with Ionflux Object Base System; if not, write to the Free Software 
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ * 
+ * ========================================================================== */
+%{
+#include "ifobject/IFCache.hpp"
+%}
+
+namespace Ionflux
+{
+
+namespace ObjectBase
+{
+
+class IFCacheClassInfo
+: public Ionflux::ObjectBase::IFClassInfo
+{
+    public:
+        IFCacheClassInfo();
+        virtual ~IFCacheClassInfo();
+};
+
+class IFCache
+: public Ionflux::ObjectBase::IFObject
+{
+    public:
+        
+        IFCache();
+        virtual ~IFCache();
+        virtual std::string getString() const;
+        virtual void clear();
+        virtual void reset(Ionflux::ObjectBase::UInt64 hits = 0);
+        virtual unsigned int getNumEntries() const;
+        virtual bool isFull(Ionflux::ObjectBase::UInt64 offset = 0) const;
+        virtual bool itemExists(const std::string& itemID);
+        virtual Ionflux::ObjectBase::UInt64 getHits(const std::string& 
+        itemID);
+        virtual Ionflux::ObjectBase::IFObject* getItem(const std::string& 
+        itemID);
+        virtual bool removeItem(const std::string& itemID);
+        virtual void cleanup();
+        virtual void cleanup(Ionflux::ObjectBase::UInt64 minSize);
+        virtual void addItem(const std::string& itemID, 
+        Ionflux::ObjectBase::IFObject* item, Ionflux::ObjectBase::UInt64 
+        hits = 0);
+        virtual void getItems(Ionflux::ObjectBase::IFObjectVector& target);
+        virtual void getItemIDs(Ionflux::ObjectBase::StringVector& target);
+        virtual std::string getDebugInfo();
+        static void initEntry(Ionflux::ObjectBase::IFCacheEntry& entry, 
+        Ionflux::ObjectBase::IFObject* item = 0, const std::string& itemID 
+        = "", Ionflux::ObjectBase::UInt64 cTime = 0, 
+        Ionflux::ObjectBase::UInt64 hTime = 0, Ionflux::ObjectBase::UInt64 
+        hits = 0);
+        virtual void setMaxSize(Ionflux::ObjectBase::UInt64 newMaxSize);
+        virtual Ionflux::ObjectBase::UInt64 getMaxSize() const;
+        virtual Ionflux::ObjectBase::UInt64 getCurrentSize() const;
+};
+
+}
+
+}
+
 
 %template(StringVector) std::vector<std::string>;
 %template(DoubleVector) std::vector<double>;
