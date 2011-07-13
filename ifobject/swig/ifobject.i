@@ -400,6 +400,8 @@ class IFCache
     public:
         
         IFCache();
+        IFCache(Ionflux::ObjectBase::UInt64 initMaxSize, bool 
+        initAllowZeroSize = false);
         virtual ~IFCache();
         virtual std::string getString() const;
         virtual void clear();
@@ -430,6 +432,8 @@ class IFCache
         virtual void setMaxSize(Ionflux::ObjectBase::UInt64 newMaxSize);
         virtual Ionflux::ObjectBase::UInt64 getMaxSize() const;
         virtual Ionflux::ObjectBase::UInt64 getCurrentSize() const;
+        virtual void setAllowZeroSize(bool newAllowZeroSize);
+        virtual bool getAllowZeroSize() const;
 };
 
 }

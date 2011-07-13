@@ -69,6 +69,8 @@ class IFCache
 		Ionflux::ObjectBase::UInt64 maxSize;
 		/// Current cache size.
 		Ionflux::ObjectBase::UInt64 currentSize;
+		/// Allow zero size items.
+		bool allowZeroSize;
 		
 		/** Get cache entry.
 		 *
@@ -101,6 +103,16 @@ class IFCache
 		 * Construct new IFCache object.
 		 */
 		IFCache();
+		
+		/** Constructor.
+		 *
+		 * Construct new IFCache object.
+		 *
+		 * \param initMaxSize Maximum cache size.
+		 * \param initAllowZeroSize Allow zero size items.
+		 */
+		IFCache(Ionflux::ObjectBase::UInt64 initMaxSize, bool initAllowZeroSize =
+		false);
 		
 		/** Destructor.
 		 *
@@ -298,6 +310,20 @@ class IFCache
 		 * \return Current value of current cache size.
 		 */
 		virtual Ionflux::ObjectBase::UInt64 getCurrentSize() const;
+		
+		/** Set allow zero size items.
+		 *
+		 * Set new value of allow zero size items.
+		 *
+		 * \param newAllowZeroSize New value of allow zero size items.
+		 */
+		virtual void setAllowZeroSize(bool newAllowZeroSize);
+		
+		/** Get allow zero size items.
+		 *
+		 * \return Current value of allow zero size items.
+		 */
+		virtual bool getAllowZeroSize() const;
 };
 
 }

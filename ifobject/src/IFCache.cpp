@@ -56,7 +56,16 @@ const IFCacheClassInfo IFCache::iFCacheClassInfo;
 const Ionflux::ObjectBase::IFClassInfo* IFCache::CLASS_INFO = &IFCache::iFCacheClassInfo;
 
 IFCache::IFCache()
-: maxSize(0), currentSize(0)
+: maxSize(0), currentSize(0), allowZeroSize(false)
+{
+	// NOTE: The following line is required for run-time type information.
+	theClass = CLASS_INFO;
+	// TODO: Nothing ATM. ;-)
+}
+
+IFCache::IFCache(Ionflux::ObjectBase::UInt64 initMaxSize, bool 
+initAllowZeroSize)
+: maxSize(initMaxSize), currentSize(0), allowZeroSize(initAllowZeroSize)
 {
 	// NOTE: The following line is required for run-time type information.
 	theClass = CLASS_INFO;
@@ -248,6 +257,13 @@ Ionflux::ObjectBase::IFObject* item, Ionflux::ObjectBase::UInt64 hits)
 	}
 	// Make sure the item fits within the cache.
 	UInt64 is0 = item->getSize();
+	if (!allowZeroSize 
+	    && (is0 == 0))
+	{
+	    status << "[IFCache.addItem] Item has zero size (id ='"
+	        << itemID << "')!";
+	    throw IFError(status.str());
+	}
 	/* <---- DEBUG ----- //
 	status.str("");
 	status << "maxSize = " << maxSize << ", itemSize = " << is0 
@@ -365,6 +381,16 @@ Ionflux::ObjectBase::UInt64 IFCache::getMaxSize() const
 Ionflux::ObjectBase::UInt64 IFCache::getCurrentSize() const
 {
 	return currentSize;
+}
+
+void IFCache::setAllowZeroSize(bool newAllowZeroSize)
+{
+	allowZeroSize = newAllowZeroSize;
+}
+
+bool IFCache::getAllowZeroSize() const
+{
+	return allowZeroSize;
 }
 
 Ionflux::ObjectBase::IFCache* 
