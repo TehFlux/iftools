@@ -86,6 +86,8 @@ struct IFCacheEntry
     Ionflux::ObjectBase::IFObject* item;
 };
 
+typedef unsigned int CachePolicy;
+
 }
 
 }

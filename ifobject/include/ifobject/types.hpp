@@ -80,6 +80,7 @@ typedef std::vector<double> DoubleVector;
 typedef std::vector<int> IntVector;
 typedef std::vector<unsigned int> UIntVector;
 
+/// Cache entry.
 struct IFCacheEntry
 {
     /// Item ID.
@@ -93,6 +94,9 @@ struct IFCacheEntry
     /// Item.
     Ionflux::ObjectBase::IFObject* item;
 };
+
+/// Cache policy.
+typedef unsigned int CachePolicy;
 
 }
 

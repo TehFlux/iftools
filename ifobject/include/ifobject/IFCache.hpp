@@ -71,6 +71,8 @@ class IFCache
 		Ionflux::ObjectBase::UInt64 currentSize;
 		/// Allow zero size items.
 		bool allowZeroSize;
+		/// Caching policy.
+		Ionflux::ObjectBase::CachePolicy policy;
 		
 		/** Get cache entry.
 		 *
@@ -93,6 +95,10 @@ class IFCache
 		virtual void hit(Ionflux::ObjectBase::IFCacheEntry* entry);
 		
 	public:
+		/// Caching policy: Keep most recently used.
+		static const Ionflux::ObjectBase::CachePolicy POLICY_KEEP_RECENT;
+		/// Caching policy: Keep most hits.
+		static const Ionflux::ObjectBase::CachePolicy POLICY_KEEP_MOST_HITS;
 		/// Class information instance.
 		static const IFCacheClassInfo iFCacheClassInfo;
 		/// Class information.
@@ -110,9 +116,11 @@ class IFCache
 		 *
 		 * \param initMaxSize Maximum cache size.
 		 * \param initAllowZeroSize Allow zero size items.
+		 * \param initPolicy Caching policy.
 		 */
 		IFCache(Ionflux::ObjectBase::UInt64 initMaxSize, bool initAllowZeroSize =
-		false);
+		false, Ionflux::ObjectBase::CachePolicy initPolicy = 
+		POLICY_KEEP_MOST_HITS);
 		
 		/** Destructor.
 		 *
@@ -324,6 +332,20 @@ class IFCache
 		 * \return Current value of allow zero size items.
 		 */
 		virtual bool getAllowZeroSize() const;
+		
+		/** Set caching policy.
+		 *
+		 * Set new value of caching policy.
+		 *
+		 * \param newPolicy New value of caching policy.
+		 */
+		virtual void setPolicy(Ionflux::ObjectBase::CachePolicy newPolicy);
+		
+		/** Get caching policy.
+		 *
+		 * \return Current value of caching policy.
+		 */
+		virtual Ionflux::ObjectBase::CachePolicy getPolicy() const;
 };
 
 }

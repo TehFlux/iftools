@@ -19,6 +19,7 @@ print ("  Testing IFCache...")
 
 c0 = ib.IFCache()
 c0.setMaxSize(cacheSize)
+#c0.setPolicy(ib.IFCache.POLICY_KEEP_RECENT)
 
 print ("    Adding items...")
 for i in range(0, cacheSize):

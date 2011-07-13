@@ -51,12 +51,16 @@ IFCacheClassInfo::~IFCacheClassInfo()
 {
 }
 
+// public member constants
+const Ionflux::ObjectBase::CachePolicy IFCache::POLICY_KEEP_RECENT = 0;
+const Ionflux::ObjectBase::CachePolicy IFCache::POLICY_KEEP_MOST_HITS = 1;
+
 // run-time type information instance constants
 const IFCacheClassInfo IFCache::iFCacheClassInfo;
 const Ionflux::ObjectBase::IFClassInfo* IFCache::CLASS_INFO = &IFCache::iFCacheClassInfo;
 
 IFCache::IFCache()
-: maxSize(0), currentSize(0), allowZeroSize(false)
+: maxSize(0), currentSize(0), allowZeroSize(false), policy(POLICY_KEEP_MOST_HITS)
 {
 	// NOTE: The following line is required for run-time type information.
 	theClass = CLASS_INFO;
@@ -64,8 +68,9 @@ IFCache::IFCache()
 }
 
 IFCache::IFCache(Ionflux::ObjectBase::UInt64 initMaxSize, bool 
-initAllowZeroSize)
-: maxSize(initMaxSize), currentSize(0), allowZeroSize(initAllowZeroSize)
+initAllowZeroSize, Ionflux::ObjectBase::CachePolicy initPolicy)
+: maxSize(initMaxSize), currentSize(0), allowZeroSize(initAllowZeroSize), 
+policy(initPolicy)
 {
 	// NOTE: The following line is required for run-time type information.
 	theClass = CLASS_INFO;
@@ -194,25 +199,39 @@ void IFCache::cleanup()
 {
 	if (items.size() == 0)
 	    return;
-	std::sort(items.begin(), items.end(), IFCacheEntryCompareByHits());
+	if (policy == POLICY_KEEP_MOST_HITS)
+	    std::sort(items.begin(), items.end(), IFCacheEntryCompareByHits());
+	else
+	    std::sort(items.begin(), items.end(), IFCacheEntryCompareByHTime());
 	IFCacheEntry* e0 = items[0];
-	UInt64 ch = e0->hits;
-	UInt64 hitsMin = ch;
+	UInt64 ch = 0;
+	if (policy == POLICY_KEEP_MOST_HITS)
+	    ch = e0->hits;
+	else
+	    ch = e0->hTime;
+	UInt64 hMin = ch;
 	std::vector<IFCacheEntry*> candidates;
 	candidates.push_back(e0);
 	unsigned int i = 1;
 	// Get entries with the same number of hits as the first one.
-	while ((ch == hitsMin) 
+	while ((ch == hMin) 
 	    && (i < items.size()))
 	{
 	    e0 = items[i];
-	    ch = e0->hits;
-	    if (ch == hitsMin)
+	    if (policy == POLICY_KEEP_MOST_HITS)
+	        ch = e0->hits;
+	    else
+	        ch = e0->hTime;
+	    if (ch == hMin)
 	        candidates.push_back(e0);
 	    i++;
 	}
-	std::sort(candidates.begin(), candidates.end(), 
-	    IFCacheEntryCompareByHTime());
+	if (policy == POLICY_KEEP_MOST_HITS)
+	    std::sort(candidates.begin(), candidates.end(), 
+	        IFCacheEntryCompareByHTime());
+	else
+	    std::sort(candidates.begin(), candidates.end(), 
+	        IFCacheEntryCompareByHits());
 	e0 = candidates[0];
 	// <---- DEBUG ----- //
 	std::ostringstream status;
@@ -333,8 +352,19 @@ std::string IFCache::getDebugInfo()
 	    status << "    <none>" << endl;
 	else
 	{
-	    std::sort(items.begin(), items.end(), IFCacheEntryCompareByHTime());
-	    std::sort(items.begin(), items.end(), IFCacheEntryCompareByHits());
+	    if (policy == POLICY_KEEP_MOST_HITS)
+	    {
+	        std::sort(items.begin(), items.end(), 
+	            IFCacheEntryCompareByHTime());
+	        std::sort(items.begin(), items.end(), 
+	            IFCacheEntryCompareByHits());
+	    } else
+	    {
+	        std::sort(items.begin(), items.end(), 
+	            IFCacheEntryCompareByHits());
+	        std::sort(items.begin(), items.end(), 
+	            IFCacheEntryCompareByHTime());
+	    }
 	    unsigned int k = 1;
 	    std::vector<Ionflux::ObjectBase::IFCacheEntry*>::iterator i;
 	    for (i = items.begin(); i != items.end(); i++)
@@ -391,6 +421,16 @@ void IFCache::setAllowZeroSize(bool newAllowZeroSize)
 bool IFCache::getAllowZeroSize() const
 {
 	return allowZeroSize;
+}
+
+void IFCache::setPolicy(Ionflux::ObjectBase::CachePolicy newPolicy)
+{
+	policy = newPolicy;
+}
+
+Ionflux::ObjectBase::CachePolicy IFCache::getPolicy() const
+{
+	return policy;
 }
 
 Ionflux::ObjectBase::IFCache* 

@@ -86,6 +86,8 @@ struct IFCacheEntry
     Ionflux::ObjectBase::IFObject* item;
 };
 
+typedef unsigned int CachePolicy;
+
 }
 
 }
@@ -398,10 +400,13 @@ class IFCache
 : public Ionflux::ObjectBase::IFObject
 {
     public:
+		static const Ionflux::ObjectBase::CachePolicy POLICY_KEEP_RECENT;
+		static const Ionflux::ObjectBase::CachePolicy POLICY_KEEP_MOST_HITS;
         
         IFCache();
         IFCache(Ionflux::ObjectBase::UInt64 initMaxSize, bool 
-        initAllowZeroSize = false);
+        initAllowZeroSize = false, Ionflux::ObjectBase::CachePolicy 
+        initPolicy = POLICY_KEEP_MOST_HITS);
         virtual ~IFCache();
         virtual std::string getString() const;
         virtual void clear();
@@ -434,6 +439,8 @@ class IFCache
         virtual Ionflux::ObjectBase::UInt64 getCurrentSize() const;
         virtual void setAllowZeroSize(bool newAllowZeroSize);
         virtual bool getAllowZeroSize() const;
+        virtual void setPolicy(Ionflux::ObjectBase::CachePolicy newPolicy);
+        virtual Ionflux::ObjectBase::CachePolicy getPolicy() const;
 };
 
 }
