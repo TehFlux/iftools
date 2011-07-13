@@ -266,6 +266,19 @@ class IFCache
 		Ionflux::ObjectBase::UInt64 cTime = 0, Ionflux::ObjectBase::UInt64 hTime 
 		= 0, Ionflux::ObjectBase::UInt64 hits = 0);
 		
+		/** Create instance.
+		 *
+		 * Create a new instance of the class. If the optional parent object 
+		 * is specified, a local reference for the new object will be added 
+		 * to the parent object.
+		 *
+		 * param parentObject Parent object.
+		 *
+		 * return Pointer to the new instance.
+		 */
+		static Ionflux::ObjectBase::IFCache* 
+		create(Ionflux::ObjectBase::IFObject* parentObject = 0);
+		
 		/** Set maximum cache size.
 		 *
 		 * Set new value of maximum cache size.

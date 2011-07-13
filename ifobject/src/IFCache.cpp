@@ -132,7 +132,7 @@ bool IFCache::isFull(Ionflux::ObjectBase::UInt64 offset) const
 {
 	if (maxSize == 0)
 	    return false;
-	return (currentSize + offset) <= maxSize;
+	return (currentSize + offset) >= maxSize;
 }
 
 bool IFCache::itemExists(const std::string& itemID)
@@ -248,10 +248,17 @@ Ionflux::ObjectBase::IFObject* item, Ionflux::ObjectBase::UInt64 hits)
 	}
 	// Make sure the item fits within the cache.
 	UInt64 is0 = item->getSize();
+	/* <---- DEBUG ----- //
+	status.str("");
+	status << "maxSize = " << maxSize << ", itemSize = " << is0 
+	    << ", currentSize = " << currentSize;
+	log(IFLogMessage(status.str(), VL_DEBUG, this, "addItem"));
+	// ----- DEBUG ----> */
 	if (maxSize > 0)
 	{
 	    if (is0 > maxSize)
 	    {
+	        status.str("");
 	        status << "[IFCache.addItem] Item does not fit into "
 	            "cache (id ='" << itemID << "', size = " << is0 
 	            << ")!";
@@ -267,6 +274,7 @@ Ionflux::ObjectBase::IFObject* item, Ionflux::ObjectBase::UInt64 hits)
 	        "Could not allocate cache entry!");
 	initEntry(*e0, item, itemID, 0, 0, hits);
 	// <---- DEBUG ----- //
+	status.str("");
 	status << "Adding object (id = '" << e0->itemID << "', hits = " 
 	    << e0->hits << ", cTime = " << e0->cTime << ", hTime = " 
 	    << e0->hTime << ").";
@@ -299,7 +307,12 @@ std::string IFCache::getDebugInfo()
 	    << "  maxSize     = " << maxSize << endl 
 	    << "  currentSize = " << currentSize << endl
 	    << "  numItems    = " << items.size() << endl
-	    << "  entries:" << endl;
+	    << "  full        = " ;
+	if (isFull())
+	    status << "yes" << endl;
+	else
+	    status << "no" << endl;
+	status << "  entries:" << endl;
 	if (items.size() == 0)
 	    status << "    <none>" << endl;
 	else
@@ -352,6 +365,19 @@ Ionflux::ObjectBase::UInt64 IFCache::getMaxSize() const
 Ionflux::ObjectBase::UInt64 IFCache::getCurrentSize() const
 {
 	return currentSize;
+}
+
+Ionflux::ObjectBase::IFCache* 
+IFCache::create(Ionflux::ObjectBase::IFObject* parentObject)
+{
+    IFCache* newObject = new IFCache();
+    if (newObject == 0)
+    {
+        throw IFError("Could not allocate object.");
+    }
+    if (parentObject != 0)
+        parentObject->addLocalRef(newObject);
+    return newObject;
 }
 
 }
