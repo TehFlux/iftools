@@ -2,7 +2,7 @@
 #define IONFLUX_OBJECT_IFEXAMPLECLASS
 /* ==========================================================================
  * Ionflux Object Base System
- * Copyright © 2006 Joern P. Meier
+ * Copyright © 2006-2011 Joern P. Meier
  * mail@ionflux.org
  * --------------------------------------------------------------------------
  * IFExampleClass.hpp              Example class (header).
@@ -279,6 +279,12 @@ class IFExampleClass
 		 */
 		virtual int deserialize(const std::string& source, int offset = 0);
 		
+		/** Get some numeric value.
+		 *
+		 * \return Current value of some numeric value.
+		 */
+		virtual int getSomeValue() const;
+		
 		/** Set some numeric value.
 		 *
 		 * Set new value of some numeric value.
@@ -287,11 +293,11 @@ class IFExampleClass
 		 */
 		virtual void setSomeValue(int newSomeValue);
 		
-		/** Get some numeric value.
+		/** Get some byte string.
 		 *
-		 * \return Current value of some numeric value.
+		 * \return Current value of some byte string.
 		 */
-		virtual int getSomeValue() const;
+		virtual std::string getSomeText() const;
 		
 		/** Set some byte string.
 		 *
@@ -301,17 +307,17 @@ class IFExampleClass
 		 */
 		virtual void setSomeText(const std::string& newSomeText);
 		
-		/** Get some byte string.
-		 *
-		 * \return Current value of some byte string.
-		 */
-		virtual std::string getSomeText() const;
-		
 		/** Get a read-only property.
 		 *
 		 * \return Current value of a read-only property.
 		 */
 		virtual double getRoProp() const;
+		
+		/** Get special Blah object.
+		 *
+		 * \return Current value of special Blah object.
+		 */
+		virtual Blah* getSpecialBlah() const;
 		
 		/** Set special Blah object.
 		 *
@@ -320,12 +326,6 @@ class IFExampleClass
 		 * \param newSpecialBlah New value of special Blah object.
 		 */
 		virtual void setSpecialBlah(Blah* newSpecialBlah);
-		
-		/** Get special Blah object.
-		 *
-		 * \return Current value of special Blah object.
-		 */
-		virtual Blah* getSpecialBlah() const;
 		
 		/** Get number of blupps.
 		 *
@@ -410,7 +410,7 @@ class IFExampleClass
 		 *
 		 * \return blah map.
 		 */
-		virtual std::map<std::string, Blah*>& getgetBlahs();
+		virtual std::map<std::string, Blah*>& getBlahs();
 		
 		/** Add blah.
 		 *

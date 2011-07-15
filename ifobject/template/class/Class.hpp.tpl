@@ -493,7 +493,7 @@ class {$class.name}{if ( haveBaseIFObject == 1 ) || ( haveBaseOther == 1 )}
 		 */
 		bool opDispatch(const Ionflux::ObjectBase::IFOpName& opName, 
 			const Ionflux::ObjectBase::IFObjectVector* params = 0, 
-			Ionflux::ObjectBase::IFObjectVector* target = 0) const;{/if}{if enablePersistence == 1}{ref declarePersistentProtectedFuncs}{/if}
+			Ionflux::ObjectBase::IFObjectVector* target = 0) const;{/if}{if enablePersistence == 1}{ref declarePersistentProtectedFuncs}{/if}{foreach prop in property.protected}{if prop.protectedWrite == "true"}{ref declarePropertyWriteFuncs}{/if}{/foreach}
 		
 	public:{foreach fr in class.friendClasses}{first}
 	    // Friend classes.{/first}{single}

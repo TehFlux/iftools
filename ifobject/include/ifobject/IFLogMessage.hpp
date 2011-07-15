@@ -2,7 +2,7 @@
 #define IONFLUX_OBJECT_IFLOGMESSAGE
 /* ==========================================================================
  * Ionflux Object Base System
- * Copyright © 2006 Joern P. Meier
+ * Copyright © 2006-2011 Joern P. Meier
  * mail@ionflux.org
  * --------------------------------------------------------------------------
  * IFLogMessage.hpp                Log message (header).
@@ -223,6 +223,12 @@ class IFLogMessage
 		 */
 		virtual int deserialize(const std::string& source, int offset = 0);
 		
+		/** Get the message.
+		 *
+		 * \return Current value of the message.
+		 */
+		virtual std::string getMessage() const;
+		
 		/** Set the message.
 		 *
 		 * Set new value of the message.
@@ -231,11 +237,11 @@ class IFLogMessage
 		 */
 		virtual void setMessage(const std::string& newMessage);
 		
-		/** Get the message.
+		/** Get verbosity level.
 		 *
-		 * \return Current value of the message.
+		 * \return Current value of verbosity level.
 		 */
-		virtual std::string getMessage() const;
+		virtual Ionflux::ObjectBase::IFVerbosityLevel getLevel() const;
 		
 		/** Set verbosity level.
 		 *
@@ -245,11 +251,11 @@ class IFLogMessage
 		 */
 		virtual void setLevel(Ionflux::ObjectBase::IFVerbosityLevel newLevel);
 		
-		/** Get verbosity level.
+		/** Get source object.
 		 *
-		 * \return Current value of verbosity level.
+		 * \return Current value of source object.
 		 */
-		virtual Ionflux::ObjectBase::IFVerbosityLevel getLevel() const;
+		virtual const Ionflux::ObjectBase::IFObject* getSource() const;
 		
 		/** Set source object.
 		 *
@@ -259,11 +265,11 @@ class IFLogMessage
 		 */
 		virtual void setSource(const Ionflux::ObjectBase::IFObject* newSource);
 		
-		/** Get source object.
+		/** Get source function name.
 		 *
-		 * \return Current value of source object.
+		 * \return Current value of source function name.
 		 */
-		virtual const Ionflux::ObjectBase::IFObject* getSource() const;
+		virtual std::string getSourceFunctionName() const;
 		
 		/** Set source function name.
 		 *
@@ -273,12 +279,6 @@ class IFLogMessage
 		 */
 		virtual void setSourceFunctionName(const std::string& 
 		newSourceFunctionName);
-		
-		/** Get source function name.
-		 *
-		 * \return Current value of source function name.
-		 */
-		virtual std::string getSourceFunctionName() const;
 };
 
 }

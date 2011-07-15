@@ -1,6 +1,6 @@
 /* ==========================================================================
  * Ionflux Object Base System
- * Copyright © 2006 Joern P. Meier
+ * Copyright © 2006-2011 Joern P. Meier
  * mail@ionflux.org
  * --------------------------------------------------------------------------
  * IFError.cpp                     Error (implementation).
@@ -84,7 +84,7 @@ std::string IFError::getReason() const
 Ionflux::ObjectBase::IFError& IFError::operator=(const 
 Ionflux::ObjectBase::IFError& other)
 {
-	setReason(other.getReason());
+setReason(other.getReason());
 	return *this;
 }
 

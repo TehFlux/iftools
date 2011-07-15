@@ -2,7 +2,7 @@
 #define IONFLUX_OBJECT_IFERROR
 /* ==========================================================================
  * Ionflux Object Base System
- * Copyright © 2006 Joern P. Meier
+ * Copyright © 2006-2011 Joern P. Meier
  * mail@ionflux.org
  * --------------------------------------------------------------------------
  * IFError.hpp                     Error (header).
@@ -115,6 +115,12 @@ class IFError
 		 */
 		virtual Ionflux::ObjectBase::IFError* copy() const;
 		
+		/** Get reason.
+		 *
+		 * \return Current value of reason.
+		 */
+		virtual std::string getReason() const;
+		
 		/** Set reason.
 		 *
 		 * Set new value of reason.
@@ -122,12 +128,6 @@ class IFError
 		 * \param newReason New value of reason.
 		 */
 		virtual void setReason(const std::string& newReason);
-		
-		/** Get reason.
-		 *
-		 * \return Current value of reason.
-		 */
-		virtual std::string getReason() const;
 };
 
 }

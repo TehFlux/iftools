@@ -2,7 +2,7 @@
 #define IONFLUX_OBJECT_IFCLASSINFO
 /* ==========================================================================
  * Ionflux Object Base System
- * Copyright © 2006 Joern P. Meier
+ * Copyright © 2006-2011 Joern P. Meier
  * mail@ionflux.org
  * --------------------------------------------------------------------------
  * IFClassInfo.hpp                 Class information (header).

@@ -2,7 +2,7 @@
 #define IONFLUX_OBJECT_IFCACHE
 /* ==========================================================================
  * Ionflux Object Base System
- * Copyright © 2006 Joern P. Meier
+ * Copyright © 2006-2011 Joern P. Meier
  * mail@ionflux.org
  * --------------------------------------------------------------------------
  * IFCache.hpp                     Cache (header).
@@ -299,6 +299,12 @@ class IFCache
 		static Ionflux::ObjectBase::IFCache* 
 		create(Ionflux::ObjectBase::IFObject* parentObject = 0);
 		
+		/** Get maximum cache size.
+		 *
+		 * \return Current value of maximum cache size.
+		 */
+		virtual Ionflux::ObjectBase::UInt64 getMaxSize() const;
+		
 		/** Set maximum cache size.
 		 *
 		 * Set new value of maximum cache size.
@@ -307,17 +313,17 @@ class IFCache
 		 */
 		virtual void setMaxSize(Ionflux::ObjectBase::UInt64 newMaxSize);
 		
-		/** Get maximum cache size.
-		 *
-		 * \return Current value of maximum cache size.
-		 */
-		virtual Ionflux::ObjectBase::UInt64 getMaxSize() const;
-		
 		/** Get current cache size.
 		 *
 		 * \return Current value of current cache size.
 		 */
 		virtual Ionflux::ObjectBase::UInt64 getCurrentSize() const;
+		
+		/** Get allow zero size items.
+		 *
+		 * \return Current value of allow zero size items.
+		 */
+		virtual bool getAllowZeroSize() const;
 		
 		/** Set allow zero size items.
 		 *
@@ -327,11 +333,11 @@ class IFCache
 		 */
 		virtual void setAllowZeroSize(bool newAllowZeroSize);
 		
-		/** Get allow zero size items.
+		/** Get caching policy.
 		 *
-		 * \return Current value of allow zero size items.
+		 * \return Current value of caching policy.
 		 */
-		virtual bool getAllowZeroSize() const;
+		virtual Ionflux::ObjectBase::CachePolicy getPolicy() const;
 		
 		/** Set caching policy.
 		 *
@@ -340,12 +346,6 @@ class IFCache
 		 * \param newPolicy New value of caching policy.
 		 */
 		virtual void setPolicy(Ionflux::ObjectBase::CachePolicy newPolicy);
-		
-		/** Get caching policy.
-		 *
-		 * \return Current value of caching policy.
-		 */
-		virtual Ionflux::ObjectBase::CachePolicy getPolicy() const;
 };
 
 }

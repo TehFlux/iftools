@@ -1,6 +1,6 @@
 /* ==========================================================================
  * Ionflux Object Base System
- * Copyright © 2006 Joern P. Meier
+ * Copyright © 2006-2011 Joern P. Meier
  * mail@ionflux.org
  * --------------------------------------------------------------------------
  * IFExampleClass.cpp              Example class (implementation).
@@ -427,13 +427,13 @@ void IFExampleClass::clearBlupps()
     blupps.clear();
 }
 
-unsigned int IFExampleClass::getBlahs() const
+unsigned int IFExampleClass::getNumBlahs() const
 {
 	IFGuard propertyGuard(guardMutex);
 	return blahs.size();
 }
 
-Blah* IFExampleClass::getBlah(const std::string& elementKey) const
+Blah* IFExampleClass::getBlah(const std::string& elementKey)
 {
 	IFGuard propertyGuard(guardMutex);
 	std::map<std::string, Blah*>::const_iterator i = blahs.find(elementKey);

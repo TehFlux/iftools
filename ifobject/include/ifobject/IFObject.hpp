@@ -2,7 +2,7 @@
 #define IONFLUX_OBJECT_IFOBJECT
 /* ==========================================================================
  * Ionflux Object Base System
- * Copyright © 2006 Joern P. Meier
+ * Copyright © 2006-2011 Joern P. Meier
  * mail@ionflux.org
  * --------------------------------------------------------------------------
  * IFObject.hpp                    Object (header).
@@ -621,6 +621,12 @@ class IFObject
 		 */
 		virtual int deserialize(const std::string& source, int offset = 0);
 		
+		/** Get log target.
+		 *
+		 * \return Current value of log target.
+		 */
+		virtual Ionflux::ObjectBase::IFObject* getLogTarget() const;
+		
 		/** Set log target.
 		 *
 		 * Set new value of log target.
@@ -628,12 +634,6 @@ class IFObject
 		 * \param newLogTarget New value of log target.
 		 */
 		virtual void setLogTarget(Ionflux::ObjectBase::IFObject* newLogTarget);
-		
-		/** Get log target.
-		 *
-		 * \return Current value of log target.
-		 */
-		virtual Ionflux::ObjectBase::IFObject* getLogTarget() const;
 		
 		/** Get signal: object changed signal.
 		 *

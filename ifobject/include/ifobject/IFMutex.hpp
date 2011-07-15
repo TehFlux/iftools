@@ -2,7 +2,7 @@
 #define IONFLUX_OBJECT_IFMUTEX
 /* ==========================================================================
  * Ionflux Object Base System
- * Copyright © 2006 Joern P. Meier
+ * Copyright © 2006-2011 Joern P. Meier
  * mail@ionflux.org
  * --------------------------------------------------------------------------
  * IFMutex.hpp                     Mutex (header).

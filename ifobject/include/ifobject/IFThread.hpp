@@ -2,7 +2,7 @@
 #define IONFLUX_OBJECT_IFTHREAD
 /* ==========================================================================
  * Ionflux Object Base System
- * Copyright © 2006 Joern P. Meier
+ * Copyright © 2006-2011 Joern P. Meier
  * mail@ionflux.org
  * --------------------------------------------------------------------------
  * IFThread.hpp                    Thread (header).
@@ -286,6 +286,13 @@ class IFThread
 		static void nanoSleep(unsigned int sleepSecs, unsigned int 
 		sleepNanoSecs);
 		
+		/** Get the function which is executed within the thread.
+		 *
+		 * \return Current value of the function which is executed within the 
+		 * thread.
+		 */
+		virtual Ionflux::ObjectBase::IFThreadFunction getThreadFunction() const;
+		
 		/** Set the function which is executed within the thread.
 		 *
 		 * Set new value of the function which is executed within the thread.
@@ -296,12 +303,11 @@ class IFThread
 		virtual void setThreadFunction(Ionflux::ObjectBase::IFThreadFunction 
 		newThreadFunction);
 		
-		/** Get the function which is executed within the thread.
+		/** Get context to be associated with the thread.
 		 *
-		 * \return Current value of the function which is executed within the 
-		 * thread.
+		 * \return Current value of context to be associated with the thread.
 		 */
-		virtual Ionflux::ObjectBase::IFThreadFunction getThreadFunction() const;
+		virtual Ionflux::ObjectBase::IFObject* getContext() const;
 		
 		/** Set context to be associated with the thread.
 		 *
@@ -311,12 +317,6 @@ class IFThread
 		 * thread.
 		 */
 		virtual void setContext(Ionflux::ObjectBase::IFObject* newContext);
-		
-		/** Get context to be associated with the thread.
-		 *
-		 * \return Current value of context to be associated with the thread.
-		 */
-		virtual Ionflux::ObjectBase::IFObject* getContext() const;
 		
 		/** Get signal: thread start signal.
 		 *

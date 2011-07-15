@@ -105,7 +105,7 @@ IF{$ev.id|uppercase(1)}Event* {$class.name}::create{$ev.id|uppercase(1)}Event()
 	if (found)
         return i;
 	return -1;{/if}
-\}{if prop.readOnly != "true"}{if prop.hideImpl != "true"}
+\}{if ( prop.readOnly != "true" ) || ( prop.protectedWrite == "true" )}{if prop.hideImpl != "true"}
 
 {swrap 75}std::vector<{$prop.element.type}>& {$class.name}::get{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if}(){/swrap}
 \{{if enableGuards == 1}
@@ -188,14 +188,14 @@ IF{$ev.id|uppercase(1)}Event* {$class.name}::create{$ev.id|uppercase(1)}Event()
 	return {$prop.name}.size();
 \}
 
-{swrap 75}{$prop.element.type} {$class.name}::get{$prop.element.name|uppercase(1)}({if prop.key.accessType != ""}{$prop.key.accessType}{else}{$prop.key.type}{/if} elementKey){/swrap}
+{swrap 75}{$prop.element.type} {$class.name}::get{$prop.element.name|uppercase(1)}({if prop.key.accessType != ""}{$prop.key.accessType}{else}{$prop.key.type}{/if} elementKey) const{/swrap}
 \{{if enableGuards == 1}
 	IFGuard propertyGuard(guardMutex);{/if}
 	std::map<{$prop.key.type}, {$prop.element.type}>::const_iterator i = {$prop.name}.find(elementKey);
 	if (i != {$prop.name}.end())
 		return (*i).second;
 	return {if prop.element.defaultValue != ""}{$prop.element.defaultValue}{else}0{/if};
-\}{if prop.readOnly != "true"}{if prop.hideImpl != "true"}
+\}{if ( prop.readOnly != "true" ) || ( prop.protectedWrite == "true" )}{if prop.hideImpl != "true"}
 
 {swrap 75}std::map<{$prop.key.type}, {$prop.element.type}>& {$class.name}::get{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if}(){/swrap}
 \{{if enableGuards == 1}
@@ -235,7 +235,7 @@ IF{$ev.id|uppercase(1)}Event* {$class.name}::create{$ev.id|uppercase(1)}Event()
 		if ((*i).second != {if prop.element.defaultValue != ""}{$prop.element.defaultValue}{else}0{/if})
 			removeLocalRef((*i).second);
 	{/if}{$prop.name}.clear();
-\}{/if}{else}{if prop.readOnly != "true"}
+\}{/if}{else}{if ( prop.readOnly != "true" ) || ( prop.protectedWrite == "true" )}
 
 {swrap 75}void {$class.name}::set{$prop.name|uppercase(1)}({$prop.setFromType} new{$prop.name|uppercase(1)}){/swrap}
 \{{if enableGuards == 1}

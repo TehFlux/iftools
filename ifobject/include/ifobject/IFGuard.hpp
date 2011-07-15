@@ -2,7 +2,7 @@
 #define IONFLUX_OBJECT_IFGUARD
 /* ==========================================================================
  * Ionflux Object Base System
- * Copyright © 2006 Joern P. Meier
+ * Copyright © 2006-2011 Joern P. Meier
  * mail@ionflux.org
  * --------------------------------------------------------------------------
  * IFGuard.hpp                     Guard (header).
@@ -128,6 +128,12 @@ class IFGuard
 		virtual Ionflux::ObjectBase::IFObject& operator=(const 
 		Ionflux::ObjectBase::IFObject& otherObject);
 		
+		/** Get mutex.
+		 *
+		 * \return Current value of mutex.
+		 */
+		virtual Ionflux::ObjectBase::IFMutex* getMutex() const;
+		
 		/** Set mutex.
 		 *
 		 * Set new value of mutex.
@@ -135,12 +141,6 @@ class IFGuard
 		 * \param newMutex New value of mutex.
 		 */
 		virtual void setMutex(Ionflux::ObjectBase::IFMutex* newMutex);
-		
-		/** Get mutex.
-		 *
-		 * \return Current value of mutex.
-		 */
-		virtual Ionflux::ObjectBase::IFMutex* getMutex() const;
 };
 
 }

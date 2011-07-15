@@ -94,7 +94,7 @@ typedef unsigned int CachePolicy;
 
 /* ==========================================================================
  * Ionflux Object Base System
- * Copyright © 2006 Joern P. Meier
+ * Copyright © 2006-2011 Joern P. Meier
  * mail@ionflux.org
  * --------------------------------------------------------------------------
  * IFClassInfo.i                   Class information (interface).
@@ -300,7 +300,7 @@ Ionflux::ObjectBase::UInt64 getTimeTicks();
 
 /* ==========================================================================
  * Ionflux Object Base System
- * Copyright © 2006 Joern P. Meier
+ * Copyright © 2006-2011 Joern P. Meier
  * mail@ionflux.org
  * --------------------------------------------------------------------------
  * IFError.i                       Error (interface).
@@ -355,7 +355,7 @@ class IFError
 
 /* ==========================================================================
  * Ionflux Object Base System
- * Copyright © 2006 Joern P. Meier
+ * Copyright © 2006-2011 Joern P. Meier
  * mail@ionflux.org
  * --------------------------------------------------------------------------
  * IFCache.i                       Cache (interface).

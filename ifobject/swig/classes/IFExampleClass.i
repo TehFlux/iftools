@@ -1,6 +1,6 @@
 /* ==========================================================================
  * Ionflux Object Base System
- * Copyright © 2006 Joern P. Meier
+ * Copyright © 2006-2011 Joern P. Meier
  * mail@ionflux.org
  * --------------------------------------------------------------------------
  * IFExampleClass.i                Example class (interface).
@@ -111,15 +111,15 @@ class IFExampleClass
         virtual void addBlupp(Blupp* addElement);        
         virtual void removeBlupp(Blupp* removeElement);
 		virtual void removeBluppIndex(unsigned int removeIndex);
-        virtual void clearBlupps();
+		virtual void clearBlupps();
         virtual unsigned int getNumBlahs() const;
-        virtual Blah* getBlahs(const std::string& elementKey) const;
+        virtual Blah* getBlah(const std::string& elementKey) const;
 
         virtual std::map<std::string, Blah*>& getBlahs();
         virtual void addBlah(const std::string& elementKey, Blah* 
         addElement);        
-        virtual void removeBlah(const std::string& elementKey);        
-        virtual void clearBlahs();
+        virtual void removeBlah(const std::string& elementKey);
+		virtual void clearBlahs();
         virtual IFExampleSignal& getSignalFirst();
         virtual Ionflux::ObjectBase::IFSignal* getSignalFirstWrapper();
         virtual IFExampleSignal& getSignalSecond();
