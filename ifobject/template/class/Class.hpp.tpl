@@ -24,7 +24,7 @@
 # 02111-1307 USA
 # 
 # ==========================================================================
-{section checkFeatures}{$haveForwards = 0}{foreach fw in forward}{if fw != ""}{$haveForwards = 1}{/if}{/foreach}{$haveTypedefs = 0}{foreach td in typedef}{if td != ""}{$haveTypedefs = 1}{/if}{/foreach}{$haveEvents = 0}{foreach ev in event}{if ev.id != ""}{$haveEvents = 1}{/if}{/foreach}{$haveSignals = 0}{foreach si in signal}{if si.id != ""}{$haveSignals = 1}{/if}{/foreach}{$haveBaseIFObject = 0}{foreach bc in class.base.ifobject}{if bc.name != ""}{$haveBaseIFObject = 1}{/if}{/foreach}{$haveBaseOther = 0}{foreach bc in class.base.other}{if bc.name != ""}{$haveBaseOther = 1}{/if}{/foreach}{$enableClassInfo = 0}{if ( haveBaseIFObject == 1 ) || ( class.name == "IFObject" )}{$enableClassInfo = 1}{/if}{$abstractClass = 0}{foreach func in function.public}{if func.pureVirtual == "true"}{$abstractClass = 1}{/if}{/foreach}{foreach func in function.protected}{if func.pureVirtual == "true"}{$abstractClass = 1}{/if}{/foreach}{$enableMutex = 0}{$enableGuards = 0}{$enableAutoGuards = 0}{$enableLogMessage = 0}{$enableSignal = haveSignals}{$enableSerialize = 0}{$enablePersistence = 0}{$enableCopy = 0}{$enableUpcast = 0}{$enableCreate = 0}{$enableParam = 0}{foreach fe in class.features}{if fe == "mutex"}{$enableMutex = 1}{/if}{if fe == "guards"}{$enableMutex = 1}{$enableGuards = 1}{/if}{if fe == "autoguards"}{$enableMutex = 1}{$enableGuards = 1}{$enableAutoGuards = 1}{/if}{if fe == "logmessage"}{$enableLogMessage = 1}{/if}{if fe == "signal"}{$enableSignal = 1}{/if}{if fe == "serialize"}{$enableSerialize = 1}{/if}{if fe == "classinfo"}{$enableClassInfo = 1}{/if}{if fe == "persistence"}{$enablePersistence = 1}{/if}{if fe == "copy"}{$enableCopy = 1}{/if}{if fe == "upcast"}{$enableUpcast = 1}{/if}{if fe == "create"}{$enableCreate = 1}{/if}{if fe == "param"}{$enableParam = 1}{/if}{/foreach}{$haveOps = 0}{foreach op in operation}{if op.name != ""}{$haveOps = 1}{/if}{/foreach}{/section}{ref checkFeatures}{section insertGPLDisclaimer}
+{section checkFeatures}{$haveForwards = 0}{foreach fw in forward}{if fw != ""}{$haveForwards = 1}{/if}{/foreach}{$haveTypedefs = 0}{foreach td in typedef}{if td != ""}{$haveTypedefs = 1}{/if}{/foreach}{$haveEvents = 0}{foreach ev in event}{if ev.id != ""}{$haveEvents = 1}{/if}{/foreach}{$haveSignals = 0}{foreach si in signal}{if si.id != ""}{$haveSignals = 1}{/if}{/foreach}{$haveBaseIFObject = 0}{foreach bc in class.base.ifobject}{if bc.name != ""}{$haveBaseIFObject = 1}{/if}{/foreach}{$haveBaseOther = 0}{foreach bc in class.base.other}{if bc.name != ""}{$haveBaseOther = 1}{/if}{/foreach}{$enableClassInfo = 0}{if ( haveBaseIFObject == 1 ) || ( class.name == "IFObject" )}{$enableClassInfo = 1}{/if}{$abstractClass = 0}{foreach func in function.public}{if func.pureVirtual == "true"}{$abstractClass = 1}{/if}{/foreach}{foreach func in function.protected}{if func.pureVirtual == "true"}{$abstractClass = 1}{/if}{/foreach}{$enableMutex = 0}{$enableGuards = 0}{$enableAutoGuards = 0}{$enableLogMessage = 0}{$enableSignal = haveSignals}{$enableSerialize = 0}{$enablePersistence = 0}{$enableCopy = 0}{$enableUpcast = 0}{$enableCreate = 0}{$enableParam = 0}{foreach fe in class.features}{if fe == "mutex"}{$enableMutex = 1}{/if}{if fe == "guards"}{$enableMutex = 1}{$enableGuards = 1}{/if}{if fe == "autoguards"}{$enableMutex = 1}{$enableGuards = 1}{$enableAutoGuards = 1}{/if}{if fe == "logmessage"}{$enableLogMessage = 1}{/if}{if fe == "signal"}{$enableSignal = 1}{/if}{if fe == "serialize"}{$enableSerialize = 1}{/if}{if fe == "classinfo"}{$enableClassInfo = 1}{/if}{if fe == "persistence"}{$enablePersistence = 1}{/if}{if fe == "copy"}{$enableCopy = 1}{/if}{if fe == "upcast"}{$enableUpcast = 1}{/if}{if fe == "create"}{$enableCreate = 1}{/if}{if fe == "param"}{$enableParam = 1}{/if}{/foreach}{$haveOps = 0}{foreach op in operation}{if op.name != ""}{$haveOps = 1}{/if}{/foreach}{$haveBasePersistent = 0}{if enablePersistence == 1}{if class.persistence.backendBase != ""}{$haveBasePersistent = 1}{/if}{if class.persistence.backend == ""}{$class.persistence.backend = class.name + "Backend"}{/if}{/if}{/section}{ref checkFeatures}{section insertGPLDisclaimer}
  * =========================================================================
  *
 {swrap 75 " * "}This file is part of {$project.name}.
@@ -38,7 +38,7 @@ You should have received a copy of the GNU General Public License along with {$p
 {/first}{single}
 {/single}
 \#include {$inc}{/foreach}{if enablePersistence == 1}
-\#include "{$class.persistence.include}"{/if}{foreach bc in class.base.ifobject}
+\#include "{$project.persistence.include}"{/if}{foreach bc in class.base.ifobject}
 \#include "{if bc.include == ""}ifobject/{$bc.name}.hpp{else}{$bc.include}{/if}"{/foreach}{foreach bc in class.base.other}{if bc.include != "<none>"}
 \#include "{if bc.include == ""}{$bc.name}.hpp{else}{$bc.include}{/if}"{/if}{/foreach}{/section}{section insertForwards}{foreach fwd in forward}{first}
 {/first}{single}
@@ -91,34 +91,24 @@ struct {$st.name}
 		 * 
 		 * \\return New event, or 0 if an error occured.
 		 */
-		IF{$ev.id|uppercase(1)}Event* create{$ev.id|uppercase(1)}Event();{/section}{section createPropertyAccessorDecl}{if prop.style == "vector"}
+		IF{$ev.id|uppercase(1)}Event* create{$ev.id|uppercase(1)}Event();{/section}{section declareGlobalFunc}
+
+/** {$func.shortDesc}.{if func.longDesc != ""}
+ *
+{$func.longDesc|swrap(72,' * ')}{/if}{foreach prm in func.param}{first}
+ *{/first}{single}
+ *{/single}
+{swrap 75 " * "}\\param {$prm.name} {$prm.desc}.{/swrap}{/foreach}{if func.return.value != ""}
+ *
+{swrap 75 " * "}\\return {$func.return.desc}.{/swrap}{/if}
+ */
+{swrap 75}{$func.type} {$func.name}({foreach prm in func.param}{$prm.type} {$prm.name}{if prm.default != ""} = {$prm.default}{/if}{first}, {/first}{mid}, {/mid}{/foreach}){if func.const == "true"} const{/if}{if func.pureVirtual == "true"} = 0{/if};{/swrap}{/section}{section declarePropertyClearFunc}
 		
-		/** Get number of {if prop.element.plural == ""}{$prop.element.name|lowercase(1)}s{else}{$prop.element.plural|lowercase(1)}{/if}.
+		/** Clear {if prop.element.plural == ""}{$prop.element.name|lowercase(1)}s{else}{$prop.element.plural|lowercase(1)}{/if}.
 		 *
-{swrap 75 "		 * "}\\return Number of {if prop.element.plural == ""}{$prop.element.name|lowercase(1)}s{else}{$prop.element.plural|lowercase(1)}{/if}.{/swrap}
+{swrap 75 "		 * "}Clear all {if prop.element.plural == ""}{$prop.element.name|lowercase(1)}s{else}{$prop.element.plural|lowercase(1)}{/if}.{/swrap}
 		 */
-{swrap 75 "		"}virtual unsigned int getNum{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if}() const;{/swrap}
-		
-		/** Get {$prop.element.name|lowercase(1)}.
-		 *
-{swrap 75 "		 * "}Get the {$prop.element.name|lowercase(1)} at the specified index.{/swrap}
-		 *
-{swrap 75 "		 * "}\\param elementIndex Element index.{/swrap}
-		 *
-{swrap 75 "		 * "}\\return {$prop.element.name|uppercase(1)} at specified index.{/swrap}
-		 */
-{swrap 75 "		"}virtual {$prop.element.type} get{$prop.element.name|uppercase(1)}(unsigned int elementIndex = 0) const;{/swrap}
-		
-		/** Find {$prop.element.name|lowercase(1)}.
-		 *
-{swrap 75 "		 * "}Find the specified occurence of a {$prop.element.name|lowercase(1)}.{/swrap}
-		 *
-{swrap 75 "		 * "}\\param needle {$prop.element.name|uppercase(1)} to be found.{/swrap}
-{swrap 75 "		 * "}\\param occurence Number of the occurence to be found.{/swrap}
-		 *
-{swrap 75 "		 * "}\\return Index of the {$prop.element.name|lowercase(1)}, or -1 if the {$prop.element.name|lowercase(1)} cannot be found.{/swrap}
-		 */
-{swrap 75 "		"}virtual int find{$prop.element.name|uppercase(1)}({if prop.element.findType == ""}{$prop.element.type}{else}{$prop.element.findType}{/if} needle, unsigned int occurence = 1) const;{/swrap}{if prop.readOnly != "true"}{if prop.hideImpl != "true"}
+{swrap 75 "		"}virtual void clear{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if}();{/swrap}{/section}{section declareVectorWriteFuncs}{if prop.hideImpl != "true"}
         
 		/** Get {$prop.desc|lowercase(1)}.
 		 *
@@ -148,29 +138,7 @@ struct {$st.name}
 		 *
 {swrap 75 "		 * "}\\param removeElement {$prop.element.name|uppercase(1)} to be removed.{/swrap}
 		 */
-{swrap 75 "		"}virtual void remove{$prop.element.name|uppercase(1)}Index(unsigned int removeIndex);{/swrap}
-		
-		/** Clear {if prop.element.plural == ""}{$prop.element.name|lowercase(1)}s{else}{$prop.element.plural|lowercase(1)}{/if}.
-		 *
-{swrap 75 "		 * "}Clear all {if prop.element.plural == ""}{$prop.element.name|lowercase(1)}s{else}{$prop.element.plural|lowercase(1)}{/if}.{/swrap}
-		 */
-{swrap 75 "		"}virtual void clear{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if}();{/swrap}{/if}{else}{if prop.style == "map"}
-		
-		/** Get number of {if prop.element.plural == ""}{$prop.element.name|lowercase(1)}s{else}{$prop.element.plural|lowercase(1)}{/if}.
-		 *
-{swrap 75 "		 * "}\\return Number of {if prop.element.plural == ""}{$prop.element.name|lowercase(1)}s{else}{$prop.element.plural|lowercase(1)}{/if}.{/swrap}
-		 */
-{swrap 75 "		"}virtual unsigned int getNum{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if}() const;{/swrap}
-		
-		/** Get {$prop.element.name|lowercase(1)}.
-		 *
-{swrap 75 "		 * "}Get the {$prop.element.name|lowercase(1)} with the specified key.{/swrap}
-		 *
-{swrap 75 "		 * "}\\param elementKey Element key.{/swrap}
-		 *
-{swrap 75 "		 * "}\\return {$prop.element.name|uppercase(1)} with specified key.{/swrap}
-		 */
-{swrap 75 "		"}virtual {$prop.element.type} get{$prop.element.name|uppercase(1)}({if prop.key.accessType != ""}{$prop.key.accessType}{else}{$prop.key.type}{/if} elementKey);{/swrap}{if prop.readOnly != "true"}{if prop.hideImpl != "true"}
+{swrap 75 "		"}virtual void remove{$prop.element.name|uppercase(1)}Index(unsigned int removeIndex);{/swrap}{ref declarePropertyClearFunc}{/section}{section declareMapWriteFuncs}{if prop.hideImpl != "true"}
         
 		/** Get {$prop.desc|lowercase(1)}.
 		 *
@@ -193,13 +161,7 @@ struct {$st.name}
 		 *
 		 * \\param elementKey Element key.
 		 */
-{swrap 75 "		"}virtual void remove{$prop.element.name|uppercase(1)}({if prop.key.accessType != ""}{$prop.key.accessType}{else}{$prop.key.type}{/if} elementKey);{/swrap}
-		
-		/** Clear {if prop.element.plural == ""}{$prop.element.name|lowercase(1)}s{else}{$prop.element.plural|lowercase(1)}{/if}.
-		 *
-{swrap 75 "		 * "}Clear all {if prop.element.plural == ""}{$prop.element.name|lowercase(1)}s{else}{$prop.element.plural|lowercase(1)}{/if}.{/swrap}
-		 */
-{swrap 75 "		"}virtual void clear{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if}();{/swrap}{/if}{else}{if prop.readOnly != "true"}
+{swrap 75 "		"}virtual void remove{$prop.element.name|uppercase(1)}({if prop.key.accessType != ""}{$prop.key.accessType}{else}{$prop.key.type}{/if} elementKey);{/swrap}{ref declarePropertyClearFunc}{/section}{section declarePropertyWriteFuncs}{if prop.style == "vector"}{ref declareVectorWriteFuncs}{else}{if prop.style == "map"}{ref declareMapWriteFuncs}{else}
 		
 		/** Set {$prop.desc|lowercase(1)}.
 		 *
@@ -207,24 +169,56 @@ struct {$st.name}
 		 *
 {swrap 75 "		 * "}\\param new{$prop.name|uppercase(1)} New value of {$prop.desc|lowercase(1)}.{/swrap}
 		 */
-{swrap 75 "		"}virtual void set{$prop.name|uppercase(1)}({$prop.setFromType} new{$prop.name|uppercase(1)});{/swrap}{/if}
+{swrap 75 "		"}virtual void set{$prop.name|uppercase(1)}({$prop.setFromType} new{$prop.name|uppercase(1)});{/swrap}{/if}{/if}{/section}{section createVectorAccessorDecl}
+		
+		/** Get number of {if prop.element.plural == ""}{$prop.element.name|lowercase(1)}s{else}{$prop.element.plural|lowercase(1)}{/if}.
+		 *
+{swrap 75 "		 * "}\\return Number of {if prop.element.plural == ""}{$prop.element.name|lowercase(1)}s{else}{$prop.element.plural|lowercase(1)}{/if}.{/swrap}
+		 */
+{swrap 75 "		"}virtual unsigned int getNum{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if}() const;{/swrap}
+		
+		/** Get {$prop.element.name|lowercase(1)}.
+		 *
+{swrap 75 "		 * "}Get the {$prop.element.name|lowercase(1)} at the specified index.{/swrap}
+		 *
+{swrap 75 "		 * "}\\param elementIndex Element index.{/swrap}
+		 *
+{swrap 75 "		 * "}\\return {$prop.element.name|uppercase(1)} at specified index.{/swrap}
+		 */
+{swrap 75 "		"}virtual {$prop.element.type} get{$prop.element.name|uppercase(1)}(unsigned int elementIndex = 0) const;{/swrap}
+		
+		/** Find {$prop.element.name|lowercase(1)}.
+		 *
+{swrap 75 "		 * "}Find the specified occurence of a {$prop.element.name|lowercase(1)}.{/swrap}
+		 *
+{swrap 75 "		 * "}\\param needle {$prop.element.name|uppercase(1)} to be found.{/swrap}
+{swrap 75 "		 * "}\\param occurence Number of the occurence to be found.{/swrap}
+		 *
+{swrap 75 "		 * "}\\return Index of the {$prop.element.name|lowercase(1)}, or -1 if the {$prop.element.name|lowercase(1)} cannot be found.{/swrap}
+		 */
+{swrap 75 "		"}virtual int find{$prop.element.name|uppercase(1)}({if prop.element.findType == ""}{$prop.element.type}{else}{$prop.element.findType}{/if} needle, unsigned int occurence = 1) const;{/swrap}{/section}{section createMapAccessorDecl}
+		
+		/** Get number of {if prop.element.plural == ""}{$prop.element.name|lowercase(1)}s{else}{$prop.element.plural|lowercase(1)}{/if}.
+		 *
+{swrap 75 "		 * "}\\return Number of {if prop.element.plural == ""}{$prop.element.name|lowercase(1)}s{else}{$prop.element.plural|lowercase(1)}{/if}.{/swrap}
+		 */
+{swrap 75 "		"}virtual unsigned int getNum{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if}() const;{/swrap}
+		
+		/** Get {$prop.element.name|lowercase(1)}.
+		 *
+{swrap 75 "		 * "}Get the {$prop.element.name|lowercase(1)} with the specified key.{/swrap}
+		 *
+{swrap 75 "		 * "}\\param elementKey Element key.{/swrap}
+		 *
+{swrap 75 "		 * "}\\return {$prop.element.name|uppercase(1)} with specified key.{/swrap}
+		 */
+{swrap 75 "		"}virtual {$prop.element.type} get{$prop.element.name|uppercase(1)}({if prop.key.accessType != ""}{$prop.key.accessType}{else}{$prop.key.type}{/if} elementKey) const;{/swrap}{/section}{section createPropertyAccessorDecl}{if prop.style == "vector"}{ref createVectorAccessorDecl}{else}{if prop.style == "map"}{ref createMapAccessorDecl}{else}
 		
 		/** Get {$prop.desc|lowercase(1)}.
 		 *
 {swrap 75 "		 * "}\\return Current value of {$prop.desc|lowercase(1)}.{/swrap}
 		 */
-{swrap 75 "		"}virtual {$prop.type} get{$prop.name|uppercase(1)}() const;{/swrap}{/if}{/if}{/section}{section declareGlobalFunc}
-
-/** {$func.shortDesc}.{if func.longDesc != ""}
- *
-{$func.longDesc|swrap(72,' * ')}{/if}{foreach prm in func.param}{first}
- *{/first}{single}
- *{/single}
-{swrap 75 " * "}\\param {$prm.name} {$prm.desc}.{/swrap}{/foreach}{if func.return.value != ""}
- *
-{swrap 75 " * "}\\return {$func.return.desc}.{/swrap}{/if}
- */
-{swrap 75}{$func.type} {$func.name}({foreach prm in func.param}{$prm.type} {$prm.name}{if prm.default != ""} = {$prm.default}{/if}{first}, {/first}{mid}, {/mid}{/foreach}){if func.const == "true"} const{/if}{if func.pureVirtual == "true"} = 0{/if};{/swrap}{/section}{section declarePersistentInitFunc}
+{swrap 75 "		"}virtual {$prop.type} get{$prop.name|uppercase(1)}() const;{/swrap}{/if}{/if}{/section}{section declarePersistentInitFunc}
         
         /** Set from {$prop.name|uppercase(1)}.
 		 *
@@ -235,13 +229,19 @@ struct {$st.name}
 		 *
 		 * \\return \\c true on success, \\c false otherwise.
 		 */
-		virtual bool setFrom{$prop.name|uppercase(1)}({$prop.setFromType} init{$prop.name|uppercase(1)});{/section}{section declarePersistenceFuncs}
+		virtual bool setFrom{$prop.name|uppercase(1)}({$prop.setFromType} init{$prop.name|uppercase(1)});{/section}{section declarePersistenceFuncs}{if haveBasePersistent == 0}
 		
 		/** Update.
 		 *
 		 * Update record.
 		 */
 		virtual void update();
+		
+		/** Remove.
+		 *
+		 * Remove record.
+		 */
+		virtual void remove();
 		
 		/** Get persistent ID.
 		 *
@@ -258,7 +258,48 @@ struct {$st.name}
 		 *
 		 * \\return \\c true on success, \\c false otherwise.
 		 */
-		virtual bool setFromID(int objectID);{foreach prop in property.protected}{if prop.persistentInit == "true"}{ref declarePersistentInitFunc}{/if}{/foreach}{foreach prop in property.private}{if prop.persistentInit == "true"}{ref declarePersistentInitFunc}{/if}{/foreach}{/section}{section declareCopyFuncs}
+		virtual bool setFromID(int objectID);{/if}
+		
+		/** Get persistent backend object.
+		 *
+		 * Get the persistent backend object. This should be used by classes 
+		 * that use a derived backend object to ensure the class can work with 
+		 * the more specific type of the backend object.
+		 */
+		virtual {$project.persistence.namespace}::{$class.persistence.backend}* getPersistent() const;
+		
+        /** Get objects.
+		 *
+		 * Get objects matching the specified expression from the database. 
+		 * The returned objects are not referenced and must be managed by the 
+		 * caller.
+		 *
+		 * \\param database Database.
+		 * \\param expr Expression.
+		 * \\param target Where to store the objects.
+		 *
+		 * \\return Number of objects.
+		 */
+		static unsigned int getPersistentObjects(
+		    {$project.persistence.namespace}::{$project.persistence.database}* database, 
+		    std::vector<{foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}*>& target, 
+		    const litesql::Expr& expr = litesql::Expr());{foreach prop in property.protected}{if prop.persistentInit == "true"}{ref declarePersistentInitFunc}{/if}{/foreach}{foreach prop in property.private}{if prop.persistentInit == "true"}{ref declarePersistentInitFunc}{/if}{/foreach}{/section}{section declarePersistentProtectedFuncs}
+		
+		/** Initialize persistent backend object.
+		 *
+		 * Initialize the persistent backend object.
+		 */
+		virtual void initPersistentBackend();
+		
+		/** Set backend object state.
+		 *
+		 * Set the state of the persistent backend object to the state of the 
+		 * object obtained from the database using the specified litesql 
+		 * expression.
+		 * 
+		 * \param expr Expression.
+		 */
+		virtual void setPersistentBackendState(const litesql::Expr& expr);{/section}{section declareCopyFuncs}
 		
 		/** Assignment operator.
 		 *
@@ -298,7 +339,18 @@ struct {$st.name}
 		 *
 		 * \return Pointer to the new instance.
 		 */
-{swrap 75 "		"}static {foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}* create(Ionflux::ObjectBase::IFObject* parentObject = 0);{/swrap}{/section}{section declareParamFuncs}{foreach prm in class.param}
+{swrap 75 "		"}static {foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}* create(Ionflux::ObjectBase::IFObject* parentObject = 0);{/swrap}{if enablePersistence == 1}
+		
+		/** Create instance.
+		 *
+		 * Create a new instance of the class.
+		 *
+		 * \param initDatabase Database.
+		 * \param objectID Object ID.
+		 *
+		 * \return Pointer to the new instance.
+		 */
+{swrap 75 "		"}static {foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}* create({$project.persistence.namespace}::{$project.persistence.database}* initDatabase, int objectID = -1);{/swrap}{/if}{/section}{section declareParamFuncs}{foreach prm in class.param}
 		
 		/** Set parameter.
 		 *
@@ -380,18 +432,18 @@ class {$class.name}{if ( haveBaseIFObject == 1 ) || ( haveBaseOther == 1 )}
 	private:
 {foreach var in variable.private}		/// {$var.desc}.
 		{if var.spec != ""}{$var.spec} {/if}{$var.type} {$var.name}{if var.arraySize != ""}[{$var.arraySize}]{/if};
-{/foreach}{foreach prop in property.private}{if prop.proxy != "true"}		/// {$prop.desc}.
+{/foreach}{foreach prop in property.private}{if ( prop.proxy != "true" ) && ( prop.persistent != "true" )}		/// {$prop.desc}.
 		{if prop.style == "vector"}std::vector<{$prop.element.type}>{else}{if prop.style == "map"}std::map<{$prop.key.type}, {$prop.element.type}>{else}{$prop.type}{/if}{/if} {$prop.name};
 {/if}{/foreach}{foreach const in constant.private}		/// {$const.desc}.
 		static const {$const.type} {$const.name};
 {/foreach}{foreach func in function.private}{ref declareFunc}{/foreach}		
-	protected:{if enablePersistence == 1}
+	protected:{if enablePersistence == 1}{if haveBasePersistent == 0}
 		/// Persistence: database.
-		{$class.persistence.namespace}::{$class.persistence.database}* database;
+		{$project.persistence.namespace}::{$project.persistence.database}* database;
 		/// Persistence: backend object.
-		{$class.persistence.namespace}::{$class.persistence.backend}* persistent;{/if}{foreach var in variable.protected}
+		{$project.persistence.namespace}::{$class.persistence.backend}* persistent;{/if}{/if}{foreach var in variable.protected}
 		/// {$var.desc}.
-		{if var.spec != ""}{$var.spec} {/if}{$var.type} {$var.name}{if var.arraySize != ""}[{$var.arraySize}]{/if};{/foreach}{foreach prop in property.protected}{if prop.proxy != "true"}
+		{if var.spec != ""}{$var.spec} {/if}{$var.type} {$var.name}{if var.arraySize != ""}[{$var.arraySize}]{/if};{/foreach}{foreach prop in property.protected}{if ( prop.proxy != "true" ) && ( prop.persistent != "true" )}
 		/// {$prop.desc}.
 		{if prop.style == "vector"}std::vector<{$prop.element.type}>{else}{if prop.style == "map"}std::map<{$prop.key.type}, {$prop.element.type}>{else}{$prop.type}{/if}{/if} {$prop.name};{/if}{/foreach}{foreach sig in signal}{foreach ins in sig.instance}
 		/// Signal: {$ins.desc}.
@@ -441,9 +493,14 @@ class {$class.name}{if ( haveBaseIFObject == 1 ) || ( haveBaseOther == 1 )}
 		 */
 		bool opDispatch(const Ionflux::ObjectBase::IFOpName& opName, 
 			const Ionflux::ObjectBase::IFObjectVector* params = 0, 
-			Ionflux::ObjectBase::IFObjectVector* target = 0) const;{/if}
+			Ionflux::ObjectBase::IFObjectVector* target = 0) const;{/if}{if enablePersistence == 1}{ref declarePersistentProtectedFuncs}{/if}
 		
-	public:{foreach var in variable.public}
+	public:{foreach fr in class.friendClasses}{first}
+	    // Friend classes.{/first}{single}
+	    // Friend classes.{/single}
+	    friend class {$fr};{last}
+	    {/last}{single}
+	    {/single}{/foreach}{foreach var in variable.public}
 		/// {$var.desc}.
 		{if var.spec != ""}{$var.spec} {/if}{$var.type} {$var.name}{if var.arraySize != ""}[{$var.arraySize}]{/if};{/foreach}{foreach const in constant.public}
 		/// {$const.desc}.
@@ -470,7 +527,16 @@ class {$class.name}{if ( haveBaseIFObject == 1 ) || ( haveBaseOther == 1 )}
 		 * \param initDatabase Database.
 		 * \param objectID Object ID.
 		 */
-		{$class.name}({$class.persistence.namespace}::{$class.persistence.database}* initDatabase, int objectID = -1);{/if}{if enableCopy == 1}
+		{$class.name}({$project.persistence.namespace}::{$project.persistence.database}* initDatabase, int objectID = -1);
+		
+		/** Constructor.
+		 *
+		 * Construct new {$class.name} object.
+		 *
+		 * \param initDatabase Database.
+		 * \param initPersistent Persistent backend object.
+		 */
+		{$class.name}({$project.persistence.namespace}::{$project.persistence.database}* initDatabase, {$project.persistence.namespace}::{$class.persistence.backend}* initPersistent);{/if}{if enableCopy == 1}
 		
 		/** Constructor.
 		 *
@@ -522,7 +588,7 @@ class {$class.name}{if ( haveBaseIFObject == 1 ) || ( haveBaseOther == 1 )}
 		 *
 		 * \\sa serialize()
 		 */
-		virtual int deserialize(const std::string& source, int offset = 0);{/if}{if enablePersistence == 1}{ref declarePersistenceFuncs}{/if}{if enableCopy == 1}{ref declareCopyFuncs}{/if}{if enableUpcast == 1}{ref declareUpcastFuncs}{/if}{if enableCreate == 1}{ref declareCreateFuncs}{/if}{if enableParam == 1}{ref declareParamFuncs}{/if}{foreach prop in property.private}{ref createPropertyAccessorDecl}{/foreach}{foreach prop in property.protected}{ref createPropertyAccessorDecl}{/foreach}{if enablePersistence == 1}{$prop.name = "database"}{$prop.desc = "Database"}{$prop.type = class.persistence.namespace + "::" + class.persistence.database + "*"}{$prop.setFromType = class.persistence.namespace + "::" + class.persistence.database + "*"}{ref createPropertyAccessorDecl}{/if}{foreach sig in signal}{foreach ins in sig.instance}
+		virtual int deserialize(const std::string& source, int offset = 0);{/if}{if enablePersistence == 1}{ref declarePersistenceFuncs}{/if}{if enableCopy == 1}{ref declareCopyFuncs}{/if}{if enableUpcast == 1}{ref declareUpcastFuncs}{/if}{if enableCreate == 1}{ref declareCreateFuncs}{/if}{if enableParam == 1}{ref declareParamFuncs}{/if}{foreach prop in property.private}{ref createPropertyAccessorDecl}{/foreach}{foreach prop in property.protected}{ref createPropertyAccessorDecl}{if prop.readOnly != "true"}{ref declarePropertyWriteFuncs}{/if}{/foreach}{if enablePersistence == 1}{if haveBasePersistent == 0}{$prop.style = ""}{$prop.readOnly = "false"}{$prop.name = "database"}{$prop.desc = "Database"}{$prop.type = project.persistence.namespace + "::" + project.persistence.database + "*"}{$prop.setFromType = project.persistence.namespace + "::" + project.persistence.database + "*"}{ref createPropertyAccessorDecl}{ref declarePropertyWriteFuncs}{/if}{/if}{foreach sig in signal}{foreach ins in sig.instance}
 		
 		/** Get signal: {$ins.desc}.
 		 *

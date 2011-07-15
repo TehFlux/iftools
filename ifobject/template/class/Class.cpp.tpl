@@ -24,7 +24,7 @@
 # 02111-1307 USA
 # 
 # ==========================================================================
-{section checkFeatures}{$haveForwards = 0}{foreach fw in forward}{if fw != ""}{$haveForwards = 1}{/if}{/foreach}{$haveTypedefs = 0}{foreach td in typedef}{if td != ""}{$haveTypedefs = 1}{/if}{/foreach}{$haveEvents = 0}{foreach ev in event}{if ev.id != ""}{$haveEvents = 1}{/if}{/foreach}{$haveSignals = 0}{foreach si in signal}{if si.id != ""}{$haveSignals = 1}{/if}{/foreach}{$haveBaseIFObject = 0}{foreach bc in class.base.ifobject}{if bc.name != ""}{$haveBaseIFObject = 1}{/if}{/foreach}{$haveBaseOther = 0}{foreach bc in class.base.other}{if bc.name != ""}{$haveBaseOther = 1}{/if}{/foreach}{$enableClassInfo = 0}{if ( haveBaseIFObject == 1 ) || ( class.name == "IFObject" )}{$enableClassInfo = 1}{/if}{$abstractClass = 0}{foreach func in function.public}{if func.pureVirtual == "true"}{$abstractClass = 1}{/if}{/foreach}{foreach func in function.protected}{if func.pureVirtual == "true"}{$abstractClass = 1}{/if}{/foreach}{$enableMutex = 0}{$enableGuards = 0}{$enableAutoGuards = 0}{$enableLogMessage = 0}{$enableSignal = haveSignals}{$enableSerialize = 0}{$enablePersistence = 0}{$enableCopy = 0}{$enableUpcast = 0}{$enableCreate = 0}{$enableParam = 0}{foreach fe in class.features}{if fe == "mutex"}{$enableMutex = 1}{/if}{if fe == "guards"}{$enableMutex = 1}{$enableGuards = 1}{/if}{if fe == "autoguards"}{$enableMutex = 1}{$enableGuards = 1}{$enableAutoGuards = 1}{/if}{if fe == "logmessage"}{$enableLogMessage = 1}{/if}{if fe == "signal"}{$enableSignal = 1}{/if}{if fe == "serialize"}{$enableSerialize = 1}{/if}{if fe == "classinfo"}{$enableClassInfo = 1}{/if}{if fe == "persistence"}{$enablePersistence = 1}{/if}{if fe == "copy"}{$enableCopy = 1}{/if}{if fe == "upcast"}{$enableUpcast = 1}{/if}{if fe == "create"}{$enableCreate = 1}{/if}{if fe == "param"}{$enableParam = 1}{/if}{/foreach}{$haveOps = 0}{foreach op in operation}{if op.name != ""}{$haveOps = 1}{/if}{/foreach}{/section}{ref checkFeatures}{section insertGPLDisclaimer}
+{section checkFeatures}{$haveForwards = 0}{foreach fw in forward}{if fw != ""}{$haveForwards = 1}{/if}{/foreach}{$haveTypedefs = 0}{foreach td in typedef}{if td != ""}{$haveTypedefs = 1}{/if}{/foreach}{$haveEvents = 0}{foreach ev in event}{if ev.id != ""}{$haveEvents = 1}{/if}{/foreach}{$haveSignals = 0}{foreach si in signal}{if si.id != ""}{$haveSignals = 1}{/if}{/foreach}{$haveBaseIFObject = 0}{foreach bc in class.base.ifobject}{if bc.name != ""}{$haveBaseIFObject = 1}{/if}{/foreach}{$haveBaseOther = 0}{foreach bc in class.base.other}{if bc.name != ""}{$haveBaseOther = 1}{/if}{/foreach}{$enableClassInfo = 0}{if ( haveBaseIFObject == 1 ) || ( class.name == "IFObject" )}{$enableClassInfo = 1}{/if}{$abstractClass = 0}{foreach func in function.public}{if func.pureVirtual == "true"}{$abstractClass = 1}{/if}{/foreach}{foreach func in function.protected}{if func.pureVirtual == "true"}{$abstractClass = 1}{/if}{/foreach}{$enableMutex = 0}{$enableGuards = 0}{$enableAutoGuards = 0}{$enableLogMessage = 0}{$enableSignal = haveSignals}{$enableSerialize = 0}{$enablePersistence = 0}{$enableCopy = 0}{$enableUpcast = 0}{$enableCreate = 0}{$enableParam = 0}{foreach fe in class.features}{if fe == "mutex"}{$enableMutex = 1}{/if}{if fe == "guards"}{$enableMutex = 1}{$enableGuards = 1}{/if}{if fe == "autoguards"}{$enableMutex = 1}{$enableGuards = 1}{$enableAutoGuards = 1}{/if}{if fe == "logmessage"}{$enableLogMessage = 1}{/if}{if fe == "signal"}{$enableSignal = 1}{/if}{if fe == "serialize"}{$enableSerialize = 1}{/if}{if fe == "classinfo"}{$enableClassInfo = 1}{/if}{if fe == "persistence"}{$enablePersistence = 1}{/if}{if fe == "copy"}{$enableCopy = 1}{/if}{if fe == "upcast"}{$enableUpcast = 1}{/if}{if fe == "create"}{$enableCreate = 1}{/if}{if fe == "param"}{$enableParam = 1}{/if}{/foreach}{$haveOps = 0}{foreach op in operation}{if op.name != ""}{$haveOps = 1}{/if}{/foreach}{$haveBasePersistent = 0}{if enablePersistence == 1}{if class.persistence.backendBase != ""}{$haveBasePersistent = 1}{/if}{if class.persistence.backend == ""}{$class.persistence.backend = class.name + "Backend"}{/if}{/if}{/section}{ref checkFeatures}{section insertGPLDisclaimer}
  * =========================================================================
 {swrap 75 " * "}
 This file is part of {$project.name}.
@@ -248,7 +248,7 @@ IF{$ev.id|uppercase(1)}Event* {$class.name}::create{$ev.id|uppercase(1)}Event()
 		removeLocalRef({$prop.name});{/if}{if prop.persistent != "true"}
 	{$prop.name} = new{$prop.name|uppercase(1)};{else}
 	if (persistent != 0)
-		persistent->{$prop.name} = new{$prop.name|uppercase(1)};{/if}{else}
+		{if haveBasePersistent == 0}persistent{else}getPersistent(){/if}->{$prop.name} = new{$prop.name|uppercase(1)};{/if}{else}
 {$prop.impl.set|swrap(75, "	")}{/if}
 \}{/if}
 
@@ -256,7 +256,7 @@ IF{$ev.id|uppercase(1)}Event* {$class.name}::create{$ev.id|uppercase(1)}Event()
 \{{if enableGuards == 1}
 	IFGuard propertyGuard(guardMutex);{/if}
 {if prop.impl.get == ""}{if prop.persistent != "true"}	return {$prop.name};{else}	if (persistent != 0)
-		return persistent->{$prop.name};
+		return {if haveBasePersistent == 0}persistent{else}getPersistent(){/if}->{$prop.name};
 	return {$prop.notSetValue};{/if}{else}{$prop.impl.get|swrap(75, "	")}{/if}
 \}{/if}{/if}{/section}{section createFuncImpl}{if func.pureVirtual != "true"}
 
@@ -491,29 +491,37 @@ bool {$class.name}::opDispatch(const Ionflux::ObjectBase::IFOpName& opName,
 \{
 {if func.impl == ""}	// TODO: Implementation.{else}{$func.impl|swrap(75,'	')}{/if}
 {if func.return.value != ""}	return {$func.return.value};
-{/if}\}{/section}{section persistentDatabaseAccessorImpl}
+{/if}\}{/section}{section createPersistentInitFuncImpl}
 
-void {$class.name}::setDatabase({$class.persistence.namespace}::{$class.persistence.database}* newDatabase)
+{swrap 75}bool {$class.name}::setFrom{$prop.name|uppercase(1)}({$prop.setFromType} init{$prop.name|uppercase(1)}){/swrap}
 \{
+    setPersistentBackendState({$project.persistence.namespace}::{$class.persistence.backend}::{$prop.name|uppercase(1)} == init{$prop.name|uppercase(1)});
+	return true;
+\}{/section}{section persistentDatabaseAccessorImpl}
+
+void {$class.name}::setDatabase({$project.persistence.namespace}::{$project.persistence.database}* newDatabase)
+\{
+    if (database == newDatabase)
+        return;
 	database = newDatabase;
-	if (persistent != 0)
-	\{
-		delete persistent;
-		persistent = 0;
-	\}
-	if (database != 0)
-		persistent = new {$class.persistence.namespace}::{$class.persistence.backend}(*database);
+	initPersistentBackend();
 \}
 
-{$class.persistence.namespace}::{$class.persistence.database}* {$class.name}::getDatabase() const
+{$project.persistence.namespace}::{$project.persistence.database}* {$class.name}::getDatabase() const
 \{
 	return database;
-\}{/section}{section createPersistenceFuncsImpl}
+\}{/section}{section createPersistenceFuncsImpl}{if haveBasePersistent == 0}
 
 void {$class.name}::update()
 \{
 	if (persistent != 0)
 		persistent->update();
+\}
+
+void {$class.name}::remove()
+\{
+	if (persistent != 0)
+		persistent->del();
 \}
 
 int {$class.name}::getPersistentID()
@@ -525,38 +533,106 @@ int {$class.name}::getPersistentID()
 
 bool {$class.name}::setFromID(int objectID)
 \{
-	if ((database == 0) || (persistent == 0))
-		return false;
-	try \{
-		*persistent = litesql::select<{$class.persistence.namespace}::{$class.persistence.backend}>(*database, 
-			{$class.persistence.namespace}::{$class.persistence.backend}::Id == objectID).one();
-	\} catch (litesql::NotFound)
-	\{
-		return false;
-	\}
+    setPersistentBackendState({$project.persistence.namespace}::{$class.persistence.backend}::Id == objectID);
 	return true;
-\}{section createPersistentInitFuncImpl}
+\}{/if}
 
-{swrap 75}bool {$class.name}::setFrom{$prop.name|uppercase(1)}({$prop.setFromType} init{$prop.name|uppercase(1)}){/swrap}
+{swrap 75}{$project.persistence.namespace}::{$class.persistence.backend}* {$class.name}::getPersistent() const{/swrap}
+\{{if haveBasePersistent == 0}
+    return persistent;{else}
+    {$project.persistence.namespace}::{$class.persistence.backend}* result = dynamic_cast<{$project.persistence.namespace}::{$class.persistence.backend}*>(persistent);
+    if (result == 0)
+        throw {if class.persistence.errorClass != ""}{$class.persistence.errorClass}{else}PersistenceError{/if}("Backend object has wrong type!");
+    return result;{/if}
+\}
+
+unsigned int {foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}::getPersistentObjects(
+    {$project.persistence.namespace}::{$project.persistence.database}* database, 
+    std::vector<{foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}*>& target, 
+    const litesql::Expr& expr)
 \{
-	if ((database == 0) || (persistent == 0))
-		return false;
+	if (database == 0)
+	    throw {if class.persistence.errorClass != ""}{$class.persistence.errorClass}{else}PersistenceError{/if}("Database not set!");
+    litesql::DataSource<{$project.persistence.namespace}::{$class.persistence.backend}> result = litesql::select<{$project.persistence.namespace}::{$class.persistence.backend}>(
+        *database, expr);
+    if (result.count() == 0)
+        return 0;
+    std::vector<{$project.persistence.namespace}::{$class.persistence.backend}> rv0 = result.all();
+    for (std::vector<{$project.persistence.namespace}::{$class.persistence.backend}>::iterator i = 
+        rv0.begin(); i != rv0.end(); i++)
+    \{
+        {$project.persistence.namespace}::{$class.persistence.backend}* pb0 = 
+            new {$project.persistence.namespace}::{$class.persistence.backend}(*i);
+        if (pb0 == 0)
+	        throw {if class.persistence.errorClass != ""}{$class.persistence.errorClass}{else}PersistenceError{/if}("[{$class.name}::getPersistentObjects] "
+	            "Could not allocate property backend object!");
+        {$class.name}* p0 = new {$class.name}(database, pb0);
+	    if (p0 == 0)
+	    \{
+	        delete pb0;
+	        throw {if class.persistence.errorClass != ""}{$class.persistence.errorClass}{else}PersistenceError{/if}("[{$class.name}::getPersistentObjects] "
+	            "Could not allocate object!");
+	    \}
+        target.push_back(p0);
+    \}
+    return result.count();
+\}{foreach prop in property.protected}{if prop.persistentInit == "true"}{ref createPersistentInitFuncImpl}{/if}{/foreach}{foreach prop in property.private}{if prop.persistentInit == "true"}{ref createPersistentInitFuncImpl}{/if}{/foreach}{/section}{section createPersistentProtectedFuncsImpl}
+		
+{swrap 75}void {$class.name}::initPersistentBackend(){/swrap}
+\{
+    if (persistent != 0)
+    \{
+        delete persistent;
+        persistent = 0;
+    \}
+	if (database != 0)
+	\{
+		persistent = new {$project.persistence.namespace}::{$class.persistence.backend}(*database);
+		if (persistent == 0)
+		    throw {if class.persistence.errorClass != ""}{$class.persistence.errorClass}{else}PersistenceError{/if}("[{$class.name}::initPersistentBackend] "
+	            "Could not allocate backend object!");
+    \}{if class.persistence.backendInit != ""}
+{swrap 75 "    "}{$class.persistence.backendInit}{/swrap}{/if}
+\}
+
+void {$class.name}::setPersistentBackendState(const litesql::Expr& expr)
+\{
+	if (database == 0)
+	    throw {if class.persistence.errorClass != ""}{$class.persistence.errorClass}{else}PersistenceError{/if}("Database not set!");
+	if (persistent == 0)
+		throw {if class.persistence.errorClass != ""}{$class.persistence.errorClass}{else}PersistenceError{/if}("Backend object not set!");
 	try \{
-		*persistent = litesql::select<{$class.persistence.namespace}::{$class.persistence.backend}>(*database, 
-			{$class.persistence.namespace}::{$class.persistence.backend}::{$prop.name|uppercase(1)} == init{$prop.name|uppercase(1)}).one();
+		*getPersistent() = litesql::select<{$project.persistence.namespace}::{$class.persistence.backend}>(*database, expr).one();
 	\} catch (litesql::NotFound)
 	\{
-		return false;
-	\}
-	return true;
-\}{/section}{foreach prop in property.protected}{if prop.persistentInit == "true"}{ref createPersistentInitFuncImpl}{/if}{/foreach}{foreach prop in property.private}{if prop.persistentInit == "true"}{ref createPersistentInitFuncImpl}{/if}{/foreach}{/section}{section createCopyFuncsImpl}
+	    std::ostringstream status;
+	    status << "[{$class.name}::setPersistentBackendState] "
+	        << "Object not found! (expr = '" << expr.asString() << "')";
+		throw {if class.persistence.errorClass != ""}{$class.persistence.errorClass}{else}PersistenceError{/if}(status.str());
+    \}
+\}{/section}{section createCopyFuncsImpl}
 
 {swrap 75}{foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}& {$class.name}::operator=(const {foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}& other){/swrap}
 \{{if enablePersistence == 1}
-	if ((database == 0) || (persistent == 0))
-		throw PersistenceError("Database not set.");{/if}{if function.copy.impl != ""}
-{swrap 75 "	"}{$function.copy.impl}{/swrap}{else}{foreach prop in property.protected}{if prop.copy == "true"}
-	set{$prop.name|uppercase(1)}(other.get{$prop.name|uppercase(1)}());{/if}{/foreach}{/if}
+    database = other.database;
+	if (database != 0)
+	\{
+	    if (persistent != other.persistent)
+	    \{
+	        if (persistent != 0)
+	            delete persistent;
+            persistent = new {$project.persistence.namespace}::{$class.persistence.backend}(*(other.getPersistent()));
+            if (persistent == 0)
+                throw {if class.persistence.errorClass != ""}{$class.persistence.errorClass}{else}PersistenceError{/if}("Could not allocate backend object!");
+	    \}
+    \} else
+    \{
+        if (other.persistent != 0)
+		    throw {if class.persistence.errorClass != ""}{$class.persistence.errorClass}{else}PersistenceError{/if}("Database not set, "
+		        "but backend object not null!");
+    \}{/if}{if function.copy.impl != ""}
+{swrap 75 "    "}{$function.copy.impl}{/swrap}{else}{foreach prop in property.protected}{if ( prop.copy == "true" ) && ( prop.persistent != "true" )}
+set{$prop.name|uppercase(1)}(other.get{$prop.name|uppercase(1)}());{/if}{/foreach}{/if}
 	return *this;
 \}{if abstractClass == 0}
 
@@ -587,7 +663,20 @@ bool {$class.name}::setFromID(int objectID)
     if (parentObject != 0)
         parentObject->addLocalRef(newObject);
     return newObject;
-\}{/section}{section createParamFuncsImpl}{foreach prm in class.param}
+\}{if enablePersistence == 1}
+
+{swrap 75}{foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}* {$class.name}::create({$project.persistence.namespace}::{$project.persistence.database}* initDatabase, int objectID){/swrap}
+\{
+    {$class.name}* newObject = new {$class.name}(initDatabase, objectID);
+    if (newObject == 0)
+    \{{if class.create.allocationError != ""}
+        throw {$class.create.allocationError};{else}
+        return 0;{/if}
+    \}
+    return newObject;
+\}
+
+{/if}{/section}{section createParamFuncsImpl}{foreach prm in class.param}
 
 {swrap 75}void {$class.name}::set{$prm.name}(Ionflux::ObjectBase::IFParamID paramID, {$prm.type} paramValue){/swrap}
 \{{if prm.impl.set != ""}
@@ -635,7 +724,8 @@ Ionflux::ObjectBase::IFOpInfo {$class.name|uppercase(1)}ClassInfo::OP_INFO_{$op.
 \{
 	name = "{$class.name}";
 	desc = "{$class.shortDesc}";{foreach bc in class.base.ifobject}
-	baseClassInfo.push_back({$bc.name}::CLASS_INFO);{/foreach}{if haveOps == 1}{$haveParams = 0}{$haveResults = 0}{foreach op in operation}{foreach prm in op.param}{first}{$haveParams = 1}{/first}{single}{$haveParams = 1}{/single}{/foreach}{foreach res in op.result}{first}{$haveResults = 1}{/first}{single}{$haveResults = 1}{/single}{/foreach}{/foreach}{if haveParams == 1}
+	baseClassInfo.push_back({$bc.name}::CLASS_INFO);{/foreach}{foreach bc in class.base.other}{if bc.hasClassInfo == "true"}
+	baseClassInfo.push_back({$bc.name}::CLASS_INFO);{/if}{/foreach}{if haveOps == 1}{$haveParams = 0}{$haveResults = 0}{foreach op in operation}{foreach prm in op.param}{first}{$haveParams = 1}{/first}{single}{$haveParams = 1}{/single}{/foreach}{foreach res in op.result}{first}{$haveResults = 1}{/first}{single}{$haveResults = 1}{/single}{/foreach}{/foreach}{if haveParams == 1}
 	Ionflux::ObjectBase::IFOpParamInfo currentParam;{/if}{if haveResults == 1}
 	Ionflux::ObjectBase::IFOpResultInfo currentResult;{/if}{foreach op in operation}
 	OP_INFO_{$op.name|uppercase}.name = "{$op.name}";{foreach prm in op.param}
@@ -697,7 +787,7 @@ const Ionflux::ObjectBase::IFClassInfo* {$class.name}::CLASS_INFO = &{$class.nam
 : {/first}{single}
 : {/single}{$init.name}({$init.value}){notlast}, {/notlast}{/foreach}{foreach sig in signal}{foreach ins in sig.instance}{first}{if haveInitializer == 0}
 : {$haveInitializer = 1}{else}, {/if}{/first}{single}{if haveInitializer == 0}
-: {$haveInitializer = 1}{else}, {/if}{/single}signal{$ins.name|uppercase(1)}Wrapper(0){notlast}, {/notlast}{/foreach}{/foreach}{if enablePersistence == 1}{if haveInitializer == 0}
+: {$haveInitializer = 1}{else}, {/if}{/single}signal{$ins.name|uppercase(1)}Wrapper(0){notlast}, {/notlast}{/foreach}{/foreach}{if ( enablePersistence == 1 ) && ( haveBasePersistent == 0 )}{if haveInitializer == 0}
 : {$haveInitializer = 1}{else}, {/if}database(0), persistent(0){/if}
 \{{if enableClassInfo == 1}
 	// NOTE: The following line is required for run-time type information.
@@ -708,12 +798,12 @@ const Ionflux::ObjectBase::IFClassInfo* {$class.name}::CLASS_INFO = &{$class.nam
 {$constructor.default.impl|swrap(75,'	')}{/if}
 \}{if enablePersistence == 1}
 
-{$class.name}::{$class.name}({$class.persistence.namespace}::{$class.persistence.database}* initDatabase, int objectID){$haveInitializer = 0}{foreach init in constructor.default.initializer}{$haveInitializer = 1}{first}
+{$class.name}::{$class.name}({$project.persistence.namespace}::{$project.persistence.database}* initDatabase, int objectID){$haveInitializer = 0}{foreach init in constructor.default.initializer}{$haveInitializer = 1}{first}
 : {/first}{single}
 : {/single}{$init.name}({$init.value}){notlast}, {/notlast}{/foreach}{foreach sig in signal}{foreach ins in sig.instance}{first}{if haveInitializer == 0}
 : {$haveInitializer = 1}{else}, {/if}{/first}{single}{if haveInitializer == 0}
-: {$haveInitializer = 1}{else}, {/if}{/single}signal{$ins.name|uppercase(1)}Wrapper(0){notlast}, {/notlast}{/foreach}{/foreach}{if enablePersistence == 1}{if haveInitializer == 0}
-: {$haveInitializer = 1}{else}, {/if}persistent(0){/if}
+: {$haveInitializer = 1}{else}, {/if}{/single}signal{$ins.name|uppercase(1)}Wrapper(0){notlast}, {/notlast}{/foreach}{/foreach}{if ( enablePersistence == 1 ) && ( haveBasePersistent == 0 )}{if haveInitializer == 0}
+: {$haveInitializer = 1}{else}, {/if}database(0), persistent(0){/if}
 \{{if enableClassInfo == 1}
 	// NOTE: The following line is required for run-time type information.
 	theClass = CLASS_INFO;{/if}{if enableAutoGuards == 1}
@@ -722,20 +812,36 @@ const Ionflux::ObjectBase::IFClassInfo* {$class.name}::CLASS_INFO = &{$class.nam
 	setDatabase(initDatabase);
 	if (objectID != -1)
 		setFromID(objectID);
+\}
+
+{$class.name}::{$class.name}({$project.persistence.namespace}::{$project.persistence.database}* initDatabase, {$project.persistence.namespace}::{$class.persistence.backend}* initPersistent){$haveInitializer = 0}{foreach init in constructor.default.initializer}{$haveInitializer = 1}{first}
+: {/first}{single}
+: {/single}{$init.name}({$init.value}){notlast}, {/notlast}{/foreach}{foreach sig in signal}{foreach ins in sig.instance}{first}{if haveInitializer == 0}
+: {$haveInitializer = 1}{else}, {/if}{/first}{single}{if haveInitializer == 0}
+: {$haveInitializer = 1}{else}, {/if}{/single}signal{$ins.name|uppercase(1)}Wrapper(0){notlast}, {/notlast}{/foreach}{/foreach}{if ( enablePersistence == 1 ) && ( haveBasePersistent == 0 )}{if haveInitializer == 0}
+: {$haveInitializer = 1}{else}, {/if}database(0), persistent(0){/if}
+\{{if enableClassInfo == 1}
+	// NOTE: The following line is required for run-time type information.
+	theClass = CLASS_INFO;{/if}{if enableAutoGuards == 1}
+	// NOTE: The following line is required for guards to work.
+	setGuardEnabled(true);{/if}
+	/* Do not use setDatabase() here since that also initializes the 
+	   persistent backend. */
+	database = initDatabase;
+	persistent = initPersistent;
 \}{/if}{if enableCopy == 1}
 
 {$class.name}::{$class.name}(const {foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}& other){$haveInitializer = 0}{foreach init in constructor.default.initializer}{$haveInitializer = 1}{first}
 : {/first}{single}
 : {/single}{$init.name}({$init.value}){notlast}, {/notlast}{/foreach}{foreach sig in signal}{foreach ins in sig.instance}{first}{if haveInitializer == 0}
 : {$haveInitializer = 1}{else}, {/if}{/first}{single}{if haveInitializer == 0}
-: {$haveInitializer = 1}{else}, {/if}{/single}signal{$ins.name|uppercase(1)}Wrapper(0){notlast}, {/notlast}{/foreach}{/foreach}{if enablePersistence == 1}{if haveInitializer == 0}
-: {$haveInitializer = 1}{else}, {/if}persistent(0){/if}
+: {$haveInitializer = 1}{else}, {/if}{/single}signal{$ins.name|uppercase(1)}Wrapper(0){notlast}, {/notlast}{/foreach}{/foreach}{if ( enablePersistence == 1 ) && ( haveBasePersistent == 0 )}{if haveInitializer == 0}
+: {$haveInitializer = 1}{else}, {/if}database(0), persistent(0){/if}
 \{{if enableClassInfo == 1}
 	// NOTE: The following line is required for run-time type information.
 	theClass = CLASS_INFO;{/if}{if enableAutoGuards == 1}
 	// NOTE: The following line is required for guards to work.
-	setGuardEnabled(true);{/if}{if enablePersistence == 1}
-	setDatabase(other.getDatabase());{/if}{if constructor.copy.impl == ""}
+	setGuardEnabled(true);{/if}{if constructor.copy.impl == ""}
 	*this = other;{else}
 {swrap 75 "	"}{$constructor.copy.impl}{/swrap}{/if}
 \}{/if}{foreach con in constructor.public}
@@ -760,7 +866,7 @@ const Ionflux::ObjectBase::IFClassInfo* {$class.name}::CLASS_INFO = &{$class.nam
 	persistent = 0;{else}
 	// TODO: Nothing ATM. ;-){/if}{else}
 {$destructor.impl|swrap(75,'	')}{/if}
-\}{foreach func in function.private}{ref createFuncImpl}{/foreach}{foreach func in function.protected}{ref createFuncImpl}{/foreach}{foreach op in operation}{ref createOpProxyImpl}{/foreach}{if haveOps == 1}{ref createOpDispatchImpl}{/if}{foreach ev in event}{ref createEventHelperFunctionImpl}{/foreach}{foreach func in function.public}{ref createFuncImpl}{/foreach}{foreach prop in property.private}{ref createPropertyAccessorImpl}{/foreach}{foreach prop in property.protected}{ref createPropertyAccessorImpl}{/foreach}{if enablePersistence == 1}{ref persistentDatabaseAccessorImpl}{/if}{if enableSerialize == 1}
+\}{foreach func in function.private}{ref createFuncImpl}{/foreach}{foreach func in function.protected}{ref createFuncImpl}{/foreach}{if enablePersistence == 1}{ref createPersistentProtectedFuncsImpl}{/if}{foreach op in operation}{ref createOpProxyImpl}{/foreach}{if haveOps == 1}{ref createOpDispatchImpl}{/if}{foreach ev in event}{ref createEventHelperFunctionImpl}{/foreach}{foreach func in function.public}{ref createFuncImpl}{/foreach}{foreach prop in property.private}{ref createPropertyAccessorImpl}{/foreach}{foreach prop in property.protected}{ref createPropertyAccessorImpl}{/foreach}{if ( enablePersistence == 1 ) && ( haveBasePersistent == 0 )}{ref persistentDatabaseAccessorImpl}{/if}{if enableSerialize == 1}
 
 bool {$class.name}::serialize(std::string& target) const
 \{{if haveBaseIFObject == 1}{foreach bc in class.base.ifobject}
