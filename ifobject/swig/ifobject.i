@@ -27,6 +27,8 @@ namespace Ionflux
 namespace ObjectBase
 {
 
+// types.hpp
+
 // HACK.
 typedef signed char             int8_t;
 typedef short int               int16_t;
@@ -87,6 +89,47 @@ struct IFCacheEntry
 };
 
 typedef unsigned int CachePolicy;
+
+// utf8.hpp
+
+std::string uniCharToUTF8(IFUniChar uniChar, 
+	const Ionflux::ObjectBase::IFObject* logTarget = 0);
+bool utf8ToUniChar(const std::string& bytes, IFUniChar& target, 
+	const Ionflux::ObjectBase::IFObject* logTarget = 0);
+void uniCharToUTF8(const std::vector<IFUniChar>& uniChars, 
+	std::string& target,
+	const Ionflux::ObjectBase::IFObject* logTarget = 0);
+unsigned int utf8GetSize(unsigned char byte, 
+	const Ionflux::ObjectBase::IFObject* logTarget = 0);
+bool utf8ToUniChar(const std::string& bytes, 
+	std::vector<IFUniChar>& target,
+	const Ionflux::ObjectBase::IFObject* logTarget = 0);
+unsigned int utf8GetSize(const std::string& bytes, 
+	const Ionflux::ObjectBase::IFObject* logTarget = 0);
+
+// utility.hpp
+
+const unsigned int READ_BUFFER_SIZE = 4096;
+bool readFile(const std::string& fileName, std::string& target, 
+    Ionflux::ObjectBase::IFObject* logTarget = 0);
+void explode(const std::string& bytes, const std::string& splitString, 
+	std::vector<std::string>& result);
+bool isOneOf(char c, const std::string& testChars);
+bool isNumber(const std::string &bytes);
+bool isInteger(const std::string &bytes);
+bool isFloat(const std::string &bytes);
+bool isIdentifier(const std::string &bytes);
+std::string toUpper(const std::string &text, unsigned int numChars = 0, 
+	unsigned int offset = 0);
+std::string toLower(const std::string &text, unsigned int numChars = 0, 
+	unsigned int offset = 0);
+std::string trim(const std::string& bytes, bool leftTrim = true, 
+	bool rightTrim = true);
+bool hasPrefix(const std::string& bytes, const std::string& prefix, 
+    bool ignoreCase = true);
+bool hasPrefix(const std::string& bytes, const std::vector<std::string>& 
+    prefixes, bool ignoreCase = true);
+Ionflux::ObjectBase::UInt64 getTimeTicks();
 
 }
 

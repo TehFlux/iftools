@@ -24,6 +24,7 @@
  * ========================================================================== */
 
 #include "ifobject/serialize.hpp"
+#include <arpa/inet.h>
 
 namespace Ionflux
 {
@@ -54,7 +55,6 @@ int unpack(const std::string& source, std::string& target,
 	offset += dataSize;
 	return offset;
 }
-
 
 }
 

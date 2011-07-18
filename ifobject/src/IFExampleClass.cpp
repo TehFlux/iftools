@@ -433,7 +433,7 @@ unsigned int IFExampleClass::getNumBlahs() const
 	return blahs.size();
 }
 
-Blah* IFExampleClass::getBlah(const std::string& elementKey)
+Blah* IFExampleClass::getBlah(const std::string& elementKey) const
 {
 	IFGuard propertyGuard(guardMutex);
 	std::map<std::string, Blah*>::const_iterator i = blahs.find(elementKey);

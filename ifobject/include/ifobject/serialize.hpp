@@ -84,8 +84,7 @@ int unpack(const std::string& source, T& target, int offset = 0)
 
 /** Pack data (string).
  *
- * Packs the data into a string. The default implementation will work for 
- * any type which can be stored byte-wise.
+ * Packs the data into a string.
  *
  * \param source data to be packed
  * \param target where to store the packed data
@@ -95,8 +94,7 @@ void pack(const std::string& source, std::string& target, bool append = true);
 
 /** Unpack data (string).
  *
- * Unpacks the data from a string. The default implementation will work for 
- * any type which can be stored byte-wise.
+ * Unpacks the data from a string.
  *
  * \param source data to be unpacked
  * \param target where to store the unpacked data
