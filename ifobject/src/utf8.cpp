@@ -28,6 +28,7 @@
 #include <sstream>
 #include "ifobject/utf8.hpp"
 #include "ifobject/log.hpp"
+#include "ifobject/IFError.hpp"
 
 using namespace std;
 
@@ -37,8 +38,7 @@ namespace Ionflux
 namespace ObjectBase
 {
 
-std::string uniCharToUTF8(IFUniChar uniChar, 
-	const Ionflux::ObjectBase::IFObject* logTarget)
+std::string uniCharToUTF8(IFUniChar uniChar)
 {
 	std::string result;
 	if (uniChar < 128U)
@@ -92,13 +92,17 @@ std::string uniCharToUTF8(IFUniChar uniChar,
 		result.append(1, static_cast<unsigned char>(
 			(uniChar & 0x3f) | 0x80));
 	} else
-		log("Character not representable by UTF-8.", 
-			VL_ERROR, "uniCharToUTF8", logTarget);
+	{
+	    std::ostringstream status;
+	    status << "[uniCharToUTF8] " 
+	        << "Character not representable by UTF-8 (" << uniChar 
+	        << ").";
+	    throw IFError(status.str());
+	}
 	return result;
 }
 
-bool utf8ToUniChar(const std::string& bytes, IFUniChar& target, 
-	const Ionflux::ObjectBase::IFObject* logTarget)
+bool utf8ToUniChar(const std::string& bytes, IFUniChar& target)
 {
 	unsigned int size = bytes.size();
 	target = 0;
@@ -106,11 +110,8 @@ bool utf8ToUniChar(const std::string& bytes, IFUniChar& target,
 	if (size == 1)
 	{
 		if ((bytes[0] >> 7) != 0)
-		{
-			log("Invalid single-byte character.", 
-				VL_ERROR, "utf8ToUniChar", logTarget);
-			result = false;
-		} else
+		    throw IFError("[utf8ToUniChar] Invalid single-byte character.");
+        else
 			target = bytes[0];
 	} else
 	{
@@ -123,11 +124,10 @@ bool utf8ToUniChar(const std::string& bytes, IFUniChar& target,
 			if ((byte >> 6) != 2)
 			{
 				ostringstream state;
-				state << "Invalid byte (" 
+				state << "[utf8ToUniChar] Invalid byte (" 
 					<< static_cast<unsigned int>(byte) 
 					<< ") in UTF-8 sequence at position " << i << ".";
-				log(state.str(), VL_ERROR,  "utf8ToUniChar", logTarget);
-				result = false;
+                throw IFError(state.str());
 			} else
 				target |= ((byte & 0x3f) << (6 * (size - 1 - i)));
 			i++;
@@ -137,15 +137,14 @@ bool utf8ToUniChar(const std::string& bytes, IFUniChar& target,
 }
 
 void uniCharToUTF8(const std::vector<IFUniChar>& uniChars, 
-	std::string& target, const Ionflux::ObjectBase::IFObject* logTarget)
+	std::string& target)
 {
 	target = "";
 	for (unsigned int i = 0; i < uniChars.size(); i++)
-		target.append(uniCharToUTF8(uniChars[i], logTarget));
+		target.append(uniCharToUTF8(uniChars[i]));
 }
 
-unsigned int utf8GetSize(unsigned char byte, 
-	const Ionflux::ObjectBase::IFObject* logTarget)
+unsigned int utf8GetSize(unsigned char byte)
 { 
 	if (byte < 128)
 		return 1;
@@ -159,13 +158,12 @@ unsigned int utf8GetSize(unsigned char byte,
 		return 5;
 	else if ((byte & 0xfe) == 0xfc)
 		return 6;
-	log("Invalid character size.", VL_ERROR, "utf8GetSize"); 
+	throw IFError("[utf8GetSize] Invalid character size."); 
 	return 0;
 }
 
 bool utf8ToUniChar(const std::string& bytes, 
-	std::vector<IFUniChar>& target,
-	const Ionflux::ObjectBase::IFObject* logTarget)
+	std::vector<IFUniChar>& target)
 { 
 	unsigned int size = bytes.size(); 
 	unsigned int i = 0;
@@ -178,16 +176,14 @@ bool utf8ToUniChar(const std::string& bytes,
 		charSize = utf8GetSize(bytes[i]);
 		if ((charSize > 0) 
 			&& ((i + charSize) <= size) 
-			&& utf8ToUniChar(bytes.substr(i, charSize), currentChar, 
-				logTarget))
+			&& utf8ToUniChar(bytes.substr(i, charSize), currentChar))
 			i += charSize;
 		else
 		{
 			ostringstream state;
 			state << "Could not convert UTF-8 character " "(size = " 
 				<< charSize << ", position = " << i << ").";
-			log(state.str(), VL_ERROR, "utf8ToUniChar");
-			result = false;
+			throw IFError(state.str());
 		}
 		if (result)
 			target.push_back(currentChar);
@@ -195,8 +191,7 @@ bool utf8ToUniChar(const std::string& bytes,
 	return result;
 }
 
-unsigned int utf8GetSize(const std::string& bytes, 
-	const Ionflux::ObjectBase::IFObject* logTarget)
+unsigned int utf8GetSize(const std::string& bytes)
 {
 	unsigned int size = bytes.size();
 	unsigned int i = 0;

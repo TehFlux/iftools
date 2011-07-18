@@ -92,20 +92,14 @@ typedef unsigned int CachePolicy;
 
 // utf8.hpp
 
-std::string uniCharToUTF8(IFUniChar uniChar, 
-	const Ionflux::ObjectBase::IFObject* logTarget = 0);
-bool utf8ToUniChar(const std::string& bytes, IFUniChar& target, 
-	const Ionflux::ObjectBase::IFObject* logTarget = 0);
+std::string uniCharToUTF8(IFUniChar uniChar);
+bool utf8ToUniChar(const std::string& bytes, IFUniChar& target);
 void uniCharToUTF8(const std::vector<IFUniChar>& uniChars, 
-	std::string& target,
-	const Ionflux::ObjectBase::IFObject* logTarget = 0);
-unsigned int utf8GetSize(unsigned char byte, 
-	const Ionflux::ObjectBase::IFObject* logTarget = 0);
+	std::string& target);
+unsigned int utf8GetSize(unsigned char byte);
 bool utf8ToUniChar(const std::string& bytes, 
-	std::vector<IFUniChar>& target,
-	const Ionflux::ObjectBase::IFObject* logTarget = 0);
-unsigned int utf8GetSize(const std::string& bytes, 
-	const Ionflux::ObjectBase::IFObject* logTarget = 0);
+	std::vector<IFUniChar>& target);
+unsigned int utf8GetSize(const std::string& bytes);
 
 // utility.hpp
 
@@ -280,6 +274,8 @@ class IFObject
 		virtual std::string getString() const;
 		virtual void getLiteral(std::string& target, const std::string& encoding 
 		= ENCODING_UTF8) const;
+        virtual std::string getLiteral2(const std::string& encoding = 
+        ENCODING_UTF8) const;
 		virtual bool initFromLiteral(const std::string& source);
 		virtual Ionflux::ObjectBase::IFObject* copy() const;
 		static Ionflux::ObjectBase::IFObject* 

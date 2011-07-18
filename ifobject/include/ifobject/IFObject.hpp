@@ -329,6 +329,20 @@ class IFObject
 		virtual void getLiteral(std::string& target, const std::string& encoding 
 		= ENCODING_UTF8) const;
 		
+		/** Get literal representation.
+		 *
+		 * Get a literal representation of the object. This is a string 
+		 * representation which contains the persistent state of the object, 
+		 * so it may be used to restore the state to an unititialized object. 
+		 * It also identifies the type of object which the literal represents.
+		 *
+		 * \param encoding encoding to be used.
+		 *
+		 * \return Object literal.
+		 */
+		virtual std::string getLiteral2(const std::string& encoding = 
+		ENCODING_UTF8) const;
+		
 		/** Initialize from literal representation.
 		 *
 		 * Initialize the object from a literal representation. The object 

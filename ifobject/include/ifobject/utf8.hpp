@@ -44,8 +44,7 @@ namespace ObjectBase
  *
  * \return UTF-8 string
  */
-std::string uniCharToUTF8(IFUniChar uniChar, 
-	const Ionflux::ObjectBase::IFObject* logTarget = 0);
+std::string uniCharToUTF8(IFUniChar uniChar);
 
 /** Decode unicode character.
  *
@@ -57,8 +56,7 @@ std::string uniCharToUTF8(IFUniChar uniChar,
  *
  * \return \c true if decoding is successful, \c false otherwise
  */
-bool utf8ToUniChar(const std::string& bytes, IFUniChar& target, 
-	const Ionflux::ObjectBase::IFObject* logTarget = 0);
+bool utf8ToUniChar(const std::string& bytes, IFUniChar& target);
 
 /** Convert unicode character sequence to UTF-8.
  *
@@ -69,8 +67,7 @@ bool utf8ToUniChar(const std::string& bytes, IFUniChar& target,
  * \param logTarget object to be used for logging
  */
 void uniCharToUTF8(const std::vector<IFUniChar>& uniChars, 
-	std::string& target,
-	const Ionflux::ObjectBase::IFObject* logTarget = 0);
+	std::string& target);
 
 /** Get size of UTF-8 character.
  *
@@ -82,8 +79,7 @@ void uniCharToUTF8(const std::vector<IFUniChar>& uniChars,
  *
  * \return size of utf-8 encoded character in bytes
  */
-unsigned int utf8GetSize(unsigned char byte, 
-	const Ionflux::ObjectBase::IFObject* logTarget = 0);
+unsigned int utf8GetSize(unsigned char byte);
 
 /** Decode unicode character sequence.
  *
@@ -96,8 +92,7 @@ unsigned int utf8GetSize(unsigned char byte,
  * \return \c true if decoding is successful, \c false otherwise
  */
 bool utf8ToUniChar(const std::string& bytes, 
-	std::vector<IFUniChar>& target,
-	const Ionflux::ObjectBase::IFObject* logTarget = 0);
+	std::vector<IFUniChar>& target);
 
 /** Get size of UTF-8 string.
  *
@@ -108,8 +103,7 @@ bool utf8ToUniChar(const std::string& bytes,
  *
  * \return size of string in characters, or 0 if an error occured
  */
-unsigned int utf8GetSize(const std::string& bytes, 
-	const Ionflux::ObjectBase::IFObject* logTarget = 0);
+unsigned int utf8GetSize(const std::string& bytes);
 
 }
 

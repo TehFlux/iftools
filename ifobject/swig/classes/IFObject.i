@@ -111,6 +111,8 @@ class IFObject
         virtual  operator std::string() const;
         virtual void getLiteral(std::string& target, const std::string& 
         encoding = ENCODING_UTF8) const;
+        virtual std::string getLiteral2(const std::string& encoding = 
+        ENCODING_UTF8) const;
         virtual bool initFromLiteral(const std::string& source);
         virtual Ionflux::ObjectBase::IFObject* copy() const;
         static Ionflux::ObjectBase::IFObject* 

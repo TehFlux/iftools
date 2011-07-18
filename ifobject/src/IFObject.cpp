@@ -372,8 +372,9 @@ const
 		state << ENCODING_UTF8 << LITERAL_SEPARATOR;
 		for (unsigned int i = 0; i < buffer.size(); i++)
 		{
-			IFUniChar currentChar = static_cast<IFUniChar>(buffer[i]);
-			encoded.append(uniCharToUTF8(currentChar, this));
+			IFUniChar currentChar = static_cast<IFUniChar>(
+			    static_cast<unsigned char>(buffer[i]));
+			encoded.append(uniCharToUTF8(currentChar));
 		}
 	} else
 	if (encoding == ENCODING_BASE64)
@@ -389,6 +390,13 @@ const
 	state << encodedSize << LITERAL_SEPARATOR 
 		<< encoded;
 	target = state.str();
+}
+
+std::string IFObject::getLiteral2(const std::string& encoding) const
+{
+	std::string result;
+	getLiteral(result, encoding);
+	return result;
 }
 
 bool IFObject::initFromLiteral(const std::string& source)
@@ -554,7 +562,7 @@ bool IFObject::initFromLiteral(const std::string& source)
 	if (encoding == ENCODING_UTF8)
 	{
 		std::vector<IFUniChar> decodeTemp;
-		if (!utf8ToUniChar(encodedData, decodeTemp, this))
+		if (!utf8ToUniChar(encodedData, decodeTemp))
 		{
 			status << "Error while decoding UTF-8 data (literal: '";
 			if (source.size() > 512)
