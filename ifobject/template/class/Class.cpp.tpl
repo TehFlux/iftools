@@ -871,8 +871,9 @@ const Ionflux::ObjectBase::IFClassInfo* {$class.name}::CLASS_INFO = &{$class.nam
 bool {$class.name}::serialize(std::string& target) const
 \{{if haveBaseIFObject == 1}{foreach bc in class.base.ifobject}
 	if (!{$bc.name}::serialize(target))
-		return false;{/foreach}{/if}
-	target.clear();{foreach prop in property.private}{if prop.serialize == "true"}{ref serializeProp}{/if}{/foreach}{foreach prop in property.protected}{if prop.serialize == "true"}{ref serializeProp}{/if}{/foreach}{foreach var in variable.private}{if var.serialize == "true"}{ref serializeVar}{/if}{/foreach}{foreach var in variable.protected}{if var.serialize == "true"}{ref serializeVar}{/if}{/foreach}{foreach var in variable.public}{if var.serialize == "true"}{ref serializeVar}{/if}{/foreach}
+		return false;{/foreach}{/if}{foreach bc in class.base.other}{if bc.serialize == "true"}
+	if (!{$bc.name}::serialize(target))
+		return false;{/if}{/foreach}{foreach prop in property.private}{if prop.serialize == "true"}{ref serializeProp}{/if}{/foreach}{foreach prop in property.protected}{if prop.serialize == "true"}{ref serializeProp}{/if}{/foreach}{foreach var in variable.private}{if var.serialize == "true"}{ref serializeVar}{/if}{/foreach}{foreach var in variable.protected}{if var.serialize == "true"}{ref serializeVar}{/if}{/foreach}{foreach var in variable.public}{if var.serialize == "true"}{ref serializeVar}{/if}{/foreach}
 	return true;
 \}
 
@@ -880,7 +881,10 @@ int {$class.name}::deserialize(const std::string& source, int offset)
 \{{if haveBaseIFObject == 1}{foreach bc in class.base.ifobject}
 	offset = {$bc.name}::deserialize(source, offset);
 	if (offset < 0)
-		return false;{/foreach}{/if}{foreach prop in property.private}{if prop.serialize == "true"}{ref deserializeProp}{/if}{/foreach}{foreach prop in property.protected}{if prop.serialize == "true"}{ref deserializeProp}{/if}{/foreach}{foreach var in variable.private}{if var.serialize == "true"}{ref deserializeVar}{/if}{/foreach}{foreach var in variable.protected}{if var.serialize == "true"}{ref deserializeVar}{/if}{/foreach}{foreach var in variable.public}{if var.serialize == "true"}{ref deserializeVar}{/if}{/foreach}
+		return false;{/foreach}{/if}{foreach bc in class.base.other}{if bc.serialize == "true"}
+	offset = {$bc.name}::deserialize(source, offset);
+	if (offset < 0)
+		return false;{/if}{/foreach}{foreach prop in property.private}{if prop.serialize == "true"}{ref deserializeProp}{/if}{/foreach}{foreach prop in property.protected}{if prop.serialize == "true"}{ref deserializeProp}{/if}{/foreach}{foreach var in variable.private}{if var.serialize == "true"}{ref deserializeVar}{/if}{/foreach}{foreach var in variable.protected}{if var.serialize == "true"}{ref deserializeVar}{/if}{/foreach}{foreach var in variable.public}{if var.serialize == "true"}{ref deserializeVar}{/if}{/foreach}
 	return offset;
 \}{/if}{if enablePersistence == 1}{ref createPersistenceFuncsImpl}{/if}{if enableCopy == 1}{ref createCopyFuncsImpl}{/if}{if enableUpcast == 1}{ref createUpcastFuncsImpl}{/if}{if enableCreate == 1}{ref createCreateFuncsImpl}{/if}{if enableParam == 1}{ref createParamFuncsImpl}{/if}{foreach sig in signal}{foreach ins in sig.instance}
 

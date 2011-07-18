@@ -32,6 +32,7 @@
 #include <climits>
 #include <cstdlib>
 #include <sstream>
+#include "ifobject/IFError.hpp"
 
 using namespace std;
 using namespace Ionflux::ObjectBase;
@@ -502,7 +503,7 @@ bool IFObject::initFromLiteral(const std::string& source)
 				state = -1;
 			}
 		} else
-		if (state == 2)
+		if (state == 3)
 		{
 			// extract encoded data
 			if (encodedData.size() < encodedSize)
