@@ -458,12 +458,16 @@ bool {$class.name}::opDispatch(const Ionflux::ObjectBase::IFOpName& opName,
 		"which the operation has been called is const).";{/if}
 	return false;
 \}{/section}{section serializeProp}{if prop.serializeImpl != ""}
-{$prop.serializeImpl|swrap(75,'	')}{else}
-	pack({$prop.name}, target);{/if}{/section}{section serializeVar}{if var.serializeImpl != ""}
+{$prop.serializeImpl|swrap(75,'	')}{else}{if ( prop.persistent == "true" ) || ( prop.proxy == "true" )}
+    pack(get{$prop.name|uppercase(0)}(), target);{else}
+	pack({$prop.name}, target);{/if}{/if}{/section}{section serializeVar}{if var.serializeImpl != ""}
 {$var.serializeImpl|swrap(75,'	')}{else}
 	pack({$var.name}, target);{/if}{/section}{section deserializeProp}{if prop.deserializeImpl != ""}
-{$prop.deserializeImpl|swrap(75,'	')}{else}
-	offset = unpack(source, {$prop.name}, offset);{/if}
+{$prop.deserializeImpl|swrap(75,'	')}{else}{if ( prop.persistent == "true" ) || ( prop.proxy == "true" )}
+    {$prop.type} t0;
+    offset = unpack(source, t0, offset);
+    set{$prop.name|uppercase(0)}(t0);{else}
+	offset = unpack(source, {$prop.name}, offset);{/if}{/if}
 	if (offset < 0)
 	\{{if enableLogMessage == 1}
 		ostringstream state;
