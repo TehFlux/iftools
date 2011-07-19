@@ -374,3 +374,34 @@ IFObjectBase.packObject = function(v)
     return result;
 }
 
+/// IFObject proxy class.
+IFObjectBase.IFObject = Class.create({
+    
+    initialize: function()
+    {
+        this.name = "IFObject";
+        this.id = "";
+        this.idNum = 0;
+        this.data = "";
+    },
+    
+    pack: function()
+    {
+        return IFObjectBase.packObject(this);
+    },
+    
+    unpack: function(s)
+    {
+        var d0 = IFObjectBase.unpackObject(s);
+        /* NOTE: Setting the name without a check is acceptable, since we 
+                 have no information about base classes and derived classes 
+                 may want to call this function in their unpack() 
+                 implementation. */
+        this.name = d0.name;
+        this.id = d0.id;
+        this.idNum = d0.idNum;
+        this.data = d0.data;
+    }
+    
+});
+
