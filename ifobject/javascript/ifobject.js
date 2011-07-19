@@ -385,22 +385,45 @@ IFObjectBase.IFObject = Class.create({
         this.data = "";
     },
     
+    packData: function()
+    {
+        this.data = "";
+        this.data += IFObjectBase.packString(this.id);
+        this.data += IFObjectBase.packInt(this.idNum);
+        return this.data;
+    },
+    
+    unpackData: function(offset)
+    {
+        var p0 = IFObjectBase.defaultArg(offset, 0);
+        var r0 = IFObjectBase.unpackString(this.data, p0);
+        this.id = r0[0];
+        p0 = r0[1];
+        r0 = IFObjectBase.unpackInt(this.data, p0);
+        this.idNum = r0[0];
+        p0 = r0[1];
+        return p0;
+    },
+    
     pack: function()
     {
+        this.packData();
         return IFObjectBase.packObject(this);
     },
     
     unpack: function(s)
     {
-        var d0 = IFObjectBase.unpackObject(s);
+        var d0 = {};
+        IFObjectBase.unpackObject(s, d0);
         /* NOTE: Setting the name without a check is acceptable, since we 
                  have no information about base classes and derived classes 
                  may want to call this function in their unpack() 
                  implementation. */
         this.name = d0.name;
-        this.id = d0.id;
-        this.idNum = d0.idNum;
+        this.encoding = d0.encoding;
+        this.dataLength = d0.dataLength;
         this.data = d0.data;
+        this.unpackData();
     }
     
 });
