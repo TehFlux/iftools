@@ -218,11 +218,6 @@ class IFObject
         }
 };
 
-void pack(const Ionflux::ObjectBase::IFObject*& source, std::string& 
-target, bool append = true);
-int unpack(const std::string& source, Ionflux::ObjectBase::IFObject*& 
-target, int offset = 0);
-
 const unsigned int READ_BUFFER_SIZE;
 
 bool readFile(const std::string& fileName, std::string& target, 

@@ -56,6 +56,26 @@ int unpack(const std::string& source, std::string& target,
 	return offset;
 }
 
+void pack(float source, std::string& target, bool append)
+{
+    packBE(source, target, append);
+}
+
+int unpack(const std::string& source, float& target, int offset)
+{
+    return unpackBE(source, target, offset);
+}
+
+void pack(double source, std::string& target, bool append)
+{
+    packBE(source, target, append);
+}
+
+int unpack(const std::string& source, double& target, int offset)
+{
+    return unpackBE(source, target, offset);
+}
+
 }
 
 }

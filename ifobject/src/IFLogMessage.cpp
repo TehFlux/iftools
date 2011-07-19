@@ -300,7 +300,6 @@ bool IFLogMessage::serialize(std::string& target) const
 {
 	if (!IFObject::serialize(target))
 		return false;
-	target.clear();
 	pack(message, target);
 	pack(level, target);
 	pack(sourceFunctionName, target);

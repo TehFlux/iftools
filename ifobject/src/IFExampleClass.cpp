@@ -478,7 +478,6 @@ bool IFExampleClass::serialize(std::string& target) const
 {
 	if (!IFObject::serialize(target))
 		return false;
-	target.clear();
 	pack(someValue, target);
 	pack(someText, target);
 	pack(roProp, target);

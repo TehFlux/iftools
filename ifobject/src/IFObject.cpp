@@ -1023,7 +1023,6 @@ Ionflux::ObjectBase::IFObject* IFObject::getLogTarget() const
 
 bool IFObject::serialize(std::string& target) const
 {
-	target.clear();
 	pack(id, target);
 	pack(idNum, target);
 	return true;
