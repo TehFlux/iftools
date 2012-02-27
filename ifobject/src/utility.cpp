@@ -91,8 +91,10 @@ void explode(const std::string& bytes, const std::string& splitString,
 	result.push_back(bytes.substr(currentPos, bytes.size() - currentPos));
 }
 
-bool isOneOf(char c, const std::string& testChars)
+bool isOneOf(char c, const std::string& testChars, bool invert)
 {
+    if (invert)
+        return !isOneOf(c, testChars, false);
 	if (testChars.size() == 0)
 		return false;
 	if (testChars.find_first_of(c) == string::npos)

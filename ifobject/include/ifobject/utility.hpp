@@ -73,11 +73,12 @@ void explode(const std::string& bytes, const std::string& splitString,
  *
  * \param c Character to be checked.
  * \param testChars String of characters.
+ * \param invert Invert the result
  *
  * \return \c true if the character 'c' is one of the characters of
  * 'testChars', \c false otherwise.
  */
-bool isOneOf(char c, const std::string& testChars);
+bool isOneOf(char c, const std::string& testChars, bool invert = false);
 
 /** Check whether a string represents a number.
  *

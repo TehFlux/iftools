@@ -108,7 +108,7 @@ bool readFile(const std::string& fileName, std::string& target,
     Ionflux::ObjectBase::IFObject* logTarget = 0);
 void explode(const std::string& bytes, const std::string& splitString, 
 	std::vector<std::string>& result);
-bool isOneOf(char c, const std::string& testChars);
+bool isOneOf(char c, const std::string& testChars, bool invert = false);
 bool isNumber(const std::string &bytes);
 bool isInteger(const std::string &bytes);
 bool isFloat(const std::string &bytes);
