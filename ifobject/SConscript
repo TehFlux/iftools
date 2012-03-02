@@ -207,6 +207,7 @@ env.Append(BUILDERS = { 'Source' : sourceBuilder,
     'SWIGPython' : swigPythonBuilder})
 
 ifobjectLibHeaders = [
+    'include/sha1.hpp',
     'include/libb64.hpp',
 	'include/ifobject/types.hpp',
 	'include/ifobject/log.hpp',
@@ -231,6 +232,7 @@ ifobjectLibHeaders = [
 ]
 
 ifobjectLibSources = [
+    'build/sha1.cpp',
     'build/libb64.cpp',
 	'build/log.cpp',
 	'build/utf8.cpp',

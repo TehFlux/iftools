@@ -124,6 +124,14 @@ bool hasPrefix(const std::string& bytes, const std::string& prefix,
 bool hasPrefix(const std::string& bytes, const std::vector<std::string>& 
     prefixes, bool ignoreCase = true);
 Ionflux::ObjectBase::UInt64 getTimeTicks();
+std::string makeHex(const std::string& inputData);
+std::string makeReadable(const std::string& inputData, 
+	const std::string& replacement);
+std::string makeNiceHex(const std::string& hex, const std::string& readable, 
+	int bytesPerLine, int groupBytes);
+std::string sha1(const std::string& secret, bool hexOut = false);
+std::string hmac(const std::string& key, const std::string& message, 
+    bool hexOut = false);
 
 }
 
@@ -287,6 +295,8 @@ class IFObject
 		virtual bool removeLocalRef(Ionflux::ObjectBase::IFObject* refTarget) 
 		const;
 		virtual bool removeAllLocalRefs() const;
+		virtual unsigned int getNumLocalRefs(Ionflux::ObjectBase::IFObject* 
+		refTarget) const;
 		virtual void setGuardEnabled(bool newGuardState);
 		virtual bool getGuardEnabled();
 		virtual bool lock() const;

@@ -950,6 +950,26 @@ bool IFObject::removeAllLocalRefs() const
 	return result;
 }
 
+unsigned int IFObject::getNumLocalRefs(Ionflux::ObjectBase::IFObject* 
+refTarget) const
+{
+	if (refTarget == 0)
+	{
+		log(IFLogMessage("Attempt to get reference count for null object.", 
+			VL_ERROR, this, "removeLocalRef"));
+		return false;
+	}
+	IFObjectRefMap::iterator i = refData->refMap.find(refTarget);
+	IFObjectRefInfo* refInfo = 0;
+	if ((i != refData->refMap.end())
+		&& ((*i).second != 0))
+		refInfo = (*i).second;
+	if ((refInfo == 0)
+		|| (refInfo->refCount == 0))
+		return 0;
+	return refInfo->refCount;
+}
+
 void IFObject::setGuardEnabled(bool newGuardState)
 {
 	if (newGuardState)

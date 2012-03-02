@@ -140,6 +140,8 @@ class IFObject
         virtual bool removeLocalRef(Ionflux::ObjectBase::IFObject* 
         refTarget) const;
         virtual bool removeAllLocalRefs() const;
+        virtual unsigned int getNumLocalRefs(Ionflux::ObjectBase::IFObject*
+        refTarget) const;
         virtual void setGuardEnabled(bool newGuardState);
         virtual bool getGuardEnabled();
         virtual bool lock() const;

@@ -204,6 +204,73 @@ bool hasPrefix(const std::string& bytes, const std::vector<std::string>&
  */
 Ionflux::ObjectBase::UInt64 getTimeTicks();
 
+/** Make readable hexadecimal code.
+ *
+ * Convert a string that not necessarily contains readable characters to
+ * readable hexadecimal code.
+ *
+ * \param inputData A string of bytes to be converted.
+ *
+ * \return Hexadecimal string.
+ */
+std::string makeHex(const std::string& inputData);
+
+/** Replace unreadable characters.
+ *
+ * Convert a string that not necessarily contains readable characters to
+ * readable characters, replacing characters considered unreadable with 
+ * 'replacement'.
+ *
+ * \param inputData A string of bytes to be converted.
+ * \param replacement A string with which to replace unreadable characters.
+ *
+ * \return String composed of readable characters.
+ */
+std::string makeReadable(const std::string& inputData, 
+	const std::string& replacement);
+
+/** Make nice hexadecimal output.
+ *
+ * This function generates a nice human readable hexadecimal output from a 
+ * string of hexadecimal bytes and a readable representation of that string, 
+ * similar to the display of a hex editor.
+ *
+ * \param hex String of bytes in hexadecimal representation.
+ * \param readable Readable representation of the string.
+ * \param bytesPerLine How many bytes to display per line.
+ * \param groupBytes How many bytes to display in each group.
+ *
+ * \return Nicely formatted hexadecimal output.
+ */
+std::string makeNiceHex(const std::string& hex, const std::string& readable, 
+	int bytesPerLine, int groupBytes);
+
+/** Calculate SHA-1 hash.
+ *
+ * Calculate the SHA-1 hash for a string.
+ *
+ * \param secret The string containing the secret which should be hashed.
+ * \param hexOut If set to \c true, the return value will be a hexadecimal 
+ * string.
+ *
+ * \return SHA-1 hash of the input secret.
+ */
+std::string sha1(const std::string& secret, bool hexOut = false);
+
+/** Calculate HMAC-SHA hash.
+ *
+ * Calculate the HMAC-SHA hash for a key and a message.
+ *
+ * \param key The string containing the key.
+ * \param message The string containing the message.
+ * \param hexOut If set to \c true, the return value will be a hexadecimal 
+ * string.
+ *
+ * \return HMAC-SHA hash of the input key and message.
+ */
+std::string hmac(const std::string& key, const std::string& message, 
+    bool hexOut = false);
+
 }
 
 }

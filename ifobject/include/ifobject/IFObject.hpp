@@ -534,6 +534,17 @@ class IFObject
 		 */
 		virtual bool removeAllLocalRefs() const;
 		
+		/** Get number of local references.
+		 *
+		 * Get the number of local referenced for the object.
+		 *
+		 * \param refTarget Target object.
+		 *
+		 * \return number of local references for the object.
+		 */
+		virtual unsigned int getNumLocalRefs(Ionflux::ObjectBase::IFObject* 
+		refTarget) const;
+		
 		/** Set guard state.
 		 *
 		 * Enable or disable object locking. If set to \c true, access to the 

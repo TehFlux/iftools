@@ -27,6 +27,9 @@
 #include <sys/time.h>
 #include <sstream>
 #include <fstream>
+#include <iomanip>
+#include <cstring>
+#include "sha1.hpp"
 #include "ifobject/utility.hpp"
 #include "ifobject/IFObject.hpp"
 #include "ifobject/IFLogMessage.hpp"
@@ -295,6 +298,103 @@ Ionflux::ObjectBase::UInt64 getTimeTicks()
     UInt64 ct = static_cast<UInt64>(t0.tv_sec)
         * 1000000 + t0.tv_usec;
     return ct;
+}
+
+std::string makeHex(const std::string& inputData)
+{
+    std::ostringstream buffer;
+	buffer << uppercase << right << setfill('0') << hex;
+	for (unsigned int i = 0; i < inputData.size(); i++)
+		buffer << setw(2) << int(static_cast<unsigned char>(inputData[i]));
+	return buffer.str();
+}
+
+std::string makeReadable(const std::string& inputData, 
+	const std::string& replacement)
+{
+    std::ostringstream buffer;
+	unsigned char currentChar;
+	for (unsigned int i = 0; i < inputData.size(); i++)
+	{
+		currentChar = static_cast<unsigned char>(inputData[i]);
+		if (((currentChar >= 32) && (currentChar <= 126))
+			|| (currentChar >= 160))
+		{
+			buffer << inputData[i];
+		} else
+		{
+			buffer << replacement;
+		}
+	}
+	return buffer.str();
+}
+
+std::string makeNiceHex(const std::string& hex, const std::string& readable, 
+	int bytesPerLine, int groupBytes)
+{
+    std::ostringstream buffer;
+	string paddedHex(hex);
+	string paddedReadable(readable);
+	if ((paddedHex.size() % 2) != 0)
+		paddedHex.append(" ");
+	while (((paddedHex.size() / 2) % bytesPerLine) != 0)
+		paddedHex.append("  ");
+	unsigned int bytes = paddedHex.size() / 2;
+	while (paddedReadable.size() < bytes)
+		paddedReadable.append(" ");
+	int readablePos = 0;
+	for (unsigned int i = 0; i < bytes; i++)
+	{
+		buffer << paddedHex.substr(2 * i, 2) << " ";
+		if ((((i + 1) % groupBytes) == 0) && (((i + 1) % bytesPerLine) != 0))
+			buffer << " ";
+		if (((i + 1) % bytesPerLine) == 0)
+		{
+			buffer << " " << paddedReadable.substr(readablePos, bytesPerLine) 
+			    << "\n";
+			readablePos += bytesPerLine;
+		}
+	}
+	return buffer.str();
+}
+
+std::string sha1(const std::string& secret, bool hexOut)
+{
+	sha1_context ctx;
+	unsigned char sha1sum[20];
+	char *buffer = new char[secret.size()];
+	memcpy(reinterpret_cast<void *>(buffer), 
+		reinterpret_cast<const void *>(secret.c_str()), secret.size());
+	::sha1_starts(&ctx);
+	::sha1_update(&ctx, reinterpret_cast<uint8 *>(buffer), secret.size());
+	::sha1_finish(&ctx, sha1sum);
+	delete[] buffer;
+	if (hexOut)
+		return makeHex(string(reinterpret_cast<const char*>(sha1sum), 20));
+	return string(reinterpret_cast<const char*>(sha1sum), 20);
+}
+
+std::string hmac(const std::string& key, const std::string& message, 
+    bool hexOut)
+{
+    const unsigned int blockSize = 64;
+    std::string tKey(key);
+    if (tKey.size() > blockSize)
+        tKey = sha1(tKey);
+    if (tKey.size() < blockSize)
+        tKey.append(blockSize - tKey.size(), '\x0');
+    std::string oKey;
+    std::string iKey;
+    for (unsigned int i = 0; i < blockSize; i++)
+    {
+        oKey.append(1, tKey[i] ^ '\x5c');
+        iKey.append(1, tKey[i] ^ '\x36');
+    }
+    std::string t0(iKey);
+    t0.append(message);
+    std::string result(oKey);
+    result.append(sha1(t0));
+    return sha1(result, hexOut);
 }
 
 }
