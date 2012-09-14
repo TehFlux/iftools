@@ -451,16 +451,25 @@ void TCPServer::disconnect(TCPRemotePeer *peer)
 		return;
 	}
 	IOEvent currentEvent;
-	currentEvent.fd = peer->getSocket().getFD();
-	currentEvent.peer = peer;
-	currentEvent.type = IOEvent::IO_READ;
-	iomp->removeEvent(this, currentEvent);
-	onDisconnect(*peer);
-	peer->getSocket().close();
-	if (iomp->isRunning())
-		trash.push_back(peer);
-	else
-		removeClient(peer);
+	int fd0 = peer->getSocket().getFD();
+	if (fd0 == 0)
+	{
+		log.msg("[TCPServer::disconnect] WARNING: Ignoring attempt to "
+			"disconnect peer with null FD.", log.VL_WARNING);
+		return;
+	} else
+	{
+        currentEvent.fd = fd0;
+        currentEvent.peer = peer;
+        currentEvent.type = IOEvent::IO_READ;
+        iomp->removeEvent(this, currentEvent);
+        onDisconnect(*peer);
+        peer->getSocket().close();
+    }
+    if (iomp->isRunning())
+        trash.push_back(peer);
+    else
+        removeClient(peer);
 }
 
 void TCPServer::broadcast(const std::string &bytes)

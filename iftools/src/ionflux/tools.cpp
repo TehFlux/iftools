@@ -1321,7 +1321,7 @@ bool getLine(const std::string& bytes, std::string& line,
 {
     unsigned int numBytes = bytes.size();
     if (startPos >= numBytes)
-        return "";
+        return false;
     unsigned int cPos = startPos;
     bool lineFound = false;
     while (!lineFound 
