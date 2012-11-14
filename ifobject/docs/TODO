@@ -15,6 +15,8 @@ Up next
 New
 --------------------------------------------------------------------------------
 
++ Merge changes to class templates from ICBFM.
+
 + Build on windows
   > check dependencies (maybe boost can be used as a replacement?)
     . sigc++
