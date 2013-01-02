@@ -156,8 +156,8 @@ class IFObject
         virtual void getXML(std::string& target, unsigned int indentLevel =
         0) const;
         virtual std::string getXML0(unsigned int indentLevel = 0) const;
-        virtual void writeToFile(const std::string& fileName) const;
-        virtual void loadFromFile(const std::string& fileName);
+        virtual void writeToXMLFile(const std::string& fileName) const;
+        virtual void loadFromXMLFile(const std::string& fileName);
         virtual std::string getValueString() const;
         virtual std::string getIDString() const;
         virtual std::string getString() const;

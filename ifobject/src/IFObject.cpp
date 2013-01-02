@@ -1081,7 +1081,7 @@ std::string IFObject::getXML0(unsigned int indentLevel) const
 	return xmlData;
 }
 
-void IFObject::writeToFile(const std::string& fileName) const
+void IFObject::writeToXMLFile(const std::string& fileName) const
 {
 	std::ofstream f0;
 	f0.open(fileName.c_str(), ios_base::out);
@@ -1096,7 +1096,7 @@ void IFObject::writeToFile(const std::string& fileName) const
 	f0.write(xmlData.c_str(), xmlData.size());
 }
 
-void IFObject::loadFromFile(const std::string& fileName)
+void IFObject::loadFromXMLFile(const std::string& fileName)
 {
 	Ionflux::ObjectBase::XMLUtils::loadFromFile(fileName, *this, 
 	    getXMLElementName());

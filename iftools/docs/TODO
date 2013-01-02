@@ -1,6 +1,6 @@
 ================================================================================
-Ionflux Object Base System
-Copyright © 2006-2013 Joern P. Meier
+Ionflux Tools
+Copyright © 2004-2013 Joern P. Meier
 mail@ionflux.org
 --------------------------------------------------------------------------------
 TODO
@@ -21,33 +21,32 @@ New
 Critical stuff
 --------------------------------------------------------------------------------
 
++ Move features from IFTools to IFObject or separate libraries.
+  > create a standalone version of iftpl that has minimal dependencies
 
++ Add a verbatim section feature for configuration values.
 
 --------------------------------------------------------------------------------
 Important stuff
 --------------------------------------------------------------------------------
 
-+ Merge features from FMBase
-  > property system
-  > memory management events
++ Fix a possible bug in ConfigTree::findChild() (seems to remember the result 
+  of the previous call and start the search from there).
 
-+ Merge automatic database binding generation from XTW
++ Use ManagedObject reference count instead of management flags where possible.
+  . Derive objects from ManagedObject where possible.
 
-+ generate XML serialization code automatically for properties
-
-+ auto-detect Python
++ Tokenizer: Add proper escaped character expansion (optional).
 
 --------------------------------------------------------------------------------
 Nice to have
 --------------------------------------------------------------------------------
 
-+ Build on windows
-  > check dependencies (maybe boost can be used as a replacement?)
-    . sigc++
-    . pthread
+
 
 --------------------------------------------------------------------------------
 Side-tracks
 --------------------------------------------------------------------------------
+
 
 

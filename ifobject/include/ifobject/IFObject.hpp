@@ -674,7 +674,7 @@ class IFObject
 		 *
 		 * \param fileName file name.
 		 */
-		virtual void writeToFile(const std::string& fileName) const;
+		virtual void writeToXMLFile(const std::string& fileName) const;
 		
 		/** Load object data from file.
 		 *
@@ -682,7 +682,7 @@ class IFObject
 		 *
 		 * \param fileName File name.
 		 */
-		virtual void loadFromFile(const std::string& fileName);
+		virtual void loadFromXMLFile(const std::string& fileName);
 		
 		/** Get string representation of value.
 		 *

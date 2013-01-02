@@ -1,10 +1,17 @@
 ================================================================================
 Ionflux Tools
-Copyright (c) 2004-2010 Joern P. Meier
+Copyright (c) 2004-2013 Joern P. Meier
 mail@ionflux.org
 --------------------------------------------------------------------------------
 Readme
 ================================================================================
+
+[NOTE 2013-01-02] The Ionflux Tools Class Library contains mostly legacy 
+code that will be integrated into the Ionflux Object Base System or moved to 
+other libraries. The most important features are the configuration file system 
+and the template engine, which are still extensively used in other projects.
+
+--------------------------------------------------------------------------------
 
 The Ionflux Tools Class Library is a lightweight multi-platform C++ framework. 
 It features a set of useful classes and tools, such as a template engine and a 
