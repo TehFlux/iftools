@@ -121,6 +121,10 @@ class ConfigTree
 		static const TokenType TT_NESTED_OPEN;
 		/// Token type: Nested configuration (close).
 		static const TokenType TT_NESTED_CLOSE;
+		/// Token type: Verbatim configuration value (open).
+		static const TokenType TT_VERBATIM_OPEN;
+		/// Token type: Verbatim configuration value (close).
+		static const TokenType TT_VERBATIM_CLOSE;
 		/// Auto-insertion marker.
 		static const std::string AUTO_INSERT_MARKER;
 		/// Special characters in configuration values.

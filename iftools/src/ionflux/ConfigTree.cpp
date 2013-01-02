@@ -46,6 +46,10 @@ const TokenType ConfigTree::TT_NESTED_OPEN = {
 	TokenType::USERTYPE_ID + 5, "{", false, 1};
 const TokenType ConfigTree::TT_NESTED_CLOSE = {
 	TokenType::USERTYPE_ID + 6, "}", false, 1};
+const TokenType ConfigTree::TT_VERBATIM_OPEN = {
+	TokenType::USERTYPE_ID + 7, "<", false, 3};
+const TokenType ConfigTree::TT_VERBATIM_CLOSE = {
+	TokenType::USERTYPE_ID + 8, ">", false, 3};
 
 const std::string ConfigTree::AUTO_INSERT_MARKER = 
 	"# ------- Values inserted automatically by the configuration system "
@@ -63,6 +67,8 @@ ConfigTree::ConfigTree()
 	tok.addTokenType(TT_TREEPATH);
 	tok.addTokenType(TT_NESTED_OPEN);
 	tok.addTokenType(TT_NESTED_CLOSE);
+	tok.addTokenType(TT_VERBATIM_OPEN);
+	tok.addTokenType(TT_VERBATIM_CLOSE);
 	tok.setTokenTypeAnything();
 	tok.setExtractQuoted(true);
 }
@@ -266,9 +272,18 @@ void ConfigTree::parseConfig(const std::string& configData)
 				} else
 				{
 					// Extract option value.
+					/* verbatim state
+					   0 - none
+					   1 - open
+					   2 - closed
+					 */
+					int verbatim = 0;
 					while ((currentToken.typeID != Tokenizer::TT_NONE.typeID)
 						&& (currentToken.typeID != Tokenizer::TT_INVALID.typeID)
-						&& (currentToken.typeID != Tokenizer::TT_LINETERM.typeID))
+						&& ((verbatim == 1) 
+						    || (currentToken.typeID 
+						        != Tokenizer::TT_LINETERM.typeID))
+						&& (verbatim < 2))
 					{
 						if (currentToken.typeID == Tokenizer::TT_ESCAPED.typeID)
 						{
@@ -288,6 +303,10 @@ void ConfigTree::parseConfig(const std::string& configData)
 									&& (currentToken.value[0] 
 										!= TT_NESTED_CLOSE.validChars[0])
 									&& (currentToken.value[0] 
+										!= TT_VERBATIM_OPEN.validChars[0])
+									&& (currentToken.value[0] 
+										!= TT_VERBATIM_CLOSE.validChars[0])
+									&& (currentToken.value[0] 
 										!= Tokenizer::ESCAPE_CHAR))
 								|| (currentToken.value.size() == 0))
 							{
@@ -299,10 +318,30 @@ void ConfigTree::parseConfig(const std::string& configData)
 								currentEntry.line.option.value.append(1, 
 									Tokenizer::ESCAPE_CHAR);
 							}
-						}
-						currentEntry.line.option.value.append(
-							currentToken.value);
-						currentToken = tok.getNextToken();
+						} else
+                        if ((currentToken.typeID == TT_VERBATIM_OPEN.typeID) 
+                            && (currentToken.value.size() == 3))
+                        {
+                            // Extract verbatim token value.
+                            verbatim = 1;
+                            currentToken = tok.getNextToken();
+                            if (currentToken.typeID == 
+                                Tokenizer::TT_LINETERM.typeID)
+                                // Skip the first lineterm.
+                                currentToken = tok.getNextToken();
+                        } else
+                        if (verbatim 
+                            && (currentToken.typeID 
+                                == TT_VERBATIM_CLOSE.typeID) 
+                            && (currentToken.value.size() == 3))
+                        {
+                            // End of verbatim token value.
+                            verbatim = 2;
+                        }
+                        if (verbatim < 2)
+                            currentEntry.line.option.value.append(
+                                currentToken.value);
+                        currentToken = tok.getNextToken();
 					}
 					status.str("");
 					status << "[ConfigTree::parseConfigLine] DEBUG: (Line " 

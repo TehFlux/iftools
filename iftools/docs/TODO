@@ -24,8 +24,6 @@ Critical stuff
 + Move features from IFTools to IFObject or separate libraries.
   > create a standalone version of iftpl that has minimal dependencies
 
-+ Add a verbatim section feature for configuration values.
-
 --------------------------------------------------------------------------------
 Important stuff
 --------------------------------------------------------------------------------
