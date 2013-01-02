@@ -10,9 +10,9 @@ To build the Ionflux Object Base System, the following dependencies must be
 installed on your target system:
 
 • SCons (http://www.scons.org/)
-
 • libsigc++ (http://libsigc.sourceforge.net/)
-
+• pthread
+• tinyxml (http://www.grinninglizard.com/tinyxml/)
 • iftools (http://iftools.sourceforge.net/), required for ifclassgen
   (this will change in the future)
 

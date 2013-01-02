@@ -26,7 +26,6 @@
 %{
 #include "ifobject/IFObject.hpp"
 %}
-#undef assert
 
 // forward declarations for types from the Ionflux Object Base System
 namespace Ionflux
@@ -91,6 +90,7 @@ class IFObject
 		static const std::string ENCODING_UTF8;
 		static const std::string ENCODING_BASE64;
 		static const Ionflux::ObjectBase::UInt64 DEFAULT_SIZE;
+		static const std::string XML_ELEMENT_NAME;
 		static const IFIDNum ID_NUM_UNDEFINED;
         static const Ionflux::ObjectBase::IFSignalType SIGNAL_TYPE_OBJECT;
         static const std::string SIGNAL_NAME_OBJECT_CHANGED;
@@ -107,7 +107,6 @@ class IFObject
         virtual Ionflux::ObjectBase::IFObjectID getID() const;
         virtual void setIDNum(Ionflux::ObjectBase::IFIDNum newIDNum);
         virtual Ionflux::ObjectBase::IFIDNum getIDNum() const;
-        virtual std::string getString() const;
         virtual  operator std::string() const;
         virtual void getLiteral(std::string& target, const std::string& 
         encoding = ENCODING_UTF8) const;
@@ -128,9 +127,9 @@ class IFObject
         virtual void log(const Ionflux::ObjectBase::IFObject& logObject) 
         const;
         virtual void log() const;
-        virtual bool assert(bool assertion, const 
+        virtual bool assert0(bool assertion, const 
         Ionflux::ObjectBase::IFObject& logObject);
-        virtual bool assert(bool assertion, const 
+        virtual bool assert0(bool assertion, const 
         Ionflux::ObjectBase::IFObject& logObject) const;
         virtual bool addRef() const;
         virtual bool removeRef() const;
@@ -148,6 +147,20 @@ class IFObject
         virtual bool tryLock() const;
         virtual bool unlock() const;
         virtual Ionflux::ObjectBase::UInt64 getSize() const;
+        virtual std::string getXMLElementName() const;
+        virtual void getXMLChildData(std::string& target, unsigned int 
+        indentLevel = 0) const;
+        virtual std::string getXMLChildData0(std::string& target, unsigned 
+        int indentLevel = 0) const;
+        virtual std::string getXMLAttributeData() const;
+        virtual void getXML(std::string& target, unsigned int indentLevel =
+        0) const;
+        virtual std::string getXML0(unsigned int indentLevel = 0) const;
+        virtual void writeToFile(const std::string& fileName) const;
+        virtual void loadFromFile(const std::string& fileName);
+        virtual std::string getValueString() const;
+        virtual std::string getIDString() const;
+        virtual std::string getString() const;
         virtual bool serialize(std::string& target) const;
         virtual int deserialize(const std::string& source, int offset = 0);
         virtual void setLogTarget(Ionflux::ObjectBase::IFObject* 
@@ -163,12 +176,6 @@ class IFObject
 
 std::ostream& operator<<(std::ostream& outputStream, const 
 Ionflux::ObjectBase::IFObject& source);
-
-void pack(const Ionflux::ObjectBase::IFObject*& source, std::string& 
-target, bool append = true);
-
-int unpack(const std::string& source, Ionflux::ObjectBase::IFObject*& 
-target, int offset = 0);
 
 }
 

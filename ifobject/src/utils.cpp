@@ -3,7 +3,7 @@
  * Copyright © 2006 Joern P. Meier
  * mail@ionflux.org
  * --------------------------------------------------------------------------
- * utility.cpp                 Utility functions (implementation).
+ * utils.cpp                 Utility functions (implementation).
  * ==========================================================================
  *
  * This file is part of Ionflux Object Base System.
@@ -29,8 +29,10 @@
 #include <fstream>
 #include <iomanip>
 #include <cstring>
+#include <cstdlib>
+#include <cmath>
 #include "sha1.hpp"
-#include "ifobject/utility.hpp"
+#include "ifobject/utils.hpp"
 #include "ifobject/IFObject.hpp"
 #include "ifobject/IFLogMessage.hpp"
 #include "ifobject/IFError.hpp"
@@ -235,6 +237,101 @@ std::string toLower(const std::string &text, unsigned int numChars,
 	return result.str();
 }
 
+bool toBool(const std::string &bytes)
+{
+    std::string v0 = toLower(bytes);
+    if ((v0 == "true") 
+        || (v0 == "yes") 
+        || (v0 == "1") 
+        || (v0 == "on"))
+        return true;
+    return false;
+}
+
+double toFloat(const std::string& bytes)
+{
+	if (bytes.size() == 0)
+		return 0.;
+	const std::string numbers = "0123456789";
+	const std::string dots = ".";
+	const std::string exponent = "eE";
+	const std::string signum = "+-";
+	unsigned int i = 0;
+	if (bytes.size() == 1)
+	{
+	    if (isOneOf(bytes[0], numbers))
+	        return static_cast<double>(strtol(bytes.c_str(), 0, 10));
+	}
+	// Check signum.
+	double sig0 = 1.;
+	if (isOneOf(bytes[i], signum))
+	{
+	    if (bytes[i] == '-')
+	        sig0 = -1.;
+		i++;
+	}
+	bool result = true;
+	// Check integer part.
+	std::string int0;
+	while (result && (i < bytes.size()))
+	{
+	    if (!isOneOf(bytes[i], numbers))
+	        result = false;
+	    else
+	        int0.append(1, bytes[i]);
+		i++;
+	}
+	double int1 = 0.;
+	if (int0.size() > 0)
+	    int1 = static_cast<double>(strtol(int0.c_str(), 0, 10));
+	/* Accept dot if it is either preceded by a number (thus i > 1) 
+	   or the next character is a number. */
+	if (isOneOf(bytes[i - 1], dots) 
+		&& ((i > 1) || ((i < bytes.size()) && isOneOf(bytes[i], numbers))))
+		result = true;
+	// Check fraction part.
+	std::string frac0;
+	while (result && (i < bytes.size()))
+	{
+	    if (!isOneOf(bytes[i], numbers))
+	        result = false;
+	    else
+	        frac0.append(1, bytes[i]);
+		i++;
+	}
+	double frac1 = 0.;
+	if (frac0.size() > 0)
+	    frac1 = static_cast<double>(strtol(frac0.c_str(), 0, 10));
+	if (isOneOf(bytes[i - 1], exponent))
+		result = true;
+	if (!result)
+	    // Best guess.
+	    return sig0 * (int1 + pow(10., -1. * frac0.size()) * frac1);
+	// Check signum of exponent.
+	double expSig0 = 1.;
+	if ((i < bytes.size()) && isOneOf(bytes[i], signum))
+	{
+	    if (bytes[i] == '-')
+	        expSig0 = -1.;
+		i++;
+	}
+	// Check exponent.
+	std::string exp0;
+	while (result && (i < bytes.size()))
+	{
+	    if (!isOneOf(bytes[i], numbers))
+	        result = false;
+	    else
+	        exp0.append(1, bytes[i]);
+		i++;
+	}
+	double exp1 = 0.;
+	if (exp0.size() > 0)
+	    exp1 = static_cast<double>(strtol(exp0.c_str(), 0, 10));
+	return sig0 * (int1 + pow(10., -1. * frac0.size()) * frac1) 
+	    * pow(10., expSig0 * exp1);
+}
+
 std::string trim(const std::string& bytes, bool leftTrim, bool rightTrim)
 {
 	if (bytes.size() == 0)
@@ -397,10 +494,49 @@ std::string hmac(const std::string& key, const std::string& message,
     return sha1(result, hexOut);
 }
 
+void vectorFromList(const std::string& data, 
+    Ionflux::ObjectBase::IntVector& target, 
+    const std::string& separator)
+{
+    StringVector parts0;
+    explode(data, ",", parts0);
+    for (StringVector::const_iterator i = parts0.begin(); 
+        i != parts0.end(); i++)
+        target.push_back(strtol((*i).c_str(), 0, 10));
+}
+
+void vectorFromList(const std::string& data, 
+    Ionflux::ObjectBase::UIntVector& target, 
+    const std::string& separator)
+{
+    StringVector parts0;
+    explode(data, ",", parts0);
+    for (StringVector::const_iterator i = parts0.begin(); 
+        i != parts0.end(); i++)
+        target.push_back(strtol((*i).c_str(), 0, 10));
+}
+
+void vectorFromList(const std::string& data, 
+    Ionflux::ObjectBase::DoubleVector& target, 
+    const std::string& separator)
+{
+    StringVector parts0;
+    explode(data, ",", parts0);
+    for (StringVector::const_iterator i = parts0.begin(); 
+        i != parts0.end(); i++)
+        target.push_back(toFloat(trim(*i)));
+}
+
+std::string getIndent(unsigned int level, unsigned int indentWidth, 
+    char indentChar)
+{
+    return std::string(level * indentWidth, indentChar);
 }
 
 }
 
-/** \file utility.cpp
+}
+
+/** \file utils.cpp
  * \brief Utility functions (implementation).
  */

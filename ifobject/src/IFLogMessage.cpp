@@ -28,6 +28,13 @@
 #include "ifobject/IFMutex.hpp"
 #include "ifobject/IFGuard.hpp"
 #include <sstream>
+#include "ifobject/serialize.hpp"
+#include "ifobject/utils.hpp"
+
+using Ionflux::ObjectBase::pack;
+using Ionflux::ObjectBase::packObj;
+using Ionflux::ObjectBase::unpack;
+using Ionflux::ObjectBase::unpackObj;
 
 using namespace std;
 using namespace Ionflux::ObjectBase;
@@ -310,27 +317,33 @@ int IFLogMessage::deserialize(const std::string& source, int offset)
 {
 	offset = IFObject::deserialize(source, offset);
 	if (offset < 0)
-		return false;
-	offset = unpack(source, message, offset);
+		return -1;
+	// message
+    offset = unpack(source, message, offset);
 	if (offset < 0)
 	{
-		std::cerr << "[IFLogMessage::deserialize] ERROR: "
+        std::ostringstream status;
+		status << "[IFLogMessage::deserialize] "
 			"Could not deserialize property 'message'.";
-		return false;
+        throw Ionflux::ObjectBase::IFError(status.str());
 	}
-	offset = unpack(source, level, offset);
+	// level
+    offset = unpack(source, level, offset);
 	if (offset < 0)
 	{
-		std::cerr << "[IFLogMessage::deserialize] ERROR: "
+        std::ostringstream status;
+		status << "[IFLogMessage::deserialize] "
 			"Could not deserialize property 'level'.";
-		return false;
+        throw Ionflux::ObjectBase::IFError(status.str());
 	}
-	offset = unpack(source, sourceFunctionName, offset);
+	// sourceFunctionName
+    offset = unpack(source, sourceFunctionName, offset);
 	if (offset < 0)
 	{
-		std::cerr << "[IFLogMessage::deserialize] ERROR: "
+        std::ostringstream status;
+		status << "[IFLogMessage::deserialize] "
 			"Could not deserialize property 'sourceFunctionName'.";
-		return false;
+        throw Ionflux::ObjectBase::IFError(status.str());
 	}
 	return offset;
 }

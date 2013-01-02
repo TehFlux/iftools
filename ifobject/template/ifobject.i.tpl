@@ -4,7 +4,7 @@
 %module IFObjectBase
 %{
 #include "ifobject/IFObject.hpp"
-#include "ifobject/utility.hpp"
+#include "ifobject/utils.hpp"
 #include "ifobject/types.hpp"
 #include "ifobject/IFError.hpp"
 #include "ifobject/IFCache.hpp"

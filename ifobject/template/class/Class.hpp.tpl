@@ -1,6 +1,6 @@
 # ==========================================================================
 # Ionflux Object Base System
-# Copyright © 2006-2009 Joern P. Meier
+# Copyright © 2006-2013 Joern P. Meier
 # mail@ionflux.org
 # --------------------------------------------------------------------------
 # Class.hpp.tpl              class template (header)
@@ -24,7 +24,7 @@
 # 02111-1307 USA
 # 
 # ==========================================================================
-{section checkFeatures}{$haveForwards = 0}{foreach fw in forward}{if fw != ""}{$haveForwards = 1}{/if}{/foreach}{$haveTypedefs = 0}{foreach td in typedef}{if td != ""}{$haveTypedefs = 1}{/if}{/foreach}{$haveEvents = 0}{foreach ev in event}{if ev.id != ""}{$haveEvents = 1}{/if}{/foreach}{$haveSignals = 0}{foreach si in signal}{if si.id != ""}{$haveSignals = 1}{/if}{/foreach}{$haveBaseIFObject = 0}{foreach bc in class.base.ifobject}{if bc.name != ""}{$haveBaseIFObject = 1}{/if}{/foreach}{$haveBaseOther = 0}{foreach bc in class.base.other}{if bc.name != ""}{$haveBaseOther = 1}{/if}{/foreach}{$enableClassInfo = 0}{if ( haveBaseIFObject == 1 ) || ( class.name == "IFObject" )}{$enableClassInfo = 1}{/if}{$abstractClass = 0}{foreach func in function.public}{if func.pureVirtual == "true"}{$abstractClass = 1}{/if}{/foreach}{foreach func in function.protected}{if func.pureVirtual == "true"}{$abstractClass = 1}{/if}{/foreach}{$enableMutex = 0}{$enableGuards = 0}{$enableAutoGuards = 0}{$enableLogMessage = 0}{$enableSignal = haveSignals}{$enableSerialize = 0}{$enablePersistence = 0}{$enableCopy = 0}{$enableUpcast = 0}{$enableCreate = 0}{$enableParam = 0}{foreach fe in class.features}{if fe == "mutex"}{$enableMutex = 1}{/if}{if fe == "guards"}{$enableMutex = 1}{$enableGuards = 1}{/if}{if fe == "autoguards"}{$enableMutex = 1}{$enableGuards = 1}{$enableAutoGuards = 1}{/if}{if fe == "logmessage"}{$enableLogMessage = 1}{/if}{if fe == "signal"}{$enableSignal = 1}{/if}{if fe == "serialize"}{$enableSerialize = 1}{/if}{if fe == "classinfo"}{$enableClassInfo = 1}{/if}{if fe == "persistence"}{$enablePersistence = 1}{/if}{if fe == "copy"}{$enableCopy = 1}{/if}{if fe == "upcast"}{$enableUpcast = 1}{/if}{if fe == "create"}{$enableCreate = 1}{/if}{if fe == "param"}{$enableParam = 1}{/if}{/foreach}{$haveOps = 0}{foreach op in operation}{if op.name != ""}{$haveOps = 1}{/if}{/foreach}{$haveBasePersistent = 0}{if enablePersistence == 1}{if class.persistence.backendBase != ""}{$haveBasePersistent = 1}{/if}{if class.persistence.backend == ""}{$class.persistence.backend = class.name + "Backend"}{/if}{/if}{/section}{ref checkFeatures}{section insertGPLDisclaimer}
+{section checkFeatures}{$haveForwards = 0}{foreach fw in forward}{if fw != ""}{$haveForwards = 1}{/if}{/foreach}{$haveTypedefs = 0}{foreach td in typedef}{if td != ""}{$haveTypedefs = 1}{/if}{/foreach}{$haveEvents = 0}{foreach ev in event}{if ev.id != ""}{$haveEvents = 1}{/if}{/foreach}{$haveSignals = 0}{foreach si in signal}{if si.id != ""}{$haveSignals = 1}{/if}{/foreach}{$haveBaseIFObject = 0}{foreach bc in class.base.ifobject}{if bc.name != ""}{$haveBaseIFObject = 1}{/if}{/foreach}{$haveBaseOther = 0}{foreach bc in class.base.other}{if bc.name != ""}{$haveBaseOther = 1}{/if}{/foreach}{$enableClassInfo = 0}{if ( haveBaseIFObject == 1 ) || ( class.name == "IFObject" )}{$enableClassInfo = 1}{/if}{$abstractClass = 0}{foreach func in function.public}{if func.pureVirtual == "true"}{$abstractClass = 1}{/if}{/foreach}{foreach func in function.protected}{if func.pureVirtual == "true"}{$abstractClass = 1}{/if}{/foreach}{$enableMutex = 0}{$enableGuards = 0}{$enableAutoGuards = 0}{$enableLogMessage = 0}{$enableSignal = haveSignals}{$enableSerialize = 0}{$enablePersistence = 0}{$enableCopy = 0}{$enableUpcast = 0}{$enableCreate = 0}{$enableParam = 0}{$enableQObject = 0}{$enablePropertySet = 0}{$enableClassName = 0}{$enableExtendedCreate = 0}{foreach fe in class.features}{if fe == "mutex"}{$enableMutex = 1}{/if}{if fe == "guards"}{$enableMutex = 1}{$enableGuards = 1}{/if}{if fe == "autoguards"}{$enableMutex = 1}{$enableGuards = 1}{$enableAutoGuards = 1}{/if}{if fe == "logmessage"}{$enableLogMessage = 1}{/if}{if fe == "signal"}{$enableSignal = 1}{/if}{if fe == "serialize"}{$enableSerialize = 1}{/if}{if fe == "classinfo"}{$enableClassInfo = 1}{/if}{if fe == "persistence"}{$enablePersistence = 1}{/if}{if fe == "copy"}{$enableCopy = 1}{/if}{if fe == "upcast"}{$enableUpcast = 1}{/if}{if fe == "create"}{$enableCreate = 1}{if class.create.extendedCreate == "true"}{$enableExtendedCreate = 1}{/if}{/if}{if fe == "param"}{$enableParam = 1}{/if}{if fe == "qobject"}{$enableQObject = 1}{/if}{if fe == "propertyset"}{$enablePropertySet = 1}{/if}{if fe == "classname"}{$enableClassName = 1}{/if}{/foreach}{$haveOps = 0}{foreach op in operation}{if op.name != ""}{$haveOps = 1}{/if}{/foreach}{$haveBasePersistent = 0}{if enablePersistence == 1}{if class.persistence.backendBase != ""}{$haveBasePersistent = 1}{/if}{if class.persistence.backend == ""}{$class.persistence.backend = class.name + "Backend"}{/if}{/if}{/section}{ref checkFeatures}{section insertGPLDisclaimer}
  * =========================================================================
  *
 {swrap 75 " * "}This file is part of {$project.name}.
@@ -34,13 +34,14 @@
 {$project.name} is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with {$project.name}; if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA{/swrap}
- * {/section}{section insertIncludes}{foreach inc in include.header}{first}
-{/first}{single}
-{/single}
+ * {/section}{section insertIncludeBlocks}{foreach block in includeBlock}{if ( block.pos == includeBlockPos ) && ( block.file == includeBlockFile )}{if block.type == "list"}{foreach inc in block.list}
+\#include {$inc}{/foreach}{else}{if block.type == "verbatim"}
+{$block.value}{/if}{/if}{/if}{/foreach}{/section}{section insertIncludes}{if project.exportSpecInclude != ""}
+\#include "{$project.exportSpecInclude}"{/if}{$includeBlockPos = ""}{$includeBlockFile = "header"}{ref insertIncludeBlocks}{foreach inc in include.header}
 \#include {$inc}{/foreach}{if enablePersistence == 1}
 \#include "{$project.persistence.include}"{/if}{foreach bc in class.base.ifobject}
 \#include "{if bc.include == ""}ifobject/{$bc.name}.hpp{else}{$bc.include}{/if}"{/foreach}{foreach bc in class.base.other}{if bc.include != "<none>"}
-\#include "{if bc.include == ""}{$bc.name}.hpp{else}{$bc.include}{/if}"{/if}{/foreach}{/section}{section insertForwards}{foreach fwd in forward}{first}
+\#include "{if bc.include == ""}{$bc.name}.hpp{else}{$bc.include}{/if}"{/if}{/foreach}{$includeBlockPos = "post"}{ref insertIncludeBlocks}{/section}{section insertForwards}{foreach fwd in forward}{first}
 {/first}{single}
 {/single}
 {$fwd};{/foreach}{foreach ev in event}{first}{if haveForwards == 0}
@@ -75,7 +76,7 @@ typedef {$td};{/foreach}{/section}{section createStructDecl}{foreach st in struc
 /** {$st.desc}.{if (class.group.shortDesc == "") && (class.group.name != "")}
  * \\ingroup {$class.group.name}{/if}
  */
-struct {$st.name}
+struct {if class.linkagePrefix != ""}{$class.linkagePrefix} {else}{if project.linkagePrefix != ""}{$project.linkagePrefix} {/if}{/if}{$st.name}
 \{{foreach fi in st.field}
 	/// {$fi.desc}.
 	{$fi.type} {$fi.name};{/foreach}{foreach cn in st.constant}
@@ -102,13 +103,96 @@ struct {$st.name}
  *
 {swrap 75 " * "}\\return {$func.return.desc}.{/swrap}{/if}
  */
-{swrap 75}{$func.type} {$func.name}({foreach prm in func.param}{$prm.type} {$prm.name}{if prm.default != ""} = {$prm.default}{/if}{first}, {/first}{mid}, {/mid}{/foreach}){if func.const == "true"} const{/if}{if func.pureVirtual == "true"} = 0{/if};{/swrap}{/section}{section declarePropertyClearFunc}
+{swrap 75}{if class.linkagePrefix != ""}{$class.linkagePrefix} {else}{if project.linkagePrefix != ""}{$project.linkagePrefix} {/if}{/if}{$func.type} {$func.name}({foreach prm in func.param}{$prm.type} {$prm.name}{if prm.default != ""} = {$prm.default}{/if}{first}, {/first}{mid}, {/mid}{/foreach}){if func.const == "true"} const{/if}{if func.pureVirtual == "true"} = 0{/if};{/swrap}{/section}{section declareClassNameFuncs}
+        
+        /** Get class name.
+         *
+         * Get the class name.
+         *
+         * \\return class name
+         */
+{swrap 75 "		"}virtual std::string getClassName() const;{/swrap}{/section}{section declarePropertySetFuncs}{if class.propertySet.enablePropertyUpdateHandlers == "true"}{if function.updatePropertyHandler.impl != ""}
+        
+        /** Update property handler.
+         *
+         * This is called after a property has been updated.
+         *
+         * \\param p property
+         */
+{swrap 75 "		"}virtual void onUpdateProperty(const Ionflux::ObjectBase::IFProperty& p);{/swrap}{/if}{if function.updatePropertiesHandler.impl != ""}
+        
+        /** Update property handler.
+         *
+         * This is called after a set of properties has been updated.
+         *
+         * \\param p property set
+         */
+{swrap 75 "		"}virtual void onUpdateProperties(const Ionflux::ObjectBase::IFPropertySet& p);{/swrap}{/if}{/if}
+        
+        /** Update property.
+         *
+         * Update a property of the object.
+         *
+         * \\param p property
+         * \\param ignoreOwnSet ignore the properties added to this set
+         */
+{swrap 75 "		"}virtual void updateProperty(const Ionflux::ObjectBase::IFProperty& p, bool ignoreOwnSet = false);{/swrap}
+        
+        /** Update properties.
+         *
+         * Update the properties of the object using values from the specified 
+         * property set.
+         *
+         * \\param ps property set
+         */
+{swrap 75 "		"}virtual void updateProperties(const Ionflux::ObjectBase::IFPropertySet& ps);{/swrap}
+        
+        /** Get property.
+         *
+         * Get a property from the object.
+         *
+         * \\param p property
+         * \\param ignoreOwnSet ignore the properties added to this set
+         */
+{swrap 75 "		"}virtual void getProperty(Ionflux::ObjectBase::IFProperty& p, bool ignoreOwnSet = false);{/swrap}
+        
+       /** Get properties.
+         *
+         * Add properties from the object the specified property set.
+         *
+         * \\param ps property set
+         */
+{swrap 75 "		"}virtual void getProperties(Ionflux::ObjectBase::IFPropertySet& ps);{/swrap}{/section}{section declarePropertyClearFunc}
 		
 		/** Clear {if prop.element.plural == ""}{$prop.element.name|lowercase(1)}s{else}{$prop.element.plural|lowercase(1)}{/if}.
 		 *
 {swrap 75 "		 * "}Clear all {if prop.element.plural == ""}{$prop.element.name|lowercase(1)}s{else}{$prop.element.plural|lowercase(1)}{/if}.{/swrap}
 		 */
-{swrap 75 "		"}virtual void clear{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if}();{/swrap}{/section}{section declareVectorWriteFuncs}{if prop.hideImpl != "true"}
+{swrap 75 "		"}virtual void clear{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if}();{/swrap}{/section}{section declareExtendedVectorAddFuncs}
+		
+		/** Create {$prop.element.name|lowercase(1)}.
+		 *
+{swrap 75 "		 * "}Create a new {$prop.element.name|lowercase(1)} which is managed by the {$prop.element.name|lowercase(1)} set.{/swrap}
+		 *
+		 * \\return New {$prop.element.name|lowercase(1)}.
+		 */
+{swrap 75 "		"}virtual {if prop.element.addType == ""}{$prop.element.type}{else}{$prop.element.addType}{/if} add{$prop.element.name|uppercase(1)}();{/swrap}
+		
+		/** Add {if prop.element.plural == ""}{$prop.element.name|lowercase(1)}s{else}{$prop.element.plural|lowercase(1)}{/if}.
+		 *
+{swrap 75 "		 * "}Add {if prop.element.plural == ""}{$prop.element.name|lowercase(1)}s{else}{$prop.element.plural|lowercase(1)}{/if} from a {$prop.element.name|lowercase(1)} vector.{/swrap}
+		 *
+		 * \\param new{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if} {if prop.element.plural == ""}{$prop.element.name|lowercase(1)}s{else}{$prop.element.plural|lowercase(1)}{/if}.
+		 */
+{swrap 75 "		"}virtual void add{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if}(std::vector<{$prop.element.type}>& new{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if});{/swrap}
+		
+		/** Add {if prop.element.plural == ""}{$prop.element.name|lowercase(1)}s{else}{$prop.element.plural|lowercase(1)}{/if}.
+		 *
+		 * Add {if prop.element.plural == ""}{$prop.element.name|lowercase(1)}s{else}{$prop.element.plural|lowercase(1)}{/if} from a {$prop.element.name|lowercase(1)} set.
+		 *
+		 * \\param new{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if} {if prop.element.plural == ""}{$prop.element.name|lowercase(1)}s{else}{$prop.element.plural|lowercase(1)}{/if}.
+		 */
+{swrap 75 "		"}virtual void add{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if}({foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}* new{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if});{/swrap}{/section}{section declareVectorWriteFuncs}{if prop.hideImpl != "true"}
         
 		/** Get {$prop.desc|lowercase(1)}.
 		 *
@@ -122,7 +206,7 @@ struct {$st.name}
 		 *
 {swrap 75 "		 * "}\\param addElement {$prop.element.name|uppercase(1)} to be added.{/swrap}
 		 */
-{swrap 75 "		"}virtual void add{$prop.element.name|uppercase(1)}({if prop.element.addType == ""}{$prop.element.type}{else}{$prop.element.addType}{/if} addElement);{/swrap}
+{swrap 75 "		"}virtual void add{$prop.element.name|uppercase(1)}({if prop.element.addType == ""}{$prop.element.type}{else}{$prop.element.addType}{/if} addElement);{/swrap}{if prop.extendedAddFuncs == "true"}{ref declareExtendedVectorAddFuncs}{/if}
 		
 		/** Remove {$prop.element.name|lowercase(1)}.
 		 *
@@ -136,7 +220,7 @@ struct {$st.name}
 		 *
 {swrap 75 "		 * "}Remove a {$prop.element.name|lowercase(1)}.{/swrap}
 		 *
-{swrap 75 "		 * "}\\param removeElement {$prop.element.name|uppercase(1)} to be removed.{/swrap}
+{swrap 75 "		 * "}\\param removeIndex {$prop.element.name|uppercase(1)} to be removed.{/swrap}
 		 */
 {swrap 75 "		"}virtual void remove{$prop.element.name|uppercase(1)}Index(unsigned int removeIndex);{/swrap}{ref declarePropertyClearFunc}{/section}{section declareMapWriteFuncs}{if prop.hideImpl != "true"}
         
@@ -297,7 +381,7 @@ struct {$st.name}
 		 * object obtained from the database using the specified litesql 
 		 * expression.
 		 * 
-		 * \param expr Expression.
+		 * \\param expr Expression.
 		 */
 		virtual void setPersistentBackendState(const litesql::Expr& expr);{/section}{section declareCopyFuncs}
 		
@@ -305,9 +389,9 @@ struct {$st.name}
 		 *
 		 * Assign an object.
 		 *
-		 * \param other Other object.
+		 * \\param other Other object.
 		 *
-		 * \return The object itself.
+		 * \\return The object itself.
 		 */
 {swrap 75 "		"}virtual {foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}& operator=(const {foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}& other);{/swrap}{if abstractClass == 0}
 		
@@ -315,7 +399,7 @@ struct {$st.name}
 		 *
 		 * Create a copy of the object.
 		 *
-		 * \return Newly allocated copy of the object.
+		 * \\return Newly allocated copy of the object.
 		 */
 {swrap 75 "		"}virtual {foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}* copy() const;{/swrap}{/if}{/section}{section declareUpcastFuncs}
 		
@@ -323,11 +407,21 @@ struct {$st.name}
 		 *
 		 * Cast an IFObject to the most specific type.
 		 *
-		 * \param other Other object.
+		 * \\param other Other object.
 		 *
-		 * \return The more specific object, or 0 if the cast failed.
+		 * \\return The more specific object, or 0 if the cast failed.
 		 */
-{swrap 75 "		"}static {foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}* upcast(Ionflux::ObjectBase::IFObject* other);{/swrap}{/section}{section declareCreateFuncs}
+{swrap 75 "		"}static {foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}* upcast(Ionflux::ObjectBase::IFObject* other);{/swrap}{/section}{section declareExtendedCreateFuncs}{foreach con in constructor.public}
+        
+		/** Create instance.
+		 *
+		 * Create a new {$class.name} object.{foreach prm in con.param}{first}
+		 *{/first}{single}
+		 *{/single}
+{swrap 75 "		 * "}\\param {$prm.name} {$prm.desc}.{/swrap}{/foreach}
+		 * \\param parentObject Parent object.
+		 */
+{swrap 75 "		"}static {foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}* create({foreach prm in con.param}{$prm.type} {$prm.name}{if prm.default != ""} = {$prm.default}{/if}{first}, {/first}{mid}, {/mid}{/foreach}, Ionflux::ObjectBase::IFObject* parentObject = 0);{/swrap}{/foreach}{/section}{section declareCreateFuncs}
 		
 		/** Create instance.
 		 *
@@ -335,9 +429,9 @@ struct {$st.name}
 		 * is specified, a local reference for the new object will be added 
 		 * to the parent object.
 		 *
-		 * \param parentObject Parent object.
+		 * \\param parentObject Parent object.
 		 *
-		 * \return Pointer to the new instance.
+		 * \\return Pointer to the new instance.
 		 */
 {swrap 75 "		"}static {foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}* create(Ionflux::ObjectBase::IFObject* parentObject = 0);{/swrap}{if enablePersistence == 1}
 		
@@ -345,19 +439,19 @@ struct {$st.name}
 		 *
 		 * Create a new instance of the class.
 		 *
-		 * \param initDatabase Database.
-		 * \param objectID Object ID.
+		 * \\param initDatabase Database.
+		 * \\param objectID Object ID.
 		 *
-		 * \return Pointer to the new instance.
+		 * \\return Pointer to the new instance.
 		 */
-{swrap 75 "		"}static {foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}* create({$project.persistence.namespace}::{$project.persistence.database}* initDatabase, int objectID = -1);{/swrap}{/if}{/section}{section declareParamFuncs}{foreach prm in class.param}
+{swrap 75 "		"}static {foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}* create({$project.persistence.namespace}::{$project.persistence.database}* initDatabase, int objectID = -1);{/swrap}{/if}{if enableExtendedCreate == 1}{ref declareExtendedCreateFuncs}{/if}{/section}{section declareParamFuncs}{foreach prm in class.param}
 		
 		/** Set parameter.
 		 *
 		 * Set the parameter with the specified ID.
 		 *
-		 * \param paramID Parameter ID.
-		 * \param paramValue Parameter value.
+		 * \\param paramID Parameter ID.
+		 * \\param paramValue Parameter value.
 		 */
 {swrap 75 "		"}virtual void set{$prm.name|uppercase(1)}(Ionflux::ObjectBase::IFParamID paramID, {$prm.type} paramValue);{/swrap}
 		
@@ -365,7 +459,7 @@ struct {$st.name}
 		 *
 		 * Get the parameter with the specified ID.
 		 *
-		 * \param paramID Parameter ID.
+		 * \\param paramID Parameter ID.
 		 */
 {swrap 75 "		"}virtual {$prm.type} get{$prm.name|uppercase(1)}(Ionflux::ObjectBase::IFParamID paramID);{/swrap}{/foreach}{/section}{section declareFunc}
 		
@@ -378,7 +472,29 @@ struct {$st.name}
 		 *
 {swrap 75 "		 * "}\\return {$func.return.desc}.{/swrap}{/if}
 		 */
-{swrap 75 "		"}{$func.spec} {$func.type} {$func.name}({foreach prm in func.param}{$prm.type} {$prm.name}{if prm.default != ""} = {$prm.default}{/if}{first}, {/first}{mid}, {/mid}{/foreach}){if func.const == "true"} const{/if}{if func.throw != ""} throw({if func.throw != "<none>"}{$func.throw}{/if}){/if}{if func.pureVirtual == "true"} = 0{/if};{/swrap}{/section}\#ifndef {$project.includeGuardPrefix}{$class.name|uppercase}
+{swrap 75 "		"}{$func.spec} {$func.type} {$func.name}({foreach prm in func.param}{$prm.type} {$prm.name}{if prm.default != ""} = {$prm.default}{/if}{first}, {/first}{mid}, {/mid}{/foreach}){if func.const == "true"} const{/if}{if func.throw != ""} throw({if func.throw != "<none>"}{$func.throw}{/if}){/if}{if func.pureVirtual == "true"} = 0{/if};{/swrap}{/section}{section declareQtSignal}
+		
+		/** {$si.shortDesc}.{if si.longDesc != ""}
+		 *
+{$si.longDesc|swrap(72,'		 * ')}{/if}{foreach prm in si.param}{first}
+		 *{/first}{single}
+		 *{/single}
+{swrap 75 "		 * "}\\param {$prm.name} {$prm.desc}.{/swrap}{/foreach}{if si.return.value != ""}
+		 *
+{swrap 75 "		 * "}\\return {$si.return.desc}.{/swrap}{/if}
+		 */
+{swrap 75 "		"}{$si.type} {$si.name}({foreach prm in si.param}{$prm.type} {$prm.name}{if prm.default != ""} = {$prm.default}{/if}{first}, {/first}{mid}, {/mid}{/foreach}){if si.const == "true"} const{/if}{if si.throw != ""} throw({if si.throw != "<none>"}{$si.throw}{/if}){/if}{if si.pureVirtual == "true"} = 0{/if};{/swrap}{/section}{section declareQtSlot}
+		
+		/** {$sl.shortDesc}.{if sl.longDesc != ""}
+		 *
+{$sl.longDesc|swrap(72,'		 * ')}{/if}{foreach prm in sl.param}{first}
+		 *{/first}{single}
+		 *{/single}
+{swrap 75 "		 * "}\\param {$prm.name} {$prm.desc}.{/swrap}{/foreach}{if sl.return.value != ""}
+		 *
+{swrap 75 "		 * "}\\return {$sl.return.desc}.{/swrap}{/if}
+		 */
+{swrap 75 "		"}{$sl.spec} {$sl.type} {$sl.name}({foreach prm in sl.param}{$prm.type} {$prm.name}{if prm.default != ""} = {$prm.default}{/if}{first}, {/first}{mid}, {/mid}{/foreach}){if sl.const == "true"} const{/if}{if sl.throw != ""} throw({if sl.throw != "<none>"}{$sl.throw}{/if}){/if}{if sl.pureVirtual == "true"} = 0{/if};{/swrap}{/section}\#ifndef {$project.includeGuardPrefix}{$class.name|uppercase}
 \#define {$project.includeGuardPrefix}{$class.name|uppercase}
 /* ==========================================================================
  * {$project.name}
@@ -386,8 +502,29 @@ struct {$st.name}
  * {$project.mail}
  * --------------------------------------------------------------------------
 {swrap 75 ' * '}{$class.name|append('.hpp')|rpad(' ', 30)}  {$class.shortDesc} (header).{/swrap}{if project.license == "GPL"}{ref insertGPLDisclaimer}{/if}
- * ========================================================================== */{ref insertIncludes}{foreach un in undef.header}
-\#undef {$un}{/foreach}{ref insertIFObjectForwards}{foreach ns in namespace}
+ * ========================================================================== */
+{ref insertIncludes}{if class.linkagePrefix != ""}
+
+\#ifndef {$class.linkagePrefix}
+\#define {$class.linkagePrefix}
+\#endif{else}{if project.linkagePrefix != ""}
+
+\#ifndef {$project.linkagePrefix}
+\#define {$project.linkagePrefix}
+\#endif{/if}{/if}{foreach un in undef.header}
+\#undef {$un}{/foreach}{if enablePropertySet == 1}
+
+namespace Ionflux
+\{
+
+namespace ObjectBase
+\{
+    // Forward declarations for the PropertySet feature.
+    class IFProperty;
+    class IFPropertySet;
+\}
+
+\}{/if}{ref insertIFObjectForwards}{foreach ns in namespace}
 
 namespace {$ns.name}
 \{{/foreach}{ref insertForwards}{ref insertTypedefs}{if class.group.shortDesc != ""}
@@ -426,9 +563,11 @@ class {$class.name}ClassInfo
  *
 {$class.longDesc|swrap(75,' * ')}
  */
-class {$class.name}{if ( haveBaseIFObject == 1 ) || ( haveBaseOther == 1 )}
+class {if class.linkagePrefix != ""}{$class.linkagePrefix} {else}{if project.linkagePrefix != ""}{$project.linkagePrefix} {/if}{/if}{$class.name}{if ( haveBaseIFObject == 1 ) || ( haveBaseOther == 1 )}
 : {swrap 75}{foreach bc in class.base.ifobject}{if bc.inheritanceType == ""}public{else}{$bc.inheritanceType}{/if} Ionflux::ObjectBase::{$bc.name}{notlast}, {/notlast}{/foreach}{foreach bc in class.base.other}{first}{if haveBaseIFObject == 1}, {/if}{/first}{single}{if haveBaseIFObject == 1}, {/if}{/single}{if bc.inheritanceType == ""}public{else}{$bc.inheritanceType}{/if} {$bc.name}{notlast}, {/notlast}{/foreach}{/swrap}{/if}
-\{
+\{{if enableQObject == 1}
+    Q_OBJECT
+    {/if}
 	private:
 {foreach var in variable.private}		/// {$var.desc}.
 		{if var.spec != ""}{$var.spec} {/if}{$var.type} {$var.name}{if var.arraySize != ""}[{$var.arraySize}]{/if};
@@ -524,8 +663,8 @@ class {$class.name}{if ( haveBaseIFObject == 1 ) || ( haveBaseOther == 1 )}
 		 *
 		 * Construct new {$class.name} object.
 		 *
-		 * \param initDatabase Database.
-		 * \param objectID Object ID.
+		 * \\param initDatabase Database.
+		 * \\param objectID Object ID.
 		 */
 		{$class.name}({$project.persistence.namespace}::{$project.persistence.database}* initDatabase, int objectID = -1);
 		
@@ -533,8 +672,8 @@ class {$class.name}{if ( haveBaseIFObject == 1 ) || ( haveBaseOther == 1 )}
 		 *
 		 * Construct new {$class.name} object.
 		 *
-		 * \param initDatabase Database.
-		 * \param initPersistent Persistent backend object.
+		 * \\param initDatabase Database.
+		 * \\param initPersistent Persistent backend object.
 		 */
 		{$class.name}({$project.persistence.namespace}::{$project.persistence.database}* initDatabase, {$project.persistence.namespace}::{$class.persistence.backend}* initPersistent);{/if}{if enableCopy == 1}
 		
@@ -542,7 +681,7 @@ class {$class.name}{if ( haveBaseIFObject == 1 ) || ( haveBaseOther == 1 )}
 		 *
 		 * Construct new {$class.name} object.
 		 *
-		 * \param other Other object.
+		 * \\param other Other object.
 		 */
 		{$class.name}(const {foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}& other);{/if}
 		{foreach con in constructor.public}
@@ -588,7 +727,7 @@ class {$class.name}{if ( haveBaseIFObject == 1 ) || ( haveBaseOther == 1 )}
 		 *
 		 * \\sa serialize()
 		 */
-		virtual int deserialize(const std::string& source, int offset = 0);{/if}{if enablePersistence == 1}{ref declarePersistenceFuncs}{/if}{if enableCopy == 1}{ref declareCopyFuncs}{/if}{if enableUpcast == 1}{ref declareUpcastFuncs}{/if}{if enableCreate == 1}{ref declareCreateFuncs}{/if}{if enableParam == 1}{ref declareParamFuncs}{/if}{foreach prop in property.private}{ref createPropertyAccessorDecl}{/foreach}{foreach prop in property.protected}{ref createPropertyAccessorDecl}{if prop.readOnly != "true"}{ref declarePropertyWriteFuncs}{/if}{/foreach}{if enablePersistence == 1}{if haveBasePersistent == 0}{$prop.style = ""}{$prop.readOnly = "false"}{$prop.name = "database"}{$prop.desc = "Database"}{$prop.type = project.persistence.namespace + "::" + project.persistence.database + "*"}{$prop.setFromType = project.persistence.namespace + "::" + project.persistence.database + "*"}{ref createPropertyAccessorDecl}{ref declarePropertyWriteFuncs}{/if}{/if}{foreach sig in signal}{foreach ins in sig.instance}
+		virtual int deserialize(const std::string& source, int offset = 0);{/if}{if enablePersistence == 1}{ref declarePersistenceFuncs}{/if}{if enableCopy == 1}{ref declareCopyFuncs}{/if}{if enableUpcast == 1}{ref declareUpcastFuncs}{/if}{if enableCreate == 1}{ref declareCreateFuncs}{/if}{if enableParam == 1}{ref declareParamFuncs}{/if}{if enablePropertySet == 1}{ref declarePropertySetFuncs}{/if}{foreach prop in property.private}{ref createPropertyAccessorDecl}{/foreach}{foreach prop in property.protected}{ref createPropertyAccessorDecl}{if ( prop.readOnly != "true" ) && ( prop.protectedWrite != "true" )}{ref declarePropertyWriteFuncs}{/if}{/foreach}{if enablePersistence == 1}{if haveBasePersistent == 0}{$prop.style = ""}{$prop.readOnly = "false"}{$prop.name = "database"}{$prop.desc = "Database"}{$prop.type = project.persistence.namespace + "::" + project.persistence.database + "*"}{$prop.setFromType = project.persistence.namespace + "::" + project.persistence.database + "*"}{ref createPropertyAccessorDecl}{ref declarePropertyWriteFuncs}{/if}{/if}{foreach sig in signal}{foreach ins in sig.instance}
 		
 		/** Get signal: {$ins.desc}.
 		 *
@@ -604,7 +743,14 @@ class {$class.name}{if ( haveBaseIFObject == 1 ) || ( haveBaseOther == 1 )}
 		 *
 		 * \\return Signal for the {$ins.desc} event.
 		 */
-		virtual Ionflux::ObjectBase::IFSignal* getSignal{$ins.name|uppercase(1)}Wrapper();{/foreach}{/foreach}
+		virtual Ionflux::ObjectBase::IFSignal* getSignal{$ins.name|uppercase(1)}Wrapper();{/foreach}{/foreach}{if enableClassName == 1}{ref declareClassNameFuncs}{/if}{if enableQObject == 1}
+    
+    signals:{foreach si in qt.signals}{ref declareQtSignal}{/foreach}
+    
+    public slots:{foreach sl in qt.slots.public}{ref declareQtSlot}{/foreach}
+    
+    protected slots:{foreach sl in qt.slots.protected}{ref declareQtSlot}{/foreach}
+{/if}
 \};{foreach func in function.global}{ref declareGlobalFunc}{/foreach}{if class.group.shortDesc != ""}
 
 /// @\}

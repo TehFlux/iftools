@@ -380,7 +380,7 @@ class IFExampleClass
 		 *
 		 * Remove a blupp.
 		 *
-		 * \param removeElement Blupp to be removed.
+		 * \param removeIndex Blupp to be removed.
 		 */
 		virtual void removeBluppIndex(unsigned int removeIndex);
 		

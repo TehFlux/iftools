@@ -31,6 +31,13 @@
 #include "ifobject/IFSignal.hpp"
 #include "ifobject/IFExampleEvent.hpp"
 #include <sstream>
+#include "ifobject/serialize.hpp"
+#include "ifobject/utils.hpp"
+
+using Ionflux::ObjectBase::pack;
+using Ionflux::ObjectBase::packObj;
+using Ionflux::ObjectBase::unpack;
+using Ionflux::ObjectBase::unpackObj;
 
 using namespace std;
 using namespace Ionflux::ObjectBase;
@@ -489,33 +496,36 @@ int IFExampleClass::deserialize(const std::string& source, int offset)
 {
 	offset = IFObject::deserialize(source, offset);
 	if (offset < 0)
-		return false;
-	offset = unpack(source, someValue, offset);
+		return -1;
+	// someValue
+    offset = unpack(source, someValue, offset);
 	if (offset < 0)
 	{
 		ostringstream state;
 		state << "Could not deserialize property 'someValue'.";
 		log(IFLogMessage(state.str(), VL_ERROR, 
 			this, "deserialize"));
-		return false;
+        return -1;
 	}
-	offset = unpack(source, someText, offset);
+	// someText
+    offset = unpack(source, someText, offset);
 	if (offset < 0)
 	{
 		ostringstream state;
 		state << "Could not deserialize property 'someText'.";
 		log(IFLogMessage(state.str(), VL_ERROR, 
 			this, "deserialize"));
-		return false;
+        return -1;
 	}
-	offset = unpack(source, roProp, offset);
+	// roProp
+    offset = unpack(source, roProp, offset);
 	if (offset < 0)
 	{
 		ostringstream state;
 		state << "Could not deserialize property 'roProp'.";
 		log(IFLogMessage(state.str(), VL_ERROR, 
 			this, "deserialize"));
-		return false;
+        return -1;
 	}
 	offset = unpack(source, miep, offset);
 	if (offset < 0)
@@ -524,7 +534,7 @@ int IFExampleClass::deserialize(const std::string& source, int offset)
 		state << "Could not deserialize variable 'miep'.";
 		log(IFLogMessage(state.str(), VL_ERROR, 
 			this, "deserialize"));
-		return false;
+        return false;
 	}
 	return offset;
 }

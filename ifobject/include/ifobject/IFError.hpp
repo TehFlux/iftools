@@ -62,7 +62,7 @@ class IFError
 		 *
 		 * Construct new IFError object.
 		 *
-		 * param other Other object.
+		 * \param other Other object.
 		 */
 		IFError(const Ionflux::ObjectBase::IFError& other);
 		
@@ -100,9 +100,9 @@ class IFError
 		 *
 		 * Assign an object.
 		 *
-		 * param other Other object.
+		 * \param other Other object.
 		 *
-		 * return The object itself.
+		 * \return The object itself.
 		 */
 		virtual Ionflux::ObjectBase::IFError& operator=(const 
 		Ionflux::ObjectBase::IFError& other);
@@ -111,7 +111,7 @@ class IFError
 		 *
 		 * Create a copy of the object.
 		 *
-		 * return Newly allocated copy of the object.
+		 * \return Newly allocated copy of the object.
 		 */
 		virtual Ionflux::ObjectBase::IFError* copy() const;
 		

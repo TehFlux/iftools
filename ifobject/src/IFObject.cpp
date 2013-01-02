@@ -32,7 +32,17 @@
 #include <climits>
 #include <cstdlib>
 #include <sstream>
+#include <fstream>
 #include "ifobject/IFError.hpp"
+#include "ifobject/xmlutils.hpp"
+#include "ifobject/xmlutils_private.hpp"
+#include "ifobject/serialize.hpp"
+#include "ifobject/utils.hpp"
+
+using Ionflux::ObjectBase::pack;
+using Ionflux::ObjectBase::packObj;
+using Ionflux::ObjectBase::unpack;
+using Ionflux::ObjectBase::unpackObj;
 
 using namespace std;
 using namespace Ionflux::ObjectBase;
@@ -76,6 +86,7 @@ const std::string IFObject::ENCODING_RAW = "raw";
 const std::string IFObject::ENCODING_UTF8 = "utf8";
 const std::string IFObject::ENCODING_BASE64 = "base64";
 const Ionflux::ObjectBase::UInt64 IFObject::DEFAULT_SIZE = 1;
+const std::string IFObject::XML_ELEMENT_NAME = "object";
 const IFIDNum IFObject::ID_NUM_UNDEFINED = -1;
 
 // signal type and instance name constants
@@ -343,15 +354,6 @@ Ionflux::ObjectBase::IFIDNum IFObject::getIDNum() const
 {
 	// TODO: Implementation.
 	return idNum;
-}
-
-std::string IFObject::getString() const
-{
-	ostringstream state;
-	state << getClassName();
-	if (id.size() > 0)
-		state << "{" << id << "}";
-	return state.str();
 }
 
  IFObject::operator std::string() const
@@ -708,7 +710,7 @@ void IFObject::log() const
 	log(*this);
 }
 
-bool IFObject::assert(bool assertion, const Ionflux::ObjectBase::IFObject& 
+bool IFObject::assert0(bool assertion, const Ionflux::ObjectBase::IFObject&
 logObject)
 {
 	if (!assertion)
@@ -716,7 +718,7 @@ logObject)
 	return assertion;
 }
 
-bool IFObject::assert(bool assertion, const Ionflux::ObjectBase::IFObject& 
+bool IFObject::assert0(bool assertion, const Ionflux::ObjectBase::IFObject&
 logObject) const
 {
 	if (!assertion)
@@ -1025,6 +1027,123 @@ Ionflux::ObjectBase::UInt64 IFObject::getSize() const
 	return DEFAULT_SIZE;
 }
 
+std::string IFObject::getXMLElementName() const
+{
+	// TODO: Implementation.
+	return XML_ELEMENT_NAME;
+}
+
+void IFObject::getXMLChildData(std::string& target, unsigned int 
+indentLevel) const
+{
+	// TODO: Implementation.
+}
+
+std::string IFObject::getXMLChildData0(std::string& target, unsigned int 
+indentLevel) const
+{
+	std::string cd;
+	getXMLChildData(cd, indentLevel);
+	return cd;
+}
+
+std::string IFObject::getXMLAttributeData() const
+{
+	std::ostringstream result;
+	std::string id0 = getID();
+	if (id0.size() > 0)
+	    result << "name=\"" << XMLUtils::xmlEscape(id0) << "\"";
+	return result.str();
+}
+
+void IFObject::getXML(std::string& target, unsigned int indentLevel) const
+{
+	std::ostringstream xmlData;
+	std::string iws = getIndent(indentLevel);
+	std::string en = getXMLElementName();
+	xmlData << iws << "<" << en;
+	std::string xa = getXMLAttributeData();
+	if (xa.size() > 0)
+	    xmlData << " " << xa;
+	std::string cd;
+	getXMLChildData(cd, indentLevel + 1);
+	if (cd.size() == 0)
+	    xmlData << " />";
+	else
+	    xmlData << ">\n" << cd << "\n" << iws << "</" << en << ">";
+	target.append(xmlData.str());
+}
+
+std::string IFObject::getXML0(unsigned int indentLevel) const
+{
+	std::string xmlData;
+	getXML(xmlData, indentLevel);
+	return xmlData;
+}
+
+void IFObject::writeToFile(const std::string& fileName) const
+{
+	std::ofstream f0;
+	f0.open(fileName.c_str(), ios_base::out);
+	if (!f0)
+	{
+	    std::ostringstream status;
+	    status << "Could not write to file' " << fileName << "'";
+	    throw IFError(status.str());
+	}
+	std::string xmlData;
+	getXML(xmlData);
+	f0.write(xmlData.c_str(), xmlData.size());
+}
+
+void IFObject::loadFromFile(const std::string& fileName)
+{
+	Ionflux::ObjectBase::XMLUtils::loadFromFile(fileName, *this, 
+	    getXMLElementName());
+}
+
+std::string IFObject::getValueString() const
+{
+	// TODO: Implementation.
+	return "";
+}
+
+std::string IFObject::getIDString() const
+{
+	std::ostringstream status;
+	status << getClassName();
+	std::string s0 = getID();
+	int id0 = getIDNum();
+	if ((s0.size() > 0) || (id0 != ID_NUM_UNDEFINED))
+	{
+	    status << "{";
+	    bool first = true;
+	    if (s0.size() > 0)
+	    {
+	        status << s0;
+	        first = false;
+	    }
+	    if (id0 != ID_NUM_UNDEFINED)
+	    {
+	        if (!first)
+	            status << ", ";
+	        status << id0;
+	    }
+	    status << "}";
+	}
+	return status.str();;
+}
+
+std::string IFObject::getString() const
+{
+	std::ostringstream status;
+	status << getIDString();
+	std::string s0 = getValueString();
+	if (s0.size() > 0)
+	    status << "[" << s0 << "]";
+	return status.str();
+}
+
 void IFObject::setLogTarget(Ionflux::ObjectBase::IFObject* newLogTarget)
 {
 	if (logTarget == newLogTarget)
@@ -1057,7 +1176,7 @@ int IFObject::deserialize(const std::string& source, int offset)
 		state << "Could not deserialize variable 'id'.";
 		log(IFLogMessage(state.str(), VL_ERROR, 
 			this, "deserialize"));
-		return false;
+        return false;
 	}
 	offset = unpack(source, idNum, offset);
 	if (offset < 0)
@@ -1066,7 +1185,7 @@ int IFObject::deserialize(const std::string& source, int offset)
 		state << "Could not deserialize variable 'idNum'.";
 		log(IFLogMessage(state.str(), VL_ERROR, 
 			this, "deserialize"));
-		return false;
+        return false;
 	}
 	return offset;
 }
@@ -1139,45 +1258,6 @@ Ionflux::ObjectBase::IFObject& source)
 {
 	// TODO: Implementation.
 	return outputStream << source.getString();
-}
-
-void pack(const Ionflux::ObjectBase::IFObject*& source, std::string& 
-target, bool append)
-{
-	std::string buffer;
-	if (source == 0)
-		pack(false, buffer);
-	else
-	{
-		pack(true, buffer);
-		source->serialize(buffer);
-	}
-	if (append)
-		target.append(buffer);
-	else
-		target = buffer;
-}
-
-int unpack(const std::string& source, Ionflux::ObjectBase::IFObject*& 
-target, int offset)
-{
-	bool isNonNull = false;
-	offset = unpack(source, isNonNull, offset);
-	if (!isNonNull)
-	{
-		target = 0;
-		return offset;
-	}
-	if (target != 0)
-		offset = target->deserialize(source, offset);
-	else
-	{
-		std::cerr << "[unpack] ERROR: "
-			"Target IFObject must be non-null for deserialization." 
-			<< std::endl;
-		offset = -1;
-	}
-	return offset;
 }
 
 }

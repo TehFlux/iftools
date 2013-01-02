@@ -37,7 +37,6 @@
 #include "ifobject/utf8.hpp"
 #include "libb64.hpp"
 #include "ifobject/IFClassInfo.hpp"
-#undef assert
 
 // forward declarations for types from the Ionflux Object Base System
 namespace Ionflux
@@ -208,6 +207,8 @@ class IFObject
 		static const std::string ENCODING_BASE64;
 		/// Default object size.
 		static const Ionflux::ObjectBase::UInt64 DEFAULT_SIZE;
+		/// XML element name.
+		static const std::string XML_ELEMENT_NAME;
 		/// ID number: undefined.
 		static const IFIDNum ID_NUM_UNDEFINED;
 		/// Signal type: object.
@@ -299,14 +300,6 @@ class IFObject
 		 * \return The ID number.
 		 */
 		virtual Ionflux::ObjectBase::IFIDNum getIDNum() const;
-		
-		/** Get string representation.
-		 *
-		 * Get a string representation of the object
-		 *
-		 * \return String representation of the object.
-		 */
-		virtual std::string getString() const;
 		
 		/** Get string representation.
 		 *
@@ -466,7 +459,7 @@ class IFObject
 		 *
 		 * \return Value of the assertion.
 		 */
-		virtual bool assert(bool assertion, const Ionflux::ObjectBase::IFObject& 
+		virtual bool assert0(bool assertion, const Ionflux::ObjectBase::IFObject&
 		logObject);
 		
 		/** Check assertion.
@@ -478,7 +471,7 @@ class IFObject
 		 *
 		 * \return Value of the assertion.
 		 */
-		virtual bool assert(bool assertion, const Ionflux::ObjectBase::IFObject& 
+		virtual bool assert0(bool assertion, const Ionflux::ObjectBase::IFObject&
 		logObject) const;
 		
 		/** Add reference.
@@ -617,6 +610,104 @@ class IFObject
 		 */
 		virtual Ionflux::ObjectBase::UInt64 getSize() const;
 		
+		/** Get XML element name.
+		 *
+		 * Get the XML element name for the object.
+		 *
+		 * \return XML element name.
+		 */
+		virtual std::string getXMLElementName() const;
+		
+		/** Get XML child data.
+		 *
+		 * Get the XML child data for the object.
+		 *
+		 * \param target Where to store the XML data.
+		 * \param indentLevel Indentation level.
+		 */
+		virtual void getXMLChildData(std::string& target, unsigned int 
+		indentLevel = 0) const;
+		
+		/** Get XML child data.
+		 *
+		 * Get the XML child data for the object.
+		 *
+		 * \param target Where to store the XML data.
+		 * \param indentLevel Indentation level.
+		 *
+		 * \return XML child data.
+		 */
+		virtual std::string getXMLChildData0(std::string& target, unsigned int 
+		indentLevel = 0) const;
+		
+		/** Get XML attribute data.
+		 *
+		 * Get a string containing the XML attributes of the object.
+		 *
+		 * \return XML attribute data.
+		 */
+		virtual std::string getXMLAttributeData() const;
+		
+		/** Get XML representation.
+		 *
+		 * Get an XML representation of the object
+		 *
+		 * \param target Where to store the XML data.
+		 * \param indentLevel Indentation level.
+		 */
+		virtual void getXML(std::string& target, unsigned int indentLevel = 0) 
+		const;
+		
+		/** Get XML representation.
+		 *
+		 * Get an XML representation of the object
+		 *
+		 * \param indentLevel Indentation level.
+		 *
+		 * \return XML representation.
+		 */
+		virtual std::string getXML0(unsigned int indentLevel = 0) const;
+		
+		/** Write object data to XML file.
+		 *
+		 * Write the object data to an XML file.
+		 *
+		 * \param fileName file name.
+		 */
+		virtual void writeToFile(const std::string& fileName) const;
+		
+		/** Load object data from file.
+		 *
+		 * Load object data from an XML file.
+		 *
+		 * \param fileName File name.
+		 */
+		virtual void loadFromFile(const std::string& fileName);
+		
+		/** Get string representation of value.
+		 *
+		 * Get a string representation of the value of the object
+		 *
+		 * \return String representation of the value of the object.
+		 */
+		virtual std::string getValueString() const;
+		
+		/** Get ID string.
+		 *
+		 * Get a string identifying the object.
+		 *
+		 * \return ID string.
+		 */
+		virtual std::string getIDString() const;
+		
+		/** Get string representation.
+		 *
+		 * Get a string representation of the object
+		 *
+		 * \return String representation of the object.
+		 */
+		virtual std::string getString() const;
+		
 		/** Serialize.
 		 *
 		 * Serialize the object. This creates a string which contains data 
@@ -720,40 +811,6 @@ class IFObject
  */
 std::ostream& operator<<(std::ostream& outputStream, const 
 Ionflux::ObjectBase::IFObject& source);
-
-/** Pack object.
- *
- * Pack an object into a string. This uses the serialize() method of the
- * object to obtain a serialized representation of the persistent state 
- * of the object, which is then stored in the target buffer. The data 
- * will be prefixed by \c true if the object is non-null and by \c false
- * if the object is null.
- *
- * \param source source object.
- * \param target where to store the packed data.
- * \param append whether data should be appended to or replace the target 
- * data.
- */
-void pack(const Ionflux::ObjectBase::IFObject*& source, std::string& 
-target, bool append = true);
-
-/** Unpack object.
- *
- * Unpack an object from a string. This uses the deserialize() method of
- * the object to restore the persistent state of the child object from 
- * the source buffer. The source data must start with a packed boolean 
- * value to indicate whether the object is non-null. If the object is 
- * non-null, it must be created before unpack() is called, i.e. \c 
- * target must already point to a valid object.
- *
- * \param source data to be unpacked.
- * \param target where to store the unpacked data.
- * \param offset offset from which to start unpacking.
- *
- * \return new offset, or -1 if the data could not be unpacked.
- */
-int unpack(const std::string& source, Ionflux::ObjectBase::IFObject*& 
-target, int offset = 0);
 
 /// @}
 

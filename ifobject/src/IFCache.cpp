@@ -26,7 +26,7 @@
 
 #include "ifobject/IFCache.hpp"
 #include "ifobject/IFLogMessage.hpp"
-#include "ifobject/utility.hpp"
+#include "ifobject/utils.hpp"
 #include "ifobject/IFError.hpp"
 #include <algorithm>
 #include <sstream>

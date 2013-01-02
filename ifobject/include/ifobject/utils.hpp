@@ -1,11 +1,11 @@
-#ifndef IONFLUX_OBJECT_UTILITY
-#define IONFLUX_OBJECT_UTILITY
+#ifndef IONFLUX_OBJECT_UTILS
+#define IONFLUX_OBJECT_UTILS
 /* ==========================================================================
  * Ionflux Object Base System
- * Copyright © 2006 Joern P. Meier
+ * Copyright © 2006-2013 Joern P. Meier
  * mail@ionflux.org
  * --------------------------------------------------------------------------
- * utility.hpp                 Utility functions (header).
+ * utils.hpp                 Utility functions (header).
  * ==========================================================================
  *
  * This file is part of Ionflux Object Base System.
@@ -28,7 +28,10 @@
 
 #include <string>
 #include <vector>
+#include <sstream>
 #include "ifobject/types.hpp"
+#include "ifobject/constants.hpp"
+#include "ifobject/IFError.hpp"
 
 namespace Ionflux
 {
@@ -38,8 +41,144 @@ namespace ObjectBase
 
 class IFObject;
 
-/// Default size for read buffers.
-const unsigned int READ_BUFFER_SIZE = 4096;
+/// Checked allocation.
+template<class T>
+T* create(const std::string& source = "", 
+    const std::string& objName = "object")
+{
+    T* nt = new T();
+    if (nt == 0)
+    {
+        std::ostringstream status;
+        if (source.size() > 0)
+            status << "[" << source << "] ";
+        status << "Could not allocate " << objName << ".";
+        throw IFError(status.str());
+    }
+    return nt;
+}
+
+/// Checked allocation.
+template<class T, class A>
+T* create1(A arg0, const std::string& source = "", 
+    const std::string& objName = "object")
+{
+    T* nt = new T(arg0);
+    if (nt == 0)
+    {
+        std::ostringstream status;
+        if (source.size() > 0)
+            status << "[" << source << "] ";
+        status << "Could not allocate " << objName << ".";
+        throw IFError(status.str());
+    }
+    return nt;
+}
+
+/// Checked allocation.
+template<class T, class A0, class A1>
+T* create2(A0 arg0, A1 arg1, const std::string& source = "", 
+    const std::string& objName = "object")
+{
+    T* nt = new T(arg0, arg1);
+    if (nt == 0)
+    {
+        std::ostringstream status;
+        if (source.size() > 0)
+            status << "[" << source << "] ";
+        status << "Could not allocate " << objName << ".";
+        throw IFError(status.str());
+    }
+    return nt;
+}
+
+/// Checked allocation.
+template<class T, class A0, class A1, class A2>
+T* create3(A0 arg0, A1 arg1, A2 arg2, const std::string& source = "", 
+    const std::string& objName = "object")
+{
+    T* nt = new T(arg0, arg1, arg2);
+    if (nt == 0)
+    {
+        std::ostringstream status;
+        if (source.size() > 0)
+            status << "[" << source << "] ";
+        status << "Could not allocate " << objName << ".";
+        throw IFError(status.str());
+    }
+    return nt;
+}
+
+/// Checked allocation.
+template<class T, class A0, class A1, class A2, class A3>
+T* create4(A0 arg0, A1 arg1, A2 arg2, A3 arg3, 
+    const std::string& source = "", 
+    const std::string& objName = "object")
+{
+    T* nt = new T(arg0, arg1, arg2, arg3);
+    if (nt == 0)
+    {
+        std::ostringstream status;
+        if (source.size() > 0)
+            status << "[" << source << "] ";
+        status << "Could not allocate " << objName << ".";
+        throw IFError(status.str());
+    }
+    return nt;
+}
+
+/// Checked allocation.
+template<class T, class A0, class A1, class A2, class A3, class A4>
+T* create5(A0 arg0, A1 arg1, A2 arg2, A3 arg3, A4 arg4, 
+    const std::string& source = "", 
+    const std::string& objName = "object")
+{
+    T* nt = new T(arg0, arg1, arg2, arg3, arg4);
+    if (nt == 0)
+    {
+        std::ostringstream status;
+        if (source.size() > 0)
+            status << "[" << source << "] ";
+        status << "Could not allocate " << objName << ".";
+        throw IFError(status.str());
+    }
+    return nt;
+}
+
+/// Null pointer check.
+template<class T>
+T* nullPointerCheck(T* p, const std::string& source = "", 
+    const std::string& objName = "Pointer")
+{
+    if (p == 0)
+    {
+        std::ostringstream status;
+        if (source.size() > 0)
+            status << "[" << source << "] ";
+        status << objName << " is null.";
+        throw IFError(status.str());
+    }
+    return p;
+}
+
+/// Checked dynamic cast.
+template<class T0, class T1>
+T0* checkedDynamicCast(T1* p, const std::string& source = "", 
+    const std::string& objName = "pointer", 
+    const std::string& expectedType = "<unknown>")
+{
+    T0* result = dynamic_cast<T0*>(p);
+    if (result == 0)
+    {
+        std::ostringstream status;
+        if (source.size() > 0)
+            status << "[" << source << "] ";
+        status << " " << objName << " has unexpected type "
+            "(expected type: " << expectedType << ").";
+        throw IFError(status.str());
+    }
+    return result;
+}
 
 /** Read file.
  *
@@ -156,6 +295,23 @@ std::string toUpper(const std::string &text, unsigned int numChars = 0,
 std::string toLower(const std::string &text, unsigned int numChars = 0, 
 	unsigned int offset = 0);
 
+/// Convert string to bool.
+bool toBool(const std::string& bytes);
+
+/** Convert string to float.
+ *
+ * This is a float conversion function that does not depend on the locale 
+ * (unlike strtod).
+ *
+ * \param bytes bytes
+ *
+ * \note This is rather a hack and may lack precision. Use strtod if at all 
+ * possible.
+ *
+ * \return result of the conversion
+ */
+double toFloat(const std::string& bytes);
+
 /** Trim byte string.
  *
  * Remove whitespace characters from the beginning and end of the specified 
@@ -271,11 +427,64 @@ std::string sha1(const std::string& secret, bool hexOut = false);
 std::string hmac(const std::string& key, const std::string& message, 
     bool hexOut = false);
 
-}
+/** Set vector from value list.
+ *
+ * Initialize the elements of a vector from a list of values, given 
+ * as a string.
+ * 
+ * \param data list data
+ * \param target target vector
+ * \param separator separator
+ */
+void vectorFromList(const std::string& data, 
+    Ionflux::ObjectBase::IntVector& target, 
+    const std::string& separator = DEFAULT_COORD_SEPARATOR);
+
+/** Set vector from value list.
+ *
+ * Initialize the elements of a vector from a list of values, given 
+ * as a string.
+ * 
+ * \param data list data
+ * \param target target vector
+ * \param separator separator
+ */
+void vectorFromList(const std::string& data, 
+    Ionflux::ObjectBase::UIntVector& target, 
+    const std::string& separator = DEFAULT_COORD_SEPARATOR);
+
+/** Set vector from value list.
+ *
+ * Initialize the elements of a vector from a list of values, given 
+ * as a string.
+ * 
+ * \param data list data
+ * \param target target vector
+ * \param separator separator
+ */
+void vectorFromList(const std::string& data, 
+    Ionflux::ObjectBase::DoubleVector& target, 
+    const std::string& separator = DEFAULT_COORD_SEPARATOR);
+
+/** Get indentation string
+ *
+ * Get a string of characters that can be used for indentation.
+ *
+ * \param level indentation level
+ * \param indentWidth indentation width (per level)
+ * \param indentChar indentation character
+ *
+ * \return indentation string
+ */
+std::string getIndent(unsigned int level = 0, 
+    unsigned int indentWidth = DEFAULT_INDENT_WIDTH, 
+    char indentChar = ' ');
 
 }
 
-/** \file utility.hpp
+}
+
+/** \file utils.hpp
  * \brief Utility functions (header).
  */
 #endif

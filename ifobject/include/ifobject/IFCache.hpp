@@ -292,9 +292,9 @@ class IFCache
 		 * is specified, a local reference for the new object will be added 
 		 * to the parent object.
 		 *
-		 * param parentObject Parent object.
+		 * \param parentObject Parent object.
 		 *
-		 * return Pointer to the new instance.
+		 * \return Pointer to the new instance.
 		 */
 		static Ionflux::ObjectBase::IFCache* 
 		create(Ionflux::ObjectBase::IFObject* parentObject = 0);

@@ -24,7 +24,7 @@
 # 02111-1307 USA
 # 
 # ==========================================================================
-{section checkFeatures}{$haveForwards = 0}{foreach fw in forward}{if fw != ""}{$haveForwards = 1}{/if}{/foreach}{$haveTypedefs = 0}{foreach td in typedef}{if td != ""}{$haveTypedefs = 1}{/if}{/foreach}{$haveEvents = 0}{foreach ev in event}{if ev.id != ""}{$haveEvents = 1}{/if}{/foreach}{$haveSignals = 0}{foreach si in signal}{if si.id != ""}{$haveSignals = 1}{/if}{/foreach}{$haveBaseIFObject = 0}{foreach bc in class.base.ifobject}{if bc.name != ""}{$haveBaseIFObject = 1}{/if}{/foreach}{$haveBaseOther = 0}{foreach bc in class.base.other}{if bc.name != ""}{$haveBaseOther = 1}{/if}{/foreach}{$enableClassInfo = 0}{if ( haveBaseIFObject == 1 ) || ( class.name == "IFObject" )}{$enableClassInfo = 1}{/if}{$abstractClass = 0}{foreach func in function.public}{if func.pureVirtual == "true"}{$abstractClass = 1}{/if}{/foreach}{foreach func in function.protected}{if func.pureVirtual == "true"}{$abstractClass = 1}{/if}{/foreach}{$enableMutex = 0}{$enableGuards = 0}{$enableAutoGuards = 0}{$enableLogMessage = 0}{$enableSignal = haveSignals}{$enableSerialize = 0}{$enablePersistence = 0}{$enableCopy = 0}{$enableUpcast = 0}{$enableCreate = 0}{$enableParam = 0}{foreach fe in class.features}{if fe == "mutex"}{$enableMutex = 1}{/if}{if fe == "guards"}{$enableMutex = 1}{$enableGuards = 1}{/if}{if fe == "autoguards"}{$enableMutex = 1}{$enableGuards = 1}{$enableAutoGuards = 1}{/if}{if fe == "logmessage"}{$enableLogMessage = 1}{/if}{if fe == "signal"}{$enableSignal = 1}{/if}{if fe == "serialize"}{$enableSerialize = 1}{/if}{if fe == "classinfo"}{$enableClassInfo = 1}{/if}{if fe == "persistence"}{$enablePersistence = 1}{/if}{if fe == "copy"}{$enableCopy = 1}{/if}{if fe == "upcast"}{$enableUpcast = 1}{/if}{if fe == "create"}{$enableCreate = 1}{/if}{if fe == "param"}{$enableParam = 1}{/if}{/foreach}{$haveOps = 0}{foreach op in operation}{if op.name != ""}{$haveOps = 1}{/if}{/foreach}{$haveBasePersistent = 0}{if enablePersistence == 1}{if class.persistence.backendBase != ""}{$haveBasePersistent = 1}{/if}{if class.persistence.backend == ""}{$class.persistence.backend = class.name + "Backend"}{/if}{/if}{/section}{ref checkFeatures}{section insertGPLDisclaimer}
+{section checkFeatures}{$haveForwards = 0}{foreach fw in forward}{if fw != ""}{$haveForwards = 1}{/if}{/foreach}{$haveTypedefs = 0}{foreach td in typedef}{if td != ""}{$haveTypedefs = 1}{/if}{/foreach}{$haveEvents = 0}{foreach ev in event}{if ev.id != ""}{$haveEvents = 1}{/if}{/foreach}{$haveSignals = 0}{foreach si in signal}{if si.id != ""}{$haveSignals = 1}{/if}{/foreach}{$haveBaseIFObject = 0}{foreach bc in class.base.ifobject}{if bc.name != ""}{$haveBaseIFObject = 1}{/if}{/foreach}{$haveBaseOther = 0}{foreach bc in class.base.other}{if bc.name != ""}{$haveBaseOther = 1}{/if}{/foreach}{$enableClassInfo = 0}{if ( haveBaseIFObject == 1 ) || ( class.name == "IFObject" )}{$enableClassInfo = 1}{/if}{$abstractClass = 0}{foreach func in function.public}{if func.pureVirtual == "true"}{$abstractClass = 1}{/if}{/foreach}{foreach func in function.protected}{if func.pureVirtual == "true"}{$abstractClass = 1}{/if}{/foreach}{$enableMutex = 0}{$enableGuards = 0}{$enableAutoGuards = 0}{$enableLogMessage = 0}{$enableSignal = haveSignals}{$enableSerialize = 0}{$enablePersistence = 0}{$enableCopy = 0}{$enableUpcast = 0}{$enableCreate = 0}{$enableParam = 0}{$enableQObject = 0}{$enablePropertySet = 0}{$enableClassName = 0}{$enableMemDebug = 0}{$enableExtendedCreate = 0}{foreach fe in class.features}{if fe == "mutex"}{$enableMutex = 1}{/if}{if fe == "guards"}{$enableMutex = 1}{$enableGuards = 1}{/if}{if fe == "autoguards"}{$enableMutex = 1}{$enableGuards = 1}{$enableAutoGuards = 1}{/if}{if fe == "logmessage"}{$enableLogMessage = 1}{/if}{if fe == "signal"}{$enableSignal = 1}{/if}{if fe == "serialize"}{$enableSerialize = 1}{/if}{if fe == "classinfo"}{$enableClassInfo = 1}{/if}{if fe == "persistence"}{$enablePersistence = 1}{/if}{if fe == "copy"}{$enableCopy = 1}{/if}{if fe == "upcast"}{$enableUpcast = 1}{/if}{if fe == "create"}{$enableCreate = 1}{if class.create.extendedCreate == "true"}{$enableExtendedCreate = 1}{/if}{/if}{if fe == "param"}{$enableParam = 1}{/if}{if fe == "qobject"}{$enableQObject = 1}{/if}{if fe == "propertyset"}{$enablePropertySet = 1}{/if}{if fe == "classname"}{$enableClassName = 1}{/if}{if fe == "memdebug"}{$enableMemDebug = 1}{if project.memDebug.autoEnable == "false"}{$class.memDebug.autoEnable = "false"}{/if}{/if}{/foreach}{$haveOps = 0}{foreach op in operation}{if op.name != ""}{$haveOps = 1}{/if}{/foreach}{$haveBasePersistent = 0}{if enablePersistence == 1}{if class.persistence.backendBase != ""}{$haveBasePersistent = 1}{/if}{if class.persistence.backend == ""}{$class.persistence.backend = class.name + "Backend"}{/if}{/if}{/section}{ref checkFeatures}{section insertGPLDisclaimer}
  * =========================================================================
 {swrap 75 " * "}
 This file is part of {$project.name}.
@@ -34,15 +34,34 @@ This file is part of {$project.name}.
 {$project.name} is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with {$project.name}; if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA{/swrap}
- * {/section}{section insertIncludes}
-
+ * {/section}{section insertIncludeBlocks}{foreach block in includeBlock}{if ( block.pos == includeBlockPos ) && ( block.file == includeBlockFile )}{if block.type == "list"}{foreach inc in block.list}
+\#include {$inc}{/foreach}{else}{if block.type == "verbatim"}
+{$block.value}{/if}{/if}{/if}{/foreach}{/section}{section insertIncludes}
+{$includeBlockPos = "pre"}{$includeBlockFile = "impl"}{ref insertIncludeBlocks}
 \#include "{if class.overrideProjectPrefix != "true"}{if project.includePrefix != ""}{$project.includePrefix}/{/if}{/if}{if class.includePrefix != ""}{$class.includePrefix}/{/if}{$class.name}.hpp"{if enableMutex == 1}
 \#include "ifobject/IFMutex.hpp"{/if}{if enableGuards == 1}
 \#include "ifobject/IFGuard.hpp"{/if}{if enableLogMessage == 1}
 \#include "ifobject/IFLogMessage.hpp"{/if}{if enableSignal == 1}
 \#include "ifobject/IFSignal.hpp"{/if}{foreach ev in event}
 \#include "{if project.includePrefix != ""}{$project.includePrefix}/{/if}{if class.includePrefix != ""}{$class.includePrefix}/{/if}IF{$ev.id|uppercase(1)}Event.hpp"{/foreach}{foreach inc in include.impl}
-\#include {$inc}{/foreach}{/section}{section createEventHelperFunctionImpl}
+\#include {$inc}{/foreach}{if enablePropertySet == 1}
+\#include "ifobject/IFPropertySet.hpp"
+\#include "ifobject/IFProperty.hpp"
+\#include "ifobject/IFValue.hpp"{/if}{if enableMemDebug == 1}
+\#include "ifobject/IFMMEvent.hpp"{/if}{if enableSerialize == 1}
+\#include "ifobject/serialize.hpp"
+\#include "ifobject/utils.hpp"
+
+using Ionflux::ObjectBase::pack;
+using Ionflux::ObjectBase::packObj;
+using Ionflux::ObjectBase::unpack;
+using Ionflux::ObjectBase::unpackObj;{/if}{$includeBlockPos = ""}{ref insertIncludeBlocks}{/section}{section createClassNameFuncsImpl}
+
+{swrap 75}std::string {$class.name}::getClassName() const{/swrap}
+\{{if enableGuards == 1}
+    IFGuard functionGuard(guardMutex);{/if}
+    return "{$class.name}";
+\}{/section}{section createEventHelperFunctionImpl}
 
 IF{$ev.id|uppercase(1)}Event* {$class.name}::create{$ev.id|uppercase(1)}Event()
 \{{if enableGuards == 1}
@@ -58,6 +77,310 @@ IF{$ev.id|uppercase(1)}Event* {$class.name}::create{$ev.id|uppercase(1)}Event()
 	\}
 	addLocalRef(event);
 	return event;
+\}{/section}{section createPropertySetFuncsImpl}{if class.propertySet.enablePropertyUpdateHandlers == "true"}{if function.updatePropertyHandler.impl != ""}
+
+{swrap 75}void {$class.name}::onUpdateProperty(const Ionflux::ObjectBase::IFProperty& p){/swrap}
+\{{if enableGuards == 1}
+    IFGuard functionGuard(guardMutex);{/if}
+{swrap 75 "    "}{$function.updatePropertyHandler.impl}{/swrap}
+\}{/if}{if function.updatePropertiesHandler.impl != ""}
+
+{swrap 75}void {$class.name}::onUpdateProperties(const Ionflux::ObjectBase::IFPropertySet& p){/swrap}
+\{{if enableGuards == 1}
+    IFGuard functionGuard(guardMutex);{/if}
+{swrap 75 "    "}{$function.updatePropertiesHandler.impl}{/swrap}
+\}{/if}{/if}
+
+{swrap 75}void {$class.name}::updateProperty(const Ionflux::ObjectBase::IFProperty& p, bool ignoreOwnSet){/swrap}
+\{{if enableGuards == 1}
+    IFGuard functionGuard(guardMutex);{/if}{foreach prop in property.protected}{if ( prop.readOnly != "true") && ( prop.protectedWrite != "true" )}{if prop.valueType == "bool"}
+    // {$prop.name}
+    if (p.getName() == "{$prop.name}")
+    \{
+        Ionflux::ObjectBase::IFValue* v0 = Ionflux::ObjectBase::IFValue::upcast(p.getValue());
+        if (v0 != 0)\
+        \{\
+            set{$prop.name|uppercase(1)}(v0->getBool());{if class.propertySet.enablePropertyUpdateHandlers == "true"}
+            onUpdateProperty(p);{/if}
+        \}\
+        return;
+    \}{/if}{if prop.valueType == "integer"}
+    // {$prop.name}
+    if (p.getName() == "{$prop.name}")
+    \{
+        Ionflux::ObjectBase::IFValue* v0 = Ionflux::ObjectBase::IFValue::upcast(p.getValue());
+        if (v0 != 0)\
+        \{\
+            set{$prop.name|uppercase(1)}(v0->getInteger());{if class.propertySet.enablePropertyUpdateHandlers == "true"}
+            onUpdateProperty(p);{/if}
+        \}\
+        return;
+    \}{/if}{if prop.valueType == "float"}
+    // {$prop.name}
+    if (p.getName() == "{$prop.name}")
+    \{
+        Ionflux::ObjectBase::IFValue* v0 = Ionflux::ObjectBase::IFValue::upcast(p.getValue());
+        if (v0 != 0)\
+        \{\
+            set{$prop.name|uppercase(1)}(v0->getFloat());{if class.propertySet.enablePropertyUpdateHandlers == "true"}
+            onUpdateProperty(p);{/if}
+        \}\
+        return;
+    \}{/if}{if prop.valueType == "string"}
+    // {$prop.name}
+    if (p.getName() == "{$prop.name}")
+    \{
+        Ionflux::ObjectBase::IFValue* v0 = Ionflux::ObjectBase::IFValue::upcast(p.getValue());
+        if (v0 != 0)\
+        \{\
+            set{$prop.name|uppercase(1)}(v0->getStringValue());{if class.propertySet.enablePropertyUpdateHandlers == "true"}
+            onUpdateProperty(p);{/if}
+        \}\
+        return;
+    \}{/if}{if prop.valueType == "vec4"}
+    // {$prop.name}
+    if (p.getName() == "{$prop.name}")
+    \{
+        Ionflux::ObjectBase::IFValue* v0 = Ionflux::ObjectBase::IFValue::upcast(p.getValue());
+        if (v0 != 0)\
+        \{\
+            set{$prop.name|uppercase(1)}(v0->getV4());{if class.propertySet.enablePropertyUpdateHandlers == "true"}
+            onUpdateProperty(p);{/if}
+        \}\
+        return;
+    \}{/if}{if prop.valueType == "color"}
+    // {$prop.name}
+    if (p.getName() == "{$prop.name}")
+    \{
+        Ionflux::ObjectBase::IFValue* v0 = Ionflux::ObjectBase::IFValue::upcast(p.getValue());
+        if (v0 != 0)\
+        \{\
+            set{$prop.name|uppercase(1)}(v0->getColor());{if class.propertySet.enablePropertyUpdateHandlers == "true"}
+            onUpdateProperty(p);{/if}
+        \}\
+        return;
+    \}{/if}{if prop.valueType == "object"}
+    // {$prop.name}
+    if (p.getName() == "{$prop.name}")
+    \{
+        set{$prop.name|uppercase(1)}(
+            dynamic_cast<{$prop.type}>(p.getValue()));{if class.propertySet.enablePropertyUpdateHandlers == "true"}
+        onUpdateProperty(p);{/if}
+        return;
+    \}{/if}{if prop.valueType == "propertySet"}
+    // property set: {$prop.name}
+    if ({$prop.name} != 0)
+    \{
+        Ionflux::ObjectBase::IFProperty* p0 = {$prop.name}->getProperty(p.getName());
+        if ((p0 != 0) && (p0 != &p))
+        \{
+            p0->setValue(p.getValue());{if class.propertySet.enablePropertyUpdateHandlers == "true"}
+            onUpdateProperty(*p0);{/if}
+            return;
+        \}
+    \}{/if}{if prop.valueType == "propertyIndex"}
+    // property index: {$prop.name}
+    if ({$prop.name} != 0)
+    \{
+        Ionflux::ObjectBase::IFProperty* p0 = {$prop.name}->getProperty(p.getName());
+        if ((p0 != 0) && (p0 != &p))
+        \{
+            p0->setValue(p.getValue());{if class.propertySet.enablePropertyUpdateHandlers == "true"}
+            onUpdateProperty(*p0);{/if}
+            return;
+        \}
+    \}{/if}{/if}{/foreach}{if class.propertySet.isPropertySet == "true"}
+    // the class itself is a property set
+    if (!ignoreOwnSet)
+    \{
+        Ionflux::ObjectBase::IFProperty* p0 = getProperty(p.getName());
+        if ((p0 != 0) && (p0 != &p))
+        \{
+            p0->setValue(p.getValue());{if class.propertySet.enablePropertyUpdateHandlers == "true"}
+            onUpdateProperty(*p0);{/if}
+            return;
+        \}
+    \}{/if}{if class.propertySet.isPropertyIndex == "true"}
+    // the class itself is a property index
+    if (!ignoreOwnSet)
+    \{
+        Ionflux::ObjectBase::IFProperty* p0 = getProperty(p.getName());
+        if ((p0 != 0) && (p0 != &p))
+        \{
+            p0->setValue(p.getValue());{if class.propertySet.enablePropertyUpdateHandlers == "true"}
+            onUpdateProperty(*p0);{/if}
+            return;
+        \}
+    \}{/if}{foreach bc in class.base.other}{if bc.propertySetEnabled == "true"}{if bc.ignoreOwnSet == "true"}
+    // NOTE: base class will not check its own property set{/if}
+    {$bc.name}::updateProperty(p{if bc.ignoreOwnSet == "true"}, true{/if});{/if}{/foreach}
+\}
+
+{swrap 75}void {$class.name}::updateProperties(const Ionflux::ObjectBase::IFPropertySet& ps){/swrap}
+\{{if enableGuards == 1}
+    IFGuard functionGuard(guardMutex);{/if}
+    for (unsigned int i = 0; i < ps.getNumProperties(); i++)
+    \{
+        Ionflux::ObjectBase::IFProperty* p0 = ps.getProperty(i);
+        if (p0 != 0)
+            updateProperty(*p0);
+    \}{if class.propertySet.enablePropertyUpdateHandlers == "true"}
+    onUpdateProperties(ps);{/if}
+\}
+
+{swrap 75}void {$class.name}::getProperty(Ionflux::ObjectBase::IFProperty& p, bool ignoreOwnSet){/swrap}
+\{{if enableGuards == 1}
+    IFGuard functionGuard(guardMutex);{/if}{foreach prop in property.protected}{if prop.valueType == "bool"}
+    // {$prop.name}
+    if (p.getName() == "{$prop.name}")
+    \{
+        Ionflux::ObjectBase::IFValue* v0 = Ionflux::ObjectBase::IFValue::create();
+        v0->setValue(static_cast<bool>(get{$prop.name|uppercase(1)}()));
+        p.setValue(v0);
+        return;
+    \}{/if}{if prop.valueType == "integer"}
+    // {$prop.name}
+    if (p.getName() == "{$prop.name}")
+    \{
+        Ionflux::ObjectBase::IFValue* v0 = Ionflux::ObjectBase::IFValue::create();
+        v0->setValue(static_cast<Ionflux::ObjectBase::Int64>(get{$prop.name|uppercase(1)}()));
+        p.setValue(v0);
+        return;
+    \}{/if}{if prop.valueType == "float"}
+    // {$prop.name}
+    if (p.getName() == "{$prop.name}")
+    \{
+        Ionflux::ObjectBase::IFValue* v0 = Ionflux::ObjectBase::IFValue::create();
+        v0->setValue(static_cast<double>(get{$prop.name|uppercase(1)}()));
+        p.setValue(v0);
+        return;
+    \}{/if}{if prop.valueType == "string"}
+    // {$prop.name}
+    if (p.getName() == "{$prop.name}")
+    \{
+        Ionflux::ObjectBase::IFValue* v0 = Ionflux::ObjectBase::IFValue::create();
+        v0->setValue(get{$prop.name|uppercase(1)}());
+        p.setValue(v0);{if prop.typeHint == "file"}
+        p.setTypeHint(Ionflux::ObjectBase::IFProperty::TYPE_HINT_FILE);{/if}{if prop.typeHint == "filePath"}
+        p.setTypeHint(Ionflux::ObjectBase::IFProperty::TYPE_HINT_FILE_PATH);{/if}{if prop.typeHint == "callable"}
+        p.setTypeHint(Ionflux::ObjectBase::IFProperty::TYPE_HINT_CALLABLE);{/if}
+        return;
+    \}{/if}{if prop.valueType == "vec4"}
+    // {$prop.name}
+    if (p.getName() == "{$prop.name}")
+    \{
+        Ionflux::ObjectBase::IFValue* v0 = Ionflux::ObjectBase::IFValue::create();
+        v0->setValue(get{$prop.name|uppercase(1)}());
+        p.setValue(v0);
+        return;
+    \}{/if}{if prop.valueType == "color"}
+    // {$prop.name}
+    if (p.getName() == "{$prop.name}")
+    \{
+        Ionflux::ObjectBase::IFValue* v0 = Ionflux::ObjectBase::IFValue::create();
+        v0->setValue(get{$prop.name|uppercase(1)}());
+        p.setValue(v0);
+        return;
+    \}{/if}{if prop.valueType == "object"}
+    // {$prop.name}
+    if (p.getName() == "{$prop.name}")
+    \{
+        p.setValue(get{$prop.name|uppercase(1)}());
+        return;
+    \}{/if}{if prop.valueType == "propertySet"}
+    // property set: {$prop.name}
+    if ({$prop.name} != 0)
+    \{
+        Ionflux::ObjectBase::IFProperty* p0 = {$prop.name}->getProperty(p.getName());
+        if (p0 != 0)
+        \{
+            p.setValue(p0->getValue());
+            return;
+        \}
+    \}{/if}{if prop.valueType == "propertyIndex"}
+    // property index: {$prop.name}
+    if ({$prop.name} != 0)
+    \{
+        Ionflux::ObjectBase::IFProperty* p0 = {$prop.name}->getProperty(p.getName());
+        if (p0 != 0)
+        \{
+            p.setValue(p0->getValue());
+            return;
+        \}
+    \}{/if}{/foreach}{if class.propertySet.isPropertySet == "true"}
+    // the class itself is a property set
+    if (!ignoreOwnSet)
+    \{
+        Ionflux::ObjectBase::IFProperty* p0 = getProperty(p.getName());
+        if (p0 != 0)
+        \{
+            p.setValue(p0->getValue());
+            return;
+        \}
+    \}{/if}{if class.propertySet.isPropertyIndex == "true"}
+    // the class itself is a property index
+    if (!ignoreOwnSet)
+    \{
+        Ionflux::ObjectBase::IFProperty* p0 = getProperty(p.getName());
+        if (p0 != 0)
+        \{
+            p.setValue(p0->getValue());
+            return;
+        \}
+    \}{/if}{foreach bc in class.base.other}{if bc.propertySetEnabled == "true"}{if bc.ignoreOwnSet == "true"}
+    // NOTE: base class will not check its own property set{/if}
+    {$bc.name}::getProperty(p{if bc.ignoreOwnSet == "true"}, true{/if});{/if}{/foreach}
+\}
+
+{swrap 75}void {$class.name}::getProperties(Ionflux::ObjectBase::IFPropertySet& ps){/swrap}
+\{{if enableGuards == 1}
+    IFGuard functionGuard(guardMutex);{/if}{$tempPropDefined = 0}{foreach bc in class.base.other}{if bc.propertySetEnabled == "true"}
+    {$bc.name}::getProperties(ps);{/if}{/foreach}{foreach prop in property.protected}{if ( prop.valueType == "bool" ) || ( prop.valueType == "integer" ) || ( prop.valueType == "float" ) || ( prop.valueType == "string" ) || ( prop.valueType == "vec4" ) || ( prop.valueType == "color" )}
+    // {$prop.name}
+    {if tempPropDefined == 0}Ionflux::ObjectBase::IFProperty* {$tempPropDefined = 1}{/if}p0 = ps.getProperty("{$prop.name}");
+    if (p0 == 0)
+    \{
+        p0 = ps.addProperty();
+        p0->setName("{$prop.name}");
+    \}
+    getProperty(*p0);{/if}{/foreach}{if class.propertySet.isPropertySet == "true"}
+    // the class itself is a property set
+    ps.addProperties(this);{/if}
+\}{/section}{section createExtendedVectorAddFuncImpl}
+
+{swrap 75}{if prop.element.addType == ""}{$prop.element.type}{else}{$prop.element.addType}{/if} {$class.name}::add{$prop.element.name|uppercase(1)}(){/swrap}
+\{{if enableGuards == 1}
+	IFGuard propertyGuard(guardMutex);{/if}{if prop.proxy.target != ""}{if prop.proxy.nullError != ""}
+    if ({$prop.proxy.target} == 0)
+        throw {$prop.proxy.nullError};{/if}
+    return {$prop.proxy.target}->add{$prop.element.name|uppercase(1)}();{else}{if prop.check.maxSize != ""}
+	if ({$prop.name}.size() >= {$prop.check.maxSize})
+	    throw {$prop.check.sizeError};{/if}
+	{if prop.element.addType == ""}{$prop.element.type}{else}{$prop.element.addType}{/if} o0 = {$prop.element.createExpr};
+	add{$prop.element.name|uppercase(1)}(o0);
+	return o0;{/if}
+\}
+
+{swrap 75}void {$class.name}::add{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if}(std::vector<{$prop.element.type}>& new{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if}){/swrap}
+\{{if enableGuards == 1}
+	IFGuard propertyGuard(guardMutex);{/if}{if prop.proxy.target != ""}{if prop.proxy.nullError != ""}
+    if ({$prop.proxy.target} == 0)
+        throw {$prop.proxy.nullError};{/if}
+    return {$prop.proxy.target}->add{$prop.element.name|uppercase(1)}(new{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if});{else}
+	for (std::vector<{$prop.element.type}>::iterator i = new{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if}.begin(); 
+	    i != new{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if}.end(); i++)
+	    add{$prop.element.name|uppercase(1)}(*i);{/if}
+\}
+
+{swrap 75}void {$class.name}::add{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if}({foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}* new{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if}){/swrap}
+\{{if enableGuards == 1}
+	IFGuard propertyGuard(guardMutex);{/if}{if prop.proxy.target != ""}{if prop.proxy.nullError != ""}
+    if ({$prop.proxy.target} == 0)
+        throw {$prop.proxy.nullError};{/if}
+    return {$prop.proxy.target}->add{$prop.element.name|uppercase(1)}(new{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if});{else}
+	for (unsigned int i = 0; 
+	    i < new{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if}->getNum{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if}(); i++)
+	    add{$prop.element.name|uppercase(1)}(new{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if}->get{$prop.element.name|uppercase(1)}(i));{/if}
 \}{/section}{section createPropertyAccessorImpl}{if prop.style == "vector"}
 
 {swrap 75}unsigned int {$class.name}::getNum{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if}() const{/swrap}
@@ -126,7 +449,7 @@ IF{$ev.id|uppercase(1)}Event* {$class.name}::create{$ev.id|uppercase(1)}Event()
 	    throw {$prop.check.sizeError};{/if}
 	{if prop.element.managed == "true"}addLocalRef(addElement);
 	{/if}{$prop.name}.push_back(addElement);{/if}
-\}
+\}{if prop.extendedAddFuncs == "true"}{ref createExtendedVectorAddFuncImpl}{/if}
 
 {swrap 75}void {$class.name}::remove{$prop.element.name|uppercase(1)}({if prop.element.removeType == ""}{$prop.element.type}{else}{$prop.element.removeType}{/if} removeElement){/swrap}
 \{{if enableGuards == 1}
@@ -190,11 +513,12 @@ IF{$ev.id|uppercase(1)}Event* {$class.name}::create{$ev.id|uppercase(1)}Event()
 
 {swrap 75}{$prop.element.type} {$class.name}::get{$prop.element.name|uppercase(1)}({if prop.key.accessType != ""}{$prop.key.accessType}{else}{$prop.key.type}{/if} elementKey) const{/swrap}
 \{{if enableGuards == 1}
-	IFGuard propertyGuard(guardMutex);{/if}
+	IFGuard propertyGuard(guardMutex);{/if}{if prop.impl.get != ""}
+{swrap 75 "    "}{$prop.impl.get}{/swrap}{else}
 	std::map<{$prop.key.type}, {$prop.element.type}>::const_iterator i = {$prop.name}.find(elementKey);
 	if (i != {$prop.name}.end())
 		return (*i).second;
-	return {if prop.element.defaultValue != ""}{$prop.element.defaultValue}{else}0{/if};
+	return {if prop.element.defaultValue != ""}{$prop.element.defaultValue}{else}0{/if};{/if}
 \}{if ( prop.readOnly != "true" ) || ( prop.protectedWrite == "true" )}{if prop.hideImpl != "true"}
 
 {swrap 75}std::map<{$prop.key.type}, {$prop.element.type}>& {$class.name}::get{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if}(){/swrap}
@@ -265,6 +589,13 @@ IF{$ev.id|uppercase(1)}Event* {$class.name}::create{$ev.id|uppercase(1)}Event()
 	IFGuard functionGuard(guardMutex);{/if}
 {if func.impl == ""}	// TODO: Implementation.{else}{$func.impl|swrap(75,'	')}{/if}
 {if func.return.value != ""}	return {$func.return.value};
+{/if}\}{/if}{/section}{section createQtSlotImpl}{if sl.pureVirtual != "true"}
+
+{swrap 75}{$sl.type} {$class.name}::{$sl.name}({foreach prm in sl.param}{$prm.type} {$prm.name}{first}, {/first}{mid}, {/mid}{/foreach}){if sl.const == "true"} const{/if}{if sl.throw != ""} throw({if sl.throw != "<none>"}{$sl.throw}{/if}){/if}{/swrap}
+\{{if ( enableGuards == 1 ) && ( sl.spec != "static" )}
+	IFGuard functionGuard(guardMutex);{/if}
+{if sl.impl == ""}	// TODO: Implementation.{else}{$sl.impl|swrap(75,'	')}{/if}
+{if sl.return.value != ""}	return {$sl.return.value};
 {/if}\}{/if}{/section}{section createOpProxyImpl}
 
 {swrap 75}bool {$class.name}::op{$op.name|uppercase(1)}({foreach prm in op.param}Ionflux::ObjectBase::IFObject* {$prm.name}, {/foreach}Ionflux::ObjectBase::IFObjectVector* target){if op.const == "true"} const{/if}{/swrap}
@@ -459,24 +790,32 @@ bool {$class.name}::opDispatch(const Ionflux::ObjectBase::IFOpName& opName,
 	return false;
 \}{/section}{section serializeProp}{if prop.serializeImpl != ""}
 {$prop.serializeImpl|swrap(75,'	')}{else}{if ( prop.persistent == "true" ) || ( prop.proxy == "true" )}
-    pack(get{$prop.name|uppercase(0)}(), target);{else}
-	pack({$prop.name}, target);{/if}{/if}{/section}{section serializeVar}{if var.serializeImpl != ""}
+    pack(get{$prop.name|uppercase(0)}(), target);{else}{if prop.valueType == "object"}
+    packObj({$prop.name}, target);{else}
+	pack({$prop.name}, target);{/if}{/if}{/if}{/section}{section serializeVar}{if var.serializeImpl != ""}
 {$var.serializeImpl|swrap(75,'	')}{else}
-	pack({$var.name}, target);{/if}{/section}{section deserializeProp}{if prop.deserializeImpl != ""}
+	pack({$var.name}, target);{/if}{/section}{section deserializeProp}
+	// {$prop.name}{if prop.deserializeImpl != ""}
 {$prop.deserializeImpl|swrap(75,'	')}{else}{if ( prop.persistent == "true" ) || ( prop.proxy == "true" )}
     {$prop.type} t0;
     offset = unpack(source, t0, offset);
-    set{$prop.name|uppercase(0)}(t0);{else}
-	offset = unpack(source, {$prop.name}, offset);{/if}{/if}
+    set{$prop.name|uppercase(1)}(t0);{else}{if prop.valueType == "object"}
+    {$prop.type} t{$prop.name|uppercase(1)} = {$prop.name};
+    offset = unpackObj(source, t{$prop.name|uppercase(1)}, offset);
+    if (t{$prop.name|uppercase(1)} != {$prop.name})
+        set{$prop.name|uppercase(1)}(t{$prop.name|uppercase(1)});{else}
+    offset = unpack(source, {$prop.name}, offset);{/if}{/if}{/if}
 	if (offset < 0)
 	\{{if enableLogMessage == 1}
 		ostringstream state;
 		state << "Could not deserialize property '{$prop.name}'.";
 		log(IFLogMessage(state.str(), VL_ERROR, 
-			this, "deserialize"));{else}
-		std::cerr << "[{$class.name}::deserialize] ERROR: "
-			"Could not deserialize property '{$prop.name}'.";{/if}
-		return false;
+			this, "deserialize"));
+        return -1;{else}
+        std::ostringstream status;
+		status << "[{$class.name}::deserialize] "
+			"Could not deserialize property '{$prop.name}'.";
+        throw {if class.serialize.errorClass != ""}{$class.serialize.errorClass}{else}Ionflux::ObjectBase::IFError{/if}(status.str());{/if}
 	\}{/section}{section deserializeVar}{if var.deserializeImpl != ""}
 {$var.deserializeImpl|swrap(75,'	')}{else}
 	offset = unpack(source, {$var.name}, offset);{/if}
@@ -485,10 +824,12 @@ bool {$class.name}::opDispatch(const Ionflux::ObjectBase::IFOpName& opName,
 		ostringstream state;
 		state << "Could not deserialize variable '{$var.name}'.";
 		log(IFLogMessage(state.str(), VL_ERROR, 
-			this, "deserialize"));{else}
-		std::cerr << "[{$class.name}::deserialize] ERROR: "
-			"Could not deserialize variable '{$var.name}'.";{/if}
-		return false;
+			this, "deserialize"));
+        return false;{else}
+        std::ostringstream status;
+		status << "[{$class.name}::deserialize] "
+			"Could not deserialize property '{$prop.name}'.";
+        throw {if class.serialize.errorClass != ""}{$class.serialize.errorClass}{else}Ionflux::ObjectBase::IFError{/if}(status.str());{/if}
 	\}{/section}{section defineGlobalFunc}
 
 {swrap 75}{$func.type} {$func.name}({foreach prm in func.param}{$prm.type} {$prm.name}{first}, {/first}{mid}, {/mid}{/foreach}){if func.const == "true"} const{/if}{/swrap}
@@ -654,7 +995,20 @@ set{$prop.name|uppercase(1)}(other.get{$prop.name|uppercase(1)}());{/if}{/foreac
 {swrap 75}{foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}* {$class.name}::upcast(Ionflux::ObjectBase::IFObject* other){/swrap}
 \{
     return dynamic_cast<{$class.name}*>(other);
-\}{/section}{section createCreateFuncsImpl}
+\}{/section}{section createExtendedCreateFuncsImpl}{foreach con in constructor.public}
+
+{swrap 75}{foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}* {$class.name}::create({foreach prm in con.param}{$prm.type} {$prm.name}{first}, {/first}{mid}, {/mid}{/foreach}, Ionflux::ObjectBase::IFObject* parentObject){/swrap}
+\{
+{swrap 75 "    "}{$class.name}* newObject = new {$class.name}({foreach prm in con.param}{$prm.name}{first}, {/first}{mid}, {/mid}{/foreach});{/swrap}
+    if (newObject == 0)
+    \{{if class.create.allocationError != ""}
+        throw {$class.create.allocationError};{else}
+        return 0;{/if}
+    \}
+    if (parentObject != 0)
+        parentObject->addLocalRef(newObject);
+    return newObject;
+\}{/foreach}{/section}{section createCreateFuncsImpl}
 
 {swrap 75}{foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}* {$class.name}::create(Ionflux::ObjectBase::IFObject* parentObject){/swrap}
 \{
@@ -680,7 +1034,7 @@ set{$prop.name|uppercase(1)}(other.get{$prop.name|uppercase(1)}());{/if}{/foreac
     return newObject;
 \}
 
-{/if}{/section}{section createParamFuncsImpl}{foreach prm in class.param}
+{/if}{if enableExtendedCreate == 1}{ref createExtendedCreateFuncsImpl}{/if}{/section}{section createParamFuncsImpl}{foreach prm in class.param}
 
 {swrap 75}void {$class.name}::set{$prm.name}(Ionflux::ObjectBase::IFParamID paramID, {$prm.type} paramValue){/swrap}
 \{{if prm.impl.set != ""}
@@ -785,7 +1139,9 @@ const std::string {$class.name}::SIGNAL_NAME_{$ins.id|uppercase} = "{$ins.id|low
 
 // run-time type information instance constants
 const {$class.name}ClassInfo {$class.name}::{$class.name|lowercase(1)}ClassInfo;
-const Ionflux::ObjectBase::IFClassInfo* {$class.name}::CLASS_INFO = &{$class.name}::{$class.name|lowercase(1)}ClassInfo;{/if}
+const Ionflux::ObjectBase::IFClassInfo* {$class.name}::CLASS_INFO = &{$class.name}::{$class.name|lowercase(1)}ClassInfo;{/if}{if class.hooks.preConstructorDef != ""}
+
+{$class.hooks.preConstructorDef}{/if}
 
 {$class.name}::{$class.name}(){$haveInitializer = 0}{foreach init in constructor.default.initializer}{$haveInitializer = 1}{first}
 : {/first}{single}
@@ -797,7 +1153,10 @@ const Ionflux::ObjectBase::IFClassInfo* {$class.name}::CLASS_INFO = &{$class.nam
 	// NOTE: The following line is required for run-time type information.
 	theClass = CLASS_INFO;{/if}{if enableAutoGuards == 1}
 	// NOTE: The following line is required for guards to work.
-	setGuardEnabled(true);{/if}{if constructor.default.impl == ""}
+	setGuardEnabled(true);{/if}{if enableMemDebug == 1}{if class.memDebug.autoEnable == "true"}
+    refData->mmDebug = true;{/if}
+    if (refData->mmDebug)
+        handleMMEvent(Ionflux::ObjectBase::IFMMEvent(Ionflux::ObjectBase::IFMMEvent::TYPE_CREATE, this));{/if}{if constructor.default.impl == ""}
 	// TODO: Nothing ATM. ;-){else}
 {$constructor.default.impl|swrap(75,'	')}{/if}
 \}{if enablePersistence == 1}
@@ -812,7 +1171,10 @@ const Ionflux::ObjectBase::IFClassInfo* {$class.name}::CLASS_INFO = &{$class.nam
 	// NOTE: The following line is required for run-time type information.
 	theClass = CLASS_INFO;{/if}{if enableAutoGuards == 1}
 	// NOTE: The following line is required for guards to work.
-	setGuardEnabled(true);{/if}
+	setGuardEnabled(true);{/if}{if enableMemDebug == 1}{if class.memDebug.autoEnable == "true"}
+    refData->mmDebug = true;{/if}
+    if (refData->mmDebug)
+        handleMMEvent(Ionflux::ObjectBase::IFMMEvent(Ionflux::ObjectBase::IFMMEvent::TYPE_CREATE, this));{/if}
 	setDatabase(initDatabase);
 	if (objectID != -1)
 		setFromID(objectID);
@@ -828,7 +1190,10 @@ const Ionflux::ObjectBase::IFClassInfo* {$class.name}::CLASS_INFO = &{$class.nam
 	// NOTE: The following line is required for run-time type information.
 	theClass = CLASS_INFO;{/if}{if enableAutoGuards == 1}
 	// NOTE: The following line is required for guards to work.
-	setGuardEnabled(true);{/if}
+	setGuardEnabled(true);{/if}{if enableMemDebug == 1}{if class.memDebug.autoEnable == "true"}
+	refData->mmDebug = true;{/if}
+    if (refData->mmDebug)
+        handleMMEvent(Ionflux::ObjectBase::IFMMEvent(Ionflux::ObjectBase::IFMMEvent::TYPE_CREATE, this));{/if}
 	/* Do not use setDatabase() here since that also initializes the 
 	   persistent backend. */
 	database = initDatabase;
@@ -845,7 +1210,10 @@ const Ionflux::ObjectBase::IFClassInfo* {$class.name}::CLASS_INFO = &{$class.nam
 	// NOTE: The following line is required for run-time type information.
 	theClass = CLASS_INFO;{/if}{if enableAutoGuards == 1}
 	// NOTE: The following line is required for guards to work.
-	setGuardEnabled(true);{/if}{if constructor.copy.impl == ""}
+	setGuardEnabled(true);{/if}{if enableMemDebug == 1}{if class.memDebug.autoEnable == "true"}
+	refData->mmDebug = true;{/if}
+    if (refData->mmDebug)
+        handleMMEvent(Ionflux::ObjectBase::IFMMEvent(Ionflux::ObjectBase::IFMMEvent::TYPE_CREATE, this));{/if}{if constructor.copy.impl == ""}
 	*this = other;{else}
 {swrap 75 "	"}{$constructor.copy.impl}{/swrap}{/if}
 \}{/if}{foreach con in constructor.public}
@@ -857,14 +1225,21 @@ const Ionflux::ObjectBase::IFClassInfo* {$class.name}::CLASS_INFO = &{$class.nam
 	// NOTE: The following line is required for run-time type information.
 	theClass = CLASS_INFO;{/if}{if enableAutoGuards == 1}
 	// NOTE: The following line is required for guards to work.
-	setGuardEnabled(true);{/if}{if con.impl == ""}
+	setGuardEnabled(true);{/if}{if enableMemDebug == 1}{if class.memDebug.autoEnable == "true"}
+	refData->mmDebug = true;{/if}
+    if (refData->mmDebug)
+        handleMMEvent(Ionflux::ObjectBase::IFMMEvent(Ionflux::ObjectBase::IFMMEvent::TYPE_CREATE, 
+            this));{/if}{if con.impl == ""}
 	// TODO: Nothing ATM. ;-){else}
 {$con.impl|swrap(75,'	')}{/if}
 \}{/foreach}
 
 {$class.name}::~{$class.name}(){if destructor.throw != ""} throw({if destructor.throw != "<none>"}{$destructor.throw}{/if}){/if}
 \{{foreach prop in property.protected}{if ( prop.style == "vector" ) || ( prop.style == "map" )}{if prop.proxy != "true"}
-	clear{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if}();{/if}{/if}{/foreach}{if destructor.impl == ""}{if enablePersistence == 1}
+	clear{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if}();{/if}{/if}{/foreach}{if enableMemDebug == 1}
+    if (refData->mmDebug)
+        handleMMEvent(Ionflux::ObjectBase::IFMMEvent(Ionflux::ObjectBase::IFMMEvent::TYPE_DELETE, 
+            this));{/if}{if destructor.impl == ""}{if enablePersistence == 1}
 	if (persistent != 0)
 		delete persistent;
 	persistent = 0;{else}
@@ -885,7 +1260,7 @@ int {$class.name}::deserialize(const std::string& source, int offset)
 \{{if haveBaseIFObject == 1}{foreach bc in class.base.ifobject}
 	offset = {$bc.name}::deserialize(source, offset);
 	if (offset < 0)
-		return false;{/foreach}{/if}{foreach bc in class.base.other}{if bc.serialize == "true"}
+		return -1;{/foreach}{/if}{foreach bc in class.base.other}{if bc.serialize == "true"}
 	offset = {$bc.name}::deserialize(source, offset);
 	if (offset < 0)
 		return false;{/if}{/foreach}{foreach prop in property.private}{if prop.serialize == "true"}{ref deserializeProp}{/if}{/foreach}{foreach prop in property.protected}{if prop.serialize == "true"}{ref deserializeProp}{/if}{/foreach}{foreach var in variable.private}{if var.serialize == "true"}{ref deserializeVar}{/if}{/foreach}{foreach var in variable.protected}{if var.serialize == "true"}{ref deserializeVar}{/if}{/foreach}{foreach var in variable.public}{if var.serialize == "true"}{ref deserializeVar}{/if}{/foreach}
@@ -913,7 +1288,7 @@ Ionflux::ObjectBase::IFSignal* {$class.name}::getSignal{$ins.name|uppercase(1)}W
 		addLocalRef(signal{$ins.name|uppercase(1)}Wrapper);
 	\}
 	return signal{$ins.name|uppercase(1)}Wrapper;
-\}{/foreach}{/foreach}{foreach func in function.global}{ref defineGlobalFunc}{/foreach}{foreach ns in namespace}
+\}{/foreach}{/foreach}{if enableClassName == 1}{ref createClassNameFuncsImpl}{/if}{if enableQObject == 1}{foreach sl in qt.slots.public}{ref createQtSlotImpl}{/foreach}{foreach sl in qt.slots.protected}{ref createQtSlotImpl}{/foreach}{/if}{if enablePropertySet == 1}{ref createPropertySetFuncsImpl}{/if}{foreach func in function.global}{ref defineGlobalFunc}{/foreach}{foreach ns in namespace}
 
 \}{/foreach}{if insert.impl.postNamespace != ""}
 

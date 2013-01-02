@@ -34,6 +34,7 @@ if (not os.path.isfile('site_scons/local_config.py')):
         'site_scons/local_config.py')
 
 import local_config as lc
+from sources import *
 
 Help("""
 Type 'scons' to build the default targets.
@@ -91,10 +92,48 @@ def checkProgram(ctx, cmd):
     ctx.Result(result)
     return result
 
-config = env.Configure(custom_tests = { "CheckProgram" : checkProgram })
+def checkPkgConfig(ctx, pkg):
+    """Check for package using pkg-config."""
+    ctx.Message('Checking for ' + pkg + '... ')
+    cmd = "pkg-config --cflags " + pkg
+    try:
+        p0 = subprocess.Popen(shlex.split(cmd), stdout=subprocess.PIPE, 
+            stderr=subprocess.STDOUT)
+        d = p0.stdout.read()
+        if (d.find('was not found') != -1):
+            result = 0
+        else:
+            ctx.sconf.env.MergeFlags('!' + cmd)
+            result = 1
+    except Exception:
+        result = 0
+    ctx.Result(result)
+    return result
 
+config = env.Configure(custom_tests = {
+    "CheckProgram" : checkProgram, 
+    "CheckPkgConfig" : checkPkgConfig })
+
+missingDeps = []
+if (not config.CheckPkgConfig("sigc++-2.0")):
+    missingDeps += ['sigc++']
+else:
+    env.MergeFlags(['!pkg-config --cflags --libs sigc++-2.0'])
 if (not config.CheckLib("pthread")):
-    print "pthread not found!"
+    missingDeps += ['pthread']
+if (not config.CheckLibWithHeader("tinyxml", "tinyxml/tinyxml.h", 
+    'C++', autoadd = 0)):
+    missingDeps += ['tinyxml']
+
+if (len(missingDeps) > 0):
+    print "******************************************************"
+    print "Ionflux Object Base System cannot be built because the "
+    print "following dependencies were not found:"
+    print " "
+    for it in missingDeps:
+        print "  " + it
+    print " "
+    print "******************************************************"
     Exit(1)
 
 buildPyModule = True
@@ -146,8 +185,7 @@ if (not config.CheckProgram("swig")):
 
 env = config.Finish()
 
-env.MergeFlags(['-Wall', '-Wno-deprecated', '-O2', 
-    '!pkg-config --cflags --libs sigc++-2.0'])
+env.MergeFlags(['-Wall', '-Wno-deprecated', '-O2'])
 
 def buildSource(source, target, env):
     """Builder function to build source files from class configuration."""
@@ -206,66 +244,6 @@ env.Append(BUILDERS = { 'Source' : sourceBuilder,
     'Interface' : interfaceBuilder, 
     'SWIGPython' : swigPythonBuilder})
 
-ifobjectLibHeaders = [
-    'include/sha1.hpp',
-    'include/libb64.hpp',
-	'include/ifobject/types.hpp',
-	'include/ifobject/log.hpp',
-	'include/ifobject/utf8.hpp',
-	'include/ifobject/serialize.hpp',
-	'include/ifobject/utility.hpp',
-	'include/ifobject/cachehelpers.hpp',
-	'include/ifobject/ifobjectbase.hpp',
-	'include/ifobject/IFClassInfo.hpp',
-	'include/ifobject/IFObject.hpp',
-	'include/ifobject/IFObjectEvent.hpp',
-	'include/ifobject/IFObjectSignalProxy.hpp',
-	'include/ifobject/IFMutex.hpp',
-	'include/ifobject/IFGuard.hpp',
-	'include/ifobject/IFSignal.hpp',
-	'include/ifobject/IFLogMessage.hpp', 
-	'include/ifobject/IFThread.hpp', 
-	'include/ifobject/IFThreadEvent.hpp', 
-	'include/ifobject/IFObjectSignalProxy.hpp', 
-    'include/ifobject/IFCache.hpp', 
-    'include/ifobject/IFError.hpp'
-]
-
-ifobjectLibSources = [
-    'build/sha1.cpp',
-    'build/libb64.cpp',
-	'build/log.cpp',
-	'build/utf8.cpp',
-	'build/serialize.cpp',
-	'build/utility.cpp',
-	'build/IFClassInfo.cpp',
-	'build/IFObject.cpp',
-	'build/IFObjectEvent.cpp',
-	'build/IFObjectSignalProxy.cpp',
-	'build/IFMutex.cpp',
-	'build/IFGuard.cpp',
-	'build/IFSignal.cpp',
-	'build/IFLogMessage.cpp',
-	'build/IFThread.cpp',
-	'build/IFThreadEvent.cpp',
-	'build/IFThreadSignalProxy.cpp', 
-	'build/IFCache.cpp', 
-	'build/IFError.cpp' 
-]
-
-ifobjectLibClasses = [
-    'IFClassInfo', 
-    'IFExampleClass', 
-    'IFGuard', 
-    'IFLogMessage', 
-    'IFMutex', 
-    'IFObject', 
-    'IFSignal', 
-    'IFThread', 
-    'IFCache', 
-    'IFError'
-]
-
 allTargets = []
 
 # ifclassgen class generator
@@ -316,7 +294,9 @@ else:
     print "****************************************************************"
 
 # ifobject shared library
-ifobjectLib = env.SharedLibrary(target = "lib/ifobject", 
+ifobjectLibEnv = env.Clone()
+ifobjectLibEnv.Append(LIBS = ['tinyxml'])
+ifobjectLib = ifobjectLibEnv.SharedLibrary(target = "lib/ifobject", 
     source = ifobjectLibSources)
 
 targetLibs = [ifobjectLib]
