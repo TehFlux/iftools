@@ -1082,7 +1082,7 @@ Ionflux::ObjectBase::IFOpInfo {$class.name|uppercase(1)}ClassInfo::OP_INFO_{$op.
 \{
 	name = "{$class.name}";
 	desc = "{$class.shortDesc}";{foreach bc in class.base.ifobject}
-	baseClassInfo.push_back({$bc.name}::CLASS_INFO);{/foreach}{foreach bc in class.base.other}{if bc.hasClassInfo == "true"}
+	baseClassInfo.push_back(Ionflux::ObjectBase::{$bc.name}::CLASS_INFO);{/foreach}{foreach bc in class.base.other}{if bc.hasClassInfo == "true"}
 	baseClassInfo.push_back({$bc.name}::CLASS_INFO);{/if}{/foreach}{if haveOps == 1}{$haveParams = 0}{$haveResults = 0}{foreach op in operation}{foreach prm in op.param}{first}{$haveParams = 1}{/first}{single}{$haveParams = 1}{/single}{/foreach}{foreach res in op.result}{first}{$haveResults = 1}{/first}{single}{$haveResults = 1}{/single}{/foreach}{/foreach}{if haveParams == 1}
 	Ionflux::ObjectBase::IFOpParamInfo currentParam;{/if}{if haveResults == 1}
 	Ionflux::ObjectBase::IFOpResultInfo currentResult;{/if}{foreach op in operation}
