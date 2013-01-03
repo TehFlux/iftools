@@ -533,6 +533,20 @@ std::string getIndent(unsigned int level, unsigned int indentWidth,
     return std::string(level * indentWidth, indentChar);
 }
 
+std::string escape(const std::string &source, const std::string& escapeWhat)
+{
+	if (source.size() == 0)
+		return "";
+	std::string result;
+	for (unsigned int i = 0; i < source.size(); i++)
+	{
+		if (isOneOf(source[i], escapeWhat))
+			result.append(1, '\\');
+		result.append(1, source[i]);
+	}
+	return result;
+}
+
 }
 
 }

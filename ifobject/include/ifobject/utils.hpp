@@ -480,6 +480,22 @@ std::string getIndent(unsigned int level = 0,
     unsigned int indentWidth = DEFAULT_INDENT_WIDTH, 
     char indentChar = ' ');
 
+/** Escape string.
+ *
+ * Escapes a string so it may be used (for example) with a function like 
+ * explodeQuoted(), or anything else thar requires quotes and whitespace to 
+ * be escaped.
+ *
+ * \param source String to be escaped.
+ * \param escapeWhat Characters which should be escaped.
+ *
+ * \return Escaped string.
+ *
+ * \sa explodeQuoted()
+ */
+std::string escape(const std::string &source, 
+	const std::string& escapeWhat = " '\"");
+
 }
 
 }

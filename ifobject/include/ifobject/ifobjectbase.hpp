@@ -27,7 +27,7 @@
  * ========================================================================== */
 
 #include "ifobject/types.hpp"
-#include "ifobject/utility.hpp"
+#include "ifobject/utils.hpp"
 #include "ifobject/IFError.hpp"
 #include "ifobject/IFObject.hpp"
 #include "ifobject/IFCache.hpp"
