@@ -58,7 +58,7 @@ IFExampleClassClassInfo::IFExampleClassClassInfo()
 {
 	name = "IFExampleClass";
 	desc = "Example class";
-	baseClassInfo.push_back(IFObject::CLASS_INFO);
+	baseClassInfo.push_back(Ionflux::ObjectBase::IFObject::CLASS_INFO);
 	Ionflux::ObjectBase::IFOpParamInfo currentParam;
 	Ionflux::ObjectBase::IFOpResultInfo currentResult;
 	OP_INFO_DOSTUFFWITHOBJECTOP.name = "doStuffWithObjectOp";

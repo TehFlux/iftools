@@ -40,7 +40,7 @@ IFMutexClassInfo::IFMutexClassInfo()
 {
 	name = "IFMutex";
 	desc = "Mutex";
-	baseClassInfo.push_back(IFObject::CLASS_INFO);
+	baseClassInfo.push_back(Ionflux::ObjectBase::IFObject::CLASS_INFO);
 }
 
 IFMutexClassInfo::~IFMutexClassInfo()

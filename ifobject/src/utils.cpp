@@ -75,6 +75,28 @@ bool readFile(const std::string& fileName, std::string& target,
     return true;
 }
 
+bool writeFile(const std::string& fileName, const std::string& data, 
+	char writeMode)
+{
+	if (fileName == "")
+		return false;
+	ofstream outputFileStream;
+	if (writeMode == 'a')
+		outputFileStream.open(fileName.c_str(), ios_base::app);
+	else
+		outputFileStream.open(fileName.c_str(), ios_base::out);
+	if (!outputFileStream)
+	{
+	    std::ostringstream status;
+		status << "[writeFile] Could not write to file '" 
+			<< fileName << "'";
+	    throw IFError(status.str());
+	}
+	outputFileStream.write(data.c_str(), data.size());
+	// outputFileStream.flush();
+	return true;
+}
+
 void explode(const std::string& bytes, const std::string& splitString, 
 	std::vector<std::string>& result)
 {

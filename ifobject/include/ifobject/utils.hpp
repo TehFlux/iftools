@@ -193,6 +193,21 @@ T0* checkedDynamicCast(T1* p, const std::string& source = "",
 bool readFile(const std::string& fileName, std::string& target, 
     Ionflux::ObjectBase::IFObject* logTarget = 0);
 
+/** Write to file.
+ *
+ * Writes the specified byte string to a file. If 'writeMode' is 'w' (or 0), 
+ * the file is overwritten, if 'writeMode' is 'a', the byte string is appended 
+ * to the file.
+ *
+ * \param fileName File name.
+ * \param data Data to be written.
+ * \param writeMode File write mode.
+ *
+ * \return \c true on success, \c false otherwise.
+ */
+bool writeFile(const std::string& fileName, const std::string& data, 
+	char writeMode = 'w');
+
 /** Explode a string.
  *
  * Splits up a string of bytes at 'splitString', creating a vector containing 
