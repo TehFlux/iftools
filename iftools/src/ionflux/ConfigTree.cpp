@@ -78,7 +78,8 @@ ConfigTree::~ConfigTree()
 	// TODO: Nothing ATM. ;-)
 }
 
-void ConfigTree::parseConfig(const std::string& configData)
+void ConfigTree::parseConfig(const std::string& configData, 
+    unsigned int lineOffset)
 {
 	ostringstream status;
 	ConfigTreeEntry currentEntry;
@@ -88,6 +89,7 @@ void ConfigTree::parseConfig(const std::string& configData)
 	bool lineError = false;
 	unsigned int lineCount = 1;
 	unsigned int nestingLevel = 0;
+	unsigned int nestedLines = 0;
 	ConfigTree *nestedTree = 0;
 	Node *nestedRoot = 0;
 	// Node *currentChild = 0;
@@ -240,7 +242,7 @@ void ConfigTree::parseConfig(const std::string& configData)
 					nestingLevel = 1;
 					/* Disable escaped character extraction since we need 
 					   everything inside the nesting block verbatim. */
-					tok.setExtractEscaped(false);
+					//tok.setExtractEscaped(false);
 					currentToken = tok.getNextToken();
 					while ((currentToken.typeID != Tokenizer::TT_NONE.typeID)
 						&& (currentToken.typeID != Tokenizer::TT_INVALID.typeID)
@@ -251,6 +253,15 @@ void ConfigTree::parseConfig(const std::string& configData)
 						else
 						if (currentToken.typeID == TT_NESTED_OPEN.typeID)
 							nestingLevel++;
+						else
+						if ((currentToken.typeID 
+						    == Tokenizer::TT_LINETERM.typeID) 
+						    && (currentToken.value[0] == '\n'))
+							nestedLines++;
+                        if (currentToken.typeID 
+						    == Tokenizer::TT_ESCAPED.typeID)
+							currentEntry.line.option.value.append(
+								1, Tokenizer::ESCAPE_CHAR);
 						if (nestingLevel != 0)
 							currentEntry.line.option.value.append(
 								currentToken.value);
@@ -367,7 +378,7 @@ void ConfigTree::parseConfig(const std::string& configData)
 			error = true;
 			status.str("");
 			status << "[ConfigTree::parseConfigLine] ERROR: Parse error in "
-				"line " << lineCount << ": Unexpected token '" 
+				"line " << (lineCount + lineOffset) << ": Unexpected token '" 
 				<< currentToken.value << "'.";
 			log.msg(status.str(), log.VL_ERROR);
 		}
@@ -422,13 +433,16 @@ void ConfigTree::parseConfig(const std::string& configData)
 				}
 				// ----- TESTING ----- */
 				nestedTree = new ConfigTree();
-				nestedTree->parseConfig(currentEntry.line.option.value);
+				nestedTree->parseConfig(currentEntry.line.option.value, 
+				    lineCount - 1);
 				nestedRoot = nestedTree->getRoot();
 				log.assert(nestedRoot != 0, "[ConfigTree::parseConfigLine] "
 					"Nested tree root node pointer is null.");
 				*currentEntry.data.node = *nestedRoot;
 				entries.push_back(currentEntry);
 				delete nestedTree;
+				lineCount += nestedLines;
+				nestedLines = 0;
 			}
 		} else
 		if (currentEntry.line.type == ConfigLine::CL_ROOT_DATA)

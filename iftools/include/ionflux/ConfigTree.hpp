@@ -154,8 +154,10 @@ class ConfigTree
 		 * Parses configuration data, with syntax as specified for ConfigTree.
 		 *
 		 * \param configData Configuration data.
+		 * \param lineOffset line offset
 		 */
-		virtual void parseConfig(const std::string& configData);
+		virtual void parseConfig(const std::string& configData, 
+		    unsigned int lineOffset = 0);
 		
 		/** Read configuration from a file.
 		 *
