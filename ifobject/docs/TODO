@@ -31,11 +31,14 @@ Important stuff
   > property system
   > memory management events
 
-+ Merge automatic database binding generation from XTW
++ Merge automatic database binding generation (from XTW)
 
-+ generate XML serialization code automatically for properties
++ Class templates
+  > generate XML serialization code automatically for properties
+  > generate JavaScript proxy classes automatically
 
-+ auto-detect Python
++ Build scripts
+  > auto-detect Python
 
 --------------------------------------------------------------------------------
 Nice to have
