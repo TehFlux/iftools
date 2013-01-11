@@ -15,7 +15,8 @@ Up next
 New
 --------------------------------------------------------------------------------
 
-
++ Class templates
+  > vector style properties: add support for set<Element>(index, value)
 
 --------------------------------------------------------------------------------
 Critical stuff
@@ -32,6 +33,8 @@ Important stuff
   > memory management events
 
 + Merge automatic database binding generation (from XTW)
+  > generate accessor functions for relationships automatically
+    (see Object/Property in XTW)
 
 + Class templates
   > generate XML serialization code automatically for properties
