@@ -15,8 +15,7 @@ Up next
 New
 --------------------------------------------------------------------------------
 
-+ Class templates
-  > vector style properties: add support for set<Element>(index, value)
+
 
 --------------------------------------------------------------------------------
 Critical stuff
@@ -28,6 +27,12 @@ Critical stuff
 Important stuff
 --------------------------------------------------------------------------------
 
++ Class templates
+  > vector style properties: add support for set<Element>(index, value)
+
++ Serialization functions for vectors and maps (with string key)
+  (see [iftools]xmlutils.cpp:getXML0(), [fmbase]/xmlutils.cpp:getColorMap())
+
 + Merge features from FMBase
   > property system
   > memory management events
@@ -38,6 +43,7 @@ Important stuff
 
 + Class templates
   > generate XML serialization code automatically for properties
+  > generate serialization code for vector/map style properties
   > generate JavaScript proxy classes automatically
 
 + Build scripts
