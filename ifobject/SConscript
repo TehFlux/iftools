@@ -79,6 +79,7 @@ prefix = ARGUMENTS.get('prefix', defaultPrefix)
 
 env.VariantDir('build', 'src')
 env.VariantDir('test/build', 'test')
+env.VariantDir('swig/wrapper/build', 'swig/wrapper')
 
 def checkProgram(ctx, cmd):
     """Check for installed program."""
@@ -285,7 +286,7 @@ if (haveIFTpl):
                 source = ['conf/class/' + it + '.conf',
                     'template/interface.i.tpl'])
         ]
-    interfaces = env.Interface(target = lc.swigInterfaceFile, 
+    interfaces = env.Interface(target = lc.swigInterfaceFile[0], 
         source = interfaceTargets + [lc.swigInterfaceTemplateFile])
     allTargets += (classInterfaces + [interfaces])
 else:
@@ -326,18 +327,19 @@ targetTests = [ifclassinfotestBin, ifobjecttestBin, ifthreadtestBin,
     packtestBin, ifexampleclasstestBin]
 
 # Python module.
-ifobjectWrapper = env.SWIGPython(target = [ 'swig/ifobject_wrap.cxx', 
-        'swig/python/IFObjectBase.py'], 
-    source = 'swig/ifobject.i')
+ifobjectWrapper = env.SWIGPython(target = [ 
+        'swig/wrapper/ifobject_wrap.cxx', 'swig/python/IFObjectBase.py'], 
+    source = lc.swigInterfaceFile[0])
 
 ifobjectPyModuleEnv = env.Clone()
 ifobjectPyModuleEnv.Append(LIBS = ['ifobject', 'python' + lc.pythonVersion])
 
 ifobjectPyModule = ifobjectPyModuleEnv.SharedLibrary(
     target = 'swig/python/_IFObjectBase', 
-    source = 'swig/ifobject_wrap.cxx', SHLIBPREFIX = '', SHLIBSUFFIX = '.so')
+    source = 'swig/wrapper/ifobject_wrap.cxx', 
+    SHLIBPREFIX = '', SHLIBSUFFIX = '.so')
 
-allHeaders = ifobjectLibHeaders + [lc.swigInterfaceFile]
+allHeaders = ifobjectLibHeaders + [ lc.swigInterfaceFile[0] ]
 
 installBinTargets = [targetBins]
 if (buildIFClassgen):
