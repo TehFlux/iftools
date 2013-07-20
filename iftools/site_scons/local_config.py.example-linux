@@ -1,0 +1,27 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+"""Local configuration.
+
+Use this to add local configuration that will be used for the build. To do 
+this, create a copy of this file named local_config.py in the site_scons 
+directory.
+
+If you do not want to use any local configuration, a default copy will be 
+created for you automatically."""
+
+# Prefix.
+# Set this if you do not want to use the default or the SCons command line 
+# parameter.
+prefix = '/opt'
+
+# Python version.
+pythonVersion = "3.3"
+# Python site packages path.
+pythonSitePackagesPath = ('/python' + pythonVersion + '/lib/python' 
+    + pythonVersion + '/site-packages')
+
+# Paths.
+PATH = 'bin'
+CPPPATH = [prefix + '/python' + pythonVersion + '/include/python' 
+    + pythonVersion]
+LIBPATH = [prefix + '/python' + pythonVersion + '/lib']
