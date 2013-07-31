@@ -101,7 +101,7 @@ bool utf8ToUniChar(const std::string& bytes,
 	std::vector<IFUniChar>& target);
 unsigned int utf8GetSize(const std::string& bytes);
 
-// utility.hpp
+// utils.hpp
 
 const unsigned int READ_BUFFER_SIZE = 4096;
 bool readFile(const std::string& fileName, std::string& target, 
@@ -129,6 +129,7 @@ std::string makeReadable(const std::string& inputData,
 	const std::string& replacement);
 std::string makeNiceHex(const std::string& hex, const std::string& readable, 
 	int bytesPerLine, int groupBytes);
+std::string parseHex(const std::string& inputData);
 std::string sha1(const std::string& secret, bool hexOut = false);
 std::string hmac(const std::string& key, const std::string& message, 
     bool hexOut = false);

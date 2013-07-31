@@ -416,6 +416,16 @@ std::string makeReadable(const std::string& inputData,
 std::string makeNiceHex(const std::string& hex, const std::string& readable, 
 	int bytesPerLine, int groupBytes);
 
+/** Parse hex string.
+ *
+ * Parse a hex string into a byte string.
+ *
+ * \param inputData The hex string to be parsed.
+ *
+ * \return The bytes represented by the hexadecimal string.
+ */
+std::string parseHex(const std::string& inputData);
+
 /** Calculate SHA-1 hash.
  *
  * Calculate the SHA-1 hash for a string.

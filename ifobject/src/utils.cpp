@@ -477,6 +477,18 @@ std::string makeNiceHex(const std::string& hex, const std::string& readable,
 	return buffer.str();
 }
 
+std::string parseHex(const std::string &inputData)
+{
+	int currentByte;
+	std::string result;
+	for (unsigned int i = 0; i < (inputData.size() / 2); i++)
+	{
+		currentByte = strtol(inputData.substr(2 * i, 2).c_str(), 0, 16);
+		result.append(1, static_cast<char>(currentByte));
+	}
+	return result;
+}
+
 std::string sha1(const std::string& secret, bool hexOut)
 {
 	sha1_context ctx;
