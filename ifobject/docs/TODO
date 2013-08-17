@@ -36,6 +36,7 @@ Important stuff
 + Merge features from FMBase
   > property system
     . support storing object values as an ID (useful for serialization)
+    . support vectors and dictionaries of values as a value type
   > memory management events
 
 + Merge automatic database binding generation (from XTW)
