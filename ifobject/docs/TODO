@@ -21,6 +21,8 @@ New
 Critical stuff
 --------------------------------------------------------------------------------
 
++ support C++ templates
+
 + Use exceptions for critical errors instead of the logging system.
   > memory management functions
 
@@ -48,7 +50,6 @@ Important stuff
   > property system
     . support storing object values as an ID (useful for serialization)
     . support vectors and dictionaries of values as a value type
-  > memory management events
 
 + Merge automatic database binding generation (from XTW)
   > generate accessor functions for relationships automatically
@@ -66,6 +67,12 @@ Important stuff
 --------------------------------------------------------------------------------
 Nice to have
 --------------------------------------------------------------------------------
+
++ ObjectPool
+  > used to reduce allocations for objects with short lifecycle
+  > allocate space for a number of object pointers
+  > allocate and recycle objects as needed
+  > if object pool is too small, increase by a factor
 
 + Build on windows
   > check dependencies (maybe boost can be used as a replacement?)
