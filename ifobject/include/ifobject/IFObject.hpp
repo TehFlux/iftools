@@ -700,6 +700,20 @@ class IFObject
 		 */
 		virtual std::string getIDString() const;
 		
+		/** Get error string.
+		 *
+		 * Get an error string. The error string includes a string 
+		 * representation of the object, an error message and optionally the 
+		 * source of the error (e.g. a function name).
+		 *
+		 * \param message error message.
+		 * \param source error source.
+		 *
+		 * \return String representation of the object.
+		 */
+		virtual std::string getErrorString(const std::string& message, const 
+		std::string& source = "") const;
+		
 		/** Get string representation.
 		 *
 		 * Get a string representation of the object

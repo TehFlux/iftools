@@ -160,6 +160,8 @@ class IFObject
         virtual void loadFromXMLFile(const std::string& fileName);
         virtual std::string getValueString() const;
         virtual std::string getIDString() const;
+        virtual std::string getErrorString(const std::string& message, 
+        const std::string& source = "") const;
         virtual std::string getString() const;
         virtual bool serialize(std::string& target) const;
         virtual int deserialize(const std::string& source, int offset = 0);

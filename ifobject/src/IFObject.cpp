@@ -1134,6 +1134,17 @@ std::string IFObject::getIDString() const
 	return status.str();;
 }
 
+std::string IFObject::getErrorString(const std::string& message, const 
+std::string& source) const
+{
+	std::ostringstream status;
+	status << "[" << getIDString();
+	if (source.size() > 0)
+	    status << "::" << source;
+	status << "] " << message;
+	return status.str();
+}
+
 std::string IFObject::getString() const
 {
 	std::ostringstream status;
