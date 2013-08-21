@@ -1146,12 +1146,6 @@ std::string IFObject::getString() const
 
 void IFObject::setLogTarget(Ionflux::ObjectBase::IFObject* newLogTarget)
 {
-	if (logTarget == newLogTarget)
-		return;
-    if (newLogTarget != 0)
-        addLocalRef(newLogTarget);
-	if (logTarget != 0)
-		removeLocalRef(logTarget);
 	logTarget = newLogTarget;
 }
 
