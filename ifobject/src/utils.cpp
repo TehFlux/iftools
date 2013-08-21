@@ -358,8 +358,8 @@ std::string trim(const std::string& bytes, bool leftTrim, bool rightTrim)
 {
 	if (bytes.size() == 0)
 		return "";
-	unsigned int from = 0;
-	unsigned int to = bytes.size() - 1;
+	int from = 0;
+	int to = bytes.size() - 1;
 	static const string trimChars = " \t\r\n";
 	if (leftTrim)
 		while ((from <= to)
@@ -370,7 +370,7 @@ std::string trim(const std::string& bytes, bool leftTrim, bool rightTrim)
 			&& isOneOf(bytes[to], trimChars))
 			to--;
 	string result;
-	for (unsigned int i = from; i <= to; i++)
+	for (int i = from; i <= to; i++)
 		result.append(1, bytes[i]);
 	return result;
 }

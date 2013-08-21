@@ -71,6 +71,13 @@ env = Environment(ENV = env0,
 if (ARGUMENTS.get('debug', 'no') == 'yes'):
     env.Append(CCFLAGS = '-g')
 
+if (hasattr(lc, 'debug') and lc.debug):
+    debugDefault = 'yes'
+else:
+    debugDefault = 'no'
+if (ARGUMENTS.get('debug', debugDefault) == 'yes'):
+    env.Append(CCFLAGS = '-g')
+
 if (hasattr(lc, 'prefix')):
     defaultPrefix = lc.prefix
 else:

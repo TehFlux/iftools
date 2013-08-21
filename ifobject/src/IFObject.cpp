@@ -680,7 +680,7 @@ Ionflux::ObjectBase::IFObject& IFObject::operator=(const
 Ionflux::ObjectBase::IFObject& otherObject)
 {
 	log(IFLogMessage("Assignment operator not implemented.", 
-		VL_ERROR, this, "operator="));
+		VL_WARNING, this, "operator="));
 	return *this;
 }
 
