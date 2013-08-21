@@ -89,6 +89,7 @@ struct IFCacheEntry
 };
 
 typedef unsigned int CachePolicy;
+typedef int MMEventTypeID;
 
 // utf8.hpp
 
@@ -133,6 +134,8 @@ std::string parseHex(const std::string& inputData);
 std::string sha1(const std::string& secret, bool hexOut = false);
 std::string hmac(const std::string& key, const std::string& message, 
     bool hexOut = false);
+std::string mmTypeIDGetString(Ionflux::ObjectBase::MMEventTypeID typeID);
+std::string getTimestamp();
 
 }
 
@@ -258,6 +261,8 @@ Ionflux::ObjectBase::UInt64 getTimeTicks();
 
 $IFError
 $IFCache
+$IFMMEvent
+$IFMMEventHandler
 
 %template(StringVector) std::vector<std::string>;
 %template(DoubleVector) std::vector<double>;

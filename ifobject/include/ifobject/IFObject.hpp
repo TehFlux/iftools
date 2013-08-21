@@ -58,6 +58,8 @@ namespace ObjectBase
 {
 
 class IFMutex;
+class IFMMEvent;
+class IFMMEventHandler;
 // events used by IFObject
 class IFObjectEvent;
 
@@ -88,6 +90,8 @@ struct IFRefCountData
 	IFObjectRefMap refMap;
 	/// Reference count.
 	unsigned int refCount;
+	/// memory management debugging flag.
+	bool mmDebug;
 };
 
 /// Signal connections for IFObjectSignal.
@@ -691,6 +695,31 @@ class IFObject
 		 * \return String representation of the value of the object.
 		 */
 		virtual std::string getValueString() const;
+		
+		/** Set memory management debugging flag.
+		 *
+		 * Set the memory management debugging flag.
+		 *
+		 * \param newFlag memory management debugging flag.
+		 */
+		virtual void setMMDebug(bool newFlag = true);
+		
+		/** Get memory management debugging flag.
+		 *
+		 * Get the memory management debugging flag.
+		 *
+		 * \return memory management debugging flag.
+		 */
+		virtual bool mmDebugEnabled();
+		
+		/** Handle memory management event.
+		 *
+		 * Handle memory management event.
+		 *
+		 * \param event event.
+		 */
+		virtual void handleMMEvent(const Ionflux::ObjectBase::IFMMEvent& event) 
+		const;
 		
 		/** Get ID string.
 		 *

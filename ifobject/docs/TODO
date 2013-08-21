@@ -9,8 +9,7 @@ TODO
 Up next
 --------------------------------------------------------------------------------
 
-+ Merge features from FMBase
-  > memory management events
+
 
 --------------------------------------------------------------------------------
 New
@@ -22,11 +21,22 @@ New
 Critical stuff
 --------------------------------------------------------------------------------
 
++ Use exceptions for critical errors instead of the logging system.
+  > memory management functions
+
 + Install templates
 
 --------------------------------------------------------------------------------
 Important stuff
 --------------------------------------------------------------------------------
+
++ Create memory management event handler for debugging
+  > object lifetime statistics
+    . total number of allocations
+    . average lifetime
+  > memory management debugging
+    . each object that has been created should be deleted
+    . objects should not be deleted more than once
 
 + Class templates
   > vector style properties: add support for set<Element>(index, value)
@@ -45,6 +55,7 @@ Important stuff
     (see Object/Property in XTW)
 
 + Class templates
+  > document features
   > generate XML serialization code automatically for properties
   > generate serialization code for vector/map style properties
   > generate JavaScript proxy classes automatically

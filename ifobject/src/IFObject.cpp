@@ -34,6 +34,8 @@
 #include <sstream>
 #include <fstream>
 #include "ifobject/IFError.hpp"
+#include "ifobject/IFMMEvent.hpp"
+#include "ifobject/IFMMEventHandler.hpp"
 #include "ifobject/xmlutils.hpp"
 #include "ifobject/xmlutils_private.hpp"
 #include "ifobject/serialize.hpp"
@@ -116,6 +118,7 @@ IFObject::IFObject()
 		exit(-1);
 	}
 	refData->refCount = 0;
+	refData->mmDebug = false;
 }
 
 IFObject::~IFObject()
@@ -729,12 +732,15 @@ logObject) const
 bool IFObject::addRef() const
 {
 	if (refData->refCount < UINT_MAX)
-		refData->refCount++;
-	else
 	{
-		log(IFLogMessage("Reference count overflow.", 
-			VL_ERROR, this, "addRef"));
-		return false;
+		refData->refCount++;
+	    if (refData->mmDebug)
+	        handleMMEvent(IFMMEvent(IFMMEvent::TYPE_ADD_REF, this, 
+	            refData->refCount));
+	} else
+	{
+	    throw IFError(getErrorString("Reference count overflow.", 
+	        "addRef"));
 	}
 	return true;
 }
@@ -742,12 +748,16 @@ bool IFObject::addRef() const
 bool IFObject::removeRef() const
 {
 	if (refData->refCount > 0)
-		refData->refCount--;
-	else
 	{
-		log(IFLogMessage("Attempt to remove reference for object "
-			"with zero references.", VL_ERROR, this, "removeRef"));
-		return false;
+		refData->refCount--;
+	    if (refData->mmDebug)
+	        handleMMEvent(IFMMEvent(IFMMEvent::TYPE_REMOVE_REF, this, 
+	            refData->refCount));
+	} else
+	{
+	    throw IFError(getErrorString(
+	        "Attempt to remove reference for object with zero references.", 
+	            "removeRef"));
 	}
 	return true;
 }
@@ -809,6 +819,10 @@ bool IFObject::addLocalRef(Ionflux::ObjectBase::IFObject* refTarget) const
 	log(IFLogMessage(state.str(), 
 		VL_DEBUG_INSANE, this, "addLocalRef"));
 	// ----- DEBUG ----- */
+	if (refTarget->mmDebugEnabled())
+	    handleMMEvent(IFMMEvent(
+	        IFMMEvent::TYPE_ADD_LOCAL_REF, refTarget, 
+	        refInfo->refCount, this));
 	return true;
 }
 
@@ -845,6 +859,10 @@ const
 			"removeLocalRef"));
 		return false;
 	}
+	if (refTarget->mmDebugEnabled())
+	    handleMMEvent(IFMMEvent(
+	        IFMMEvent::TYPE_REMOVE_LOCAL_REF, refTarget, 
+	        refInfo->refCount, this));
 	if (refInfo->refCount == 0)
 	{
 		refData->refMap[refTarget] = 0;
@@ -1106,6 +1124,30 @@ std::string IFObject::getValueString() const
 {
 	// TODO: Implementation.
 	return "";
+}
+
+void IFObject::setMMDebug(bool newFlag)
+{
+	refData->mmDebug = newFlag;
+}
+
+bool IFObject::mmDebugEnabled()
+{
+	// TODO: Implementation.
+	return refData->mmDebug;
+}
+
+void IFObject::handleMMEvent(const Ionflux::ObjectBase::IFMMEvent& event) 
+const
+{
+	IFMMEventHandler* h0 = IFMMEventHandler::getInstance();
+	if (h0 != 0)
+	    h0->handleMMEvent(event);
+	else {
+	    // <---- DEBUG ----- //
+	    std::cerr << event << std::endl;
+	    // ----- DEBUG ----> */
+	}
 }
 
 std::string IFObject::getIDString() const

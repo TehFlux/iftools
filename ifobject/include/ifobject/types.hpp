@@ -98,6 +98,9 @@ struct IFCacheEntry
 /// Cache policy.
 typedef unsigned int CachePolicy;
 
+/// Memory management event type ID.
+typedef int MMEventTypeID;
+
 }
 
 }

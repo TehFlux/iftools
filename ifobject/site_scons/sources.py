@@ -30,7 +30,9 @@ ifobjectLibHeaders = [
 	'include/ifobject/IFThreadEvent.hpp', 
 	'include/ifobject/IFObjectSignalProxy.hpp', 
     'include/ifobject/IFCache.hpp', 
-    'include/ifobject/IFError.hpp'
+    'include/ifobject/IFError.hpp', 
+    'include/ifobject/IFMMEvent.hpp', 
+    'include/ifobject/IFMMEventHandler.hpp'
 ]
 
 ifobjectLibSources = [
@@ -53,7 +55,9 @@ ifobjectLibSources = [
 	'build/IFThreadEvent.cpp',
 	'build/IFThreadSignalProxy.cpp', 
 	'build/IFCache.cpp', 
-	'build/IFError.cpp' 
+	'build/IFError.cpp', 
+	'build/IFMMEvent.cpp', 
+	'build/IFMMEventHandler.cpp'
 ]
 
 ifobjectLibClasses = [
@@ -66,6 +70,8 @@ ifobjectLibClasses = [
     'IFSignal', 
     'IFThread', 
     'IFCache', 
-    'IFError'
+    'IFError', 
+    'IFMMEvent', 
+    'IFMMEventHandler'
 ]
 

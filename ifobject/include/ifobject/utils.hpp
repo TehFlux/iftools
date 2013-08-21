@@ -521,6 +521,19 @@ std::string getIndent(unsigned int level = 0,
 std::string escape(const std::string &source, 
 	const std::string& escapeWhat = " '\"");
 
+/** Get string representation for memory management event.
+ *
+ * Get a string representation for a memory management event.
+ *
+ * \param typeID type ID
+ *
+ * \return string representation
+ */
+std::string mmTypeIDGetString(Ionflux::ObjectBase::MMEventTypeID typeID);
+
+/// Get timestamp.
+std::string getTimestamp();
+
 }
 
 }

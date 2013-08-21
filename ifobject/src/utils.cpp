@@ -31,9 +31,11 @@
 #include <cstring>
 #include <cstdlib>
 #include <cmath>
+#include <ctime>
 #include "sha1.hpp"
 #include "ifobject/utils.hpp"
 #include "ifobject/IFObject.hpp"
+#include "ifobject/IFMMEvent.hpp"
 #include "ifobject/IFLogMessage.hpp"
 #include "ifobject/IFError.hpp"
 
@@ -579,6 +581,37 @@ std::string escape(const std::string &source, const std::string& escapeWhat)
 		result.append(1, source[i]);
 	}
 	return result;
+}
+
+std::string mmTypeIDGetString(Ionflux::ObjectBase::MMEventTypeID typeID)
+{
+    if (typeID == IFMMEvent::TYPE_UNDEFINED)
+        return "UNDEFINED";
+    if (typeID == IFMMEvent::TYPE_CREATE)
+        return "CREATE";
+    if (typeID == IFMMEvent::TYPE_DELETE)
+        return "DELETE";
+    if (typeID == IFMMEvent::TYPE_ADD_REF)
+        return "ADD_REF";
+    if (typeID == IFMMEvent::TYPE_REMOVE_REF)
+        return "REMOVE_REF";
+    if (typeID == IFMMEvent::TYPE_ADD_LOCAL_REF)
+        return "ADD_LOCAL_REF";
+    if (typeID == IFMMEvent::TYPE_REMOVE_LOCAL_REF)
+        return "REMOVE_LOCAL_REF";
+    return "<unknown>";
+}
+
+std::string getTimestamp()
+{
+    time_t t0;
+    ::time(&t0);
+    tm* t1 = ::localtime(&t0);
+    char buf[256];
+    size_t s0 = ::strftime(buf, 256, "%Y-%m-%d %H:%M:%S", t1);
+    if (s0 == 0)
+        throw IFError("[getTimeStamp] Could not create timestamp.");
+    return std::string(buf, s0);
 }
 
 }

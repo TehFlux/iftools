@@ -47,6 +47,8 @@ namespace ObjectBase
 {
 
 class IFMutex;
+class IFMMEvent;
+class IFMMEventHandler;
 // events used by IFObject
 class IFObjectEvent;
 
@@ -64,6 +66,7 @@ struct IFRefCountData
 {
     IFObjectRefMap refMap;
     unsigned int refCount;
+    bool mmDebug;
 };
 
 struct IFObjectSignalConnections
@@ -159,6 +162,10 @@ class IFObject
         virtual void writeToXMLFile(const std::string& fileName) const;
         virtual void loadFromXMLFile(const std::string& fileName);
         virtual std::string getValueString() const;
+        virtual void setMMDebug(bool newFlag = true);
+        virtual bool mmDebugEnabled();
+        virtual void handleMMEvent(const Ionflux::ObjectBase::IFMMEvent& 
+        event) const;
         virtual std::string getIDString() const;
         virtual std::string getErrorString(const std::string& message, 
         const std::string& source = "") const;
