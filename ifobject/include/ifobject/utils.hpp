@@ -508,7 +508,7 @@ std::string getIndent(unsigned int level = 0,
 /** Escape string.
  *
  * Escapes a string so it may be used (for example) with a function like 
- * explodeQuoted(), or anything else thar requires quotes and whitespace to 
+ * explodeQuoted(), or anything else that requires quotes and whitespace to 
  * be escaped.
  *
  * \param source String to be escaped.

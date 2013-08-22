@@ -21,10 +21,22 @@ New
 Critical stuff
 --------------------------------------------------------------------------------
 
++ Class templates
+  > create modular templates
+  > make sure they work with the new iftpl from iftemplate
+
 + support C++ templates
 
 + Use exceptions for critical errors instead of the logging system.
   > memory management functions
+
++ Serialization functions for vectors and maps (with string key)
+  (see [iftools]xmlutils.cpp:getXML0(), [fmbase]/xmlutils.cpp:getColorMap())
+
++ Class templates
+  > document features
+  > generate XML serialization code automatically for properties
+  > generate serialization code for vector/map style properties
 
 + Install templates
 
@@ -43,9 +55,6 @@ Important stuff
 + Class templates
   > vector style properties: add support for set<Element>(index, value)
 
-+ Serialization functions for vectors and maps (with string key)
-  (see [iftools]xmlutils.cpp:getXML0(), [fmbase]/xmlutils.cpp:getColorMap())
-
 + Merge features from FMBase
   > property system
     . support storing object values as an ID (useful for serialization)
@@ -56,9 +65,6 @@ Important stuff
     (see Object/Property in XTW)
 
 + Class templates
-  > document features
-  > generate XML serialization code automatically for properties
-  > generate serialization code for vector/map style properties
   > generate JavaScript proxy classes automatically
 
 + Build scripts
