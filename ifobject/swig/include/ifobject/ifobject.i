@@ -102,9 +102,20 @@ bool utf8ToUniChar(const std::string& bytes,
 	std::vector<IFUniChar>& target);
 unsigned int utf8GetSize(const std::string& bytes);
 
-// utils.hpp
+// constants.hpp
 
 const unsigned int READ_BUFFER_SIZE = 4096;
+const std::string DEFAULT_COORD_SEPARATOR = ",";
+const unsigned int DEFAULT_INDENT_WIDTH = 2;
+const std::string XML_ELEMENT_NAME_INT_VECTOR = "intv";
+const std::string XML_ELEMENT_NAME_UINT_VECTOR = "uintv";
+const std::string XML_ELEMENT_NAME_DOUBLE_VECTOR = "doublev";
+const std::string XML_ELEMENT_NAME_COLOR_SET_VECTOR = "colorsetv";
+const std::string XML_ELEMENT_NAME_VECTOR2_SET_VECTOR = "vector2setv";
+const unsigned char DIR_SEPARATOR = '/';
+
+// utils.hpp
+
 bool readFile(const std::string& fileName, std::string& target, 
     Ionflux::ObjectBase::IFObject* logTarget = 0);
 void explode(const std::string& bytes, const std::string& splitString, 
@@ -136,6 +147,10 @@ std::string hmac(const std::string& key, const std::string& message,
     bool hexOut = false);
 std::string mmTypeIDGetString(Ionflux::ObjectBase::MMEventTypeID typeID);
 std::string getTimestamp();
+std::string appendDirSeparator(const std::string& path, 
+	unsigned char separator = DIR_SEPARATOR);
+std::string prependDirSeparator(const std::string& path, 
+	unsigned char separator = DIR_SEPARATOR);
 
 }
 

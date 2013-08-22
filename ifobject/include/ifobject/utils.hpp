@@ -534,6 +534,30 @@ std::string mmTypeIDGetString(Ionflux::ObjectBase::MMEventTypeID typeID);
 /// Get timestamp.
 std::string getTimestamp();
 
+/** Append directory separator.
+ *
+ * Append directory separator to \c path, if not already present.
+ *
+ * \param path Path to which a directory separator should be appended.
+ * \param separator Directory separator to be used.
+ *
+ * \return Path with directory separator appended.
+ */
+std::string appendDirSeparator(const std::string& path, 
+	unsigned char separator = DIR_SEPARATOR);
+
+/** Prepend directory separator.
+ *
+ * Prepend directory separator to \c path, if not already present.
+ *
+ * \param path Path to which a directory separator should be prepended.
+ * \param separator Directory separator to be used.
+ *
+ * \return Path with directory separator prepended.
+ */
+std::string prependDirSeparator(const std::string& path, 
+	unsigned char separator = DIR_SEPARATOR);
+
 }
 
 }

@@ -614,6 +614,27 @@ std::string getTimestamp()
     return std::string(buf, s0);
 }
 
+std::string appendDirSeparator(const std::string& path, 
+	unsigned char separator)
+{
+	string result = path;
+	if ((result.size() > 0)
+		&& (result[result.size() - 1] != separator))
+		result.append(1, separator);
+	return result;
+}
+
+std::string prependDirSeparator(const std::string& path, 
+	unsigned char separator)
+{
+	string result;
+	if ((path.size() == 0)
+		|| (path[0] != separator))
+		result.append(1, separator);
+	result.append(path);
+	return result;
+}
+
 }
 
 }

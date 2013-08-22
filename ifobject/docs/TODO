@@ -9,7 +9,13 @@ TODO
 Up next
 --------------------------------------------------------------------------------
 
++ use iftemplate instead of iftools
+  > ifclassgen
+    . or maybe rewrite it in Python
+  > s.a. class templates
 
++ Class templates
+  > create modular templates
 
 --------------------------------------------------------------------------------
 New
@@ -22,10 +28,11 @@ Critical stuff
 --------------------------------------------------------------------------------
 
 + Class templates
-  > create modular templates
   > make sure they work with the new iftpl from iftemplate
   > document features
   > generate XML serialization code automatically for properties
+    . requires getObject0() to be specialized for each serializable 
+      class (possibly via get<class name>() method)
   > generate serialization code for vector/map style properties
   > install using SCons
   > support C++ templates

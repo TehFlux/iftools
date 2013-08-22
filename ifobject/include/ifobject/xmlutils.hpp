@@ -162,6 +162,42 @@ std::string getXML0(const std::vector<T>& v,
     return xmlData.str();
 }
 
+/** Get XML
+ *
+ * Get an XML representation for a dictionary of objects.
+ *
+ * \param v vector
+ * \param name name attribute value
+ * \param indentLevel indentation level
+ *
+ * \return XML representation
+ */
+template<class T>
+std::string getXML0(const std::map<std::string, T>& m, 
+    const std::string& elementName = "map", const std::string& name = "", 
+    unsigned int indentLevel = 0)
+{
+    std::ostringstream xmlData;
+    std::string iws0 = getIndent(indentLevel);
+    std::string iws1 = getIndent(indentLevel + 1);
+    xmlData << iws0 << "<" << elementName;
+    if (name.size() > 0)
+        xmlData << " name=\"" << name << "\"";
+    xmlData << ">";
+    for (typename std::map<std::string, T>::const_iterator i = m.begin(); 
+        i != m.end(); i++)
+    {
+        std::string key = (*i).first;
+        T e0 = (*i).second;
+        xmlData << "\n" << iws1 << "<entry key=\"" 
+            << key << "\">";
+        xmlData << "\n" << e0->getXML0(indentLevel + 2);
+        xmlData << "\n" << iws1 << "</entry>";
+    }
+    xmlData << "\n" << iws0 << "</" << elementName << ">";
+    return xmlData.str();
+}
+
 }
 
 }

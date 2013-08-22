@@ -26,11 +26,13 @@
  * 
  * ========================================================================== */
 #include <string>
-#include "ifobject/constants.hpp"
+#include <sstream>
 #define TIXML_USE_STL
 #include "tinyxml/tinyxml.h"
 #undef TIXML_USE_STL
+#include "ifobject/constants.hpp"
 #include "ifobject/xmlutils.hpp"
+#include "ifobject/IFError.hpp"
 
 namespace Ionflux
 {
@@ -147,6 +149,37 @@ void loadFromFile(const std::string& fileName, T& target,
     TiXmlElement* m0 = findElementByNameOrError(d0.RootElement(), 
         elementName);
     getObject0(m0, target, elementName);
+}
+
+/// Get dictionary of objects from an XML element.
+template<class T, class TP>
+void getObjMap(TiXmlElement* e0, 
+    std::map<std::string, TP>& target, const std::string& elementName = "vec", 
+    const std::string& childElementName = "")
+{
+    checkElementNameOrError(e0, elementName, "getObjMap");
+    TiXmlElement* ee0 = e0->FirstChildElement();
+    while (ee0 != 0)
+    {
+        const char* a0 = ee0->Value();
+        if (std::string(a0) == "entry")
+        {
+            std::string k = getAttributeValue(ee0, "key");
+            TiXmlElement* ce0 = findElementByNameOrError(ee0, 
+                childElementName, "getObjMap");
+            TP co0 = T::create();
+            getObject0(ce0, *co0, childElementName);
+            typename std::map<std::string, TP>::iterator j = target.find(k);
+            if (j != target.end())
+            {
+                std::ostringstream status;
+                status << "[getObjMap] Duplicate key: '" << k << "'";
+                throw IFError(status.str());
+            }
+            target[k] = co0;
+        }
+        ee0 = ee0->NextSiblingElement();
+    }
 }
 
 }

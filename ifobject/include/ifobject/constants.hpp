@@ -58,6 +58,9 @@ const std::string XML_ELEMENT_NAME_COLOR_SET_VECTOR = "colorsetv";
 /// XML element name: vector of vector 2 set
 const std::string XML_ELEMENT_NAME_VECTOR2_SET_VECTOR = "vector2setv";
 
+/// Directory separator.
+const unsigned char DIR_SEPARATOR = '/';
+
 }
 
 }
