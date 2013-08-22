@@ -24,21 +24,19 @@ Critical stuff
 + Class templates
   > create modular templates
   > make sure they work with the new iftpl from iftemplate
-
-+ support C++ templates
+  > document features
+  > generate XML serialization code automatically for properties
+  > generate serialization code for vector/map style properties
+  > install using SCons
+  > support C++ templates
 
 + Use exceptions for critical errors instead of the logging system.
   > memory management functions
 
 + Serialization functions for vectors and maps (with string key)
-  (see [iftools]xmlutils.cpp:getXML0(), [fmbase]/xmlutils.cpp:getColorMap())
-
-+ Class templates
-  > document features
-  > generate XML serialization code automatically for properties
-  > generate serialization code for vector/map style properties
-
-+ Install templates
+  (see [ifobject]xmlutils.cpp:getXML0(), [fmbase]/xmlutils.cpp:getColorMap())
+  > getObjMap(...)
+  > getXML0(const std::map<std::string, T>& m, ...)
 
 --------------------------------------------------------------------------------
 Important stuff
