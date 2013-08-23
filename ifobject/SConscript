@@ -176,6 +176,27 @@ else:
     else:
         env.Append(LIBS = ['pcre'])
 
+buildIFClassgen0 = True
+if (not config.CheckLib("iftemplate", language = 'C++', autoadd = 0)):
+    print "*****************************************************"
+    print "iftemplate not found - ifclassgen0 will NOT be built!"
+    print "*****************************************************"
+    buildIFClassgen0 = False
+else:
+    missingDeps = []
+    if (not config.CheckLib("ifobject")):
+        missingDeps += ['ifobject']
+    
+    if (len(missingDeps) > 0):
+        print "**************************************************************"
+        print "ifclassgen0 cannot be built because the following dependencies"
+        print "were not found:"
+        print " "
+        for it in missingDeps:
+            print "  " + it
+        print " "
+        print "**************************************************************"
+        buildIFClassgen = False
 
 haveIFClassgen = True
 if (not config.CheckProgram("ifclassgen")):
@@ -262,6 +283,14 @@ ifclassgenBin = env.Program('bin/ifclassgen',
 if (buildIFClassgen):
     allTargets += [ifclassgenBin]
     haveIFClassgen = True
+
+# ifclassgen0 class generator
+ifclassgen0Bin = env.Program('bin/ifclassgen0', 
+	['build/ifclassgen0.cpp'], 
+	LIBS = ['iftemplate', 'ifobject'])
+
+if (buildIFClassgen0):
+    allTargets += [ifclassgen0Bin]
 
 # Source files.
 if (haveIFClassgen):

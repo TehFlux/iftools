@@ -31,6 +31,8 @@
 #include "ifobject/IFError.hpp"
 #include "ifobject/IFObject.hpp"
 #include "ifobject/IFCache.hpp"
+#include "ifobject/IFMMEvent.hpp"
+#include "ifobject/IFMMEventHandler.hpp"
 
 /** \file ifobjectbase.hpp
  * \brief Global header.

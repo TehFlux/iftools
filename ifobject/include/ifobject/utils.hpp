@@ -185,7 +185,7 @@ T0* checkedDynamicCast(T1* p, const std::string& source = "",
  * Read data from a file.
  *
  * \param fileName File name.
- * \param fileName Where to store the data.
+ * \param target Where to store the data.
  * \param logTarget Target for logging messages.
  *
  * \return \c true if the file can be read from, \c false otherwise.
