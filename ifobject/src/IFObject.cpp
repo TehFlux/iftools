@@ -124,6 +124,10 @@ IFObject::IFObject()
 IFObject::~IFObject()
 {
 	removeAllLocalRefs();
+	/* <---- DEBUG ----- //
+	std::cerr << "[IFObject::~IFObject] DEBUG: "
+	    "Deleting refData " << refData << std::endl;
+	// ----- DEBUG ----> */
 	delete refData;
 	refData = 0;
 }
