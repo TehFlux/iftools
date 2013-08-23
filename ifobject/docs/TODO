@@ -16,6 +16,8 @@ Up next
 
 + Class templates
   > create modular templates
+    . class.header, class.impl, event_conf, signal_proxy_conf
+    . refactor monolithic templates into modules
 
 --------------------------------------------------------------------------------
 New
