@@ -1,0 +1,49 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+"""Local configuration.
+
+Use this to add local configuration that will be used for the build. To do 
+this, create a copy of this file named local_config.py in the site_scons 
+directory.
+
+If you do not want to use any local configuration, a default copy will be 
+created for you automatically."""
+
+# Base name.
+# Do not change this unless you know what you are doing.
+baseName = 'ifobject'
+# Prefix.
+# Set this if you do not want to use the default or the SCons command line 
+# parameter.
+prefix = '/Users/flux/usr'
+
+# debug mode
+debug = True
+
+# Python version.
+pythonVersion = "3.3"
+# Python site packages path.
+pythonSitePackagesPath = ('/python' + pythonVersion + '/lib/python' 
+    + pythonVersion + '/site-packages')
+
+# The SWIG interface template file.
+swigInterfaceTemplateFile = 'template/' + baseName + '.i.tpl'
+# The SWIG interface file.
+swigInterfaceFile = 'swig/' + baseName + '.i'
+
+# Paths.
+PATH = 'bin'
+CPPPATH = [
+    '/Users/flux/svn/stuff/trunk/iftemplate/include', 
+    '/Users/flux/svn/stuff/trunk/iftemplate/swig/include', 
+    '/opt/local/include', 
+    prefix + '/include', 
+    prefix + '/python' + pythonVersion + '/include/python' + pythonVersion
+]
+LIBPATH = [
+    '/Users/flux/svn/stuff/trunk/iftemplate/lib', 
+    '/opt/local/lib', 
+    prefix + '/lib', 
+    prefix + '/python' + pythonVersion + '/lib'
+]
+
