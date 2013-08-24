@@ -17,15 +17,22 @@ baseName = 'ifobject'
 ## parameter.
 #prefix = '/usr/local'
 
+# debug mode
+debug = True
+
 # Python version.
-pythonVersion = "2.7"
+pythonVersion = "3.3"
 # Python site packages path.
 pythonSitePackagesPath = '/lib/python' + pythonVersion + '/site-packages'
 
 # The SWIG interface template file.
-swigInterfaceTemplateFile = 'template/' + baseName + '.i.tpl'
+swigInterfaceTemplateFile = [
+    'template/' + baseName + '.i.tpl'
+]
 # The SWIG interface file.
-swigInterfaceFile = 'swig/' + baseName + '.i'
+swigInterfaceFile = [
+    'swig/' + baseName + '.i'
+]
 
 # Paths.
 PATH = 'bin'

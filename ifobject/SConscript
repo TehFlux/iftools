@@ -26,7 +26,7 @@
 # 02111-1307 USA
 # 
 # ==========================================================================
-import os, subprocess, shutil, shlex, string, copy
+import os, subprocess, shutil, shlex, string, copy, re
 
 # Create a default local configuration file if it does not exist.
 if (not os.path.isfile('site_scons/local_config.py')):
@@ -248,15 +248,20 @@ def buildClassInterface(source, target, env):
 def buildInterface(source, target, env):
     """Builder function to build a SWIG interface declaration."""
     classNames = []
+    if (isinstance(lc.swigInterfaceTemplateFile, str)):
+        templateFile = lc.swigInterfaceTemplateFile
     for it in source:
         cn, ext = os.path.splitext(os.path.basename(it.path))
         if (ext == '.i'):
             classNames += [cn]
+        elif (ext == '.tpl'):
+            templateFile = it.path
     tplData = {}
-    tplStr = open(lc.swigInterfaceTemplateFile).read()
-    tpl = string.Template(tplStr)
+    p0 = re.compile("/\*.*?\*/", re.DOTALL)
     for cn in classNames:
-        tplData[cn] = open('swig/classes/' + cn + '.i').read()
+        tplData[cn] = p0.sub('', open('swig/classes/' + cn + '.i').read())
+    tplStr = open(templateFile).read()
+    tpl = string.Template(tplStr)
     for it in target:
         f0 = open(it.path, 'w')
         f0.write(tpl.substitute(tplData))
@@ -323,7 +328,7 @@ if (haveIFTpl):
                     'template/interface.i.tpl'])
         ]
     interfaces = env.Interface(target = lc.swigInterfaceFile[0], 
-        source = interfaceTargets + [lc.swigInterfaceTemplateFile])
+        source = interfaceTargets + [lc.swigInterfaceTemplateFile[0]])
     allTargets += (classInterfaces + [interfaces])
 else:
     print "****************************************************************"

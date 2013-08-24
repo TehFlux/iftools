@@ -256,11 +256,12 @@ int main(int argc, char* argv[])
 	config["___datetime"].setData(now.getTimestamp());
 	config["___rfc_datetime"].setData(now.getRFCTimestamp());
 	// Prepare template repository.
-	TemplateRepository tplRep;
-	tplRep.addTemplatePaths(tplPath);
-	tplRep.update();
+	TemplateRepository* tplRep = TemplateRepository::create();
+	tplRep->addTemplatePaths(tplPath);
+	tplRep->update();
 	// Generate class header and implementation.
 	Template tpl;
+	tpl.setRepository(tplRep);
 	string header = tpl.processModule(TEMPLATE_MODULE_CLASS_HEADER, 
 	    &configRoot);
 	currentFile.setFullName(includeDir);

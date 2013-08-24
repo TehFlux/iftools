@@ -27,9 +27,13 @@ pythonSitePackagesPath = ('/python' + pythonVersion + '/lib/python'
     + pythonVersion + '/site-packages')
 
 # The SWIG interface template file.
-swigInterfaceTemplateFile = 'template/' + baseName + '.i.tpl'
+swigInterfaceTemplateFile = [
+    'template/' + baseName + '.i.tpl'
+]
 # The SWIG interface file.
-swigInterfaceFile = 'swig/' + baseName + '.i'
+swigInterfaceFile = [
+    'swig/' + baseName + '.i'
+]
 
 # Paths.
 PATH = 'bin'
