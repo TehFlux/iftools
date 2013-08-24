@@ -9,11 +9,6 @@ TODO
 Up next
 --------------------------------------------------------------------------------
 
-+ use iftemplate instead of iftools
-  > ifclassgen
-    . or maybe rewrite it in Python
-  > s.a. class templates
-
 + Class templates
   > create modular templates
     . class.header, class.impl, event_conf, signal_proxy_conf
@@ -23,11 +18,15 @@ Up next
 New
 --------------------------------------------------------------------------------
 
-
++ Add a more generalized serialization framework.
+  > binary, XML, JSON
 
 --------------------------------------------------------------------------------
 Critical stuff
 --------------------------------------------------------------------------------
+
++ use iftemplate instead of iftools
+  > testing
 
 + Class templates
   > make sure they work with the new iftpl from iftemplate
