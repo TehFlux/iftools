@@ -1,0 +1,1 @@
+{section printBar}{$bar}{/section}

@@ -1,0 +1,54 @@
+============================================================================
+IFTemplate - Ionflux Template Processor
+Copyright © 2012 Jörn P. Meier
+mail@ionflux.org
+----------------------------------------------------------------------------
+node-serialization.txt       Node binary format specification.
+============================================================================
+
+This document describes the format for binary serialization of a Node 
+object.
+
+---------------+-------------+----------------------------------------------
+Bytes          | Name        | Description
+---------------+-------------+----------------------------------------------
+Data header (1x):
+---------------+-------------+----------------------------------------------
+4              | recordSize  | Size of the complete node record. *1
+20             | checkSum    | SHA-1 checksum of the node record. *2
+4              | nodeID      | Numerical node ID.
+4              | dataType    | Data type.
+4              | maxUID      | Maximum UID assigned by this node.
+4              | uidMode     | Child node UID assignment mode.
+1              | autoCreate  | Node auto-creation mode.
+4              | numData     | Number of data entries.
+4              | numChildren | Number of child nodes.
+4              | nameSize    | Size of nodeName (bytes).
+---------------+-------------+----------------------------------------------
+Node name block (1x):
+---------------+-------------+----------------------------------------------
+<nameSize>     | nodeName    | Node name.
+---------------+-------------+----------------------------------------------
+Data entry blocks (<numData>x):
+---------------+-------------+----------------------------------------------
+4              | dataSize    | Size of data entry (bytes).
+<dataSize>     | dataEntry   | Data entry.
+---------------+-------------+----------------------------------------------
+Child node data blocks (<numChildren>x):
+---------------+-------------+----------------------------------------------
+*3             | childData   | Child node data.
+---------------+-------------+----------------------------------------------
+
+1) Including child node data blocks.
+
+2) For purposes of calculating the checksum, this field is set to zeroes.
+   Child node blocks are included in the checksum calculation. Thus, the 
+   integrity of a node in serialized form may be checked by comparing its 
+   size and this field to the size and checksum of a data block (where the 
+   checksum field has been zeroed out).
+
+3) Child node data uses the same format as described in this document. Thus, 
+   the size of the child node data block can be obtained from the first 4 
+   bytes of the block. If the size of a node data block is 0, it is assumed 
+   to be a null node.
+

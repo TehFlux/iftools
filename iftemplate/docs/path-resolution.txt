@@ -1,0 +1,23 @@
+============================================================================
+IFTemplate - Ionflux Template Processor
+Copyright © 2012 Jörn P. Meier
+mail@ionflux.org
+----------------------------------------------------------------------------
+path-resolution.txt         How fully qualified node paths are resolved.
+============================================================================
+
+There are six types of valid node (or data) references. Each reference type 
+may be expressed as a combination of one of three basic reference types 
+(Name, ID, Path) and two reference subtypes (Reference, Subscript).
+
+          |  Name    |  ID      | Path
+----------+----------+----------+-----------
+Reference | foo.bar  | foo.42   | foo.(.bar)
+Subscript | foo[bar] | foo[42]* | foo[.42]
+
+The following additional rules apply:
+
+1) Subscript arguments may be enclosed in single or double quotes (', ").
+
+2) If the last reference is of type *, it denotes a data index.
+

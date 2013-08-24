@@ -1,0 +1,48 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+"""Local configuration.
+
+Use this to add local configuration that will be used for the build. To do 
+this, create a copy of this file named local_config.py in the site_scons 
+directory.
+
+If you do not want to use any local configuration, a default copy will be 
+created for you automatically."""
+
+# Base name.
+# Do not change this unless you know what you are doing.
+baseName = 'iftemplate'
+## Prefix.
+## Set this if you do not want to use the default or the SCons command line 
+## parameter.
+prefix = '/home/flux4/usr'
+
+# Enable debug mode.
+debug = True
+
+# Python version.
+pythonVersion = "3.3"
+# Python site packages path.
+pythonSitePackagesPath = ('/python' + pythonVersion + '/lib/python' 
+    + pythonVersion + '/site-packages')
+
+# Ionflux Object Base system template path
+#ifobjectTemplatePath = 'template'
+ifobjectTemplatePath = '/home/flux4/svn/iftools/trunk/ifobject/template'
+
+# The SWIG interface template file.
+swigInterfaceTemplateFile = [
+    'template/' + baseName + '.i.tpl'
+]
+# The SWIG interface file.
+swigInterfaceFile = [
+    'swig/include/' + baseName + '/' + baseName + '.i'
+]
+
+# Paths.
+PATH = 'bin'
+CPPPATH = [prefix + '/python' + pythonVersion + '/include/python' 
+    + pythonVersion, prefix + '/include']
+LIBPATH = [prefix + '/python' + pythonVersion + '/lib', 
+    prefix + '/lib']
+

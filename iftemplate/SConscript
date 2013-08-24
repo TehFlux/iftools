@@ -1,0 +1,368 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+# ==========================================================================
+# IFTemplate - Ionflux Template Processor
+# Copyright © 2012 Jörn P. Meier
+# mail@ionflux.org
+# --------------------------------------------------------------------------
+# SConscript                  SCons build script
+# ==========================================================================
+# 
+# This file is part of IFTemplate - Ionflux Template Processor.
+# 
+# IFTemplate - Ionflux Template Processor is free software; you can 
+# redistribute it and/or modify it under the terms of the GNU General 
+# Public  License as published by the Free Software Foundation; either 
+# version 2 of the License, or (at your option) any later version.
+# 
+# IFTemplate - Ionflux Template Processor is distributed in the hope 
+# that it will be useful, but WITHOUT ANY WARRANTY; without even the 
+# implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with IFTemplate - Ionflux Template Processor; if not, write to the 
+# Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 
+# 02111-1307 USA
+ 
+# ==========================================================================
+import os, subprocess, shutil, shlex, string, copy, re, sys
+
+# Create a default local configuration file if it does not exist.
+if (not os.path.isfile('site_scons/local_config.py')):
+    shutil.copy('site_scons/local_config.py.default', 
+        'site_scons/local_config.py')
+
+import local_config as lc
+from sources import *
+
+Help("""
+Type 'scons' to build the default targets.
+Type 'scons install' to install to default location.
+Type 'scons <target>' to build a specific target.
+
+You can add local configuration to site_scons/local_config.py.
+
+Targets:
+  (default)                    Everything.
+  all                          Everything
+  libs                         Shared libraries.
+  programs                     Programs.
+  tests                        Test programs.
+  sources                      Source files (requires ifclassgen).
+  interfaces                   SWIG interface declarations (requires iftpl).
+  pymodule                     Python module.
+  install                      Install headers, libraries and programs.
+
+Options:
+  prefix=<target directory>    Installation prefix
+                               (default: /usr/local)
+  debug=<yes|no>               Whether to use debug compiler flags 
+                               (default: yes)
+""")
+
+env0 = os.environ
+env0['PATH'] += (':' + lc.PATH)
+
+env = Environment(ENV = env0, 
+    CPPPATH = ['include'] + lc.CPPPATH, 
+    LIBPATH = ['lib'] + lc.LIBPATH)
+env.MergeFlags(['-Wall', '-Wno-deprecated', '-O2'])
+
+if (hasattr(lc, 'debug') and lc.debug):
+    debugDefault = 'yes'
+else:
+    debugDefault = 'no'
+if (ARGUMENTS.get('debug', debugDefault) == 'yes'):
+    env.Append(CCFLAGS = '-g')
+
+if (hasattr(lc, 'prefix')):
+    defaultPrefix = lc.prefix
+else:
+    defaultPrefix = '/usr/local'
+prefix = ARGUMENTS.get('prefix', defaultPrefix)
+
+iftemplateEnv = env.Clone()
+
+#env.VariantDir('deps/tinyxml/build', 'deps/tinyxml/src')
+
+if (hasattr(lc, 'prefix')):
+    defaultPrefix = lc.prefix
+else:
+    defaultPrefix = '/usr/local'
+prefix = ARGUMENTS.get('prefix', defaultPrefix)
+
+iftemplateEnv.VariantDir('build', 'src')
+iftemplateEnv.VariantDir('test/build', 'test')
+iftemplateEnv.VariantDir('swig/wrapper/build', 'swig/wrapper')
+
+def checkProgram(ctx, cmd):
+    """Check for installed program."""
+    ctx.Message('Checking for ' + cmd + '... ')
+    try:
+        subprocess.call(cmd, stdout=subprocess.PIPE, 
+            stderr=subprocess.STDOUT)
+        result = 1
+    except Exception:
+        result = 0
+    ctx.Result(result)
+    return result
+
+def checkPkgConfig(ctx, pkg):
+    """Check for package using pkg-config."""
+    ctx.Message('Checking for ' + pkg + '... ')
+    cmd = "pkg-config --cflags " + pkg
+    try:
+        p0 = subprocess.Popen(shlex.split(cmd), stdout=subprocess.PIPE, 
+            stderr=subprocess.STDOUT)
+        d = p0.stdout.read()
+        if (d.find('was not found') != -1):
+            result = 0
+        else:
+            ctx.sconf.env.MergeFlags('!' + cmd)
+            result = 1
+    except Exception:
+        result = 0
+    ctx.Result(result)
+    return result
+
+config = iftemplateEnv.Configure(custom_tests = { 
+    "CheckProgram" : checkProgram, 
+    "CheckPkgConfig" : checkPkgConfig })
+
+missingDeps = []
+if (not config.CheckPkgConfig("sigc++-2.0")):
+    missingDeps += ['sigc++']
+else:
+    iftemplateEnv.MergeFlags(['!pkg-config --cflags --libs sigc++-2.0'])
+if (not config.CheckLibWithHeader("ifobject", "ifobject/IFObject.hpp", 
+    'C++', autoadd = 0)):
+    missingDeps += ['ifobject']
+
+if (len(missingDeps) > 0):
+    print "***********************************************************"
+    print "IFTemplate cannot be built because the following dependencies"
+    print "were not found:"
+    print " "
+    for it in missingDeps:
+        print "  " + it
+    print " "
+    print "***********************************************************"
+    Exit(1)
+
+buildPyModule = True
+if (not config.CheckLibWithHeader("python" + lc.pythonVersion, 
+    "Python.h", 'C', autoadd = 0)):
+    print "***************************************************"
+    print "Python not found - Python modules will NOT be built!"
+    print "***************************************************"
+    buildPyModule = False
+
+haveIFClassgen = True
+if (not config.CheckProgram("ifclassgen")):
+    haveIFClassgen = False
+haveIFTpl = True
+if (not config.CheckProgram("iftpl")):
+    haveIFTpl = False
+haveSWIG = True
+if (not config.CheckProgram("swig")):
+    print "*************************************************"
+    print "SWIG not found - Python module will NOT be built!"
+    print "*************************************************"
+    haveSWIG = False
+    buildPyModule = False
+
+iftemplateEnv = config.Finish()
+
+def buildSource(source, target, env):
+    """Builder function to build source files from class configuration."""
+    classNames = []
+    for it in source:
+        cn, ext = os.path.splitext(os.path.basename(it.path))
+        if (ext == '.conf'):
+            classNames += [cn]
+    for cn in classNames:
+        c0 = ("ifclassgen -t " + lc.ifobjectTemplatePath 
+            + "/class -c conf/class -m conf/main.conf -i include/" 
+            + lc.baseName + " -s src " + cn)
+        print c0
+        sp0 = subprocess.call(shlex.split(c0))
+
+def buildClassInterface(source, target, env):
+    """Builder function to build SWIG interface files from class 
+       configuration."""
+    classNames = []
+    for it in source:
+        cn, ext = os.path.splitext(os.path.basename(it.path))
+        if (ext == '.conf'):
+            classNames += [cn]
+    for cn in classNames:
+        c0 = ("iftpl " + lc.ifobjectTemplatePath 
+            + "/interface.i.tpl conf/class/" + cn + ".conf conf/main.conf")
+        print c0
+        f0 = open("swig/classes/" + cn + ".i", 'w')
+        sp0 = subprocess.call(shlex.split(c0), stdout = f0)
+        f0.close()
+
+def buildInterface(source, target, env):
+    """Builder function to build a SWIG interface declaration."""
+    classNames = []
+    if (isinstance(lc.swigInterfaceTemplateFile, str)):
+        templateFile = lc.swigInterfaceTemplateFile
+    for it in source:
+        cn, ext = os.path.splitext(os.path.basename(it.path))
+        if (ext == '.i'):
+            classNames += [cn]
+        elif (ext == '.tpl'):
+            templateFile = it.path
+    tplData = {}
+    p0 = re.compile("/\*.*?\*/", re.DOTALL)
+    for cn in classNames:
+        tplData[cn] = p0.sub('', open('swig/classes/' + cn + '.i').read())
+    tplStr = open(templateFile).read()
+    tpl = string.Template(tplStr)
+    for it in target:
+        f0 = open(it.path, 'w')
+        f0.write(tpl.substitute(tplData))
+        f0.close()
+
+sourceBuilder = Builder(action = buildSource)
+classInterfaceBuilder = Builder(action = buildClassInterface)
+interfaceBuilder = Builder(action = buildInterface)
+swigIncludes = ''
+for it in iftemplateEnv['CPPPATH']:
+    swigIncludes += ('-I' + it + ' ')
+swigPythonBuilder = Builder(action = "swig -c++ -python "
+    + swigIncludes + "-outdir swig/python -o $TARGET $SOURCE")
+
+iftemplateEnv.Append(BUILDERS = { 'Source' : sourceBuilder, 
+    'ClassInterface' : classInterfaceBuilder, 
+    'Interface' : interfaceBuilder, 
+    'SWIGPython' : swigPythonBuilder })
+
+allClasses = iftemplateLibClasses
+allTargets = []
+
+# Source files.
+if (haveIFClassgen):
+    sources = []
+    for it in allClasses:
+        sources += [ 
+            iftemplateEnv.Source(target = [
+                    'include/iftemplate/' + it + '.hpp', 
+                    'src/' + it + '.cpp'], 
+                source = ['conf/class/' + it + '.conf',
+                    'template/class/Class.hpp.tpl', 
+                    'template/class/Class.cpp.tpl'])
+        ]
+    allTargets += sources
+else:
+    print "**********************************************************"
+    print "ifclassgen not found - source files will NOT be generated!"
+    print "**********************************************************"
+
+# Interface declarations.
+if (haveIFTpl):
+    interfaces = []
+    classInterfaces = []
+    # iftemplate library
+    interfaceTargets = []
+    for it in iftemplateLibClasses:
+        t0 = 'swig/classes/' + it + '.i'
+        interfaceTargets += [t0]
+        classInterfaces += [ 
+            iftemplateEnv.ClassInterface(target = [ t0 ], 
+                source = ['conf/class/' + it + '.conf',
+                    'template/interface.i.tpl'])
+        ]
+    interfaces += [ iftemplateEnv.Interface(target = lc.swigInterfaceFile[0], 
+        source = interfaceTargets + [lc.swigInterfaceTemplateFile[0]]) ]
+    allTargets += (classInterfaces + interfaces)
+else:
+    print "****************************************************************"
+    print "iftpl not found -  Interface declarations will NOT be generated!"
+    print "****************************************************************"
+
+# iftemplate shared library
+iftemplateLibEnv = iftemplateEnv.Clone()
+iftemplateLibEnv.Append(LIBS = ['ifobject'])
+iftemplateLib = iftemplateLibEnv.SharedLibrary(target = "lib/iftemplate", 
+    source = iftemplateLibSources)
+
+targetLibs = [iftemplateLib]
+
+# iftpl template processor
+iftplBin = iftemplateEnv.Program('bin/iftpl0', 
+	['build/iftpl.cpp'], 
+	LIBS = ['ifobject', 'iftemplate'])
+ifdateBin = iftemplateEnv.Program('bin/ifdate', 
+	['build/ifdate.cpp'], 
+	LIBS = ['ifobject', 'iftemplate'])
+
+# programs.
+targetBins = [ iftplBin, ifdateBin ]
+#targetBins = []
+
+# tests
+testEnv = iftemplateEnv.Clone()
+testEnv.Append(LIBS = ['ifobject', 'iftemplate'], 
+    CPPPATH = ['test/include', '.'])
+
+#iftemplatetest14Bin = testEnv.Program('test/bin/ciftemplatetest14', 
+#	['test/build/ciftemplatetest14.cpp'])
+
+#targetTests = [ciftemplatetest14Bin]
+targetTests = []
+
+# iftemplate Python module.
+iftemplateWrapper = iftemplateEnv.SWIGPython(target = [ 
+        'swig/wrapper/iftemplate_wrap.cxx', 'swig/python/IFTemplate.py'], 
+    source = lc.swigInterfaceFile[0])
+
+iftemplatePyModuleEnv = iftemplateEnv.Clone()
+iftemplatePyModuleEnv.Append(LIBS = ['iftemplate', 'ifobject', 
+    'python' + lc.pythonVersion])
+if (sys.platform == 'darwin'):
+    iftemplatePyModuleEnv.Append(LIBS = ['ifobject'])
+
+iftemplatePyModule = iftemplatePyModuleEnv.SharedLibrary(
+    target = 'swig/python/_IFTemplate', 
+    source = 'swig/wrapper/iftemplate_wrap.cxx', 
+    SHLIBPREFIX = '', SHLIBSUFFIX = '.so')
+
+pyModules = [iftemplatePyModule]
+
+allHeaders = iftemplateLibHeaders + lc.swigInterfaceFile
+
+installBinTargets = [targetBins]
+
+installHeaders = iftemplateEnv.Install(prefix + '/include/' + lc.baseName, 
+    allHeaders)
+installLibs = iftemplateEnv.Install(prefix + '/lib', targetLibs)
+installBins = iftemplateEnv.Install(prefix + '/bin', installBinTargets)
+if (buildPyModule):
+    pyModuleTargets = ['swig/python/IFTemplate.py', iftemplatePyModule]
+    installPyModules = iftemplateEnv.Install(prefix + lc.pythonSitePackagesPath, 
+        pyModuleTargets)
+
+allTargets += (targetLibs + targetBins + targetTests)
+if (buildPyModule):
+    allTargets += pyModules
+
+installTargets = [installHeaders, installLibs, installBins]
+if (buildPyModule):
+    installTargets += [installPyModules]
+
+aliasLibs = Alias('libs', targetLibs)
+aliasBins = Alias('programs', targetBins)
+aliasTests = Alias('tests', targetTests)
+aliasAll = Alias('all', allTargets)
+aliasInstall = Alias('install', installTargets)
+if (haveIFClassgen):
+    aliasSources = Alias('sources', sources)
+if (haveIFTpl):
+    aliasInterfaces = Alias('interfaces', classInterfaces + [interfaces])
+if (buildPyModule):
+    aliasPyModule = Alias('pymodule', pyModules)
+
+Default('all')

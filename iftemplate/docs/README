@@ -1,0 +1,77 @@
+==========================================================================
+IFTemplate - Ionflux Template Processor
+Copyright © 2012-2013 Jörn P. Meier
+mail@ionflux.org
+--------------------------------------------------------------------------
+README
+==========================================================================
+
+What is it?
+--------------------------------------------------------------------------
+
+IFTemplate (Ionflux Template Processor) is a template processing 
+library. It also provides a generic Node type that can be used for 
+specifying input data for the template engine.
+
+IFTemplate can be linked into other programs as a dynamic library, or 
+used as a standalone command line template processor.
+
+Using SWIG, bindings for a large variety of programming languages can 
+be created for the C++ library. The package currently supports Python, 
+but it should not be too hard to generate bindings for other languages 
+as well.
+
+--------------------------------------------------------------------------
+Dependencies
+--------------------------------------------------------------------------
+
+IFTemplate depends on the following packages:
+
++ Ionflux Object Base System (http://sf.net/projects/iftools)
++ Ionflux Tools (http://sf.net/projects/iftools, optional, required for 
+  generating the source files from the class configuration files)
+
+Make sure you get a recent SVN version of Ionflux Object Base System and 
+Ionflux Tools. Older packages will most likely not work.
+
+You can checkout the recent source code from SVN like this:
+
+svn co https://iftools.svn.sourceforge.net/svnroot/iftools/trunk/ifobject ifobject-svn
+
+svn co https://iftools.svn.sourceforge.net/svnroot/iftools/trunk/iftools iftools-svn
+
+--------------------------------------------------------------------------
+Building
+--------------------------------------------------------------------------
+
+Build all of the dependencies before you try to build IFTemplate. There 
+are build instructions included with the individual projects.
+
+IFTemplate uses SCons as the build system (http://www.scons.org/).
+
+If you want to use custom configuration for the build process (for 
+example, Python and library paths), copy 
+site_scons/local_config.py.default to site_scons/local_config.py and 
+adjust the settings as required.
+
+If everything is set up correctly, you can build the project with 
+'scons' in the main directory.
+
+--------------------------------------------------------------------------
+Using
+--------------------------------------------------------------------------
+
+This library is intended for developers, so you should be able to derive 
+how it is meant to be used from the source code documentation and the 
+scripts in the 'test' directory. If you have any questions, you can 
+still contact me by mail (mail@ionflux.org).
+
+Enjoy!
+
+--------------------------------------------------------------------------
+Licensing
+--------------------------------------------------------------------------
+
+This software is released under the terms of the GNU General Public 
+License version 2.
+

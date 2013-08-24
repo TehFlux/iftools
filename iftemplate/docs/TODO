@@ -1,0 +1,81 @@
+================================================================================
+IFTemplate - Ionflux Template Processor
+Copyright © 2012-2013 Jörn P. Meier
+mail@ionflux.org
+--------------------------------------------------------------------------------
+TODO
+================================================================================
+
+Up next
+--------------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------------
+New
+--------------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------------
+Critical stuff
+--------------------------------------------------------------------------------
+
++ Testing
+  > ifdate
+  > Modular templates
+  > StringFilter
+  > StringManipulator (and subclasses)
+  > TimeZone
+  > DateTime
+
+--------------------------------------------------------------------------------
+Important stuff
+--------------------------------------------------------------------------------
+
++ Tokenizer
+  > Merge features from the Python implementation 
+    (stuff)/scripts/python/iftokenizer.py
+
++ Node serialization
+  > should support 64-bit integers
+  > use IFObject serialization
+
++ ConfigTree
+  > rewrite the parsing code
+
++ Use an UTF-8 aware tokenizer
+
++ Testing
+  > File
+  > CLArgs
+  > Node
+  > NodeReference
+  > TreeEval
+  > TreeResolver
+  > Tree
+  > Config
+  > ConfigTree
+
+--------------------------------------------------------------------------------
+Nice to have
+--------------------------------------------------------------------------------
+
++ Modular template system
+  > there is not really a scope for template modules, figure out how that 
+    can be solved (is it a big problem anyway?)
+
++ Add a date format string manipulator.
+
++ Add a modular, extensible template tag system
+
++ Make Token a class
+
++ Clean up the code
+  > Template
+
+--------------------------------------------------------------------------------
+Side-tracks
+--------------------------------------------------------------------------------
+
+
