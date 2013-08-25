@@ -156,31 +156,7 @@ std::string prependDirSeparator(const std::string& path,
 
 }
 
-/* ==========================================================================
- * Ionflux Object Base System
- * Copyright © 2006-2011 Joern P. Meier
- * mail@ionflux.org
- * --------------------------------------------------------------------------
- * IFClassInfo.i                   Class information (interface).
- * =========================================================================
 
- * This file is part of Ionflux Object Base System.
- * 
- * Ionflux Object Base System is free software; you can redistribute it 
- * and/or modify it under the terms of the GNU General Public License as 
- * published by the Free Software Foundation; either version 2 of the 
- * License, or (at your option) any later version.
- * 
- * Ionflux Object Base System is distributed in the hope that it will be 
- * useful, but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU 
- * General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along 
- * with Ionflux Object Base System; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
- * 
- * ========================================================================== */
 %{
 #include "ifobject/IFClassInfo.hpp"
 %}
@@ -361,31 +337,7 @@ Ionflux::ObjectBase::UInt64 getTimeTicks();
 
 }
 
-/* ==========================================================================
- * Ionflux Object Base System
- * Copyright © 2006-2011 Joern P. Meier
- * mail@ionflux.org
- * --------------------------------------------------------------------------
- * IFError.i                       Error (interface).
- * =========================================================================
 
- * This file is part of Ionflux Object Base System.
- * 
- * Ionflux Object Base System is free software; you can redistribute it 
- * and/or modify it under the terms of the GNU General Public License as 
- * published by the Free Software Foundation; either version 2 of the 
- * License, or (at your option) any later version.
- * 
- * Ionflux Object Base System is distributed in the hope that it will be 
- * useful, but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU 
- * General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along 
- * with Ionflux Object Base System; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
- * 
- * ========================================================================== */
 %{
 #include "ifobject/IFError.hpp"
 %}
@@ -416,31 +368,7 @@ class IFError
 
 }
 
-/* ==========================================================================
- * Ionflux Object Base System
- * Copyright © 2006-2011 Joern P. Meier
- * mail@ionflux.org
- * --------------------------------------------------------------------------
- * IFCache.i                       Cache (interface).
- * =========================================================================
 
- * This file is part of Ionflux Object Base System.
- * 
- * Ionflux Object Base System is free software; you can redistribute it 
- * and/or modify it under the terms of the GNU General Public License as 
- * published by the Free Software Foundation; either version 2 of the 
- * License, or (at your option) any later version.
- * 
- * Ionflux Object Base System is distributed in the hope that it will be 
- * useful, but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU 
- * General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along 
- * with Ionflux Object Base System; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
- * 
- * ========================================================================== */
 %{
 #include "ifobject/IFCache.hpp"
 %}
@@ -510,31 +438,7 @@ class IFCache
 
 }
 
-/* ==========================================================================
- * Ionflux Object Base System
- * Copyright © 2006-2011 Joern P. Meier
- * mail@ionflux.org
- * --------------------------------------------------------------------------
- * IFMMEvent.i                     Memory Management Event (interface).
- * =========================================================================
 
- * This file is part of Ionflux Object Base System.
- * 
- * Ionflux Object Base System is free software; you can redistribute it 
- * and/or modify it under the terms of the GNU General Public License as 
- * published by the Free Software Foundation; either version 2 of the 
- * License, or (at your option) any later version.
- * 
- * Ionflux Object Base System is distributed in the hope that it will be 
- * useful, but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU 
- * General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along 
- * with Ionflux Object Base System; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
- * 
- * ========================================================================== */
 %{
 #include "ifobject/IFMMEvent.hpp"
 %}
@@ -605,32 +509,7 @@ class IFMMEvent
 
 }
 
-/* ==========================================================================
- * Ionflux Object Base System
- * Copyright © 2006-2011 Joern P. Meier
- * mail@ionflux.org
- * --------------------------------------------------------------------------
- * IFMMEventHandler.i              Memory management event handler 
- * (interface).
- * =========================================================================
 
- * This file is part of Ionflux Object Base System.
- * 
- * Ionflux Object Base System is free software; you can redistribute it 
- * and/or modify it under the terms of the GNU General Public License as 
- * published by the Free Software Foundation; either version 2 of the 
- * License, or (at your option) any later version.
- * 
- * Ionflux Object Base System is distributed in the hope that it will be 
- * useful, but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU 
- * General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along 
- * with Ionflux Object Base System; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
- * 
- * ========================================================================== */
 %{
 #include "ifobject/IFMMEventHandler.hpp"
 %}
