@@ -15,6 +15,7 @@ ifobjectLibHeaders = [
 	'include/ifobject/serialize.hpp',
 	'include/ifobject/utils.hpp',
 	'include/ifobject/xmlutils.hpp',
+	'include/ifobject/objectutils.hpp',
 	'include/ifobject/xmlutils_private.hpp',
 	'include/ifobject/cachehelpers.hpp',
 	'include/ifobject/ifobjectbase.hpp',

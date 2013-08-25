@@ -196,7 +196,7 @@ else:
             print "  " + it
         print " "
         print "**************************************************************"
-        buildIFClassgen = False
+        buildIFClassgen0 = False
 
 haveIFClassgen = True
 if (not config.CheckProgram("ifclassgen")):

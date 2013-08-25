@@ -18,6 +18,9 @@ Up next
 New
 --------------------------------------------------------------------------------
 
++ Add versions of the template functions from utils.hpp that accept a 
+  sourceObj parameter for error reporting in objectutils.hpp.
+
 + Add a more generalized serialization framework.
   > binary, XML, JSON
 
