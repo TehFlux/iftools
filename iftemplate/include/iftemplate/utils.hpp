@@ -175,20 +175,6 @@ std::string getCurrentDir();
 bool getFileList(const Ionflux::ObjectBase::StringVector& pathList, 
 	Ionflux::ObjectBase::StringVector& target, bool recursive = false);
 
-/// Null pointer check.
-template<class T>
-T* nullPointerCheck(T* p, Ionflux::ObjectBase::IFObject* sourceObj, 
-    const std::string& source = "", const std::string& objName = "Pointer")
-{
-    if (p == 0)
-    {
-        std::ostringstream status;
-        status << objName << " is null.";
-        throw IFTemplateError(sourceObj->getErrorString(status.str(), source));
-    }
-    return p;
-}
-
 /** Explode a string.
  *
  * Explodes a string using whitespace separators. Quoted parts of the string 

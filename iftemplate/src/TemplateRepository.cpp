@@ -30,6 +30,7 @@
 #include <iomanip>
 #include <sstream>
 #include "ifobject/utils.hpp"
+#include "ifobject/objectutils.hpp"
 #include "iftemplate/Node.hpp"
 #include "iftemplate/File.hpp"
 #include "iftemplate/IFTemplateError.hpp"
@@ -109,11 +110,13 @@ Ionflux::Template::RepositoryEntryTypeID typeID, const std::string& data)
 	}
 	d.node->setAutoCreate(true);
 	Node* tn = d.node->findChild("type");
-	nullPointerCheck(tn, this, "addModule", "Type node");
+	Ionflux::ObjectBase::nullPointerCheck(tn, this, "addModule", 
+	    "Type node");
 	tn->setDataType(Node::DATA_INT);
 	tn->setData(typeID);
 	Node* dn = d.node->findChild("data");
-	nullPointerCheck(dn, this, "addModule", "Data node");
+	Ionflux::ObjectBase::nullPointerCheck(dn, this, "addModule", 
+	    "Data node");
 	dn->setDataType(Node::DATA_BLOB);
 	dn->setData(data);
 }
@@ -208,10 +211,12 @@ modulePath, bool removeTrailingNewLine)
 	        "getTemplateData"));
 	}
 	Node* tn = d.node->findChild("type");
-	nullPointerCheck(tn, this, "getTemplateData", "Type node");
+	Ionflux::ObjectBase::nullPointerCheck(tn, this, "getTemplateData", 
+	    "Type node");
 	RepositoryEntryTypeID et = tn->getInt();
 	Node* dn = d.node->findChild("data");
-	nullPointerCheck(dn, this, "getTemplateData", "Data node");
+	Ionflux::ObjectBase::nullPointerCheck(dn, this, "getTemplateData", 
+	    "Data node");
 	std::string ed = dn->getData();
 	if (et == ENTRY_TYPE_DATA)
 	    return ed;

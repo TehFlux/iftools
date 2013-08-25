@@ -41,8 +41,15 @@ swigInterfaceFile = [
 
 # Paths.
 PATH = 'bin'
-CPPPATH = [prefix + '/python' + pythonVersion + '/include/python' 
-    + pythonVersion, prefix + '/include']
-LIBPATH = [prefix + '/python' + pythonVersion + '/lib', 
-    prefix + '/lib']
+CPPPATH = [
+    prefix + '/python' + pythonVersion + '/include/python' + pythonVersion, 
+    '/home/flux4/svn/iftools/trunk/ifobject/include', 
+    '/home/flux4/svn/iftools/trunk/ifobject/swig/include', 
+    prefix + '/include'
+]
+LIBPATH = [
+    prefix + '/python' + pythonVersion + '/lib', 
+    '/home/flux4/svn/iftools/trunk/ifobject/lib', 
+    prefix + '/lib'
+]
 
