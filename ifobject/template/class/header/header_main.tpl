@@ -24,54 +24,7 @@
 # 02111-1307 USA
 # 
 # ==========================================================================
-{section checkFeatures}{$haveForwards = 0}{foreach fw in forward}{if fw != ""}{$haveForwards = 1}{/if}{/foreach}{$haveTypedefs = 0}{foreach td in typedef}{if td != ""}{$haveTypedefs = 1}{/if}{/foreach}{$haveEvents = 0}{foreach ev in event}{if ev.id != ""}{$haveEvents = 1}{/if}{/foreach}{$haveSignals = 0}{foreach si in signal}{if si.id != ""}{$haveSignals = 1}{/if}{/foreach}{$haveBaseIFObject = 0}{foreach bc in class.base.ifobject}{if bc.name != ""}{$haveBaseIFObject = 1}{/if}{/foreach}{$haveBaseOther = 0}{foreach bc in class.base.other}{if bc.name != ""}{$haveBaseOther = 1}{/if}{/foreach}{$enableClassInfo = 0}{if ( haveBaseIFObject == 1 ) || ( class.name == "IFObject" )}{$enableClassInfo = 1}{/if}{$abstractClass = 0}{foreach func in function.public}{if func.pureVirtual == "true"}{$abstractClass = 1}{/if}{/foreach}{foreach func in function.protected}{if func.pureVirtual == "true"}{$abstractClass = 1}{/if}{/foreach}{$enableMutex = 0}{$enableGuards = 0}{$enableAutoGuards = 0}{$enableLogMessage = 0}{$enableSignal = haveSignals}{$enableSerialize = 0}{$enablePersistence = 0}{$enableCopy = 0}{$enableUpcast = 0}{$enableCreate = 0}{$enableParam = 0}{$enableQObject = 0}{$enablePropertySet = 0}{$enableClassName = 0}{$enableExtendedCreate = 0}{foreach fe in class.features}{if fe == "mutex"}{$enableMutex = 1}{/if}{if fe == "guards"}{$enableMutex = 1}{$enableGuards = 1}{/if}{if fe == "autoguards"}{$enableMutex = 1}{$enableGuards = 1}{$enableAutoGuards = 1}{/if}{if fe == "logmessage"}{$enableLogMessage = 1}{/if}{if fe == "signal"}{$enableSignal = 1}{/if}{if fe == "serialize"}{$enableSerialize = 1}{/if}{if fe == "classinfo"}{$enableClassInfo = 1}{/if}{if fe == "persistence"}{$enablePersistence = 1}{/if}{if fe == "copy"}{$enableCopy = 1}{/if}{if fe == "upcast"}{$enableUpcast = 1}{/if}{if fe == "create"}{$enableCreate = 1}{if class.create.extendedCreate == "true"}{$enableExtendedCreate = 1}{/if}{/if}{if fe == "param"}{$enableParam = 1}{/if}{if fe == "qobject"}{$enableQObject = 1}{/if}{if fe == "propertyset"}{$enablePropertySet = 1}{/if}{if fe == "classname"}{$enableClassName = 1}{/if}{/foreach}{$haveOps = 0}{foreach op in operation}{if op.name != ""}{$haveOps = 1}{/if}{/foreach}{$haveBasePersistent = 0}{if enablePersistence == 1}{if class.persistence.backendBase != ""}{$haveBasePersistent = 1}{/if}{if class.persistence.backend == ""}{$class.persistence.backend = class.name + "Backend"}{/if}{/if}{/section}{ref checkFeatures}{section insertGPLDisclaimer}
- * =========================================================================
- *
-{swrap 75 " * "}This file is part of {$project.name}.
-
-{$project.name} is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
-
-{$project.name} is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with {$project.name}; if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA{/swrap}
- * {/section}{section insertIncludeBlocks}{foreach block in includeBlock}{if ( block.pos == includeBlockPos ) && ( block.file == includeBlockFile )}{if block.type == "list"}{foreach inc in block.list}
-\#include {$inc}{/foreach}{else}{if block.type == "verbatim"}
-{$block.value}{/if}{/if}{/if}{/foreach}{/section}{section insertIncludes}{if project.exportSpecInclude != ""}
-\#include "{$project.exportSpecInclude}"{/if}{$includeBlockPos = ""}{$includeBlockFile = "header"}{ref insertIncludeBlocks}{foreach inc in include.header}
-\#include {$inc}{/foreach}{if enablePersistence == 1}
-\#include "{$project.persistence.include}"{/if}{foreach bc in class.base.ifobject}
-\#include "{if bc.include == ""}ifobject/{$bc.name}.hpp{else}{$bc.include}{/if}"{/foreach}{foreach bc in class.base.other}{if bc.include != "<none>"}
-\#include "{if bc.include == ""}{$bc.name}.hpp{else}{$bc.include}{/if}"{/if}{/foreach}{$includeBlockPos = "post"}{ref insertIncludeBlocks}{/section}{section insertForwards}{foreach fwd in forward}{first}
-{/first}{single}
-{/single}
-{$fwd};{/foreach}{foreach ev in event}{first}{if haveForwards == 0}
-{/if}
-// events used by {$class.name}{/first}{single}{if haveForwards == 0}
-{/if}
-// events used by {$class.name}{/single}
-class IF{$ev.id|uppercase(1)}Event;{/foreach}{/section}{section insertIFObjectForwards}{if haveSignals == 1}
-
-// forward declarations for types from the Ionflux Object Base System
-namespace Ionflux
-\{
-
-namespace ObjectBase
-\{
-
-class IFSignal;
-
-\}
-
-\}{/if}{/section}{section insertTypedefs}{foreach td in typedef}{first}
-{/first}{single}
-{/single}
-typedef {$td};{/foreach}{foreach si in signal}{first}{if haveTypedefs == 0}
-{/if}{/first}{single}{if haveTypedefs == 0}
-{/if}{/single}
-{swrap 75}typedef sigc::signal<{$si.return.type}{foreach prm in si.param}, {$prm.type}{/foreach}> IF{$si.id|uppercase(1)}Signal;{/swrap}{/foreach}{foreach td in typedefAfterSignals}{first}{if ( haveTypedefs == 0 ) && ( haveSignals == 0)}
-{/if}{/first}{single}{if ( haveTypedefs == 0 ) && ( haveSignals == 0)}
-{/if}{/single}
-typedef {$td};{/foreach}{/section}{section createStructDecl}{foreach st in struct}
+{import class.check_features}{ref checkFeatures}{import class.insert_gpl_disclaimer}{import class.header.insert_includes}{import class.header.insert_forwards}{import class.header.insert_typedefs}{section createStructDecl}{foreach st in struct}
  
 /** {$st.desc}.{if (class.group.shortDesc == "") && (class.group.name != "")}
  * \\ingroup {$class.group.name}{/if}
@@ -767,3 +720,4 @@ extern "C"
  * \\brief {$class.shortDesc} (header).
  */
 \#endif
+

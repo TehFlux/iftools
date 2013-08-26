@@ -47,9 +47,9 @@ using namespace Ionflux::Template;
 const std::string APP_VERSION = "1.0.0";
 
 /// Template module: class header.
-const std::string TEMPLATE_MODULE_CLASS_HEADER = "class.header";
+const std::string TEMPLATE_MODULE_CLASS_HEADER = "class.header.header_main";
 /// Template module: class implementation.
-const std::string TEMPLATE_MODULE_CLASS_IMPL = "class.impl";
+const std::string TEMPLATE_MODULE_CLASS_IMPL = "class.impl.impl_main";
 /// Template module: event class configuration.
 const std::string TEMPLATE_MODULE_EVENT_CONF = "event_conf";
 /// Template module: signal proxy class configuration.
