@@ -3,7 +3,7 @@
 # Copyright © 2006-2009 Joern P. Meier
 # mail@ionflux.org
 # --------------------------------------------------------------------------
-# Class.cpp.tpl              class template (implementation)
+# impl_main.tpl              Main implementation template.
 # ==========================================================================
 # 
 # This file is part of Ionflux Object Base System.

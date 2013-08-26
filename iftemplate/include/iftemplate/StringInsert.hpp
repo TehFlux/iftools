@@ -7,7 +7,7 @@
  * --------------------------------------------------------------------------
  * StringInsert.hpp                String manipulator: insert (header).
  * =========================================================================
- *
+ * 
  * This file is part of IFTemplate - Ionflux Template Processor.
  * 
  * IFTemplate - Ionflux Template Processor is free software; you can 

@@ -7,7 +7,7 @@
  * --------------------------------------------------------------------------
  * StringTrim.hpp                  String manipulator: trim (header).
  * =========================================================================
- *
+ * 
  * This file is part of IFTemplate - Ionflux Template Processor.
  * 
  * IFTemplate - Ionflux Template Processor is free software; you can 

@@ -54,6 +54,7 @@ Targets:
   interfaces                   SWIG interface declarations (requires iftpl).
   pymodule                     Python module.
   install                      Install headers, libraries and programs.
+  bootstrap                    Install into bootstrap directory
 
 Options:
   prefix=<target directory>    Installation prefix
@@ -329,30 +330,44 @@ ifobjectPyModule = ifobjectPyModuleEnv.SharedLibrary(
 
 allHeaders = ifobjectLibHeaders + [ lc.swigInterfaceFile[0] ]
 
+# install targets
 installBinTargets = [targetBins]
 if (buildIFClassgen):
     installBinTargets += [ifclassgenBin]
+if (buildIFClassgen0):
+    installBinTargets += [ifclassgen0Bin]
 
-installHeaders = env.Install(prefix + '/include/ifobject', allHeaders)
+installHeaders = env.Install(prefix + '/include/' + lc.baseName, allHeaders)
 installLibs = env.Install(prefix + '/lib', targetLibs)
 installBins = env.Install(prefix + '/bin', installBinTargets)
 if (buildPyModule):
     installPyModule = env.Install(prefix + lc.pythonSitePackagesPath, 
         ['swig/python/IFObjectBase.py', ifobjectPyModule])
 
-allTargets += (targetLibs + targetBins + targetTests)
-if (buildPyModule):
-    allTargets += [ifobjectPyModule]
-
 installTargets = [installHeaders, installLibs, installBins]
 if (buildPyModule):
     installTargets += [installPyModule]
+
+# bootstrap install targets
+bootstrapInstallHeaders = env.Install('bootstrap/include/' + lc.baseName, 
+    allHeaders)
+bootstrapInstallLibs = env.Install('bootstrap/lib', targetLibs)
+bootstrapInstallBins = env.Install('bootstrap/bin', installBinTargets)
+
+bootstrapInstallTargets = [
+    bootstrapInstallHeaders, bootstrapInstallLibs, bootstrapInstallBins
+]
+
+allTargets += (targetLibs + targetBins + targetTests)
+if (buildPyModule):
+    allTargets += [ifobjectPyModule]
 
 aliasLibs = Alias('libs', targetLibs)
 aliasBins = Alias('programs', targetBins)
 aliasTests = Alias('tests', targetTests)
 aliasAll = Alias('all', allTargets)
 aliasInstall = Alias('install', installTargets)
+aliasBootstrap = Alias('bootstrap', bootstrapInstallTargets)
 if (haveIFClassgen):
     aliasSources = Alias('sources', sources)
 if (haveIFTpl):

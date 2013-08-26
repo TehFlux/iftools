@@ -7,7 +7,7 @@
  * --------------------------------------------------------------------------
  * Tree.hpp                        Tree (header).
  * =========================================================================
- *
+ * 
  * This file is part of IFTemplate - Ionflux Template Processor.
  * 
  * IFTemplate - Ionflux Template Processor is free software; you can 
