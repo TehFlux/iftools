@@ -1008,7 +1008,18 @@ bool Template::preprocess(Ionflux::Template::TemplateElementVector& target)
 	                    includeTemplate->setRepository(repository);
 	                includeTemplate->readTemplate(includeFile, temp);
 	                for (unsigned int k = 0; k < temp.size(); k++)
-	                    result.push_back(temp[k]);
+	                {
+	                    TemplateElement* te0 = temp[k];
+	                    for (Ionflux::Template::TemplateVarVector::iterator 
+	                        m = te0->vars.begin(); m != te0->vars.end(); m++)
+	                    {
+	                        /* Reference string filters that have been 
+	                           allocated by the included template. */
+	                        if ((*m).filter != 0)
+	                            addLocalRef((*m).filter);
+	                    }
+	                    result.push_back(te0);
+	                }
 	                removeLocalRef(includeTemplate);
 	            }
 	            trash.push_back(currentElement);
@@ -1036,7 +1047,18 @@ bool Template::preprocess(Ionflux::Template::TemplateElementVector& target)
 	                    includeTemplate->setRepository(repository);
 	                includeTemplate->setTemplate(tplData, temp);
 	                for (unsigned int k = 0; k < temp.size(); k++)
-	                    result.push_back(temp[k]);
+	                {
+	                    TemplateElement* te0 = temp[k];
+	                    for (Ionflux::Template::TemplateVarVector::iterator 
+	                        m = te0->vars.begin(); m != te0->vars.end(); m++)
+	                    {
+	                        /* Reference string filters that have been 
+	                           allocated by the included template. */
+	                        if ((*m).filter != 0)
+	                            addLocalRef((*m).filter);
+	                    }
+	                    result.push_back(te0);
+	                }
 	                removeLocalRef(includeTemplate);
 	            }
 	            trash.push_back(currentElement);

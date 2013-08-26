@@ -15,7 +15,9 @@ Up next
 New
 --------------------------------------------------------------------------------
 
-
++ TemplateElement should be a managed type.
+  > Avoid ugliness when template elements are transferred to another owner.
+    (i.e. in Template::preprocess())
 
 --------------------------------------------------------------------------------
 Critical stuff

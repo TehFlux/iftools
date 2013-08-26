@@ -251,9 +251,7 @@ if (haveIFClassgen):
             iftemplateEnv.Source(target = [
                     'include/iftemplate/' + it + '.hpp', 
                     'src/' + it + '.cpp'], 
-                source = ['conf/class/' + it + '.conf',
-                    'template/class/Class.hpp.tpl', 
-                    'template/class/Class.cpp.tpl'])
+                source = ['conf/class/' + it + '.conf'])
         ]
     allTargets += sources
 else:
@@ -272,8 +270,7 @@ if (haveIFTpl):
         interfaceTargets += [t0]
         classInterfaces += [ 
             iftemplateEnv.ClassInterface(target = [ t0 ], 
-                source = ['conf/class/' + it + '.conf',
-                    'template/interface.i.tpl'])
+                source = ['conf/class/' + it + '.conf'])
         ]
     interfaces += [ iftemplateEnv.Interface(target = lc.swigInterfaceFile[0], 
         source = interfaceTargets + [lc.swigInterfaceTemplateFile[0]]) ]
