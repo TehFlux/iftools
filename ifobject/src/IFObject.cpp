@@ -38,8 +38,8 @@
 #include "ifobject/IFMMEventHandler.hpp"
 #include "ifobject/xmlutils.hpp"
 #include "ifobject/xmlutils_private.hpp"
-#include "ifobject/serialize.hpp"
 #include "ifobject/utils.hpp"
+#include "ifobject/serialize.hpp"
 
 using Ionflux::ObjectBase::pack;
 using Ionflux::ObjectBase::packObj;
@@ -1078,7 +1078,8 @@ std::string IFObject::getXMLAttributeData() const
 	return result.str();
 }
 
-void IFObject::getXML(std::string& target, unsigned int indentLevel) const
+void IFObject::getXML(std::string& target, unsigned int indentLevel, const 
+std::string& attributes) const
 {
 	std::ostringstream xmlData;
 	std::string iws = getIndent(indentLevel);
@@ -1087,6 +1088,8 @@ void IFObject::getXML(std::string& target, unsigned int indentLevel) const
 	std::string xa = getXMLAttributeData();
 	if (xa.size() > 0)
 	    xmlData << " " << xa;
+	if (attributes.size() > 0)
+	    xmlData << " " << attributes;
 	std::string cd;
 	getXMLChildData(cd, indentLevel + 1);
 	if (cd.size() == 0)
@@ -1096,10 +1099,11 @@ void IFObject::getXML(std::string& target, unsigned int indentLevel) const
 	target.append(xmlData.str());
 }
 
-std::string IFObject::getXML0(unsigned int indentLevel) const
+std::string IFObject::getXML0(unsigned int indentLevel, const std::string& 
+attributes) const
 {
 	std::string xmlData;
-	getXML(xmlData, indentLevel);
+	getXML(xmlData, indentLevel, attributes);
 	return xmlData;
 }
 
@@ -1223,7 +1227,7 @@ int IFObject::deserialize(const std::string& source, int offset)
 	offset = unpack(source, id, offset);
 	if (offset < 0)
 	{
-		ostringstream state;
+		std::ostringstream state;
 		state << "Could not deserialize variable 'id'.";
 		log(IFLogMessage(state.str(), VL_ERROR, 
 			this, "deserialize"));
@@ -1232,7 +1236,7 @@ int IFObject::deserialize(const std::string& source, int offset)
 	offset = unpack(source, idNum, offset);
 	if (offset < 0)
 	{
-		ostringstream state;
+		std::ostringstream state;
 		state << "Could not deserialize variable 'idNum'.";
 		log(IFLogMessage(state.str(), VL_ERROR, 
 			this, "deserialize"));

@@ -321,8 +321,9 @@ class IFObject
         int indentLevel = 0) const;
         virtual std::string getXMLAttributeData() const;
         virtual void getXML(std::string& target, unsigned int indentLevel =
-        0) const;
-        virtual std::string getXML0(unsigned int indentLevel = 0) const;
+        0, const std::string& attributes = "") const;
+        virtual std::string getXML0(unsigned int indentLevel = 0, const 
+        std::string& attributes = "") const;
         virtual void writeToXMLFile(const std::string& fileName) const;
         virtual void loadFromXMLFile(const std::string& fileName);
         virtual std::string getValueString() const;

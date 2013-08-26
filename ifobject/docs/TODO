@@ -26,7 +26,8 @@ Critical stuff
 
 + Add proper bootstrapping.
   > ifclassgen0 depends on ifobject but is required for generating the 
-    ifobject sources.
+    ifobject sources. Current bootstrapping is still breaky (and does not 
+    save the source files.)
 
 + Add versions of the template functions from utils.hpp that accept a 
   sourceObj parameter for error reporting in objectutils.hpp.

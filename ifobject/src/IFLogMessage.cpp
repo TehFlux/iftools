@@ -28,8 +28,8 @@
 #include "ifobject/IFMutex.hpp"
 #include "ifobject/IFGuard.hpp"
 #include <sstream>
-#include "ifobject/serialize.hpp"
 #include "ifobject/utils.hpp"
+#include "ifobject/serialize.hpp"
 
 using Ionflux::ObjectBase::pack;
 using Ionflux::ObjectBase::packObj;

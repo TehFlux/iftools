@@ -658,19 +658,22 @@ class IFObject
 		 *
 		 * \param target Where to store the XML data.
 		 * \param indentLevel Indentation level.
+		 * \param attributes Additional attributes for the element.
 		 */
-		virtual void getXML(std::string& target, unsigned int indentLevel = 0) 
-		const;
+		virtual void getXML(std::string& target, unsigned int indentLevel = 0, 
+		const std::string& attributes = "") const;
 		
 		/** Get XML representation.
 		 *
 		 * Get an XML representation of the object
 		 *
 		 * \param indentLevel Indentation level.
+		 * \param attributes Additional attributes for the element.
 		 *
 		 * \return XML representation.
 		 */
-		virtual std::string getXML0(unsigned int indentLevel = 0) const;
+		virtual std::string getXML0(unsigned int indentLevel = 0, const 
+		std::string& attributes = "") const;
 		
 		/** Write object data to XML file.
 		 *

@@ -145,13 +145,15 @@ std::string getXML0(const Ionflux::ObjectBase::DoubleVector& v,
 template<class T>
 std::string getXML0(const std::vector<T>& v, 
     const std::string& elementName = "vec", const std::string& name = "", 
-    unsigned int indentLevel = 0)
+    unsigned int indentLevel = 0, const std::string& attributes = "")
 {
     std::ostringstream xmlData;
     std::string iws = getIndent(indentLevel);
     xmlData << iws << "<" << elementName;
     if (name.size() > 0)
         xmlData << " name=\"" << name << "\"";
+    if (attributes.size() > 0)
+        xmlData << attributes;
     xmlData << ">";
     for (unsigned int i = 0; i < v.size(); i++)
     {
@@ -175,7 +177,7 @@ std::string getXML0(const std::vector<T>& v,
 template<class T>
 std::string getXML0(const std::map<std::string, T>& m, 
     const std::string& elementName = "map", const std::string& name = "", 
-    unsigned int indentLevel = 0)
+    unsigned int indentLevel = 0, const std::string& attributes = "")
 {
     std::ostringstream xmlData;
     std::string iws0 = getIndent(indentLevel);
@@ -183,6 +185,8 @@ std::string getXML0(const std::map<std::string, T>& m,
     xmlData << iws0 << "<" << elementName;
     if (name.size() > 0)
         xmlData << " name=\"" << name << "\"";
+    if (attributes.size() > 0)
+        xmlData << attributes;
     xmlData << ">";
     for (typename std::map<std::string, T>::const_iterator i = m.begin(); 
         i != m.end(); i++)

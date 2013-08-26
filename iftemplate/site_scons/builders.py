@@ -40,6 +40,9 @@ def buildSource(source, target, env):
         c0 = ("ifclassgen0 -t " + lc.ifobjectTemplatePath 
             + " -c conf/class -m conf/main.conf -i include/" 
             + lc.baseName + " -s src " + cn)
+        #c0 = ("ifclassgen -t " + lc.ifobjectTemplatePath 
+        #    + "/attic/class -c conf/class -m conf/main.conf -i include/" 
+        #    + lc.baseName + " -s src " + cn)
         print c0
         sp0 = subprocess.call(shlex.split(c0))
 
@@ -54,6 +57,9 @@ def buildClassInterface(source, target, env):
     for cn in classNames:
         c0 = ("iftpl0 -I " + lc.ifobjectTemplatePath 
             + " swig.interface conf/class/" + cn + ".conf conf/main.conf")
+        #c0 = ("iftpl " + lc.ifobjectTemplatePath 
+        #    + "/attic/interface.i.tpl conf/class/" + cn #
+        #    + ".conf conf/main.conf")
         print c0
         f0 = open("swig/classes/" + cn + ".i", 'w')
         sp0 = subprocess.call(shlex.split(c0), stdout = f0)
