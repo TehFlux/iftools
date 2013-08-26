@@ -11,11 +11,16 @@ Up next
 
 + Class templates
   > create modular templates
-    . class.header, class.impl, event_conf, signal_proxy_conf
     . refactor monolithic templates into modules
 
 --------------------------------------------------------------------------------
 New
+--------------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------------
+Critical stuff
 --------------------------------------------------------------------------------
 
 + Add proper bootstrapping.
@@ -24,13 +29,6 @@ New
 
 + Add versions of the template functions from utils.hpp that accept a 
   sourceObj parameter for error reporting in objectutils.hpp.
-
-+ Add a more generalized serialization framework.
-  > binary, XML, JSON
-
---------------------------------------------------------------------------------
-Critical stuff
---------------------------------------------------------------------------------
 
 + use iftemplate instead of iftools
   > testing
@@ -56,6 +54,9 @@ Critical stuff
 --------------------------------------------------------------------------------
 Important stuff
 --------------------------------------------------------------------------------
+
++ Add a more generalized serialization framework.
+  > binary, XML, JSON
 
 + Create memory management event handler for debugging
   > object lifetime statistics
