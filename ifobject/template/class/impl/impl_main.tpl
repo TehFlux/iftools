@@ -24,7 +24,7 @@
 # 02111-1307 USA
 # 
 # ==========================================================================
-{import class.check_features}{ref checkFeatures}{import class.insert_gpl_disclaimer}{import class.impl.insert_includes}{import class.impl.create_class_name_funcs_impl}{import class.impl.create_event_helper_function_impl}{import class.impl.property.create_property_set_funcs_impl}{import class.impl.accessor.create_extended_vector_add_func_impl}{import class.impl.accessor.create_property_accessor_impl}{import class.impl.create_func_impl}{import class.impl.qt.create_qt_slot_impl}{import class.impl.operation.create_op_proxy_impl}{import class.impl.operation.create_op_dispatch_impl}{import class.impl.serialize.serialize_prop}{import class.impl.serialize.serialize_var}{import class.impl.serialize.deserialize_prop}{import class.impl.serialize.deserialize_var}{import class.impl.define_global_func}{import class.impl.persistence.create_persistent_init_func_impl}{import class.impl.persistence.persistent_database_accessor_impl}{import class.impl.persistence.create_persistent_protected_funcs_impl}{import class.impl.create_copy_funcs_impl}{import class.impl.create_upcast_funcs_impl}{import class.impl.create_extended_create_funcs_impl}{import class.impl.create_create_funcs_impl}{import class.impl.create_param_funcs_impl}{import class.impl.project_info}{ref projectInfo}{ref insertIncludes}{foreach un in undef.impl}
+{import class.check_features}{ref checkFeatures}{import class.insert_gpl_disclaimer}{import class.impl.insert_includes}{import class.impl.create_class_name_funcs_impl}{import class.impl.create_event_helper_function_impl}{import class.impl.property.create_property_set_funcs_impl}{import class.impl.accessor.create_extended_vector_add_func_impl}{import class.impl.accessor.create_property_accessor_impl}{import class.impl.create_func_impl}{import class.impl.qt.create_qt_slot_impl}{import class.impl.operation.create_op_proxy_impl}{import class.impl.operation.create_op_dispatch_impl}{import class.impl.serialize.serialize_prop}{import class.impl.serialize.serialize_var}{import class.impl.serialize.deserialize_prop}{import class.impl.serialize.deserialize_var}{import class.impl.define_global_func}{import class.impl.persistence.create_persistent_init_func_impl}{import class.impl.persistence.persistent_database_accessor_impl}{import class.impl.persistence.create_persistent_protected_funcs_impl}{import class.impl.create_copy_funcs_impl}{import class.impl.create_upcast_funcs_impl}{import class.impl.create_extended_create_funcs_impl}{import class.impl.create_create_funcs_impl}{import class.impl.create_param_funcs_impl}{import class.impl.xml.create_xml_io_funcs_impl}{import class.impl.project_info}{ref projectInfo}{ref insertIncludes}{foreach un in undef.impl}
 \#undef {$un}{/foreach}{foreach ud in using}{first}
 {/first}{single}
 {/single}
@@ -104,7 +104,9 @@ const std::string {$class.name}::SIGNAL_NAME_{$ins.id|uppercase} = "{$ins.id|low
 
 // run-time type information instance constants
 const {$class.name}ClassInfo {$class.name}::{$class.name|lowercase(1)}ClassInfo;
-const Ionflux::ObjectBase::IFClassInfo* {$class.name}::CLASS_INFO = &{$class.name}::{$class.name|lowercase(1)}ClassInfo;{/if}{if class.hooks.preConstructorDef != ""}
+const Ionflux::ObjectBase::IFClassInfo* {$class.name}::CLASS_INFO = &{$class.name}::{$class.name|lowercase(1)}ClassInfo;{/if}{if enableXMLIO == 1}
+
+const std::string {$class.name}::XML_ELEMENT_NAME = "{if class.xml.elementName != ""}{$class.xml.elementName}{else}{$class.name|lowercase}{/if}";{/if}{if class.hooks.preConstructorDef != ""}
 
 {$class.hooks.preConstructorDef}{/if}
 
@@ -257,7 +259,7 @@ Ionflux::ObjectBase::IFSignal* {$class.name}::getSignal{$ins.name|uppercase(1)}W
 		addLocalRef(signal{$ins.name|uppercase(1)}Wrapper);
 	\}
 	return signal{$ins.name|uppercase(1)}Wrapper;
-\}{/foreach}{/foreach}{if enableClassName == 1}{ref createClassNameFuncsImpl}{/if}{if enableQObject == 1}{foreach sl in qt.slots.public}{ref createQtSlotImpl}{/foreach}{foreach sl in qt.slots.protected}{ref createQtSlotImpl}{/foreach}{/if}{if enablePropertySet == 1}{ref createPropertySetFuncsImpl}{/if}{foreach func in function.global}{ref defineGlobalFunc}{/foreach}{foreach ns in namespace}
+\}{/foreach}{/foreach}{if enableClassName == 1}{ref createClassNameFuncsImpl}{/if}{if enableQObject == 1}{foreach sl in qt.slots.public}{ref createQtSlotImpl}{/foreach}{foreach sl in qt.slots.protected}{ref createQtSlotImpl}{/foreach}{/if}{if enablePropertySet == 1}{ref createPropertySetFuncsImpl}{/if}{if enableXMLIO == 1}{ref createXMLIOFuncsImpl}{/if}{foreach func in function.global}{ref defineGlobalFunc}{/foreach}{foreach ns in namespace}
 
 \}{/foreach}{if insert.impl.postNamespace != ""}
 

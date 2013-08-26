@@ -31,6 +31,11 @@
 #include "ifobject/IFError.hpp"
 #include "ifobject/IFObject.hpp"
 #include "ifobject/IFCache.hpp"
+#include "ifobject/IFThread.hpp"
+#include "ifobject/IFSignal.hpp"
+#include "ifobject/IFMutex.hpp"
+#include "ifobject/IFObjectEvent.hpp"
+#include "ifobject/IFLogMessage.hpp"
 #include "ifobject/IFMMEvent.hpp"
 #include "ifobject/IFMMEventHandler.hpp"
 

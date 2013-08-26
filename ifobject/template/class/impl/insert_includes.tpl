@@ -12,9 +12,10 @@
 \#include "ifobject/IFPropertySet.hpp"
 \#include "ifobject/IFProperty.hpp"
 \#include "ifobject/IFValue.hpp"{/if}{if enableMemDebug == 1}
-\#include "ifobject/IFMMEvent.hpp"{/if}{if enableSerialize == 1}
+\#include "ifobject/IFMMEvent.hpp"{/if}{if ( enableSerialize == 1) || ( enableXMLIO == 1)}
+\#include "ifobject/utils.hpp"{/if}{if enableXMLIO == 1}
+\#include "ifobject/xmlutils.hpp"{/if}{if enableSerialize == 1}
 \#include "ifobject/serialize.hpp"
-\#include "ifobject/utils.hpp"
 
 using Ionflux::ObjectBase::pack;
 using Ionflux::ObjectBase::packObj;

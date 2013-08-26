@@ -17,7 +17,8 @@ Up next
 New
 --------------------------------------------------------------------------------
 
-
++ Create full python bindings using the files in swig/classes.
+  > add support for signals and events
 
 --------------------------------------------------------------------------------
 Critical stuff
