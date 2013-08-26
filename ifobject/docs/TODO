@@ -18,6 +18,10 @@ Up next
 New
 --------------------------------------------------------------------------------
 
++ Add proper bootstrapping.
+  > ifclassgen0 depends on ifobject but is required for generating the 
+    ifobject sources.
+
 + Add versions of the template functions from utils.hpp that accept a 
   sourceObj parameter for error reporting in objectutils.hpp.
 
