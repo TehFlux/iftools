@@ -60,9 +60,18 @@ property.protected[]
                    'pname' attribute.
                    If non-empty, the property will be included in the 
                    child element list for the class.
-     elementName   Element name to be used for the child element.
+      elementName  
+                   Element name to be used for the child element.
                    If empty, the element name will be one of ['prop', 'vec', 
                    'map'], depending on the property style.
+  
+  [valueType = 'object']
+  xml
+    getFunc        Function to be used to initialize an object of the type 
+                   of the property from an XML element (required).
+    createExpr     Expression to be used to create a new object of the type 
+                   of the property. If this is not specified, the create() 
+                   function of the type will be used.
   
   [style = 'vector' | 'map']
   element

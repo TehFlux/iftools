@@ -1,0 +1,1 @@
+{section xmlGetPropChildElementName}{if prop.xml.child.elementName != ""}{$xmlCEName = prop.xml.child.elementName}{else}{if prop.style == "vector"}{$xmlCEName = "vec"}{else}{if prop.style == "map"}{$xmlCEName = "map"}{else}{$xmlCEName = "prop"}{/if}{/if}{/if}{/section}

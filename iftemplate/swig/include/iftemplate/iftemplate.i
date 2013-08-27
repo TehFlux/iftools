@@ -2305,6 +2305,54 @@ class StringTranslate
 
 
 %{
+#include "iftemplate/StringReplace.hpp"
+%}
+
+namespace Ionflux
+{
+
+namespace Template
+{
+
+namespace StringManipulator
+{
+
+class StringReplaceClassInfo
+: public Ionflux::ObjectBase::IFClassInfo
+{
+    public:
+        StringReplaceClassInfo();
+        virtual ~StringReplaceClassInfo();
+};
+
+class StringReplace
+: virtual public Ionflux::Template::StringManipulator::StringManipulator
+{
+    public:
+		static const std::string STRINGMANIP_NAME;
+        
+        StringReplace();
+		StringReplace(const Ionflux::Template::StringManipulator::StringReplace& other);
+        virtual ~StringReplace();
+        virtual std::string process(const std::string& bytes, 
+        Ionflux::ObjectBase::StringVector* args = 0);
+        virtual std::string getManipName();
+		virtual Ionflux::Template::StringManipulator::StringReplace* copy() 
+		const;
+		static Ionflux::Template::StringManipulator::StringReplace* 
+		upcast(Ionflux::ObjectBase::IFObject* other);
+		static Ionflux::Template::StringManipulator::StringReplace* 
+		create(Ionflux::ObjectBase::IFObject* parentObject = 0);
+};
+
+}
+
+}
+
+}
+
+
+%{
 #include "iftemplate/StringSubstr.hpp"
 %}
 

@@ -399,6 +399,7 @@ $StringAppend
 $StringInsert
 $StringNumFormat
 $StringTranslate
+$StringReplace
 $StringSubstr
 $StringRPad
 $StringLPad

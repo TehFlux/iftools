@@ -10,7 +10,10 @@ Up next
 --------------------------------------------------------------------------------
 
 + XML I/O
-  > class templates
+  > Class templates
+    . add support for maps (with string key)
+      (see xml.impl.get_from_xml_inner, 
+           class.impl.xml.get_xml_property_child_element)
   > Create SCons builders that generate the XML I/O header, private header 
     and implementation data for each class and then combine these files into 
     the xmlutils.hpp, xmlutils_private.hpp and xmlutils.cpp files for the 

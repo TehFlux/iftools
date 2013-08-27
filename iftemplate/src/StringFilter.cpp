@@ -43,6 +43,7 @@
 #include "iftemplate/StringInsert.hpp"
 #include "iftemplate/StringNumFormat.hpp"
 #include "iftemplate/StringTranslate.hpp"
+#include "iftemplate/StringReplace.hpp"
 #include "iftemplate/StringSubstr.hpp"
 #include "iftemplate/StringRPad.hpp"
 #include "iftemplate/StringLPad.hpp"
@@ -245,6 +246,7 @@ void StringFilter::addDefaultManipulators()
 	addManipulator(StringManipulator::StringInsert::create());
 	addManipulator(StringManipulator::StringNumFormat::create());
 	addManipulator(StringManipulator::StringTranslate::create());
+	addManipulator(StringManipulator::StringReplace::create());
 	addManipulator(StringManipulator::StringSubstr::create());
 	addManipulator(StringManipulator::StringRPad::create());
 	addManipulator(StringManipulator::StringLPad::create());
