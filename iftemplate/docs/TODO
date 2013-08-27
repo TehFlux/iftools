@@ -15,13 +15,17 @@ Up next
 New
 --------------------------------------------------------------------------------
 
-+ TemplateElement should be a managed type.
-  > Avoid ugliness when template elements are transferred to another owner.
-    (i.e. in Template::preprocess())
+
 
 --------------------------------------------------------------------------------
 Critical stuff
 --------------------------------------------------------------------------------
+
++ Add proper bootstrapping.
+  (see also ifobject)
+
++ iftpl0 seems to report an "Option not recognized" error (related to CLArgs) 
+  if there is an error in a template. That does not seem right.
 
 + Testing
   > ifdate
@@ -34,6 +38,10 @@ Critical stuff
 --------------------------------------------------------------------------------
 Important stuff
 --------------------------------------------------------------------------------
+
++ TemplateElement should be a managed type.
+  > Avoid ugliness when template elements are transferred to another owner.
+    (i.e. in Template::preprocess())
 
 + Tokenizer
   > Merge features from the Python implementation 
