@@ -82,6 +82,16 @@ void getAttrValues(const std::string& fileName,
  */
 std::string xmlEscape(const std::string& bytes);
 
+/** Set vector of integers from XML.
+ *
+ * Initialize a vector of integers from an XML representation.
+ *
+ * \param data XML data
+ * \param v vector
+ */
+void setFromXML(const std::string& data, 
+    Ionflux::ObjectBase::IntVector& v);
+
 /** Get XML (IntVector)
  *
  * Get an XML representation for a vector of integers.
@@ -93,17 +103,8 @@ std::string xmlEscape(const std::string& bytes);
  * \return XML representation
  */
 std::string getXML0(const Ionflux::ObjectBase::IntVector& v, 
-    const std::string& name = "", unsigned int indentLevel = 0);
-
-/** Set vector of integers from XML.
- *
- * Initialize a vector of integers from an XML representation.
- *
- * \param data XML data
- * \param v vector
- */
-void setFromXML(const std::string& data, 
-    Ionflux::ObjectBase::IntVector& v);
+    const std::string& name = "", unsigned int indentLevel = 0, 
+    const std::string& attributes = "");
 
 /** Get XML (UIntVector)
  *
@@ -116,7 +117,8 @@ void setFromXML(const std::string& data,
  * \return XML representation
  */
 std::string getXML0(const Ionflux::ObjectBase::UIntVector& v, 
-    const std::string& name = "", unsigned int indentLevel = 0);
+    const std::string& name = "", unsigned int indentLevel = 0, 
+    const std::string& attributes = "");
 
 /** Get XML (DoubleVector)
  *
@@ -130,7 +132,8 @@ std::string getXML0(const Ionflux::ObjectBase::UIntVector& v,
  * \return XML representation
  */
 std::string getXML0(const Ionflux::ObjectBase::DoubleVector& v, 
-    const std::string& name = "", unsigned int indentLevel = 0);
+    const std::string& name = "", unsigned int indentLevel = 0, 
+    const std::string& attributes = "");
 
 /** Get XML
  *

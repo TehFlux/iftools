@@ -313,13 +313,16 @@ void getDoubleVector(TiXmlElement* e0,
 }
 
 std::string getXML0(const Ionflux::ObjectBase::IntVector& v, 
-    const std::string& name, unsigned int indentLevel)
+    const std::string& name, unsigned int indentLevel, 
+    const std::string& attributes)
 {
     std::ostringstream xmlData;
     std::string iws = getIndent(indentLevel);
     xmlData << iws << "<" << XML_ELEMENT_NAME_INT_VECTOR;
     if (name.size() > 0)
         xmlData << " name=\"" << name << "\"";
+    if (attributes.size() > 0)
+        xmlData << " " << attributes;
     xmlData << " d=\"";
     for (unsigned int i = 0; i < v.size(); i++)
     {
@@ -332,13 +335,16 @@ std::string getXML0(const Ionflux::ObjectBase::IntVector& v,
 }
 
 std::string getXML0(const Ionflux::ObjectBase::UIntVector& v, 
-    const std::string& name, unsigned int indentLevel)
+    const std::string& name, unsigned int indentLevel, 
+    const std::string& attributes)
 {
     std::ostringstream xmlData;
     std::string iws = getIndent(indentLevel);
     xmlData << iws << "<" << XML_ELEMENT_NAME_UINT_VECTOR;
     if (name.size() > 0)
         xmlData << " name=\"" << name << "\"";
+    if (attributes.size() > 0)
+        xmlData << " " << attributes;
     xmlData << " d=\"";
     for (unsigned int i = 0; i < v.size(); i++)
     {
@@ -351,13 +357,16 @@ std::string getXML0(const Ionflux::ObjectBase::UIntVector& v,
 }
 
 std::string getXML0(const Ionflux::ObjectBase::DoubleVector& v, 
-    const std::string& name, unsigned int indentLevel)
+    const std::string& name, unsigned int indentLevel, 
+    const std::string& attributes)
 {
     std::ostringstream xmlData;
     std::string iws = getIndent(indentLevel);
     xmlData << iws << "<" << XML_ELEMENT_NAME_DOUBLE_VECTOR;
     if (name.size() > 0)
         xmlData << " name=\"" << name << "\"";
+    if (attributes.size() > 0)
+        xmlData << " " << attributes;
     xmlData << " d=\"";
     for (unsigned int i = 0; i < v.size(); i++)
     {

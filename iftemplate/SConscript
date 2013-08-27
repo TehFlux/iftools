@@ -280,6 +280,7 @@ iftemplatePyModule = iftemplatePyModuleEnv.SharedLibrary(
 pyModules = [iftemplatePyModule]
 
 allHeaders = iftemplateLibHeaders + lc.swigInterfaceFile
+allSources = iftemplateLibSources
 
 # install targets
 installBinTargets = [targetBins]
@@ -300,11 +301,13 @@ if (buildPyModule):
 # bootstrap install targets
 bootstrapInstallHeaders = env.Install('bootstrap/include/' + lc.baseName, 
     allHeaders)
+bootstrapInstallSources = env.Install('bootstrap/src', allSources)
 bootstrapInstallLibs = env.Install('bootstrap/lib', targetLibs)
 bootstrapInstallBins = env.Install('bootstrap/bin', installBinTargets)
 
 bootstrapInstallTargets = [
-    bootstrapInstallHeaders, bootstrapInstallLibs, bootstrapInstallBins
+    bootstrapInstallHeaders, bootstrapInstallLibs, bootstrapInstallBins, 
+    bootstrapInstallSources
 ]
 
 allTargets += (targetLibs + targetBins + targetTests)
