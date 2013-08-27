@@ -44,12 +44,14 @@ const std::string APP_VERSION = "1.0.0";
 void printHelp()
 {
     std::cerr << 
-"Usage: iftpl <option> ... <template file/module> <config file> "
+"Usage: iftpl <option> ... <template file/module/string> <config file> "
     "[<config file> ...]\n"
 "Options:\n"
 "  -h, --help                 Print this help.\n"
 "  -v, --version              Print version information.\n"
 "  -r, --replace              Replace configuration while merging.\n"
+"  -s, --string               Process a template string instead of a "
+    " file/module.\n"
 "  -I, --include <path list>  Set template include path(s)."
 	<< std::endl;
 }
@@ -78,6 +80,8 @@ int main(int argc, char* argv[])
 	args.addAcceptableOption("version", false);
 	args.addAcceptableOption("r", false);
 	args.addAcceptableOption("replace", false);
+	args.addAcceptableOption("s", false);
+	args.addAcceptableOption("string", false);
 	args.addAcceptableOption("I", true);
 	args.addAcceptableOption("include", true);
 	args.setArgs(argc, argv);
@@ -106,6 +110,7 @@ int main(int argc, char* argv[])
 		return 0;
 	}
 	bool replace = (args.isSet("r") || args.isSet("replace"));
+	bool useTemplateString = (args.isSet("s") || args.isSet("string"));
 	string templateFile = params[0];
 	string configFile = params[1];
 	Template tpl;
@@ -135,10 +140,14 @@ int main(int argc, char* argv[])
 			mergeConfig.readConfig(mergeFile);
 			root.merge(*mergeConfig.getRoot(), replace);
 		}
-    if (tr == 0)
-        tpl.readTemplate(templateFile);
-    else
-        tpl.setTemplateModule(templateFile);
+    if (!useTemplateString)
+    {
+        if (tr == 0)
+            tpl.readTemplate(templateFile);
+        else
+            tpl.setTemplateModule(templateFile);
+    } else
+        tpl.setTemplate(templateFile);
 	string result = tpl.process();
 	cout << result;
 	return 0;

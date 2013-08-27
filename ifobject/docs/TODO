@@ -9,8 +9,12 @@ TODO
 Up next
 --------------------------------------------------------------------------------
 
-+ Class templates
-  > XML I/O
++ XML I/O
+  > class templates
+  > Create SCons builders that generate the XML I/O header, private header 
+    and implementation data for each class and then combine these files into 
+    the xmlutils.hpp, xmlutils_private.hpp and xmlutils.cpp files for the 
+    project.
 
 --------------------------------------------------------------------------------
 New

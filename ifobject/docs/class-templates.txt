@@ -1,12 +1,19 @@
 ================================================================================
 Ionflux Object Base System
-Copyright © 2006-2010 Joern P. Meier
+Copyright © 2006-2013 Joern P. Meier
 mail@ionflux.org
 --------------------------------------------------------------------------------
 Class templates
 ================================================================================
 
-This is a reference for the features of the class templates.
+This is a reference for the features of the Ionflux Object Base System 
+class templates.
+
+The Ionflux Object Base System class templates form a metaprogramming system 
+that allows to automatically create C++ header and implementation files and 
+SWIG interface files for classes. Each class is configured using a 
+configuration file. A template processor is then used to generate the 
+implementation of these classes.
 
 NOTE: This documentation is work in progress and by no means complete at 
       the time of writing.
