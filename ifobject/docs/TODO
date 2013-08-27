@@ -10,15 +10,13 @@ Up next
 --------------------------------------------------------------------------------
 
 + Class templates
-  > create modular templates
-    . refactor monolithic templates into modules
+  > XML I/O
 
 --------------------------------------------------------------------------------
 New
 --------------------------------------------------------------------------------
 
-+ Create full python bindings using the files in swig/classes.
-  > add support for signals and events
+
 
 --------------------------------------------------------------------------------
 Critical stuff
@@ -28,6 +26,9 @@ Critical stuff
   > ifclassgen0 depends on ifobject but is required for generating the 
     ifobject sources. Current bootstrapping is still breaky (and does not 
     save the source files.)
+
++ Create full python bindings using the files in swig/classes.
+  > add support for signals and events
 
 + Add versions of the template functions from utils.hpp that accept a 
   sourceObj parameter for error reporting in objectutils.hpp.
@@ -89,6 +90,10 @@ Important stuff
 --------------------------------------------------------------------------------
 Nice to have
 --------------------------------------------------------------------------------
+
++ Class templates
+  > see what parts of the older code in impl_main.tpl and header_main.tpl 
+    can be factored out into modules
 
 + ObjectPool
   > used to reduce allocations for objects with short lifecycle
