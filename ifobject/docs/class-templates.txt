@@ -1,0 +1,75 @@
+================================================================================
+Ionflux Object Base System
+Copyright © 2006-2010 Joern P. Meier
+mail@ionflux.org
+--------------------------------------------------------------------------------
+Class templates
+================================================================================
+
+This is a reference for the features of the class templates.
+
+NOTE: This documentation is work in progress and by no means complete at 
+      the time of writing.
+
+================================================================================
+XML I/O
+================================================================================
+
+This module adds automatic XML serialization and deserialization functions 
+for a class.
+
+--------------------------------------------------------------------------------
+Configuration options
+--------------------------------------------------------------------------------
+
+class
+  features
+    'xmlio'        Enable XML I/O for the class.
+  
+  base.other[].xml
+      enabled      Enable the use of XML functions by the derived class for 
+                   this base class.
+      getFunc      The function to be used for initializing an instance of the 
+                   base class from an XML element.
+      include      The include path and file base name for the base class, 
+                   without the extension.
+  
+  xml
+    elementName    XML element name to be used for the class.
+    exception      Exception class to be used for the XML I/O functions.
+
+property.protected[]
+  [general]
+  valueType        One of [float, integer, bool, object]
+                   Used by the XML generator functions to determine how XML 
+                   should be generated for the property value.
+  xml
+    attribute
+      name         Attribute name to be used for this property.
+                   If non-empty, the property will be included in the 
+                   attribute list for the class.
+    child
+      name         Name of the property set on the child element using the 
+                   'pname' attribute.
+                   If non-empty, the property will be included in the 
+                   child element list for the class.
+     elementName   Element name to be used for the child element.
+                   If empty, the element name will be one of ['prop', 'vec', 
+                   'map'], depending on the property style.
+  
+  [style = 'vector' | 'map']
+  element
+    valueType      Value type to be used for vector elements.
+
+--------------------------------------------------------------------------------
+Template variables
+--------------------------------------------------------------------------------
+
+haveXMLAttributes  
+                   Set to '1' if the class has XML attributes.
+haveXMLChildElements  
+                   Set to '1' if the class has XML child elements.
+haveXMLBase        Set to '1' if the class has at least one base class that 
+                   can be serialized to XML. This is tested via the 
+                   class.base.xml.enabled configuration option.
+

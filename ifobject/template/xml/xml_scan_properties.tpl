@@ -1,0 +1,1 @@
+{section xmlScanProperties}{$haveXMLAttributes = 0}{$haveXMLChildElements = 0}{foreach prop in property.protected}{if prop.xml.attribute.name != ""}{$haveXMLAttributes = 1}{/if}{if prop.xml.child.name != ""}{$haveXMLChildElements = 1}{/if}{/foreach}{/section}

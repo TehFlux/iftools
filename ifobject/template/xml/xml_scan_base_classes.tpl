@@ -1,0 +1,1 @@
+{section xmlScanBaseClasses}{$haveXMLBase = 0}{if haveBaseIFObject == 1}{$haveXMLBase = 1}{/if}{foreach base in class.base.other}{if base.xml.enabled == "true"}{$haveXMLBase = 1}{/if}{/foreach}{/section}
