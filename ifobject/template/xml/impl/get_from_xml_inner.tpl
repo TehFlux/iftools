@@ -7,12 +7,12 @@ namespace XMLUtils
 \{
 
 {swrap 75}void get{$class.name|uppercase(1)}(TiXmlElement* e0, 
-    {foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}& target, const std::string& elementName){/swrap}
+    {foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}& target, const std::string& elementName = {foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}::XML_ELEMENT_NAME){/swrap}
 \{{if function.xml.fromXML.impl == ""}
     Ionflux::ObjectBase::XMLUtils::checkElementNameOrError(e0, 
         elementName, "get{$class.name|uppercase(1)}");{if haveBaseIFObject == 1}
     Ionflux::ObjectBase::XMLUtils::getObject(e0, target);{else}{foreach base in class.base.other}{if ( base.xml.enabled == "true" ) && ( base.xml.getFunc != "" )}
-    {$base.xml.getFunc}(e0, target);{/if}{/foreach}{/if}{if haveXMLAttributes == 1}
+    {$base.xml.getFunc}(e0, target, elementName);{/if}{/foreach}{/if}{if haveXMLAttributes == 1}
     // Get attribute data.
     std::string a0;{foreach prop in property.protected}{if prop.xml.attribute.name != ""}
     // Property: {$prop.name} ({$prop.valueType})
@@ -23,7 +23,7 @@ namespace XMLUtils
     target.set{$prop.name|uppercase(1)}(::strtol(a0.c_str(), 0, 10));{/if}{/if}{/foreach}{/if}{if haveXMLChildElements == 1}
     // Get child data.
     TiXmlElement* ce0 = e0->FirstChildElement();
-    while (de0 != 0)
+    while (ce0 != 0)
     \{
         std::string en0(ce0->Value());
         std::string pName = 
@@ -52,7 +52,8 @@ namespace XMLUtils
             {$prop.xml.getFunc}(ce0, *co0, "{$xmlCEName}");
             target.set{$prop.name|uppercase(1)}(co0);{/if}{if prop.style == "vector"}{if prop.element.valueType == "object"}
             std::vector<{$prop.element.type}> pv0;
-            Ionflux::ObjectBase::XMLUtils::getObjVector(ce0, pv0, 
+            Ionflux::ObjectBase::XMLUtils::getObjVector<
+                {$prop.element.type|replace('*', '')}, {$prop.element.type}>(ce0, pv0, 
                 "{$xmlCEName}", 
                 {$prop.element.type|replace('*', '')}::XML_ELEMENT_NAME);
             target.add{if prop.element.plural != ""}{$prop.element.plural}{else}{$prop.element.name|uppercase(1)}s{/if}(pv0);{/if}{if ( prop.element.valueType == "integer" ) || ( prop.element.valueType == "float" )}{ref getNumericPropVectorType}

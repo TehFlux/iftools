@@ -9,18 +9,7 @@ TODO
 Up next
 --------------------------------------------------------------------------------
 
-+ XML I/O
-  > Class templates
-    . add support for maps (with string key)
-      (see xml.impl.get_from_xml_inner, 
-           class.impl.xml.get_xml_property_child_element)
-    . add support for custom generator/get functions
-    . import statements should be moved to the modules in which the imported 
-      functions are actually referenced
-  > Create SCons builders that generate the XML I/O header, private header 
-    and implementation data for each class and then combine these files into 
-    the xmlutils.hpp, xmlutils_private.hpp and xmlutils.cpp files for the 
-    project.
+
 
 --------------------------------------------------------------------------------
 New
@@ -31,6 +20,13 @@ New
 --------------------------------------------------------------------------------
 Critical stuff
 --------------------------------------------------------------------------------
+
++ XML I/O
+  > Class templates
+    . testing: maps, custom generator/get functions
+    . import statements should be moved to the modules in which the imported 
+      functions are actually referenced
+  > Integrate new SCOns builders into ifobject (from geoutils)
 
 + Add proper bootstrapping.
   > ifclassgen0 depends on ifobject but is required for generating the 
