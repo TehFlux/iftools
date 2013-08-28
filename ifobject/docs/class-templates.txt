@@ -51,10 +51,24 @@ property.protected[]
                    Used by the XML generator functions to determine how XML 
                    should be generated for the property value.
   xml
+    getFunc        Function to be used to initialize an object of the type 
+                   of the property from an XML element. If the property is 
+                   represented by an attribute, this function must accept a 
+                   string and return a value of the property type. If the 
+                   property is represented by a child element, the function 
+                   must accept the following parameters:
+                   (element, childElementName)
     attribute
       name         Attribute name to be used for this property.
                    If non-empty, the property will be included in the 
                    attribute list for the class.
+      generatorFunc
+        name       Name of a custom XML generator function to use for the 
+                   property. The function must accept the following 
+                   parameters:
+                   (property[, <custom arguments>])
+        args       Custom arguments that will be passed to the XML generator 
+                   function for the property.
     child
       name         Name of the property set on the child element using the 
                    'pname' attribute.
@@ -64,6 +78,13 @@ property.protected[]
                    Element name to be used for the child element.
                    If empty, the element name will be one of ['prop', 'vec', 
                    'map'], depending on the property style.
+      generatorFunc
+        name       Name of a custom XML generator function to use for the 
+                   property. The function must accept the following 
+                   parameters:
+                   (property, indentLevel, attributes[, <custom arguments>])
+        args       Custom arguments that will be passed to the XML generator 
+                   function for the property.
   
   [valueType = 'object']
   xml

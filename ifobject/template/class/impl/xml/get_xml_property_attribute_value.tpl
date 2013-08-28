@@ -1,2 +1,2 @@
-{section getXMLPropertyAttributeValue}"{$prop.xml.attribute.name}=\\"" << {if prop.valueType == "string"}
-    Ionflux::ObjectBase::XMLUtils::xmlEscape({$prop.name}){/if}{if ( prop.valueType == "float" ) || ( prop.valueType == "integer" )}{$prop.name}{/if}{if prop.valueType == "bool"}static_cast<int>({$prop.name}){/if} << "\\""{/section}
+{section getXMLPropertyAttributeValue}"{$prop.xml.attribute.name}=\\"" << {if prop.xml.attribute.generatorFunc.name != ""}{$prop.xml.attribute.generatorFunc.name}({$prop.name}{if prop.xml.attribute.generatorFunc.args != ""}, {$prop.xml.attribute.generatorFunc.args}{/if}){else}{if prop.valueType == "string"}
+    Ionflux::ObjectBase::XMLUtils::xmlEscape({$prop.name}){/if}{if ( prop.valueType == "float" ) || ( prop.valueType == "integer" )}{$prop.name}{/if}{if prop.valueType == "bool"}static_cast<int>({$prop.name}){/if}{/if} << "\\""{/section}

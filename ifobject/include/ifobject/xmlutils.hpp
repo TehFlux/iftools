@@ -197,7 +197,7 @@ std::string getXML0(const std::map<std::string, T>& m,
         std::string key = (*i).first;
         T e0 = (*i).second;
         xmlData << "\n" << iws1 << "<entry key=\"" 
-            << key << "\">";
+            << xmlEscape(key) << "\">";
         xmlData << "\n" << e0->getXML0(indentLevel + 2);
         xmlData << "\n" << iws1 << "</entry>";
     }

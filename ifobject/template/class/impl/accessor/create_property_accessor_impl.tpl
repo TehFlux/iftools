@@ -154,7 +154,7 @@
 		return;
 	{$prop.name}[elementKey] = addElement;{if prop.element.managed == "true"}
 	addLocalRef(addElement);{/if}
-\}
+\}{if prop.extendedAddFuncs == "true"}{ref createExtendedMapAddFuncImpl}{/if}
 
 {swrap 75}void {$class.name}::remove{$prop.element.name|uppercase(1)}({if prop.key.accessType != ""}{$prop.key.accessType}{else}{$prop.key.type}{/if} elementKey){/swrap}
 \{{if enableGuards == 1}

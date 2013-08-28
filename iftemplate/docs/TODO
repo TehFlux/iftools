@@ -15,7 +15,10 @@ Up next
 New
 --------------------------------------------------------------------------------
 
++ Scan template modules/files for mismatched tags and report exactly which 
+  tag is mismatched. 
 
++ Add comment tags.
 
 --------------------------------------------------------------------------------
 Critical stuff
