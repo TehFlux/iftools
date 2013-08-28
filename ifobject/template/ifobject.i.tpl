@@ -145,6 +145,20 @@ std::string parseHex(const std::string& inputData);
 std::string sha1(const std::string& secret, bool hexOut = false);
 std::string hmac(const std::string& key, const std::string& message, 
     bool hexOut = false);
+void vectorFromList(const std::string& data, 
+    Ionflux::ObjectBase::IntVector& target, 
+    const std::string& separator = DEFAULT_COORD_SEPARATOR);
+void vectorFromList(const std::string& data, 
+    Ionflux::ObjectBase::UIntVector& target, 
+    const std::string& separator = DEFAULT_COORD_SEPARATOR);
+void vectorFromList(const std::string& data, 
+    Ionflux::ObjectBase::DoubleVector& target, 
+    const std::string& separator = DEFAULT_COORD_SEPARATOR);
+std::string getIndent(unsigned int level = 0, 
+    unsigned int indentWidth = DEFAULT_INDENT_WIDTH, 
+    char indentChar = ' ');
+std::string escape(const std::string &source, 
+	const std::string& escapeWhat = " '\"");
 std::string mmTypeIDGetString(Ionflux::ObjectBase::MMEventTypeID typeID);
 std::string getTimestamp();
 std::string appendDirSeparator(const std::string& path, 
