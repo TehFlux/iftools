@@ -45,9 +45,6 @@ Critical stuff
 + Class templates
   > make sure they work with the new iftpl from iftemplate
   > document features
-  > generate XML serialization code automatically for properties
-    . requires getObject0() to be specialized for each serializable 
-      class (possibly via get<class name>() method)
   > generate serialization code for vector/map style properties
   > install using SCons
   > support C++ templates
