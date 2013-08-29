@@ -28,7 +28,8 @@
 	{$bc.name}::getXMLChildData(bc0, indentLevel);
 	d0 << {if xcFirst == 0}"\\n" << {/if}bc0;{$xcFirst = 0}{/if}{/foreach}{if haveXMLChildElements == 1}
 	std::string iws0 = Ionflux::ObjectBase::getIndent(indentLevel);{foreach prop in property.protected}{if prop.xml.child.name != ""}{if xcFirst == 0}
-	d0 << "\\n";{/if}{ref getXMLPropertyChildElement}{$xcFirst = 0}{/if}{/foreach}{/if}
+	if (d0.str().size() > 0)
+	    d0 << "\\n";{/if}{ref getXMLPropertyChildElement}{$xcFirst = 0}{/if}{/foreach}{/if}
 	target = d0.str();{else}
 {swrap 75 "    "}{$function.xml.childData.impl}{/swrap}{/if}
 \}{/section}

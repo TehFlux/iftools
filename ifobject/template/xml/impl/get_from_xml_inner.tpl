@@ -53,7 +53,8 @@ namespace XMLUtils
             target.set{$prop.name|uppercase(1)}(co0);{/if}{if prop.style == "vector"}{if prop.element.valueType == "object"}
             std::vector<{$prop.element.type}> pv0;
             Ionflux::ObjectBase::XMLUtils::getObjVector<
-                {$prop.element.type|replace('*', '')}, {$prop.element.type}>(ce0, pv0, 
+                    {$prop.element.type|replace('*', '')}, 
+                    {$prop.element.type}>(ce0, pv0, 
                 "{$xmlCEName}", 
                 {$prop.element.type|replace('*', '')}::XML_ELEMENT_NAME);
             target.add{if prop.element.plural != ""}{$prop.element.plural}{else}{$prop.element.name|uppercase(1)}s{/if}(pv0);{/if}{if ( prop.element.valueType == "integer" ) || ( prop.element.valueType == "float" )}{ref getNumericPropVectorType}
@@ -64,15 +65,6 @@ namespace XMLUtils
         ce0 = ce0->NextSiblingElement();
     }{/if}{else}
 {swrap 75 "    "}{$function.xml.fromXML.impl}{/swrap}{/if}
-\}
-
-{swrap 75}void getObject0(TiXmlElement* e0, 
-    {foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}& target, const std::string& elementName){/swrap}
-\{
-    if (elementName.size() == 0)
-        get{$class.name|uppercase(1)}(e0, target);
-    else
-        get{$class.name|uppercase(1)}(e0, target, elementName);
 \}
 
 void get{$class.name|uppercase(1)}(const std::string& data, {foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}& target)
@@ -96,4 +88,33 @@ void get{$class.name|uppercase(1)}(const std::string& data, {foreach ns in names
 
 \}{foreach ns in namespace}
 
-\}{/foreach}{/section}
+\}{/foreach}
+
+namespace Ionflux
+\{
+
+namespace ObjectBase
+\{
+
+namespace XMLUtils
+\{
+
+template<>
+{swrap 75}void getObject0<{foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}>(TiXmlElement* e0, 
+    {foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}& target, const std::string& elementName){/swrap}
+\{
+    // <---- DEBUG ----- //
+    std::cerr << "[getObject0] Called for class '{$class.name}'." 
+        << std::endl;
+    // ----- DEBUG ----> */
+    if (elementName.size() == 0)
+        {foreach ns in namespace}{$ns.name}::{/foreach}XMLUtils::get{$class.name|uppercase(1)}(e0, target);
+    else
+        {foreach ns in namespace}{$ns.name}::{/foreach}XMLUtils::get{$class.name|uppercase(1)}(e0, target, elementName);
+\}
+
+\}
+
+\}
+
+\}{/section}

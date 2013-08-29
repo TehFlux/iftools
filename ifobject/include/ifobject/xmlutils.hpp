@@ -156,7 +156,7 @@ std::string getXML0(const std::vector<T>& v,
     if (name.size() > 0)
         xmlData << " name=\"" << name << "\"";
     if (attributes.size() > 0)
-        xmlData << attributes;
+        xmlData << " " << attributes;
     xmlData << ">";
     for (unsigned int i = 0; i < v.size(); i++)
     {
@@ -189,7 +189,7 @@ std::string getXML0(const std::map<std::string, T>& m,
     if (name.size() > 0)
         xmlData << " name=\"" << name << "\"";
     if (attributes.size() > 0)
-        xmlData << attributes;
+        xmlData << " " << attributes;
     xmlData << ">";
     for (typename std::map<std::string, T>::const_iterator i = m.begin(); 
         i != m.end(); i++)
