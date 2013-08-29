@@ -103,7 +103,7 @@ template<>
 {swrap 75}void getObject0<{foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}>(TiXmlElement* e0, 
     {foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}& target, const std::string& elementName){/swrap}
 \{
-    // <---- DEBUG ----- //
+    /* <---- DEBUG ----- //
     std::cerr << "[getObject0] Called for class '{$class.name}'." 
         << std::endl;
     // ----- DEBUG ----> */
