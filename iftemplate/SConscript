@@ -84,15 +84,14 @@ else:
     defaultPrefix = '/usr/local'
 prefix = ARGUMENTS.get('prefix', defaultPrefix)
 
+bootstrap = False
+if ('bootstrap' in COMMAND_LINE_TARGETS):
+    print "***********************"
+    print "Bootstrap build enabled"
+    print "***********************"
+    bootstrap = True
+
 iftemplateEnv = env.Clone()
-
-#env.VariantDir('deps/tinyxml/build', 'deps/tinyxml/src')
-
-if (hasattr(lc, 'prefix')):
-    defaultPrefix = lc.prefix
-else:
-    defaultPrefix = '/usr/local'
-prefix = ARGUMENTS.get('prefix', defaultPrefix)
 
 iftemplateEnv.VariantDir('build', 'src')
 iftemplateEnv.VariantDir('test/build', 'test')
@@ -166,6 +165,12 @@ if (not config.CheckProgram("ifclassgen")):
 haveIFTpl = True
 if (not config.CheckProgram("iftpl")):
     haveIFTpl = False
+haveIFClassgen0 = True
+if (not config.CheckProgram("ifclassgen0")):
+    haveIFClassgen0 = False
+haveIFTpl0 = True
+if (not config.CheckProgram("iftpl0")):
+    haveIFTpl0 = False
 haveSWIG = True
 if (not config.CheckProgram("swig")):
     print "*************************************************"
@@ -193,42 +198,48 @@ iftemplateEnv.Append(BUILDERS = { 'Source' : sourceBuilder,
 allClasses = iftemplateLibClasses
 allTargets = []
 
+if (not bootstrap):
 # Source files.
-if (haveIFClassgen):
-    sources = []
-    for it in allClasses:
-        sources += [ 
-            iftemplateEnv.Source(target = [
-                    'include/iftemplate/' + it + '.hpp', 
-                    'src/' + it + '.cpp'], 
-                source = ['conf/class/' + it + '.conf'])
-        ]
-    allTargets += sources
+    if (haveIFClassgen0):
+        sources = []
+        for it in allClasses:
+            sources += [ 
+                iftemplateEnv.Source(target = [
+                        'include/iftemplate/' + it + '.hpp', 
+                        'src/' + it + '.cpp'], 
+                    source = ['conf/class/' + it + '.conf'])
+            ]
+        allTargets += sources
+    else:
+        print "**********************************************************"
+        print "ifclassgen not found - source files will NOT be generated!"
+        print "**********************************************************"
+    
+    # Interface declarations.
+    if (haveIFTpl0):
+        interfaces = []
+        classInterfaces = []
+        # iftemplate library
+        interfaceTargets = []
+        for it in iftemplateLibClasses:
+            t0 = 'swig/classes/' + it + '.i'
+            interfaceTargets += [t0]
+            classInterfaces += [ 
+                iftemplateEnv.ClassInterface(target = [ t0 ], 
+                    source = ['conf/class/' + it + '.conf'])
+            ]
+        interfaces += [ iftemplateEnv.Interface(target = lc.swigInterfaceFile[0], 
+            source = interfaceTargets + [lc.swigInterfaceTemplateFile[0]]) ]
+        allTargets += (classInterfaces + interfaces)
+    else:
+        print "****************************************************************"
+        print "iftpl not found -  Interface declarations will NOT be generated!"
+        print "****************************************************************"
 else:
-    print "**********************************************************"
-    print "ifclassgen not found - source files will NOT be generated!"
-    print "**********************************************************"
-
-# Interface declarations.
-if (haveIFTpl):
-    interfaces = []
-    classInterfaces = []
-    # iftemplate library
-    interfaceTargets = []
-    for it in iftemplateLibClasses:
-        t0 = 'swig/classes/' + it + '.i'
-        interfaceTargets += [t0]
-        classInterfaces += [ 
-            iftemplateEnv.ClassInterface(target = [ t0 ], 
-                source = ['conf/class/' + it + '.conf'])
-        ]
-    interfaces += [ iftemplateEnv.Interface(target = lc.swigInterfaceFile[0], 
-        source = interfaceTargets + [lc.swigInterfaceTemplateFile[0]]) ]
-    allTargets += (classInterfaces + interfaces)
-else:
-    print "****************************************************************"
-    print "iftpl not found -  Interface declarations will NOT be generated!"
-    print "****************************************************************"
+    print "*****************************************************************"
+    print "Not generating source files and interface declarations, bootstrap"
+    print "mode enabled."
+    print "*****************************************************************"
 
 # iftemplate shared library
 iftemplateLibEnv = iftemplateEnv.Clone()
@@ -320,10 +331,11 @@ aliasTests = Alias('tests', targetTests)
 aliasAll = Alias('all', allTargets)
 aliasInstall = Alias('install', installTargets)
 aliasBootstrap = Alias('bootstrap', bootstrapInstallTargets)
-if (haveIFClassgen):
-    aliasSources = Alias('sources', sources)
-if (haveIFTpl):
-    aliasInterfaces = Alias('interfaces', classInterfaces + [interfaces])
+if (not bootstrap):
+    if (haveIFClassgen0):
+        aliasSources = Alias('sources', sources)
+    if (haveIFTpl0):
+        aliasInterfaces = Alias('interfaces', classInterfaces + [interfaces])
 if (buildPyModule):
     aliasPyModule = Alias('pymodule', pyModules)
 

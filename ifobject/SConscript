@@ -69,9 +69,7 @@ env0['PATH'] += (':' + lc.PATH)
 env = Environment(ENV = env0, 
     CPPPATH = ['include'] + lc.CPPPATH, 
     LIBPATH = ['lib'] + lc.LIBPATH)
-
-if (ARGUMENTS.get('debug', 'no') == 'yes'):
-    env.Append(CCFLAGS = '-g')
+env.MergeFlags(['-Wall', '-Wno-deprecated', '-O2'])
 
 if (hasattr(lc, 'debug') and lc.debug):
     debugDefault = 'yes'
@@ -85,6 +83,13 @@ if (hasattr(lc, 'prefix')):
 else:
     defaultPrefix = '/usr/local'
 prefix = ARGUMENTS.get('prefix', defaultPrefix)
+
+bootstrap = False
+if ('bootstrap' in COMMAND_LINE_TARGETS):
+    print "***********************"
+    print "Bootstrap build enabled"
+    print "***********************"
+    bootstrap = True
 
 env.VariantDir('build', 'src')
 env.VariantDir('test/build', 'test')
@@ -154,51 +159,58 @@ if (not config.CheckLibWithHeader("python" + lc.pythonVersion,
     print "***************************************************"
     buildPyModule = False
 
-buildIFClassgen = True
-if (not config.CheckLib("iftools", language = 'C++', autoadd = 0)):
-    print "*************************************************"
-    print "iftools not found - ifclassgen will NOT be built!"
-    print "*************************************************"
-    buildIFClassgen = False
-else:
-    missingDeps = []
-    if (not config.CheckLib("pcre", autoadd = 0)):
-        missingDeps += ['pcre']
-    
-    if (len(missingDeps) > 0):
-        print "*************************************************************"
-        print "ifclassgen cannot be built because the following dependencies"
-        print "were not found:"
-        print " "
-        for it in missingDeps:
-            print "  " + it
-        print " "
-        print "*************************************************************"
+if (not bootstrap):
+    buildIFClassgen = True
+    if (not config.CheckLib("iftools", language = 'C++', autoadd = 0)):
+        print "*************************************************"
+        print "iftools not found - ifclassgen will NOT be built!"
+        print "*************************************************"
         buildIFClassgen = False
     else:
-        env.Append(LIBS = ['pcre'])
-
-buildIFClassgen0 = True
-if (not config.CheckLib("iftemplate", language = 'C++', autoadd = 0)):
-    print "*****************************************************"
-    print "iftemplate not found - ifclassgen0 will NOT be built!"
-    print "*****************************************************"
-    buildIFClassgen0 = False
-else:
-    missingDeps = []
-    if (not config.CheckLib("ifobject", autoadd = 0)):
-        missingDeps += ['ifobject']
+        missingDeps = []
+        if (not config.CheckLib("pcre", autoadd = 0)):
+            missingDeps += ['pcre']
+        
+        if (len(missingDeps) > 0):
+            print "*************************************************************"
+            print "ifclassgen cannot be built because the following dependencies"
+            print "were not found:"
+            print " "
+            for it in missingDeps:
+                print "  " + it
+            print " "
+            print "*************************************************************"
+            buildIFClassgen = False
+        else:
+            env.Append(LIBS = ['pcre'])
     
-    if (len(missingDeps) > 0):
-        print "**************************************************************"
-        print "ifclassgen0 cannot be built because the following dependencies"
-        print "were not found:"
-        print " "
-        for it in missingDeps:
-            print "  " + it
-        print " "
-        print "**************************************************************"
+    buildIFClassgen0 = True
+    if (not config.CheckLib("iftemplate", language = 'C++', autoadd = 0)):
+        print "*****************************************************"
+        print "iftemplate not found - ifclassgen0 will NOT be built!"
+        print "*****************************************************"
         buildIFClassgen0 = False
+    else:
+        missingDeps = []
+        if (not config.CheckLib("ifobject", autoadd = 0)):
+            missingDeps += ['ifobject']
+        
+        if (len(missingDeps) > 0):
+            print "**************************************************************"
+            print "ifclassgen0 cannot be built because the following dependencies"
+            print "were not found:"
+            print " "
+            for it in missingDeps:
+                print "  " + it
+            print " "
+            print "**************************************************************"
+            buildIFClassgen0 = False
+else:
+    print "******************************************************"
+    print "Not building class generators, bootstrap mode enabled."
+    print "******************************************************"
+    buildIFClassgen = False
+    buildIFClassgen0 = False
 
 haveIFClassgen = True
 if (not config.CheckProgram("ifclassgen")):
@@ -206,6 +218,12 @@ if (not config.CheckProgram("ifclassgen")):
 haveIFTpl = True
 if (not config.CheckProgram("iftpl")):
     haveIFTpl = False
+haveIFClassgen0 = True
+if (not config.CheckProgram("ifclassgen0")):
+    haveIFClassgen0 = False
+haveIFTpl0 = True
+if (not config.CheckProgram("iftpl0")):
+    haveIFTpl0 = False
 haveSWIG = True
 if (not config.CheckProgram("swig")):
     print "*************************************************"
@@ -248,40 +266,46 @@ ifclassgen0Bin = env.Program('bin/ifclassgen0',
 if (buildIFClassgen0):
     allTargets += [ifclassgen0Bin]
 
-# Source files.
-if (haveIFClassgen):
-    sources = []
-    for it in ifobjectLibClasses:
-        sources += [ 
-            env.Source(target = [
-                    'include/ifobject/' + it + '.hpp', 
-                    'src/' + it + '.cpp'], 
-                source = ['conf/class/' + it + '.conf'])
-        ]
-    allTargets += sources
-else:
-    print "**********************************************************"
-    print "ifclassgen not found - source files will NOT be generated!"
-    print "**********************************************************"
+if (not bootstrap):
+    # Source files.
+    if (haveIFClassgen0):
+        sources = []
+        for it in ifobjectLibClasses:
+            sources += [ 
+                env.Source(target = [
+                        'include/ifobject/' + it + '.hpp', 
+                        'src/' + it + '.cpp'], 
+                    source = ['conf/class/' + it + '.conf'])
+            ]
+        allTargets += sources
+    else:
+        print "**********************************************************"
+        print "ifclassgen not found - source files will NOT be generated!"
+        print "**********************************************************"
+    # Interface declarations.
+    if (haveIFTpl0):
+        classInterfaces = []
+        interfaceTargets = []
+        for it in ifobjectLibClasses:
+            t0 = 'swig/classes/' + it + '.i'
+            interfaceTargets += [t0]
+            classInterfaces += [ 
+                env.ClassInterface(target = [ t0 ], 
+                    source = ['conf/class/' + it + '.conf'])
+            ]
+        interfaces = env.Interface(target = lc.swigInterfaceFile[0], 
+            source = interfaceTargets + [lc.swigInterfaceTemplateFile[0]])
+        allTargets += (classInterfaces + [interfaces])
+    else:
+        print "*****************************************************************"
+        print "iftpl0 not found -  Interface declarations will NOT be generated!"
+        print "*****************************************************************"
 
-# Interface declarations.
-if (haveIFTpl):
-    classInterfaces = []
-    interfaceTargets = []
-    for it in ifobjectLibClasses:
-        t0 = 'swig/classes/' + it + '.i'
-        interfaceTargets += [t0]
-        classInterfaces += [ 
-            env.ClassInterface(target = [ t0 ], 
-                source = ['conf/class/' + it + '.conf'])
-        ]
-    interfaces = env.Interface(target = lc.swigInterfaceFile[0], 
-        source = interfaceTargets + [lc.swigInterfaceTemplateFile[0]])
-    allTargets += (classInterfaces + [interfaces])
 else:
-    print "****************************************************************"
-    print "iftpl not found -  Interface declarations will NOT be generated!"
-    print "****************************************************************"
+    print "*****************************************************************"
+    print "Not generating source files and interface declarations, bootstrap"
+    print "mode enabled."
+    print "*****************************************************************"
 
 # ifobject shared library
 ifobjectLibEnv = env.Clone()
@@ -371,10 +395,11 @@ aliasTests = Alias('tests', targetTests)
 aliasAll = Alias('all', allTargets)
 aliasInstall = Alias('install', installTargets)
 aliasBootstrap = Alias('bootstrap', bootstrapInstallTargets)
-if (haveIFClassgen):
-    aliasSources = Alias('sources', sources)
-if (haveIFTpl):
-    aliasInterfaces = Alias('interfaces', classInterfaces + [interfaces])
+if (not bootstrap):
+    if (haveIFClassgen0):
+        aliasSources = Alias('sources', sources)
+    if (haveIFTpl0):
+        aliasInterfaces = Alias('interfaces', classInterfaces + [interfaces])
 if (buildPyModule):
     aliasPyModule = Alias('pymodule', ifobjectPyModule)
 

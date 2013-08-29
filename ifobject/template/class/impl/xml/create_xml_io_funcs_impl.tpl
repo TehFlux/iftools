@@ -10,9 +10,9 @@
 	Ionflux::ObjectBase::IFGuard functionGuard(guardMutex);{/if}{if function.xml.attributeData.impl == ""}{if haveBaseIFObject == 1}
 	std::string a0(Ionflux::ObjectBase::IFObject::getXMLAttributeData());{/if}{foreach base in class.base.other}{if base.xml.enabled == "true"}
 	std::string a0({$base.name}::getXMLAttributeData());{/if}{/foreach}
-	std::ostringstream d0;
+	std::ostringstream d0;{if haveXMLBase == 1}
 	if (a0.size() > 0)
-	    d0 << a0{if haveXMLAttributes == 1} << " "{/if};{$xaFirst = 1}{foreach prop in property.protected}{if prop.xml.attribute.name != ""}
+	    d0 << a0{if haveXMLAttributes == 1} << " "{/if};{/if}{$xaFirst = 1}{foreach prop in property.protected}{if prop.xml.attribute.name != ""}
 	d0 << {if xaFirst == 0}" " << {/if}{ref getXMLPropertyAttributeValue};{$xaFirst = 0}{/if}{/foreach}
 	return d0.str();{else}
 {swrap 75 "    "}{$function.xml.attributeData.impl}{/swrap}{/if}
