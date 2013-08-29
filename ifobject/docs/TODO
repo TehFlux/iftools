@@ -16,6 +16,7 @@ New
 --------------------------------------------------------------------------------
 
 + XML I/O
+  > Add Python bindings for the XML I/O automatically.
   > Support polymorphism for object properties.
 
 --------------------------------------------------------------------------------
