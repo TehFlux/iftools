@@ -38,6 +38,7 @@
 #include "ifobject/IFLogMessage.hpp"
 #include "ifobject/IFMMEvent.hpp"
 #include "ifobject/IFMMEventHandler.hpp"
+#include "ifobject/xmlutils.hpp"
 
 /** \file ifobjectbase.hpp
  * \brief Global header.
