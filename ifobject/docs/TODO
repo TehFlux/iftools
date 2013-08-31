@@ -15,13 +15,14 @@ Up next
 New
 --------------------------------------------------------------------------------
 
-+ XML I/O
-  > Add Python bindings for the XML I/O automatically.
-  > Support polymorphism for object properties.
+
 
 --------------------------------------------------------------------------------
 Critical stuff
 --------------------------------------------------------------------------------
+
++ ifclassgen0 should be moved to iftemplate, since it depends on both 
+  ifobject and iftemplate.
 
 + XML I/O
   > Class templates
@@ -29,14 +30,6 @@ Critical stuff
     . import statements should be moved to the modules in which the imported 
       functions are actually referenced
   > Integrate new SCOns builders into ifobject (from geoutils)
-
-+ Add proper bootstrapping.
-  > ifclassgen0 depends on ifobject but is required for generating the 
-    ifobject sources. Current bootstrapping is still breaky (and does not 
-    save the source files.)
-
-+ Create full python bindings using the files in swig/classes.
-  > add support for signals and events
 
 + Add versions of the template functions from utils.hpp that accept a 
   sourceObj parameter for error reporting in objectutils.hpp.
@@ -51,21 +44,6 @@ Critical stuff
   > install using SCons
   > support C++ templates
 
-+ Use exceptions for critical errors instead of the logging system.
-  > memory management functions
-
-+ Serialization functions for vectors and maps (with string key)
-  (see [ifobject]xmlutils.cpp:getXML0(), [fmbase]/xmlutils.cpp:getColorMap())
-  > getObjMap(...)
-  > getXML0(const std::map<std::string, T>& m, ...)
-
---------------------------------------------------------------------------------
-Important stuff
---------------------------------------------------------------------------------
-
-+ Add a more generalized serialization framework.
-  > binary, XML, JSON
-
 + Create memory management event handler for debugging
   > object lifetime statistics
     . total number of allocations
@@ -73,6 +51,23 @@ Important stuff
   > memory management debugging
     . each object that has been created should be deleted
     . objects should not be deleted more than once
+
++ Use exceptions for critical errors instead of the logging system.
+  > memory management functions
+
+--------------------------------------------------------------------------------
+Important stuff
+--------------------------------------------------------------------------------
+
++ XML I/O
+  > Support polymorphism for object properties.
+
++ Add a more generalized serialization framework.
+  > binary, XML, JSON
+  > Serialization functions for vectors and maps (with string key)
+
++ Create full python bindings using the files in swig/classes.
+  > add support for signals and events
 
 + Class templates
   > vector style properties: add support for set<Element>(index, value)
