@@ -9,7 +9,8 @@ TODO
 Up next
 --------------------------------------------------------------------------------
 
-
++ Class templates
+  > support C++ templates
 
 --------------------------------------------------------------------------------
 New
@@ -29,7 +30,7 @@ Critical stuff
     . testing: maps, custom generator/get functions
     . import statements should be moved to the modules in which the imported 
       functions are actually referenced
-  > Integrate new SCOns builders into ifobject (from geoutils)
+  > Integrate new SCons builders into ifobject (from geoutils)
 
 + Add versions of the template functions from utils.hpp that accept a 
   sourceObj parameter for error reporting in objectutils.hpp.
@@ -42,7 +43,6 @@ Critical stuff
   > document features
   > generate serialization code for vector/map style properties
   > install using SCons
-  > support C++ templates
 
 + Create memory management event handler for debugging
   > object lifetime statistics
