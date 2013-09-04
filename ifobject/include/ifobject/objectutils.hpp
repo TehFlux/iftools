@@ -69,6 +69,23 @@ T* nullPointerCheck(T* p, Ionflux::ObjectBase::IFObject* sourceObj,
     return p;
 }
 
+/// Checked dynamic cast.
+template<class T0, class T1>
+T0* checkedDynamicCast(T1* p, Ionflux::ObjectBase::IFObject* sourceObj, 
+    const std::string& source = "", const std::string& objName = "pointer", 
+    const std::string& expectedType = "<unknown>")
+{
+    T0* result = dynamic_cast<T0*>(p);
+    if (result == 0)
+    {
+        std::ostringstream status;
+        status << objName << " has unexpected type "
+            "(expected type: " << expectedType << ").";
+        throw IFError(sourceObj->getErrorString(status.str(), source));
+    }
+    return result;
+}
+
 }
 
 }
