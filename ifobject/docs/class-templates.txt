@@ -107,6 +107,8 @@ property.protected[]
 Template variables
 --------------------------------------------------------------------------------
 
+class.isAbstract   Set to '1' if the class is an abstract class.
+
 haveXMLAttributes  
                    Set to '1' if the class has XML attributes.
 haveXMLChildElements  
@@ -114,4 +116,8 @@ haveXMLChildElements
 haveXMLBase        Set to '1' if the class has at least one base class that 
                    can be serialized to XML. This is tested via the 
                    class.base.xml.enabled configuration option.
+
+class.xml.haveChildClasses
+                   Set to '1' if the class has child classes that the 
+                   polymorphic XML I/O functions should be aware of.
 

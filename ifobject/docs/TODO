@@ -21,22 +21,21 @@ New
 Critical stuff
 --------------------------------------------------------------------------------
 
-+ XML I/O
-  > Support polymorphism for object properties.
-    . need to choose the right child element name (using getXMLElementName())
-      (avoid hard coded child element names)
-    . child classes need to be specified on the base class (until some 
-      better method is found)
++ Testing
+  > XML I/O
+    . polymorphic types
+    . maps, custom generator/get functions
 
 + ifclassgen0 should be moved to iftemplate, since it depends on both 
   ifobject and iftemplate.
 
 + XML I/O
   > Class templates
-    . testing: maps, custom generator/get functions
     . import statements should be moved to the modules in which the imported 
       functions are actually referenced
   > Integrate new SCons builders into ifobject (from geoutils)
+  > Template variables should be moved to appropriate nodes:
+    haveXMLAttributes -> class.xml.haveAttributes, etc.
 
 + Add versions of the template functions from utils.hpp that accept a 
   sourceObj parameter for error reporting in objectutils.hpp.
