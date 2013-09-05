@@ -1,0 +1,1 @@
+{section scanFunctions}{$class.isAbstract = 0}{foreach func in function.protected}{if func.pureVirtual == "true"}{$class.isAbstract = 1}{/if}{/foreach}{foreach func in function.public}{if func.pureVirtual == "true"}{$class.isAbstract = 1}{/if}{/foreach}{/section}

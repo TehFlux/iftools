@@ -44,6 +44,14 @@ class
   xml
     elementName    XML element name to be used for the class.
     exception      Exception class to be used for the XML I/O functions.
+    childClass[] 
+                   Child classes that the XML I/O functions should be aware 
+                   of when using polymorphism.
+      name         Name of the child class.
+                   This should be a fully qualified name if the child class 
+                   is outside the project namespace.
+      getFunc      The function to be used for initializing an instance of the 
+                   child class from an XML element.
 
 property.protected[]
   [general]
@@ -88,11 +96,8 @@ property.protected[]
   
   [valueType = 'object']
   xml
-    getFunc        Function to be used to initialize an object of the type 
+    createFunc     Function to be used to create an object of the type 
                    of the property from an XML element (required).
-    createExpr     Expression to be used to create a new object of the type 
-                   of the property. If this is not specified, the create() 
-                   function of the type will be used.
   
   [style = 'vector' | 'map']
   element

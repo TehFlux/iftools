@@ -9,8 +9,7 @@ TODO
 Up next
 --------------------------------------------------------------------------------
 
-+ Class templates
-  > support C++ templates
+
 
 --------------------------------------------------------------------------------
 New
@@ -21,6 +20,13 @@ New
 --------------------------------------------------------------------------------
 Critical stuff
 --------------------------------------------------------------------------------
+
++ XML I/O
+  > Support polymorphism for object properties.
+    . need to choose the right child element name (using getXMLElementName())
+      (avoid hard coded child element names)
+    . child classes need to be specified on the base class (until some 
+      better method is found)
 
 + ifclassgen0 should be moved to iftemplate, since it depends on both 
   ifobject and iftemplate.
@@ -39,6 +45,7 @@ Critical stuff
   > testing
 
 + Class templates
+  > support C++ templates
   > make sure they work with the new iftpl from iftemplate
   > document features
   > generate serialization code for vector/map style properties
@@ -58,9 +65,6 @@ Critical stuff
 --------------------------------------------------------------------------------
 Important stuff
 --------------------------------------------------------------------------------
-
-+ XML I/O
-  > Support polymorphism for object properties.
 
 + Add a more generalized serialization framework.
   > binary, XML, JSON

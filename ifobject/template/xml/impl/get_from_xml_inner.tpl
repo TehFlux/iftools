@@ -6,8 +6,38 @@ namespace {$ns.name}
 namespace XMLUtils
 \{
 
+{swrap 75}{foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}* create{$class.name|uppercase(1)}(TiXmlElement* e0, const std::string& elementName){/swrap}
+\{{if function.xml.create.impl == ""}
+    std::string en0(e0->Value());
+    {$class.name}* o0 = 0;
+    if (en0 == elementName)
+    \{{if class.isAbstract != 1}
+        // default ({$class.name})
+        o0 = {$class.name}::create();
+        get{$class.name|uppercase(1)}(e0, *o0, en0);{else}
+        throw Ionflux::ObjectBase::IFError(
+            "[create{$class.name|uppercase(1)}] "
+            "Cannot create instance of abstract class.");{/if}
+    \}{foreach cc in class.xml.childClass} else
+    if (en0 == {$cc.name}::XML_ELEMENT_NAME)
+    \{
+        // {$cc.name}
+        {$cc.name}* o1 = {$cc.name}::create();
+        {$cc.getFunc}(e0, *o1, en0);
+        o0 = o1;
+    \}{/foreach} else
+    \{
+        std::ostringstream status;
+        status << "[create{$class.name|uppercase(1)}] "
+            << "Unexpected child element name: '" << en0 << "'";
+        throw Ionflux::ObjectBase::IFError(status.str());
+    \}
+    return o0;{else}
+{swrap 75 "    "}{$function.xml.create.impl}{/swrap}{/if}
+\}
+
 {swrap 75}void get{$class.name|uppercase(1)}(TiXmlElement* e0, 
-    {foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}& target, const std::string& elementName = {foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}::XML_ELEMENT_NAME){/swrap}
+    {foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}& target, const std::string& elementName){/swrap}
 \{{if function.xml.fromXML.impl == ""}
     Ionflux::ObjectBase::XMLUtils::checkElementNameOrError(e0, 
         elementName, "get{$class.name|uppercase(1)}");{if haveBaseIFObject == 1}
@@ -30,8 +60,8 @@ namespace XMLUtils
             Ionflux::ObjectBase::XMLUtils::getAttributeValue(
                 ce0, "pname", true);{foreach prop in property.protected}{if prop.xml.child.name != ""}{ref xmlGetPropChildElementName}
         // Property: {$prop.name} ({if prop.style == "vector"}vector[{$prop.element.valueType}]{else}{$prop.valueType}{/if})
-        if ((en0 == "{$xmlCEName}") 
-            && (pName == "{$prop.xml.child.name}"))
+        if ({if prop.valueType == "object"}pName == "{$prop.xml.child.name}"{else}(pName == "{$prop.xml.child.name}") 
+            && (en0 == "{$xmlCEName}"){/if})
         \{{if prop.valueType == "string"}
             TiXmlElement* ce1 = ce0->FirstChildElement();
             if (ce1 != 0)
@@ -46,10 +76,8 @@ namespace XMLUtils
             a0 = Ionflux::ObjectBase::XMLUtils::getAttributeValue(
                 ce0, "d", true);
             if (a0.size() > 0)
-                target.set{$prop.name|uppercase(1)}(::strtol(a0.c_str(), 0, 10));{/if}{if ( prop.valueType == "object" ) && ( prop.xml.getFunc != "" )}
-            {$prop.type} co0 = {if prop.xml.createExpr != ""}{$prop.xml.createExpr}{else}
-                {$prop.type|replace('*', '')}::create(){/if};
-            {$prop.xml.getFunc}(ce0, *co0, "{$xmlCEName}");
+                target.set{$prop.name|uppercase(1)}(::strtol(a0.c_str(), 0, 10));{/if}{if ( prop.valueType == "object" ) && ( prop.xml.createFunc != "" )}
+            {$prop.type} co0 = {$prop.xml.createFunc}(ce0, en0);
             target.set{$prop.name|uppercase(1)}(co0);{/if}{if prop.style == "vector"}{if prop.element.valueType == "object"}
             std::vector<{$prop.element.type}> pv0;
             Ionflux::ObjectBase::XMLUtils::getObjVector<
@@ -111,7 +139,51 @@ template<>
         {foreach ns in namespace}{$ns.name}::{/foreach}XMLUtils::get{$class.name|uppercase(1)}(e0, target);
     else
         {foreach ns in namespace}{$ns.name}::{/foreach}XMLUtils::get{$class.name|uppercase(1)}(e0, target, elementName);
-\}
+\}{if class.xml.haveChildClasses == 1}
+
+/// Get object vector for polymorphic type {$class.name}.
+template<>
+void getObjVector<{ref getFQName},
+    {ref getFQName}*>(TiXmlElement* e0, 
+    std::vector<{ref getFQName}*>& target, 
+    const std::string& elementName, 
+    const std::string& childElementName)
+\{
+    checkElementNameOrError(e0, elementName, 
+        "getObjVector<{$class.name}>");
+    TiXmlElement* ce0 = e0->FirstChildElement();
+    while (ce0 != 0)
+    \{
+        std::string en0(ce0->Value());
+        if (en0 == childElementName)
+        \{{if class.isAbstract != 1}
+            // default ({$class.name})
+            {ref getFQName}* co0 = 
+                {ref getFQName}::create();
+            getObject0(ce0, *co0, childElementName);
+            target.push_back(co0);{else}
+            throw Ionflux::ObjectBase::IFError(
+                "[getObjVector<{$class.name}>] "
+                "Cannot create instance of abstract class.");{/if}
+        \}{foreach cc in class.xml.childClass} else
+        if (en0 == 
+            {$cc.name}::XML_ELEMENT_NAME)
+        \{
+            // {$cc.name}
+            {$cc.name}* co0 = 
+                {$cc.name}::create();
+            getObject0(ce0, *co0, childElementName);
+            target.push_back(co0);
+        \}{/foreach} else
+        \{
+            std::ostringstream status;
+            status << "[getObjVector<{$class.name}>] "
+                << "Unexpected child element name: '" << en0 << "'";
+            throw Ionflux::ObjectBase::IFError(status.str());
+        \}
+        ce0 = ce0->NextSiblingElement();
+    \}
+\}{/if}
 
 \}
 
