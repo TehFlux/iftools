@@ -38,6 +38,14 @@ void getObjVector<{ref getFQName},
     {ref getFQName}*>(TiXmlElement* e0, 
     std::vector<{ref getFQName}*>& target, 
     const std::string& elementName, 
+    const std::string& childElementName);
+
+/// Get object map for polymorphic type {$class.name}.
+template<>
+void getObjMap<{ref getFQName},
+    {ref getFQName}*>(TiXmlElement* e0, 
+    std::map<std::string, {ref getFQName}*>& target, 
+    const std::string& elementName, 
     const std::string& childElementName);{/if}
 
 \}

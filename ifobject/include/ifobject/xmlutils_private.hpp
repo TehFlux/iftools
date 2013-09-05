@@ -154,17 +154,17 @@ void loadFromFile(const std::string& fileName, T& target,
 /// Get dictionary of objects from an XML element.
 template<class T, class TP>
 void getObjMap(TiXmlElement* e0, 
-    std::map<std::string, TP>& target, const std::string& elementName = "vec", 
+    std::map<std::string, TP>& target, const std::string& elementName = "map", 
     const std::string& childElementName = "")
 {
     checkElementNameOrError(e0, elementName, "getObjMap");
     TiXmlElement* ee0 = e0->FirstChildElement();
     while (ee0 != 0)
     {
-        const char* a0 = ee0->Value();
-        if (std::string(a0) == "entry")
+        std::string en0(ee0->Value());
+        if (en0 == "entry")
         {
-            std::string k = getAttributeValue(ee0, "key");
+            std::string k = getAttributeValue(ee0, "key", false);
             TiXmlElement* ce0 = findElementByNameOrError(ee0, 
                 childElementName, "getObjMap");
             TP co0 = T::create();

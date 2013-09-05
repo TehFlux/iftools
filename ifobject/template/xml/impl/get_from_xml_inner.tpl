@@ -141,7 +141,6 @@ template<>
         {foreach ns in namespace}{$ns.name}::{/foreach}XMLUtils::get{$class.name|uppercase(1)}(e0, target, elementName);
 \}{if class.xml.haveChildClasses == 1}
 
-/// Get object vector for polymorphic type {$class.name}.
 template<>
 void getObjVector<{ref getFQName},
     {ref getFQName}*>(TiXmlElement* e0, 
@@ -154,6 +153,7 @@ void getObjVector<{ref getFQName},
     TiXmlElement* ce0 = e0->FirstChildElement();
     while (ce0 != 0)
     \{
+        // Iterate over vector entries.
         std::string en0(ce0->Value());
         if (en0 == childElementName)
         \{{if class.isAbstract != 1}
@@ -182,6 +182,72 @@ void getObjVector<{ref getFQName},
             throw Ionflux::ObjectBase::IFError(status.str());
         \}
         ce0 = ce0->NextSiblingElement();
+    \}
+\}
+
+template<>
+void getObjMap<{ref getFQName},
+    {ref getFQName}*>(TiXmlElement* e0, 
+    std::map<std::string, {ref getFQName}*>& target, 
+    const std::string& elementName, 
+    const std::string& childElementName)
+\{
+    checkElementNameOrError(e0, elementName, "getObjMap<{$class.name}>");
+    TiXmlElement* ee0 = e0->FirstChildElement();
+    while (ee0 != 0)
+    \{
+        // Iterate over map entries.
+        std::string en0(ee0->Value());
+        if (en0 == "entry")
+        \{
+            std::string k = getAttributeValue(ee0, "key", false);
+            TiXmlElement* ce0 = ee0->FirstChildElement();
+            if (ce0 == 0)
+            \{
+                std::ostringstream status;
+                status << "[getObjMap<{$class.name}>] "
+                    << "Missing value for key: '" << k << "'";
+                throw Ionflux::ObjectBase::IFError(status.str());
+            \}
+            std::string en1(ce0->Value());
+            {ref getFQName}* co0 = 0;
+            // Add an object of the appropriate class. 
+            if (en1 == childElementName)
+            \{{if class.isAbstract != 1}
+                // default ({$class.name})
+                co0 = {ref getFQName}::create();
+                getObject0(ce0, *co0, childElementName);{else}
+                throw Ionflux::ObjectBase::IFError(
+                    "[getObjVector<{$class.name}>] "
+                    "Cannot create instance of abstract class.");{/if}
+            \}{foreach cc in class.xml.childClass} else
+            if (en1 == 
+                {$cc.name}::XML_ELEMENT_NAME)
+            \{
+                // {$cc.name}
+                {$cc.name}* co1 = 
+                    {$cc.name}::create();
+                getObject0(ce0, *co0, childElementName);
+                co0 = co1;
+            \}{/foreach} else
+            \{
+                std::ostringstream status;
+                status << "[getObjMap<{$class.name}>] "
+                    << "Unexpected child element name: '" << en1 << "'";
+                throw Ionflux::ObjectBase::IFError(status.str());
+            \}
+            typename std::map<std::string, 
+                {ref getFQName}*>::iterator j = target.find(k);
+            if (j != target.end())
+            \{
+                std::ostringstream status;
+                status << "[getObjMap<{$class.name}>] Duplicate key: '" 
+                    << k << "'";
+                throw Ionflux::ObjectBase::IFError(status.str());
+            \}
+            target[k] = co0;
+        \}
+        ee0 = ee0->NextSiblingElement();
     \}
 \}{/if}
 
