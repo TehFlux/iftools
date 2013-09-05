@@ -51,6 +51,7 @@ Critical stuff
     . create functions
   > generate serialization code for vector/map style properties
   > install using SCons
+  > add the proxyTarget feature to other property styles (done for vector)
 
 + Create memory management event handler for debugging
   > object lifetime statistics
