@@ -3,11 +3,7 @@
 %include <std_vector.i>
 %module IFObjectBase
 %{
-#include "ifobject/IFObject.hpp"
-#include "ifobject/utils.hpp"
-#include "ifobject/types.hpp"
-#include "ifobject/IFError.hpp"
-#include "ifobject/IFCache.hpp"
+#include "ifobject/ifobjectbase.hpp"
 #include <assert.h>
 %}
 
@@ -165,6 +161,33 @@ std::string appendDirSeparator(const std::string& path,
 	unsigned char separator = DIR_SEPARATOR);
 std::string prependDirSeparator(const std::string& path, 
 	unsigned char separator = DIR_SEPARATOR);
+
+// xmlutils.hpp
+
+namespace XMLUtils
+{
+
+std::string getAttrValue(const std::string& fileName, 
+    const std::string& elementName, const std::string& elementID, 
+    const std::string& attrName);
+void getAttrValues(const std::string& fileName, 
+    const std::string& elementName, const std::string& attrName, 
+    const Ionflux::ObjectBase::StringVector& elementIDs, 
+    Ionflux::ObjectBase::StringVector& target);
+std::string xmlEscape(const std::string& bytes);
+void setFromXML(const std::string& data, 
+    Ionflux::ObjectBase::IntVector& v);
+std::string getXML0(const Ionflux::ObjectBase::IntVector& v, 
+    const std::string& name = "", unsigned int indentLevel = 0, 
+    const std::string& attributes = "");
+std::string getXML0(const Ionflux::ObjectBase::UIntVector& v, 
+    const std::string& name = "", unsigned int indentLevel = 0, 
+    const std::string& attributes = "");
+std::string getXML0(const Ionflux::ObjectBase::DoubleVector& v, 
+    const std::string& name = "", unsigned int indentLevel = 0, 
+    const std::string& attributes = "");
+
+}
 
 }
 
