@@ -76,9 +76,11 @@ namespace XMLUtils
             a0 = Ionflux::ObjectBase::XMLUtils::getAttributeValue(
                 ce0, "d", true);
             if (a0.size() > 0)
-                target.set{$prop.name|uppercase(1)}(::strtol(a0.c_str(), 0, 10));{/if}{if ( prop.valueType == "object" ) && ( prop.xml.createFunc != "" )}
-            {$prop.type} co0 = {$prop.xml.createFunc}(ce0, en0);
-            target.set{$prop.name|uppercase(1)}(co0);{/if}{if prop.style == "vector"}{if prop.element.valueType == "object"}
+                target.set{$prop.name|uppercase(1)}(::strtol(a0.c_str(), 0, 10));{/if}{if prop.valueType == "object"}{if prop.xml.createFunc != ""}
+            {$prop.type} co0 = 
+                {$prop.xml.createFunc}(ce0, en0);
+            target.set{$prop.name|uppercase(1)}(co0);{else}
+\#error [xmlio] Required option 'xml.createFunc' missing on property '{$class.name}::{$prop.name}'.{/if}{/if}{if prop.style == "vector"}{if prop.element.valueType == "object"}
             std::vector<{$prop.element.type}> pv0;
             Ionflux::ObjectBase::XMLUtils::getObjVector<
                     {$prop.element.type|replace('*', '')}, 
@@ -160,7 +162,7 @@ void getObjVector<{ref getFQName},
             // default ({$class.name})
             {ref getFQName}* co0 = 
                 {ref getFQName}::create();
-            getObject0(ce0, *co0, childElementName);
+            getObject0(ce0, *co0, en0);
             target.push_back(co0);{else}
             throw Ionflux::ObjectBase::IFError(
                 "[getObjVector<{$class.name}>] "
@@ -172,7 +174,7 @@ void getObjVector<{ref getFQName},
             // {$cc.name}
             {$cc.name}* co0 = 
                 {$cc.name}::create();
-            getObject0(ce0, *co0, childElementName);
+            getObject0(ce0, *co0, en0);
             target.push_back(co0);
         \}{/foreach} else
         \{

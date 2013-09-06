@@ -27,9 +27,13 @@
 	d0 << bc0;{$xcFirst = 0}{/if}{foreach base in class.base.other}{if base.xml.enabled == "true"}
 	{$bc.name}::getXMLChildData(bc0, indentLevel);
 	d0 << {if xcFirst == 0}"\\n" << {/if}bc0;{$xcFirst = 0}{/if}{/foreach}{if haveXMLChildElements == 1}
-	std::string iws0 = Ionflux::ObjectBase::getIndent(indentLevel);{foreach prop in property.protected}{if prop.xml.child.name != ""}{if xcFirst == 0}
+	std::string iws0 = Ionflux::ObjectBase::getIndent(indentLevel);
+	bool haveBCData = false;{if haveXMLBase == 1}
 	if (d0.str().size() > 0)
-	    d0 << "\\n";{/if}{ref getXMLPropertyChildElement}{$xcFirst = 0}{/if}{/foreach}{/if}
+	    haveBCData = true;{/if}
+	bool xcFirst = true;{foreach prop in property.protected}{if prop.xml.child.name != ""}{if prop.valueType != "object"}
+	if (!xcFirst || haveBCData)
+	    d0 << "\\n";{/if}{ref getXMLPropertyChildElement}{/if}{/foreach}{/if}
 	target = d0.str();{else}
 {swrap 75 "    "}{$function.xml.childData.impl}{/swrap}{/if}
 \}{/section}
