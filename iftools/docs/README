@@ -8,8 +8,7 @@ Readme
 
 [NOTE 2013-01-02] The Ionflux Tools Class Library contains mostly legacy 
 code that will be integrated into the Ionflux Object Base System or moved to 
-other libraries. The most important features are the configuration file system 
-and the template engine, which are still extensively used in other projects.
+other libraries.
 
 --------------------------------------------------------------------------------
 
