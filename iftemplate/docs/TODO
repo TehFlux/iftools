@@ -15,24 +15,19 @@ Up next
 New
 --------------------------------------------------------------------------------
 
-+ Scan template modules/files for mismatched tags and report exactly which 
-  tag is mismatched. 
 
-+ Add comment tags.
 
 --------------------------------------------------------------------------------
 Critical stuff
 --------------------------------------------------------------------------------
 
-+ Add proper bootstrapping.
-  (see also ifobject)
++ Scan template modules/files for mismatched tags and report exactly which 
+  tag is mismatched. 
 
-+ iftpl0 seems to report an "Option not recognized" error (related to CLArgs) 
-  if there is an error in a template. That does not seem right.
++ Add comment tags.
 
 + Testing
   > ifdate
-  > Modular templates
   > StringFilter
   > StringManipulator (and subclasses)
   > TimeZone

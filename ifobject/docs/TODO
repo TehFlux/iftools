@@ -21,24 +21,11 @@ New
 Critical stuff
 --------------------------------------------------------------------------------
 
-+ Testing
-  > XML I/O
-    . polymorphic types
-    . maps, custom generator/get functions
-
-+ ifclassgen0 should be moved to iftemplate, since it depends on both 
-  ifobject and iftemplate.
-
-+ XML I/O
-  > Class templates
-    . import statements should be moved to the modules in which the imported 
-      functions are actually referenced
-  > Integrate new SCons builders into ifobject (from geoutils)
-  > Template variables should be moved to appropriate nodes:
-    haveXMLAttributes -> class.xml.haveAttributes, etc.
-
-+ Add versions of the template functions from utils.hpp that accept a 
-  sourceObj parameter for error reporting in objectutils.hpp.
++ Merge features from FMBase
+  > property system
+    . support storing object values as an ID (useful for serialization)
+    . support vectors and dictionaries of values as a value type
+  > Python context
 
 + use iftemplate instead of iftools
   > testing
@@ -68,6 +55,21 @@ Critical stuff
 Important stuff
 --------------------------------------------------------------------------------
 
++ Add versions of the template functions from utils.hpp that accept a 
+  sourceObj parameter for error reporting in objectutils.hpp.
+
++ Testing
+  > XML I/O
+    . polymorphic types
+    . maps, custom generator/get functions
+
++ XML I/O
+  > Class templates
+    . import statements should be moved to the modules in which the imported 
+      functions are actually referenced
+  > Template variables should be moved to appropriate nodes:
+    haveXMLAttributes -> class.xml.haveAttributes, etc.
+
 + Add a more generalized serialization framework.
   > binary, XML, JSON
   > Serialization functions for vectors and maps (with string key)
@@ -77,11 +79,6 @@ Important stuff
 
 + Class templates
   > vector style properties: add support for set<Element>(index, value)
-
-+ Merge features from FMBase
-  > property system
-    . support storing object values as an ID (useful for serialization)
-    . support vectors and dictionaries of values as a value type
 
 + Merge automatic database binding generation (from XTW)
   > generate accessor functions for relationships automatically

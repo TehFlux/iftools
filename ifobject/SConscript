@@ -36,6 +36,7 @@ if (not os.path.isfile('site_scons/local_config.py')):
 import local_config as lc
 from sources import *
 from builders import buildSource, buildClassInterface, buildInterface
+from builders import buildClassXMLIO, buildXMLIO
 
 Help("""
 Type 'scons' to build the default targets.
@@ -159,59 +160,6 @@ if (not config.CheckLibWithHeader("python" + lc.pythonVersion,
     print "***************************************************"
     buildPyModule = False
 
-if (not bootstrap):
-    buildIFClassgen = True
-    if (not config.CheckLib("iftools", language = 'C++', autoadd = 0)):
-        print "*************************************************"
-        print "iftools not found - ifclassgen will NOT be built!"
-        print "*************************************************"
-        buildIFClassgen = False
-    else:
-        missingDeps = []
-        if (not config.CheckLib("pcre", autoadd = 0)):
-            missingDeps += ['pcre']
-        
-        if (len(missingDeps) > 0):
-            print "*************************************************************"
-            print "ifclassgen cannot be built because the following dependencies"
-            print "were not found:"
-            print " "
-            for it in missingDeps:
-                print "  " + it
-            print " "
-            print "*************************************************************"
-            buildIFClassgen = False
-        else:
-            env.Append(LIBS = ['pcre'])
-    
-    buildIFClassgen0 = True
-    if (not config.CheckLib("iftemplate", language = 'C++', autoadd = 0)):
-        print "*****************************************************"
-        print "iftemplate not found - ifclassgen0 will NOT be built!"
-        print "*****************************************************"
-        buildIFClassgen0 = False
-    else:
-        missingDeps = []
-        if (not config.CheckLib("ifobject", autoadd = 0)):
-            missingDeps += ['ifobject']
-        
-        if (len(missingDeps) > 0):
-            print "**************************************************************"
-            print "ifclassgen0 cannot be built because the following dependencies"
-            print "were not found:"
-            print " "
-            for it in missingDeps:
-                print "  " + it
-            print " "
-            print "**************************************************************"
-            buildIFClassgen0 = False
-else:
-    print "******************************************************"
-    print "Not building class generators, bootstrap mode enabled."
-    print "******************************************************"
-    buildIFClassgen = False
-    buildIFClassgen0 = False
-
 haveIFClassgen = True
 if (not config.CheckProgram("ifclassgen")):
     haveIFClassgen = False
@@ -236,35 +184,25 @@ env = config.Finish()
 
 env.MergeFlags(['-Wall', '-Wno-deprecated', '-O2'])
 
+# configure builders
 sourceBuilder = Builder(action = buildSource)
 classInterfaceBuilder = Builder(action = buildClassInterface)
 interfaceBuilder = Builder(action = buildInterface)
 swigPythonBuilder = Builder(action = "swig -c++ -python "
     + "-outdir swig/python -o $TARGET $SOURCE")
+classXMLIOBuilder = Builder(action = buildClassXMLIO)
+xmlIOBuilder = Builder(action = buildXMLIO)
 
-env.Append(BUILDERS = { 'Source' : sourceBuilder, 
+env.Append(BUILDERS = { 
+    'Source' : sourceBuilder, 
     'ClassInterface' : classInterfaceBuilder, 
     'Interface' : interfaceBuilder, 
-    'SWIGPython' : swigPythonBuilder})
+    'SWIGPython' : swigPythonBuilder, 
+    'ClassXMLIO' : classXMLIOBuilder, 
+    'XMLIO' : xmlIOBuilder
+})
 
 allTargets = []
-
-# ifclassgen class generator
-ifclassgenBin = env.Program('bin/ifclassgen', 
-	['build/ifclassgen.cpp'], 
-	LIBS = ['iftools'])
-
-if (buildIFClassgen):
-    allTargets += [ifclassgenBin]
-    haveIFClassgen = True
-
-# ifclassgen0 class generator
-ifclassgen0Bin = env.Program('bin/ifclassgen0', 
-	['build/ifclassgen0.cpp'], 
-	LIBS = ['iftemplate', 'ifobject'])
-
-if (buildIFClassgen0):
-    allTargets += [ifclassgen0Bin]
 
 if (not bootstrap):
     # Source files.
@@ -357,10 +295,6 @@ allSources = ifobjectLibSources
 
 # install targets
 installBinTargets = [targetBins]
-if (buildIFClassgen):
-    installBinTargets += [ifclassgenBin]
-if (buildIFClassgen0):
-    installBinTargets += [ifclassgen0Bin]
 
 installHeaders = env.Install(prefix + '/include/' + lc.baseName, allHeaders)
 installLibs = env.Install(prefix + '/lib', targetLibs)

@@ -36,6 +36,7 @@ if (not os.path.isfile('site_scons/local_config.py')):
 import local_config as lc
 from sources import *
 from builders import buildSource, buildClassInterface, buildInterface
+from builders import buildClassXMLIO, buildXMLIO
 
 Help("""
 Type 'scons' to build the default targets.
@@ -189,11 +190,17 @@ for it in iftemplateEnv['CPPPATH']:
     swigIncludes += ('-I' + it + ' ')
 swigPythonBuilder = Builder(action = "swig -c++ -python "
     + swigIncludes + "-outdir swig/python -o $TARGET $SOURCE")
+classXMLIOBuilder = Builder(action = buildClassXMLIO)
+xmlIOBuilder = Builder(action = buildXMLIO)
 
-iftemplateEnv.Append(BUILDERS = { 'Source' : sourceBuilder, 
+iftemplateEnv.Append(BUILDERS = { 
+    'Source' : sourceBuilder, 
     'ClassInterface' : classInterfaceBuilder, 
     'Interface' : interfaceBuilder, 
-    'SWIGPython' : swigPythonBuilder })
+    'SWIGPython' : swigPythonBuilder, 
+    'ClassXMLIO' : classXMLIOBuilder, 
+    'XMLIO' : xmlIOBuilder
+})
 
 allClasses = iftemplateLibClasses
 allTargets = []
@@ -256,9 +263,12 @@ iftplBin = iftemplateEnv.Program('bin/iftpl0',
 ifdateBin = iftemplateEnv.Program('bin/ifdate', 
 	['build/ifdate.cpp'], 
 	LIBS = ['ifobject', 'iftemplate'])
+ifclassgen0Bin = iftemplateEnv.Program('bin/ifclassgen0', 
+	['build/ifclassgen0.cpp'], 
+	LIBS = ['ifobject', 'iftemplate'])
 
 # programs.
-targetBins = [ iftplBin, ifdateBin ]
+targetBins = [ iftplBin, ifdateBin, ifclassgen0Bin ]
 #targetBins = []
 
 # tests

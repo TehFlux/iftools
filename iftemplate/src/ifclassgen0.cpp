@@ -1,9 +1,9 @@
 /* ==========================================================================
- * Ionflux Object Base System
- * Copyright © 2006 Joern P. Meier
+ * IFTemplate - Ionflux Template Processor
+ * Copyright © 2012-2013 Jörn P. Meier
  * mail@ionflux.org
  * --------------------------------------------------------------------------
- * ifclassgen.cpp                         Class generator.
+ * ifclassgen0.cpp                         Class generator.
  * ==========================================================================
  *
  * This file is part of Ionflux's Stuff.
@@ -29,21 +29,38 @@
 #include <sstream>
 #include <fstream>
 #include <iomanip>
-#include "ionflux/CLArgs.hpp"
-#include "ionflux/ConfigTree.hpp"
-#include "ionflux/Template.hpp"
-#include "ionflux/File.hpp"
-#include "ionflux/DateTime.hpp"
+#include "ifobject/utils.hpp"
+#include "iftemplate/utils.hpp"
+#include "iftemplate/CLArgs.hpp"
+#include "iftemplate/ConfigTree.hpp"
+#include "iftemplate/Template.hpp"
+#include "iftemplate/File.hpp"
+#include "iftemplate/DateTime.hpp"
+#include "iftemplate/Node.hpp"
+#include "iftemplate/TemplateRepository.hpp"
 
 using namespace std;
-using namespace Ionflux::Tools;
+using namespace Ionflux::ObjectBase;
+using namespace Ionflux::Template;
+
+/// Application version.
+const std::string APP_VERSION = "1.0.0";
+
+/// Template module: class header.
+const std::string TEMPLATE_MODULE_CLASS_HEADER = "class.header.header_main";
+/// Template module: class implementation.
+const std::string TEMPLATE_MODULE_CLASS_IMPL = "class.impl.impl_main";
+/// Template module: event class configuration.
+const std::string TEMPLATE_MODULE_EVENT_CONF = "event_conf";
+/// Template module: signal proxy class configuration.
+const std::string TEMPLATE_MODULE_SIGNAL_PROXY_CONF = "signal_proxy_conf";
 
 void printHelp()
 {
 	cerr << "Usage: ifclassgen [options] <class name>\n"
 		"Options:\n"
-		"  -t, --templatedir <dir>        Class template directory\n"
-		"                                 (default: template/class).\n"
+		"  -t, --templatepath <dirs>      Template include path\n"
+		"                                 (default: template/ifobject).\n"
 		"  -c, --configdir <dir>          Class configuration directory\n"
 		"                                 (default: conf/class).\n"
 		"  -m  --merge <list>             Whitespace separated list of\n"
@@ -67,8 +84,9 @@ void printHelp()
 
 void printVersion()
 {
-	cerr << "Ionflux Object Base System class generator 0.0.1" << endl
-		<< "Copyright (c) 2006 Joern P. Meier <mail@ionflux.org>" << endl
+	cerr << "Ionflux Object Base System class generator " << APP_VERSION 
+	        << endl
+		<< "Copyright (c) 2013 Joern P. Meier <mail@ionflux.org>" << endl
 		<< "This is free software; see the source for copying conditions. " 
 		   "There is NO" << endl
 		<< "warranty; not even for MERCHANTABILITY or FITNESS FOR A "
@@ -77,13 +95,14 @@ void printVersion()
 
 int main(int argc, char* argv[])
 {
+    // Handle command line arguments.
 	CLArgs args;
 	args.addAcceptableOption("h", false);
 	args.addAcceptableOption("help", false);
 	args.addAcceptableOption("v", false);
 	args.addAcceptableOption("version", false);
 	args.addAcceptableOption("t", true);
-	args.addAcceptableOption("templatedir", true);
+	args.addAcceptableOption("templatepath", true);
 	args.addAcceptableOption("c", true);
 	args.addAcceptableOption("configdir", true);
 	args.addAcceptableOption("i", true);
@@ -126,12 +145,12 @@ int main(int argc, char* argv[])
 	}
 	CLOption* tplOpt = args.getOption("t");
 	if (tplOpt == 0)
-		tplOpt = args.getOption("templatedir");
-	string tplDir;
+		tplOpt = args.getOption("templatepath");
+	string tplPath;
 	if (tplOpt != 0)
-		tplDir = tplOpt->value;
+		tplPath = tplOpt->value;
 	else
-		tplDir = "template/class";
+		tplPath = "template";
 	CLOption* confOpt = args.getOption("c");
 	if (confOpt == 0)
 		confOpt = args.getOption("confdir");
@@ -182,7 +201,9 @@ int main(int argc, char* argv[])
 		signalProxyTplFile = signalProxyTplOpt->value;
 	else
 		signalProxyTplFile = "template/signalproxy.conf.tpl";
-	cerr << "Ionflux Object Base system class generator 0.0.1" << endl;
+	// Basic setup.
+	cerr << "Ionflux Object Base system class generator " << APP_VERSION 
+	    << endl;
 	ConfigTree config;
 	File currentFile;
 	ostringstream status;
@@ -234,32 +255,15 @@ int main(int argc, char* argv[])
 	DateTime now;
 	config["___datetime"].setData(now.getTimestamp());
 	config["___rfc_datetime"].setData(now.getRFCTimestamp());
-	// Prepare templates.
-	status.str("");
-	status << appendDirSeparator(tplDir) << "Class.hpp.tpl";
-	string classHeaderTplFile = status.str();
-	currentFile.setFullName(classHeaderTplFile);
-	if (!currentFile.isValid())
-	{
-		cerr << "ERROR: Class header template file '" << classHeaderTplFile 
-			<< "' not found." << endl;
-		return -1;
-	}
-	string headerTpl = readFile(classHeaderTplFile);
-	status.str("");
-	status << appendDirSeparator(tplDir) << "Class.cpp.tpl";
-	string classImplTplFile = status.str();
-	currentFile.setFullName(classImplTplFile);
-	if (!currentFile.isValid())
-	{
-		cerr << "ERROR: Class implementation template file '" 
-			<< classImplTplFile << "' not found." << endl;
-		return -1;
-	}
-	string implTpl = readFile(classImplTplFile);
-	// Generate output.
+	// Prepare template repository.
+	TemplateRepository* tplRep = TemplateRepository::create();
+	tplRep->addTemplatePaths(tplPath);
+	tplRep->update();
+	// Generate class header and implementation.
 	Template tpl;
-	string header = tpl.process(headerTpl, &configRoot);
+	tpl.setRepository(tplRep);
+	string header = tpl.processModule(TEMPLATE_MODULE_CLASS_HEADER, 
+	    &configRoot);
 	currentFile.setFullName(includeDir);
 	if (!currentFile.isDir())
 	{
@@ -276,7 +280,7 @@ int main(int argc, char* argv[])
 	cerr << "DEBUG: header:" << endl;
 	cerr << header << endl;
 	// ----- DEBUG ----- */
-	string impl = tpl.process(implTpl, &configRoot);
+	string impl = tpl.processModule(TEMPLATE_MODULE_CLASS_IMPL, &configRoot);
 	currentFile.setFullName(srcDir);
 	if (!currentFile.isDir())
 	{
@@ -296,14 +300,6 @@ int main(int argc, char* argv[])
 	// Generate event classes.
 	if (generateEvents)
 	{
-		currentFile.setFullName(eventTplFile);
-		if (!currentFile.isValid())
-		{
-			cerr << "ERROR: Event configuration template file '" 
-				<< eventTplFile << "' not found." << endl;
-			return -1;
-		}
-		string eventConfTpl = readFile(eventTplFile);
 		Node& eventNode = configRoot["event"];
 		Node* currentEvent = 0;
 		unsigned int numEvents = eventNode.getNumChildren();
@@ -323,7 +319,8 @@ int main(int argc, char* argv[])
 				eventConfNode.merge(*currentEvent);
 				/* Create additional configuration using the global 
 				   configuration and the event configuration. */
-				string eventConf = tpl.process(eventConfTpl, &eventConfNode);
+				string eventConf = tpl.processModule(
+				    TEMPLATE_MODULE_EVENT_CONF, &eventConfNode);
 				ConfigTree processedEventConf;
 				processedEventConf.parseConfig(eventConf);
 				eventConfNode.merge(*processedEventConf.getRoot());
@@ -344,7 +341,8 @@ int main(int argc, char* argv[])
 				}
 				cerr << "  Creating event class '" << eventClassName << "'..." 
 					<< endl;
-				string eventHeader = tpl.process(headerTpl, &eventConfNode);
+				string eventHeader = tpl.processModule(
+				    TEMPLATE_MODULE_CLASS_HEADER, &eventConfNode);
 				status.str("");
 				status << appendDirSeparator(includeDir) << eventClassName 
 					<< ".hpp";
@@ -352,7 +350,8 @@ int main(int argc, char* argv[])
 					<< "'... ";
 				writeFile(status.str(), eventHeader, 'w');
 				cerr << "done." << endl;
-				string eventImpl = tpl.process(implTpl, &eventConfNode);
+				string eventImpl = tpl.processModule(
+				    TEMPLATE_MODULE_CLASS_IMPL, &eventConfNode);
 				status.str("");
 				status << appendDirSeparator(srcDir) << eventClassName 
 					<< ".cpp";
@@ -368,14 +367,6 @@ int main(int argc, char* argv[])
 	// Generate signal proxy classes.
 	if (generateSignalProxies)
 	{
-		currentFile.setFullName(signalProxyTplFile);
-		if (!currentFile.isValid())
-		{
-			cerr << "ERROR: Signal proxy configuration template file '" 
-				<< signalProxyTplFile << "' not found." << endl;
-			return -1;
-		}
-		string signalProxyConfTpl = readFile(signalProxyTplFile);
 		Node& signalNode = configRoot["signal"];
 		Node* currentSignal = 0;
 		unsigned int numSignals = signalNode.getNumChildren();
@@ -396,7 +387,8 @@ int main(int argc, char* argv[])
 				signalProxyConfNode.merge(*currentSignal);
 				/* Create additional configuration using the global 
 				   configuration and the signal proxy configuration. */
-				string signalProxyConf = tpl.process(signalProxyConfTpl,
+				string signalProxyConf = tpl.processModule(
+				    TEMPLATE_MODULE_SIGNAL_PROXY_CONF, 
 					&signalProxyConfNode);
 				ConfigTree processedSignalProxyConf;
 				processedSignalProxyConf.parseConfig(signalProxyConf);
@@ -418,8 +410,8 @@ int main(int argc, char* argv[])
 				}
 				cerr << "  Creating signal proxy class '" 
 					<< signalProxyClassName << "'..." << endl;
-				string signalProxyHeader = tpl.process(headerTpl,
-					&signalProxyConfNode);
+				string signalProxyHeader = tpl.processModule(
+				    TEMPLATE_MODULE_CLASS_HEADER, &signalProxyConfNode);
 				status.str("");
 				status << appendDirSeparator(includeDir) 
 					<< signalProxyClassName << ".hpp";
@@ -427,8 +419,8 @@ int main(int argc, char* argv[])
 					<< "'... ";
 				writeFile(status.str(), signalProxyHeader, 'w');
 				cerr << "done." << endl;
-				string signalProxyImpl = tpl.process(implTpl,
-					&signalProxyConfNode);
+				string signalProxyImpl = tpl.processModule(
+				    TEMPLATE_MODULE_CLASS_IMPL, &signalProxyConfNode);
 				status.str("");
 				status << appendDirSeparator(srcDir) << signalProxyClassName 
 					<< ".cpp";
