@@ -36,4 +36,13 @@
 	    d0 << "\\n";{/if}{ref getXMLPropertyChildElement}{/if}{/foreach}{/if}
 	target = d0.str();{else}
 {swrap 75 "    "}{$function.xml.childData.impl}{/swrap}{/if}
+\}
+
+{swrap 75}void {$class.name}::loadFromXMLFile(std::string& fileName){/swrap}
+\{{if enableGuards == 1}
+	Ionflux::ObjectBase::IFGuard functionGuard(guardMutex);{/if}{if function.xml.loadFromFile.impl == ""}
+	std::string data;
+	Ionflux::ObjectBase::readFile(fileName, data);
+	{foreach ns in namespace}{$ns.name}::{/foreach}XMLUtils::get{$class.name|uppercase(1)}(data, *this);{else}
+{swrap 75 "    "}{$function.xml.loadFromFile.impl}{/swrap}{/if}
 \}{/section}

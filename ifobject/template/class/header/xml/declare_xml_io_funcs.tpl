@@ -23,4 +23,12 @@
 		 * \\param target Where to store the XML data.
 		 * \\param indentLevel Indentation level.
 		 */
-{swrap 75 "		"}void getXMLChildData(std::string& target, unsigned int indentLevel = 0) const;{/swrap}{/section}
+{swrap 75 "		"}void getXMLChildData(std::string& target, unsigned int indentLevel = 0) const;{/swrap}
+        
+        /** Load from XML file.
+		 *
+		 * Initialize the object from an XML file.
+		 *
+		 * \\param fileName file name
+		 */
+{swrap 75 "		"}void loadFromXMLFile(std::string& FileName);{/swrap}{/section}
