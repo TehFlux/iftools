@@ -8,7 +8,8 @@
     return {$prop.proxy.target}->add{$prop.element.name|uppercase(1)}();{else}{if prop.check.maxSize != ""}
 	if ({$prop.name}.size() >= {$prop.check.maxSize})
 	    throw {$prop.check.sizeError};{/if}
-	{if prop.element.addType == ""}{$prop.element.type}{else}{$prop.element.addType}{/if} o0 = {$prop.element.createExpr};
+	{if prop.element.addType == ""}{$prop.element.type}{else}{$prop.element.addType}{/if} o0{if prop.element.createExpr != ""} = {$prop.element.createExpr};{else};
+\#error [create] Required option 'createExpr' not set on property element.{/if}
 	add{$prop.element.name|uppercase(1)}(o0);
 	return o0;{/if}
 \}

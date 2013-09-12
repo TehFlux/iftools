@@ -31,6 +31,8 @@ Critical stuff
   > testing
 
 + Class templates
+  > output a preprocessor error if a required option is missing
+    . even better would be a template error tag (see iftemplate)
   > support C++ templates
   > make sure they work with the new iftpl from iftemplate
   > document features

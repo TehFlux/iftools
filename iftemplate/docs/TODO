@@ -24,7 +24,9 @@ Critical stuff
 + Scan template modules/files for mismatched tags and report exactly which 
   tag is mismatched. 
 
-+ Add comment tags.
++ Add tags.
+  > comment
+  > error
 
 + Testing
   > ifdate
