@@ -238,7 +238,7 @@ void getObjMap<{ref getFQName},
                     << "Unexpected child element name: '" << en1 << "'";
                 throw Ionflux::ObjectBase::IFError(status.str());
             \}
-            typename std::map<std::string, 
+            std::map<std::string, 
                 {ref getFQName}*>::iterator j = target.find(k);
             if (j != target.end())
             \{
