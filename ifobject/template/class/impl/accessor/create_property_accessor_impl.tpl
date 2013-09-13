@@ -180,7 +180,8 @@
 
 {swrap 75}void {$class.name}::set{$prop.name|uppercase(1)}({$prop.setFromType} new{$prop.name|uppercase(1)}){/swrap}
 \{{if enableGuards == 1}
-	IFGuard propertyGuard(guardMutex);{/if}{if prop.impl.set == ""}{if prop.managed == "true"}
+	IFGuard propertyGuard(guardMutex);{/if}{if prop.impl.preSet != ""}
+{$prop.impl.preSet|swrap(75, "	")}{/if}{if prop.impl.set == ""}{if prop.managed == "true"}
 	if ({$prop.name} == new{$prop.name|uppercase(1)})
 		return;
     if (new{$prop.name|uppercase(1)} != 0)
@@ -190,13 +191,18 @@
 	{$prop.name} = new{$prop.name|uppercase(1)};{else}
 	if (persistent != 0)
 		{if haveBasePersistent == 0}persistent{else}getPersistent(){/if}->{$prop.name} = new{$prop.name|uppercase(1)};{/if}{else}
-{$prop.impl.set|swrap(75, "	")}{/if}
+{$prop.impl.set|swrap(75, "	")}{/if}{if prop.impl.postSet != ""}
+{$prop.impl.postSet|swrap(75, "	")}{/if}
 \}{/if}
 
 {swrap 75}{$prop.type} {$class.name}::get{$prop.name|uppercase(1)}() const{/swrap}
 \{{if enableGuards == 1}
-	IFGuard propertyGuard(guardMutex);{/if}
-{if prop.impl.get == ""}{if prop.persistent != "true"}	return {$prop.name};{else}	if (persistent != 0)
-		return {if haveBasePersistent == 0}persistent{else}getPersistent(){/if}->{$prop.name};
-	return {$prop.notSetValue};{/if}{else}{$prop.impl.get|swrap(75, "	")}{/if}
+	IFGuard propertyGuard(guardMutex);{/if}{if prop.impl.preGet != ""}
+{$prop.impl.preGet|swrap(75, "	")}{/if}{if prop.impl.get == ""}{if prop.persistent != "true"}
+    return {$prop.name};{else}	
+    if (persistent != 0)
+        return {if haveBasePersistent == 0}persistent{else}getPersistent(){/if}->{$prop.name};
+	return {$prop.notSetValue};{/if}{else}
+{$prop.impl.get|swrap(75, "	")}{/if}{if prop.impl.postGet != ""}
+{$prop.impl.postGet|swrap(75, "	")}{/if}
 \}{/if}{/if}{/section}

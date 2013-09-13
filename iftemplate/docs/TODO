@@ -15,7 +15,9 @@ Up next
 New
 --------------------------------------------------------------------------------
 
-
++ Curly braces inside verbatim sections should be completely ignored.
+  . Maybe escape characters should also be ignored.
+  . Allow escaping of the verbatim section delimiters.
 
 --------------------------------------------------------------------------------
 Critical stuff
