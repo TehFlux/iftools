@@ -19,7 +19,9 @@
 		    throw {if class.persistence.errorClass != ""}{$class.persistence.errorClass}{else}PersistenceError{/if}("Database not set, "
 		        "but backend object not null!");
     \}{/if}{if function.copy.impl != ""}
-{swrap 75 "    "}{$function.copy.impl}{/swrap}{else}{foreach prop in property.protected}{if ( prop.copy == "true" ) && ( prop.persistent != "true" )}
+{swrap 75 "    "}{$function.copy.impl}{/swrap}{else}
+if (this == &other)
+    return *this;{foreach prop in property.protected}{if ( prop.copy == "true" ) && ( prop.persistent != "true" )}
 set{$prop.name|uppercase(1)}(other.get{$prop.name|uppercase(1)}());{/if}{/foreach}{/if}
 	return *this;
 \}{if abstractClass == 0}
