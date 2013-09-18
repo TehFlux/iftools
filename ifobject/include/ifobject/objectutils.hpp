@@ -42,7 +42,7 @@ namespace ObjectBase
 
 /// Checked allocation.
 template<class T>
-T* create(Ionflux::ObjectBase::IFObject* sourceObj, 
+T* create(const Ionflux::ObjectBase::IFObject* sourceObj, 
     const std::string& source = "", const std::string& objName = "object")
 {
     T* nt = new T();
@@ -57,7 +57,7 @@ T* create(Ionflux::ObjectBase::IFObject* sourceObj,
 
 /// Null pointer check.
 template<class T>
-T* nullPointerCheck(T* p, Ionflux::ObjectBase::IFObject* sourceObj, 
+T* nullPointerCheck(T* p, const Ionflux::ObjectBase::IFObject* sourceObj, 
     const std::string& source = "", const std::string& objName = "Pointer")
 {
     if (p == 0)
@@ -71,7 +71,8 @@ T* nullPointerCheck(T* p, Ionflux::ObjectBase::IFObject* sourceObj,
 
 /// Checked dynamic cast.
 template<class T0, class T1>
-T0* checkedDynamicCast(T1* p, Ionflux::ObjectBase::IFObject* sourceObj, 
+T0* checkedDynamicCast(T1* p, 
+    const Ionflux::ObjectBase::IFObject* sourceObj, 
     const std::string& source = "", const std::string& objName = "pointer", 
     const std::string& expectedType = "<unknown>")
 {

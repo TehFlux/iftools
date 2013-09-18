@@ -19,7 +19,7 @@
 	IFGuard propertyGuard(guardMutex);{/if}{if prop.proxy.target != ""}{if prop.proxy.nullError != ""}
     if ({$prop.proxy.target} == 0)
         throw {$prop.proxy.nullError};{/if}
-    return {$prop.proxy.target}->add{$prop.element.name|uppercase(1)}(new{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if});{else}
+    return {$prop.proxy.target}->add{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if}(new{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if});{else}
 	for (std::vector<{$prop.element.type}>::const_iterator i = new{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if}.begin(); 
 	    i != new{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if}.end(); i++)
 	    add{$prop.element.name|uppercase(1)}(*i);{/if}
@@ -30,7 +30,7 @@
 	IFGuard propertyGuard(guardMutex);{/if}{if prop.proxy.target != ""}{if prop.proxy.nullError != ""}
     if ({$prop.proxy.target} == 0)
         throw {$prop.proxy.nullError};{/if}
-    return {$prop.proxy.target}->add{$prop.element.name|uppercase(1)}(new{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if});{else}
+    return {$prop.proxy.target}->add{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if}(new{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if}->{$prop.proxy.target});{else}
 	for (unsigned int i = 0; 
 	    i < new{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if}->getNum{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if}(); i++)
 	    add{$prop.element.name|uppercase(1)}(new{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if}->get{$prop.element.name|uppercase(1)}(i));{/if}
