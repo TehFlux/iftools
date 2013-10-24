@@ -6,7 +6,7 @@
 		 *
 		 * \\return XML element name
 		 */
-{swrap 75 "		"}std::string getXMLElementName() const;{/swrap}
+{swrap 75 "		"}virtual std::string getXMLElementName() const;{/swrap}
         
 		/** Get XML attribute data.
 		 *
@@ -14,7 +14,7 @@
 		 *
 		 * \\return XML attribute data
 		 */
-{swrap 75 "		"}std::string getXMLAttributeData() const;{/swrap}
+{swrap 75 "		"}virtual std::string getXMLAttributeData() const;{/swrap}
         
         /** Get XML child data.
 		 *
@@ -23,7 +23,7 @@
 		 * \\param target Where to store the XML data.
 		 * \\param indentLevel Indentation level.
 		 */
-{swrap 75 "		"}void getXMLChildData(std::string& target, unsigned int indentLevel = 0) const;{/swrap}
+{swrap 75 "		"}virtual void getXMLChildData(std::string& target, unsigned int indentLevel = 0) const;{/swrap}
         
         /** Load from XML file.
 		 *
@@ -31,4 +31,4 @@
 		 *
 		 * \\param fileName file name
 		 */
-{swrap 75 "		"}void loadFromXMLFile(std::string& FileName);{/swrap}{/section}
+{swrap 75 "		"}virtual void loadFromXMLFile(const std::string& FileName);{/swrap}{/section}

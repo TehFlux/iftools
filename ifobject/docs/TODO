@@ -21,6 +21,19 @@ New
 Critical stuff
 --------------------------------------------------------------------------------
 
++ Property system (fmbase)
+  > add classes:
+    Value, Property, ObjectSet, PropertySet, Callable, 
+    Operator, PropertyIndexName, PropertyIndexKeyword
+  > support storing object values as an ID (useful for serialization)
+    . ObjectRef (stores UUID)
+    . ObjectSource (allows fetching objects by UUID)
+  > support vectors and dictionaries of values as a value type 
+    . ObjectSet and a new ObjectMap type
+    . implicitly supported if objects are supported as value types
+  > Vector4 and Color are too specialized for ifobject, leave them out 
+    for now
+
 + Merge features from FMBase
   > property system
     . support storing object values as an ID (useful for serialization)
