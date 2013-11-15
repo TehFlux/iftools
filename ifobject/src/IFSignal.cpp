@@ -125,17 +125,17 @@ std::string IFSignal::getString() const
 
 Ionflux::ObjectBase::IFSignalBase IFSignal::getSignal() const
 {
-	return signal;
+    return signal;
 }
 
 Ionflux::ObjectBase::IFSignalType IFSignal::getType() const
 {
-	return type;
+    return type;
 }
 
 std::string IFSignal::getName() const
 {
-	return name;
+    return name;
 }
 
 }

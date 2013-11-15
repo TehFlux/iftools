@@ -163,7 +163,7 @@ std::string IFMutex::getString() const
 
 Ionflux::ObjectBase::IFMutexType IFMutex::getType() const
 {
-	return type;
+    return type;
 }
 
 }

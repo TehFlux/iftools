@@ -405,12 +405,12 @@ void IFCache::setMaxSize(Ionflux::ObjectBase::UInt64 newMaxSize)
 
 Ionflux::ObjectBase::UInt64 IFCache::getMaxSize() const
 {
-	return maxSize;
+    return maxSize;
 }
 
 Ionflux::ObjectBase::UInt64 IFCache::getCurrentSize() const
 {
-	return currentSize;
+    return currentSize;
 }
 
 void IFCache::setAllowZeroSize(bool newAllowZeroSize)
@@ -420,7 +420,7 @@ void IFCache::setAllowZeroSize(bool newAllowZeroSize)
 
 bool IFCache::getAllowZeroSize() const
 {
-	return allowZeroSize;
+    return allowZeroSize;
 }
 
 void IFCache::setPolicy(Ionflux::ObjectBase::CachePolicy newPolicy)
@@ -430,7 +430,7 @@ void IFCache::setPolicy(Ionflux::ObjectBase::CachePolicy newPolicy)
 
 Ionflux::ObjectBase::CachePolicy IFCache::getPolicy() const
 {
-	return policy;
+    return policy;
 }
 
 Ionflux::ObjectBase::IFCache* 

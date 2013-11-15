@@ -78,12 +78,14 @@ void IFError::setReason(const std::string& newReason)
 
 std::string IFError::getReason() const
 {
-	return reason;
+    return reason;
 }
 
 Ionflux::ObjectBase::IFError& IFError::operator=(const 
 Ionflux::ObjectBase::IFError& other)
 {
+if (this == &other)
+    return *this;
 setReason(other.getReason());
 	return *this;
 }

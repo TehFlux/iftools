@@ -31,6 +31,8 @@
 #include "ifobject/constants.hpp"
 #include "ifobject/utils.hpp"
 
+class TiXmlElement;
+
 namespace Ionflux
 {
 

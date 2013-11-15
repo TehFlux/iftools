@@ -137,7 +137,7 @@ void IFMMEvent::setTypeID(Ionflux::ObjectBase::MMEventTypeID newTypeID)
 
 Ionflux::ObjectBase::MMEventTypeID IFMMEvent::getTypeID() const
 {
-	return typeID;
+    return typeID;
 }
 
 void IFMMEvent::setObject(const Ionflux::ObjectBase::IFObject* newObject)
@@ -147,7 +147,7 @@ void IFMMEvent::setObject(const Ionflux::ObjectBase::IFObject* newObject)
 
 const Ionflux::ObjectBase::IFObject* IFMMEvent::getObject() const
 {
-	return object;
+    return object;
 }
 
 void IFMMEvent::setObjectRefCount(unsigned int newObjectRefCount)
@@ -157,7 +157,7 @@ void IFMMEvent::setObjectRefCount(unsigned int newObjectRefCount)
 
 unsigned int IFMMEvent::getObjectRefCount() const
 {
-	return objectRefCount;
+    return objectRefCount;
 }
 
 void IFMMEvent::setParentObject(const Ionflux::ObjectBase::IFObject* 
@@ -168,7 +168,7 @@ newParentObject)
 
 const Ionflux::ObjectBase::IFObject* IFMMEvent::getParentObject() const
 {
-	return parentObject;
+    return parentObject;
 }
 
 Ionflux::ObjectBase::IFMMEvent& IFMMEvent::operator=(const 

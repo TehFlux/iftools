@@ -244,7 +244,7 @@ newThreadFunction)
 
 Ionflux::ObjectBase::IFThreadFunction IFThread::getThreadFunction() const
 {
-	return threadFunction;
+    return threadFunction;
 }
 
 void IFThread::setContext(Ionflux::ObjectBase::IFObject* newContext)
@@ -254,7 +254,7 @@ void IFThread::setContext(Ionflux::ObjectBase::IFObject* newContext)
 
 Ionflux::ObjectBase::IFObject* IFThread::getContext() const
 {
-	return context;
+    return context;
 }
 
 IFThreadSignal& IFThread::getSignalStart()

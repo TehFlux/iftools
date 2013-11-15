@@ -136,12 +136,12 @@ Ionflux::ObjectBase::IFOpName& opName) const
 
 std::string IFClassInfo::getName() const
 {
-	return name;
+    return name;
 }
 
 std::string IFClassInfo::getDesc() const
 {
-	return desc;
+    return desc;
 }
 
 }

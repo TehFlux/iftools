@@ -163,7 +163,7 @@ newTarget)
 
 Ionflux::ObjectBase::IFMMEventHandler* IFMMEventHandler::getTarget() const
 {
-	return target;
+    return target;
 }
 
 void IFMMEventHandler::setLogFileName(const std::string& newLogFileName)
@@ -173,7 +173,7 @@ void IFMMEventHandler::setLogFileName(const std::string& newLogFileName)
 
 std::string IFMMEventHandler::getLogFileName() const
 {
-	return logFileName;
+    return logFileName;
 }
 
 void IFMMEventHandler::setSilentFlag(bool newSilentFlag)
@@ -183,7 +183,7 @@ void IFMMEventHandler::setSilentFlag(bool newSilentFlag)
 
 bool IFMMEventHandler::getSilentFlag() const
 {
-	return silentFlag;
+    return silentFlag;
 }
 
 Ionflux::ObjectBase::IFMMEventHandler& IFMMEventHandler::operator=(const 

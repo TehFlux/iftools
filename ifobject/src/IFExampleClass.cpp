@@ -316,7 +316,7 @@ void IFExampleClass::setSomeValue(int newSomeValue)
 int IFExampleClass::getSomeValue() const
 {
 	IFGuard propertyGuard(guardMutex);
-	return someValue;
+    return someValue;
 }
 
 void IFExampleClass::setSomeText(const std::string& newSomeText)
@@ -328,13 +328,13 @@ void IFExampleClass::setSomeText(const std::string& newSomeText)
 std::string IFExampleClass::getSomeText() const
 {
 	IFGuard propertyGuard(guardMutex);
-	return someText;
+    return someText;
 }
 
 double IFExampleClass::getRoProp() const
 {
 	IFGuard propertyGuard(guardMutex);
-	return roProp;
+    return roProp;
 }
 
 void IFExampleClass::setSpecialBlah(Blah* newSpecialBlah)
@@ -346,7 +346,7 @@ void IFExampleClass::setSpecialBlah(Blah* newSpecialBlah)
 Blah* IFExampleClass::getSpecialBlah() const
 {
 	IFGuard propertyGuard(guardMutex);
-	return specialBlah;
+    return specialBlah;
 }
 
 unsigned int IFExampleClass::getNumBlupps() const

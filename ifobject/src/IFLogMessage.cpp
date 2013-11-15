@@ -262,7 +262,7 @@ void IFLogMessage::setMessage(const std::string& newMessage)
 std::string IFLogMessage::getMessage() const
 {
 	IFGuard propertyGuard(guardMutex);
-	return message;
+    return message;
 }
 
 void IFLogMessage::setLevel(Ionflux::ObjectBase::IFVerbosityLevel newLevel)
@@ -274,7 +274,7 @@ void IFLogMessage::setLevel(Ionflux::ObjectBase::IFVerbosityLevel newLevel)
 Ionflux::ObjectBase::IFVerbosityLevel IFLogMessage::getLevel() const
 {
 	IFGuard propertyGuard(guardMutex);
-	return level;
+    return level;
 }
 
 void IFLogMessage::setSource(const Ionflux::ObjectBase::IFObject* 
@@ -287,7 +287,7 @@ newSource)
 const Ionflux::ObjectBase::IFObject* IFLogMessage::getSource() const
 {
 	IFGuard propertyGuard(guardMutex);
-	return source;
+    return source;
 }
 
 void IFLogMessage::setSourceFunctionName(const std::string& 
@@ -300,7 +300,7 @@ newSourceFunctionName)
 std::string IFLogMessage::getSourceFunctionName() const
 {
 	IFGuard propertyGuard(guardMutex);
-	return sourceFunctionName;
+    return sourceFunctionName;
 }
 
 bool IFLogMessage::serialize(std::string& target) const

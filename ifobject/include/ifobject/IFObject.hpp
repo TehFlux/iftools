@@ -754,6 +754,15 @@ class IFObject
 		 */
 		virtual std::string getString() const;
 		
+		/** Get XML object factory.
+		 *
+		 * Get the XML object factory singleton for the class.
+		 *
+		 * \return XML object factory singleton.
+		 */
+		static Ionflux::ObjectBase::XMLUtils::IFXMLObjectFactory* 
+		getXMLObjectFactory();
+		
 		/** Serialize.
 		 *
 		 * Serialize the object. This creates a string which contains data 

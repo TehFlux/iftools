@@ -134,7 +134,7 @@ void IFGuard::setMutex(Ionflux::ObjectBase::IFMutex* newMutex)
 
 Ionflux::ObjectBase::IFMutex* IFGuard::getMutex() const
 {
-	return mutex;
+    return mutex;
 }
 
 }

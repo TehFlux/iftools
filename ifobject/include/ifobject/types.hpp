@@ -80,6 +80,16 @@ typedef std::vector<double> DoubleVector;
 typedef std::vector<int> IntVector;
 typedef std::vector<unsigned int> UIntVector;
 
+namespace XMLUtils
+{
+
+class IFXMLObjectFactory;
+
+}
+
+typedef	std::vector<Ionflux::ObjectBase::XMLUtils::IFXMLObjectFactory*> 
+    XMLObjectFactoryVector;
+
 /// Cache entry.
 struct IFCacheEntry
 {

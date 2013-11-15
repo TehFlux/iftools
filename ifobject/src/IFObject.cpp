@@ -38,6 +38,7 @@
 #include "ifobject/IFMMEventHandler.hpp"
 #include "ifobject/xmlutils.hpp"
 #include "ifobject/xmlutils_private.hpp"
+#include "ifobject/IFXMLObjectFactory.hpp"
 #include "ifobject/utils.hpp"
 #include "ifobject/serialize.hpp"
 
@@ -1205,6 +1206,14 @@ std::string IFObject::getString() const
 	return status.str();
 }
 
+Ionflux::ObjectBase::XMLUtils::IFXMLObjectFactory* 
+IFObject::getXMLObjectFactory()
+{
+	static Ionflux::ObjectBase::XMLUtils::IFXMLObjectFactory* 
+	    fac0 = Ionflux::ObjectBase::XMLUtils::IFXMLObjectFactory::create();
+	return fac0;
+}
+
 void IFObject::setLogTarget(Ionflux::ObjectBase::IFObject* newLogTarget)
 {
 	logTarget = newLogTarget;
@@ -1212,7 +1221,7 @@ void IFObject::setLogTarget(Ionflux::ObjectBase::IFObject* newLogTarget)
 
 Ionflux::ObjectBase::IFObject* IFObject::getLogTarget() const
 {
-	return logTarget;
+    return logTarget;
 }
 
 bool IFObject::serialize(std::string& target) const
