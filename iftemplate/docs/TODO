@@ -15,13 +15,15 @@ Up next
 New
 --------------------------------------------------------------------------------
 
-+ Curly braces inside verbatim sections should be completely ignored.
-  . Maybe escape characters should also be ignored.
-  . Allow escaping of the verbatim section delimiters.
+
 
 --------------------------------------------------------------------------------
 Critical stuff
 --------------------------------------------------------------------------------
+
++ Curly braces inside verbatim sections should be completely ignored.
+  . Maybe escape characters should also be ignored.
+  . Allow escaping of the verbatim section delimiters.
 
 + Scan template modules/files for mismatched tags and report exactly which 
   tag is mismatched. 
