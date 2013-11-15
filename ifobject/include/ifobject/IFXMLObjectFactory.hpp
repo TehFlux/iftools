@@ -100,7 +100,9 @@ class IFXMLObjectFactory
 		
 		/** Get class name.
 		 *
-		 * Get the name of the class this factory creates objects for.
+		 * Get the name of the class this factory creates objects for. This 
+		 * should be overridden by derived classes to return the name of the 
+		 * base type.
 		 *
 		 * \return Class name.
 		 */
