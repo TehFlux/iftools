@@ -1209,8 +1209,12 @@ std::string IFObject::getString() const
 Ionflux::ObjectBase::XMLUtils::IFXMLObjectFactory* 
 IFObject::getXMLObjectFactory()
 {
-	static Ionflux::ObjectBase::XMLUtils::IFXMLObjectFactory* 
+	static Ionflux::ObjectBase::XMLUtils::IFXMLObjectFactory* fac0 = 0;
+	if (fac0 == 0)
+	{
 	    fac0 = Ionflux::ObjectBase::XMLUtils::IFXMLObjectFactory::create();
+	    fac0->addRef();
+	}
 	return fac0;
 }
 

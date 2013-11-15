@@ -309,6 +309,8 @@ class IFObject
         virtual std::string getErrorString(const std::string& message, 
         const std::string& source = "") const;
         virtual std::string getString() const;
+		static Ionflux::ObjectBase::XMLUtils::IFXMLObjectFactory* 
+		getXMLObjectFactory();
         virtual bool serialize(std::string& target) const;
         virtual int deserialize(const std::string& source, int offset = 0);
         virtual void setLogTarget(Ionflux::ObjectBase::IFObject* 
@@ -353,6 +355,7 @@ $IFError
 $IFCache
 $IFMMEvent
 $IFMMEventHandler
+$IFXMLObjectFactory
 
 %template(StringVector) std::vector<std::string>;
 %template(DoubleVector) std::vector<double>;

@@ -372,6 +372,8 @@ class IFObject
         virtual std::string getErrorString(const std::string& message, 
         const std::string& source = "") const;
         virtual std::string getString() const;
+		static Ionflux::ObjectBase::XMLUtils::IFXMLObjectFactory* 
+		getXMLObjectFactory();
         virtual bool serialize(std::string& target) const;
         virtual int deserialize(const std::string& source, int offset = 0);
         virtual void setLogTarget(Ionflux::ObjectBase::IFObject* 
@@ -638,6 +640,77 @@ class IFMMEventHandler
         virtual void setSilentFlag(bool newSilentFlag);
         virtual bool getSilentFlag() const;
 };
+
+}
+
+}
+
+
+%{
+#include "ifobject/IFXMLObjectFactory.hpp"
+%}
+
+namespace Ionflux
+{
+
+namespace ObjectBase
+{
+
+namespace XMLUtils
+{
+
+class IFXMLObjectFactoryClassInfo
+: public Ionflux::ObjectBase::IFClassInfo
+{
+    public:
+        IFXMLObjectFactoryClassInfo();
+        virtual ~IFXMLObjectFactoryClassInfo();
+};
+
+class IFXMLObjectFactory
+: virtual public Ionflux::ObjectBase::IFObject
+{
+    public:
+        
+        IFXMLObjectFactory();
+		IFXMLObjectFactory(const Ionflux::ObjectBase::XMLUtils::IFXMLObjectFactory& other);
+        virtual ~IFXMLObjectFactory();
+        virtual std::string getObjectXMLElementName() const;
+        virtual std::string getObjectClassName() const;
+        virtual Ionflux::ObjectBase::IFObject* createObject();
+        virtual std::string getValueString() const;
+		virtual Ionflux::ObjectBase::XMLUtils::IFXMLObjectFactory* copy() const;
+		static Ionflux::ObjectBase::XMLUtils::IFXMLObjectFactory* 
+		upcast(Ionflux::ObjectBase::IFObject* other);
+		static Ionflux::ObjectBase::XMLUtils::IFXMLObjectFactory* 
+		create(Ionflux::ObjectBase::IFObject* parentObject = 0);        
+        virtual unsigned int getNumFactories() const;
+        virtual Ionflux::ObjectBase::XMLUtils::IFXMLObjectFactory* 
+        getFactory(unsigned int elementIndex = 0) const;
+		virtual int 
+		findFactory(Ionflux::ObjectBase::XMLUtils::IFXMLObjectFactory* needle, 
+		unsigned int occurence = 1) const;
+        virtual 
+        std::vector<Ionflux::ObjectBase::XMLUtils::IFXMLObjectFactory*>& 
+        getFactories();
+        virtual void 
+        addFactory(Ionflux::ObjectBase::XMLUtils::IFXMLObjectFactory* 
+        addElement);
+		virtual Ionflux::ObjectBase::XMLUtils::IFXMLObjectFactory* addFactory();
+		virtual void 
+		addFactories(std::vector<Ionflux::ObjectBase::XMLUtils::IFXMLObjectFactory*>&
+		newFactories);
+		virtual void 
+		addFactories(Ionflux::ObjectBase::XMLUtils::IFXMLObjectFactory* 
+		newFactories);        
+        virtual void 
+        removeFactory(Ionflux::ObjectBase::XMLUtils::IFXMLObjectFactory* 
+        removeElement);
+		virtual void removeFactoryIndex(unsigned int removeIndex);
+		virtual void clearFactories();
+};
+
+}
 
 }
 

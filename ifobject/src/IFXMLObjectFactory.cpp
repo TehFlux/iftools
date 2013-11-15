@@ -214,6 +214,7 @@ void
 IFXMLObjectFactory::addFactory(Ionflux::ObjectBase::XMLUtils::IFXMLObjectFactory*
 addElement)
 {
+	addLocalRef(addElement);
 	factories.push_back(addElement);
 }
 
@@ -262,6 +263,8 @@ removeElement)
 	if (found)
 	{
 		factories.erase(factories.begin() + i);
+		if (currentFactory != 0)
+			removeLocalRef(currentFactory);
 	}
 }
 
@@ -269,12 +272,19 @@ void IFXMLObjectFactory::removeFactoryIndex(unsigned int removeIndex)
 {
     if (removeIndex > factories.size())
         return;
+	Ionflux::ObjectBase::XMLUtils::IFXMLObjectFactory* e0 = factories[removeIndex];
     factories.erase(factories.begin() + removeIndex);
+    if (e0 != 0)
+        removeLocalRef(e0);
 }
 
 void IFXMLObjectFactory::clearFactories()
 {
-    factories.clear();
+    std::vector<Ionflux::ObjectBase::XMLUtils::IFXMLObjectFactory*>::iterator i;
+	for (i = factories.begin(); i != factories.end(); i++)
+		if (*i != 0)
+			removeLocalRef(*i);
+	factories.clear();
 }
 
 Ionflux::ObjectBase::XMLUtils::IFXMLObjectFactory& 
