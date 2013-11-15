@@ -95,8 +95,11 @@ const
 	    throw IFError(getErrorString("XML element is null.", "initObject"));
 	if (target == 0)
 	    throw IFError(getErrorString("Target object is null.", "initObject"));
-	checkElementNameOrError(xmlElement, elementName, 
-	    "IFXMLObjectFactory::init");
+	std::string en1(elementName);
+	if (en1.size() == 0)
+	    en1 = getObjectXMLElementName();
+	checkElementNameOrError(xmlElement, en1, 
+	    "IFXMLObjectFactory::initObject");
 	Ionflux::ObjectBase::XMLUtils::getObject(xmlElement, *target);
 }
 
@@ -112,7 +115,10 @@ std::string& elementName)
 {
 	std::string en0(xmlElement->Value());
 	IFObject* o0 = 0;
-	if (en0 == getObjectXMLElementName())
+	std::string en1(elementName);
+	if (en1.size() == 0)
+	    en1 = getObjectXMLElementName();
+	if (en0 == en1)
 	{
 	    // Create an object of the base type.
 	    o0 = createObject();
