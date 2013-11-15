@@ -112,6 +112,8 @@ Ionflux::Template::StringManipulator::StringInsert&
 StringInsert::operator=(const 
 Ionflux::Template::StringManipulator::StringInsert& other)
 {
+if (this == &other)
+    return *this;
 	return *this;
 }
 

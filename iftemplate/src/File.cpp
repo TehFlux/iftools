@@ -244,22 +244,22 @@ std::string File::getValueString() const
 
 Ionflux::ObjectBase::UInt64 File::getFileSize() const
 {
-	return fileSize;
+    return fileSize;
 }
 
 time_t File::getAccessTime() const
 {
-	return accessTime;
+    return accessTime;
 }
 
 time_t File::getModTime() const
 {
-	return modTime;
+    return modTime;
 }
 
 time_t File::getChangeTime() const
 {
-	return changeTime;
+    return changeTime;
 }
 
 void File::setName(const std::string& newName)
@@ -271,7 +271,7 @@ void File::setName(const std::string& newName)
 
 std::string File::getName() const
 {
-	return name;
+    return name;
 }
 
 void File::setPath(const std::string& newPath)
@@ -283,7 +283,7 @@ void File::setPath(const std::string& newPath)
 
 std::string File::getPath() const
 {
-	return path;
+    return path;
 }
 
 void File::setFullName(const std::string& newFullName)
@@ -296,17 +296,17 @@ void File::setFullName(const std::string& newFullName)
 
 std::string File::getFullName() const
 {
-	return fullName;
+    return fullName;
 }
 
 std::string File::getBaseName() const
 {
-	return baseName;
+    return baseName;
 }
 
 std::string File::getExtension() const
 {
-	return extension;
+    return extension;
 }
 
 unsigned int File::getNumFiles() const
@@ -363,9 +363,9 @@ Ionflux::Template::File* File::addFile()
 	return o0;
 }
 
-void File::addFiles(std::vector<Ionflux::Template::File*>& newFiles)
+void File::addFiles(const std::vector<Ionflux::Template::File*>& newFiles)
 {
-	for (std::vector<Ionflux::Template::File*>::iterator i = newFiles.begin(); 
+	for (std::vector<Ionflux::Template::File*>::const_iterator i = newFiles.begin(); 
 	    i != newFiles.end(); i++)
 	    addFile(*i);
 }
@@ -421,6 +421,8 @@ void File::clearFiles()
 Ionflux::Template::File& File::operator=(const Ionflux::Template::File& 
 other)
 {
+if (this == &other)
+    return *this;
 	return *this;
 }
 

@@ -240,7 +240,7 @@ class StringFilterFunction
 		 *
 		 * \param newArguments arguments.
 		 */
-		virtual void addArguments(std::vector<std::string>& newArguments);
+		virtual void addArguments(const std::vector<std::string>& newArguments);
 		
 		/** Add arguments.
 		 *

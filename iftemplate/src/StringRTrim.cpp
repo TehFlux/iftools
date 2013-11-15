@@ -97,6 +97,8 @@ Ionflux::Template::StringManipulator::StringRTrim&
 StringRTrim::operator=(const 
 Ionflux::Template::StringManipulator::StringRTrim& other)
 {
+if (this == &other)
+    return *this;
 	return *this;
 }
 

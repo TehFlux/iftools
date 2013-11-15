@@ -105,6 +105,8 @@ Ionflux::Template::StringManipulator::StringTruncate&
 StringTruncate::operator=(const 
 Ionflux::Template::StringManipulator::StringTruncate& other)
 {
+if (this == &other)
+    return *this;
 	return *this;
 }
 

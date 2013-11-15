@@ -105,6 +105,8 @@ Ionflux::Template::StringManipulator::StringRPad&
 StringRPad::operator=(const 
 Ionflux::Template::StringManipulator::StringRPad& other)
 {
+if (this == &other)
+    return *this;
 	return *this;
 }
 

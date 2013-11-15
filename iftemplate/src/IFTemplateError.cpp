@@ -79,12 +79,14 @@ void IFTemplateError::setReason(const std::string& newReason)
 
 std::string IFTemplateError::getReason() const
 {
-	return reason;
+    return reason;
 }
 
 Ionflux::Template::IFTemplateError& IFTemplateError::operator=(const 
 Ionflux::Template::IFTemplateError& other)
 {
+if (this == &other)
+    return *this;
 setReason(other.getReason());
 	return *this;
 }

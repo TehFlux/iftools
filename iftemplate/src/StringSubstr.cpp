@@ -105,6 +105,8 @@ Ionflux::Template::StringManipulator::StringSubstr&
 StringSubstr::operator=(const 
 Ionflux::Template::StringManipulator::StringSubstr& other)
 {
+if (this == &other)
+    return *this;
 	return *this;
 }
 

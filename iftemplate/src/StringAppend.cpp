@@ -99,6 +99,8 @@ Ionflux::Template::StringManipulator::StringAppend&
 StringAppend::operator=(const 
 Ionflux::Template::StringManipulator::StringAppend& other)
 {
+if (this == &other)
+    return *this;
 	return *this;
 }
 

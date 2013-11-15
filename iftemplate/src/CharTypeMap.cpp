@@ -79,6 +79,8 @@ CharTypeMap::~CharTypeMap()
 Ionflux::Template::CharTypeMap& CharTypeMap::operator=(const 
 Ionflux::Template::CharTypeMap& other)
 {
+if (this == &other)
+    return *this;
 	return *this;
 }
 

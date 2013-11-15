@@ -97,6 +97,8 @@ Ionflux::Template::StringManipulator::StringURLEncode&
 StringURLEncode::operator=(const 
 Ionflux::Template::StringManipulator::StringURLEncode& other)
 {
+if (this == &other)
+    return *this;
 	return *this;
 }
 

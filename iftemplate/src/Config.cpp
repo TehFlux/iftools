@@ -107,6 +107,8 @@ void Config::set(const std::string& key, const std::string& value)
 Ionflux::Template::Config& Config::operator=(const 
 Ionflux::Template::Config& other)
 {
+if (this == &other)
+    return *this;
 	return *this;
 }
 

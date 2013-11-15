@@ -147,7 +147,7 @@ void NodeReference::setValue(const std::string& newValue)
 
 std::string NodeReference::getValue() const
 {
-	return value;
+    return value;
 }
 
 void NodeReference::setType(Ionflux::Template::NodeRefTypeID newType)
@@ -157,7 +157,7 @@ void NodeReference::setType(Ionflux::Template::NodeRefTypeID newType)
 
 Ionflux::Template::NodeRefTypeID NodeReference::getType() const
 {
-	return type;
+    return type;
 }
 
 void NodeReference::setSubscript(bool newSubscript)
@@ -167,7 +167,7 @@ void NodeReference::setSubscript(bool newSubscript)
 
 bool NodeReference::getSubscript() const
 {
-	return subscript;
+    return subscript;
 }
 
 Ionflux::Template::NodeReference& NodeReference::operator=(const 

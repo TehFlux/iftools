@@ -139,6 +139,8 @@ Ionflux::Template::StringManipulator::StringNumFormat&
 StringNumFormat::operator=(const 
 Ionflux::Template::StringManipulator::StringNumFormat& other)
 {
+if (this == &other)
+    return *this;
 	return *this;
 }
 

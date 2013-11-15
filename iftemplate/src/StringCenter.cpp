@@ -121,6 +121,8 @@ Ionflux::Template::StringManipulator::StringCenter&
 StringCenter::operator=(const 
 Ionflux::Template::StringManipulator::StringCenter& other)
 {
+if (this == &other)
+    return *this;
 	return *this;
 }
 

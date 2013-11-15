@@ -122,7 +122,8 @@ class File
 		 *
 		 * \param newFiles files.
 		 */
-		virtual void addFiles(std::vector<Ionflux::Template::File*>& newFiles);
+		virtual void addFiles(const std::vector<Ionflux::Template::File*>& 
+		newFiles);
 		
 		/** Add files.
 		 *

@@ -109,7 +109,7 @@ void StringFilterFunction::setFunc(const std::string& newFunc)
 
 std::string StringFilterFunction::getFunc() const
 {
-	return func;
+    return func;
 }
 
 unsigned int StringFilterFunction::getNumArguments() const
@@ -166,10 +166,10 @@ const std::string& StringFilterFunction::addArgument()
 	return o0;
 }
 
-void StringFilterFunction::addArguments(std::vector<std::string>& 
+void StringFilterFunction::addArguments(const std::vector<std::string>& 
 newArguments)
 {
-	for (std::vector<std::string>::iterator i = newArguments.begin(); 
+	for (std::vector<std::string>::const_iterator i = newArguments.begin(); 
 	    i != newArguments.end(); i++)
 	    addArgument(*i);
 }
@@ -225,13 +225,15 @@ newManip)
 Ionflux::Template::StringManipulator::StringManipulator* 
 StringFilterFunction::getManip() const
 {
-	return manip;
+    return manip;
 }
 
 Ionflux::Template::StringFilterFunction& 
 StringFilterFunction::operator=(const 
 Ionflux::Template::StringFilterFunction& other)
 {
+if (this == &other)
+    return *this;
 	return *this;
 }
 

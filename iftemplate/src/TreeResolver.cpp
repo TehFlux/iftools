@@ -422,6 +422,8 @@ treePath, bool createPath, bool nodesOnly)
 Ionflux::Template::TreeResolver& TreeResolver::operator=(const 
 Ionflux::Template::TreeResolver& other)
 {
+if (this == &other)
+    return *this;
 	return *this;
 }
 

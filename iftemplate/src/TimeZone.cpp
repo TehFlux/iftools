@@ -260,7 +260,7 @@ void TimeZone::setOffset(int newOffset)
 
 int TimeZone::getOffset() const
 {
-	return offset;
+    return offset;
 }
 
 void TimeZone::setNameNormal(const std::string& newNameNormal)
@@ -270,7 +270,7 @@ void TimeZone::setNameNormal(const std::string& newNameNormal)
 
 std::string TimeZone::getNameNormal() const
 {
-	return nameNormal;
+    return nameNormal;
 }
 
 void TimeZone::setNameDST(const std::string& newNameDST)
@@ -280,7 +280,7 @@ void TimeZone::setNameDST(const std::string& newNameDST)
 
 std::string TimeZone::getNameDST() const
 {
-	return nameDST;
+    return nameDST;
 }
 
 void TimeZone::setShortNameNormal(const std::string& newShortNameNormal)
@@ -290,7 +290,7 @@ void TimeZone::setShortNameNormal(const std::string& newShortNameNormal)
 
 std::string TimeZone::getShortNameNormal() const
 {
-	return shortNameNormal;
+    return shortNameNormal;
 }
 
 void TimeZone::setShortNameDST(const std::string& newShortNameDST)
@@ -300,7 +300,7 @@ void TimeZone::setShortNameDST(const std::string& newShortNameDST)
 
 std::string TimeZone::getShortNameDST() const
 {
-	return shortNameDST;
+    return shortNameDST;
 }
 
 void TimeZone::setAliases(const std::string& newAliases)
@@ -310,7 +310,7 @@ void TimeZone::setAliases(const std::string& newAliases)
 
 std::string TimeZone::getAliases() const
 {
-	return aliases;
+    return aliases;
 }
 
 Ionflux::Template::TimeZone& TimeZone::operator=(const 

@@ -228,7 +228,7 @@ void Tree::setRoot(Ionflux::Template::Node* newRoot)
 
 Ionflux::Template::Node* Tree::getRoot() const
 {
-	return root;
+    return root;
 }
 
 Ionflux::Template::Tree& Tree::operator=(const Ionflux::Template::Tree& 

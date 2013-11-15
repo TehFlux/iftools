@@ -123,6 +123,8 @@ Ionflux::Template::StringManipulator::StringTranslate&
 StringTranslate::operator=(const 
 Ionflux::Template::StringManipulator::StringTranslate& other)
 {
+if (this == &other)
+    return *this;
 	return *this;
 }
 

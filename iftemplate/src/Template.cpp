@@ -2100,7 +2100,7 @@ void Template::setMaxNestingDepth(unsigned int newMaxNestingDepth)
 
 unsigned int Template::getMaxNestingDepth() const
 {
-	return maxNestingDepth;
+    return maxNestingDepth;
 }
 
 void Template::setRepository(Ionflux::Template::TemplateRepository* 
@@ -2117,12 +2117,14 @@ newRepository)
 
 Ionflux::Template::TemplateRepository* Template::getRepository() const
 {
-	return repository;
+    return repository;
 }
 
 Ionflux::Template::Template& Template::operator=(const 
 Ionflux::Template::Template& other)
 {
+if (this == &other)
+    return *this;
 	return *this;
 }
 

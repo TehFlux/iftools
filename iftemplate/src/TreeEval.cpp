@@ -868,6 +868,8 @@ Ionflux::Template::Node& result, bool createPath)
 Ionflux::Template::TreeEval& TreeEval::operator=(const 
 Ionflux::Template::TreeEval& other)
 {
+if (this == &other)
+    return *this;
 	return *this;
 }
 

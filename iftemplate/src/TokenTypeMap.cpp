@@ -212,6 +212,8 @@ std::string TokenTypeMap::getString() const
 Ionflux::Template::TokenTypeMap& TokenTypeMap::operator=(const 
 Ionflux::Template::TokenTypeMap& other)
 {
+if (this == &other)
+    return *this;
 	return *this;
 }
 

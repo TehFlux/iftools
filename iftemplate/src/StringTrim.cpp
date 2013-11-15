@@ -97,6 +97,8 @@ Ionflux::Template::StringManipulator::StringTrim&
 StringTrim::operator=(const 
 Ionflux::Template::StringManipulator::StringTrim& other)
 {
+if (this == &other)
+    return *this;
 	return *this;
 }
 

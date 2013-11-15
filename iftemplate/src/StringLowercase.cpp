@@ -110,6 +110,8 @@ Ionflux::Template::StringManipulator::StringLowercase&
 StringLowercase::operator=(const 
 Ionflux::Template::StringManipulator::StringLowercase& other)
 {
+if (this == &other)
+    return *this;
 	return *this;
 }
 

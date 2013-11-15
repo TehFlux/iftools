@@ -75,6 +75,8 @@ NodeDump::~NodeDump()
 Ionflux::Template::NodeDump& NodeDump::operator=(const 
 Ionflux::Template::NodeDump& other)
 {
+if (this == &other)
+    return *this;
 	return *this;
 }
 

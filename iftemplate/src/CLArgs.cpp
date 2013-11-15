@@ -521,12 +521,14 @@ void CLArgs::setCheckOptions(bool newCheckOptions)
 
 bool CLArgs::getCheckOptions() const
 {
-	return checkOptions;
+    return checkOptions;
 }
 
 Ionflux::Template::CLArgs& CLArgs::operator=(const 
 Ionflux::Template::CLArgs& other)
 {
+if (this == &other)
+    return *this;
 	return *this;
 }
 

@@ -97,6 +97,8 @@ Ionflux::Template::StringManipulator::StringXMLEscape&
 StringXMLEscape::operator=(const 
 Ionflux::Template::StringManipulator::StringXMLEscape& other)
 {
+if (this == &other)
+    return *this;
 	return *this;
 }
 

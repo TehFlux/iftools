@@ -170,6 +170,8 @@ Ionflux::Template::StringManipulator::StringSWrap&
 StringSWrap::operator=(const 
 Ionflux::Template::StringManipulator::StringSWrap& other)
 {
+if (this == &other)
+    return *this;
 	return *this;
 }
 

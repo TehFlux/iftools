@@ -1112,7 +1112,7 @@ bool DateTime::isDatetime(const std::string& checkDatetime)
 
 Ionflux::Template::TimeTicks DateTime::getTicks() const
 {
-	return ticks;
+    return ticks;
 }
 
 void DateTime::setTimeZone(Ionflux::Template::TimeZone* newTimeZone)
@@ -1133,47 +1133,47 @@ void DateTime::setTimeZone(Ionflux::Template::TimeZone* newTimeZone)
 
 Ionflux::Template::TimeZone* DateTime::getTimeZone() const
 {
-	return timeZone;
+    return timeZone;
 }
 
 Ionflux::Template::Year DateTime::getYear() const
 {
-	return year;
+    return year;
 }
 
 int DateTime::getMonth() const
 {
-	return month;
+    return month;
 }
 
 int DateTime::getDay() const
 {
-	return day;
+    return day;
 }
 
 int DateTime::getHour() const
 {
-	return hour;
+    return hour;
 }
 
 int DateTime::getMinute() const
 {
-	return minute;
+    return minute;
 }
 
 int DateTime::getSecond() const
 {
-	return second;
+    return second;
 }
 
 int DateTime::getWeekDay() const
 {
-	return weekDay;
+    return weekDay;
 }
 
 int DateTime::getYearDay() const
 {
-	return yearDay;
+    return yearDay;
 }
 
 Ionflux::Template::DateTime& DateTime::operator=(const 

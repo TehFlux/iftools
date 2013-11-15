@@ -334,7 +334,7 @@ void StringFilter::setFilter(const std::string& newFilter)
 
 std::string StringFilter::getFilter() const
 {
-	return filter;
+    return filter;
 }
 
 unsigned int StringFilter::getNumFunctions() const
@@ -527,6 +527,8 @@ void StringFilter::clearManipulators()
 Ionflux::Template::StringFilter& StringFilter::operator=(const 
 Ionflux::Template::StringFilter& other)
 {
+if (this == &other)
+    return *this;
 	return *this;
 }
 

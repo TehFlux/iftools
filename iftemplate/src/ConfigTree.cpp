@@ -748,6 +748,8 @@ std::string ConfigTree::escapeValue(const std::string& value)
 Ionflux::Template::ConfigTree& ConfigTree::operator=(const 
 Ionflux::Template::ConfigTree& other)
 {
+if (this == &other)
+    return *this;
 	return *this;
 }
 

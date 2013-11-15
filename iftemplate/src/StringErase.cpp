@@ -102,6 +102,8 @@ Ionflux::Template::StringManipulator::StringErase&
 StringErase::operator=(const 
 Ionflux::Template::StringManipulator::StringErase& other)
 {
+if (this == &other)
+    return *this;
 	return *this;
 }
 

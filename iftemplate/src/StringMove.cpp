@@ -102,6 +102,8 @@ Ionflux::Template::StringManipulator::StringMove&
 StringMove::operator=(const 
 Ionflux::Template::StringManipulator::StringMove& other)
 {
+if (this == &other)
+    return *this;
 	return *this;
 }
 

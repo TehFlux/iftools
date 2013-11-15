@@ -377,7 +377,7 @@ void Tokenizer::setTypeMap(Ionflux::Template::TokenTypeMap* newTypeMap)
 
 Ionflux::Template::TokenTypeMap* Tokenizer::getTypeMap() const
 {
-	return typeMap;
+    return typeMap;
 }
 
 Ionflux::Template::Tokenizer& Tokenizer::operator=(const 

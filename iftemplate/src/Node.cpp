@@ -1535,7 +1535,7 @@ void Node::setNodeID(Ionflux::Template::NodeID newNodeID)
 
 Ionflux::Template::NodeID Node::getNodeID() const
 {
-	return nodeID;
+    return nodeID;
 }
 
 void Node::setNodeName(const std::string& newNodeName)
@@ -1551,7 +1551,7 @@ void Node::setNodeName(const std::string& newNodeName)
 
 std::string Node::getNodeName() const
 {
-	return nodeName;
+    return nodeName;
 }
 
 void Node::setDataType(Ionflux::Template::NodeDataTypeID newDataType)
@@ -1561,7 +1561,7 @@ void Node::setDataType(Ionflux::Template::NodeDataTypeID newDataType)
 
 Ionflux::Template::NodeDataTypeID Node::getDataType() const
 {
-	return dataType;
+    return dataType;
 }
 
 void Node::setParent(Ionflux::Template::Node* newParent)
@@ -1571,7 +1571,7 @@ void Node::setParent(Ionflux::Template::Node* newParent)
 
 Ionflux::Template::Node* Node::getParent() const
 {
-	return parent;
+    return parent;
 }
 
 void Node::setMaxUID(Ionflux::Template::NodeID newMaxUID)
@@ -1581,7 +1581,7 @@ void Node::setMaxUID(Ionflux::Template::NodeID newMaxUID)
 
 Ionflux::Template::NodeID Node::getMaxUID() const
 {
-	return maxUID;
+    return maxUID;
 }
 
 void Node::setUidMode(Ionflux::Template::NodeUIDMode newUidMode)
@@ -1591,7 +1591,7 @@ void Node::setUidMode(Ionflux::Template::NodeUIDMode newUidMode)
 
 Ionflux::Template::NodeUIDMode Node::getUidMode() const
 {
-	return uidMode;
+    return uidMode;
 }
 
 void Node::setAutoCreate(bool newAutoCreate)
@@ -1601,7 +1601,7 @@ void Node::setAutoCreate(bool newAutoCreate)
 
 bool Node::getAutoCreate() const
 {
-	return autoCreate;
+    return autoCreate;
 }
 
 void Node::setIndexMode(Ionflux::Template::NodeIndexMode newIndexMode)
@@ -1611,7 +1611,7 @@ void Node::setIndexMode(Ionflux::Template::NodeIndexMode newIndexMode)
 
 Ionflux::Template::NodeIndexMode Node::getIndexMode() const
 {
-	return indexMode;
+    return indexMode;
 }
 
 Ionflux::Template::Node& Node::operator=(const Ionflux::Template::Node& 
