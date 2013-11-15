@@ -43,8 +43,8 @@
 	Ionflux::ObjectBase::IFGuard functionGuard(guardMutex);{/if}{if function.xml.loadFromFile.impl == ""}
 	std::string data;
 	Ionflux::ObjectBase::readFile(fileName, data);
-	// <---- DEBUG ----- //
-	std:cerr << "[{$class.name}::loadFromXMLFile] data = " << data 
+	/* <---- DEBUG ----- //
+	std::cerr << "[{$class.name}::loadFromXMLFile] data = " << data 
 	    << std::endl;
 	// <---- DEBUG ----- */
 	{foreach ns in namespace}{$ns.name}::{/foreach}XMLUtils::get{$class.name|uppercase(1)}(data, *this);{else}
