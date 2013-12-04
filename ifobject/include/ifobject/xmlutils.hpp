@@ -207,6 +207,16 @@ std::string getXML0(const std::map<std::string, T>& m,
     return xmlData.str();
 }
 
+/** Initialize object from XML data.
+ *
+ * Initialize an object from XML data.
+ *
+ * \param data XML data
+ * \param target Target object
+ */
+void getObject(const std::string& data, 
+    Ionflux::ObjectBase::IFObject& target);
+
 }
 
 }

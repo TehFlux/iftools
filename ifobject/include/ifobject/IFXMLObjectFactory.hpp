@@ -142,6 +142,16 @@ class IFXMLObjectFactory
 		virtual Ionflux::ObjectBase::IFObject* createObject(TiXmlElement* 
 		xmlElement, const std::string& elementName = "");
 		
+		/** Initialize object.
+		 *
+		 * Initialize an object from XML data.
+		 *
+		 * \param data XML data.
+		 * \param target Target object.
+		 */
+		virtual void initObject(const std::string& data, 
+		Ionflux::ObjectBase::IFObject& target);
+		
 		/** Get string representation of value.
 		 *
 		 * Get a string representation of the value of the object.

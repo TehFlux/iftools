@@ -49,4 +49,21 @@
 	// <---- DEBUG ----- */
 	{foreach ns in namespace}{$ns.name}::{/foreach}XMLUtils::get{$class.name|uppercase(1)}(data, *this);{else}
 {swrap 75 "    "}{$function.xml.loadFromFile.impl}{/swrap}{/if}
+\}
+
+{swrap 75}Ionflux::ObjectBase::XMLUtils::IFXMLObjectFactory* {$class.name}::getXMLObjectFactory(){/swrap}
+\{
+	static {foreach ns in namespace}{$ns.name}::{/foreach}XMLUtils::{$class.name}XMLFactory* fac0 = 0;
+    if (fac0 == 0)
+    \{
+        fac0 = {foreach ns in namespace}{$ns.name}::{/foreach}XMLUtils::{$class.name}XMLFactory::create();
+        fac0->addRef();{$bFacDeclared = 0}{if haveBaseIFObject == 1}
+        Ionflux::ObjectBase::XMLUtils::IFXMLObjectFactory* bFac = 
+            IFObject::getXMLObjectFactory();
+        bFac->addFactory(fac0);{$bFacDeclared = 1}{/if}{foreach base in class.base.other}{if ( base.xml.enabled == "true" )}{if bFacDeclared == 0}
+        Ionflux::ObjectBase::XMLUtils::IFXMLObjectFactory* bFac = 0;{$bFacDeclared = 1}{/if}
+        bFac = {$base.name}::getXMLObjectFactory();
+        bFac->addFactory(fac0);{/if}{/foreach}
+    \}
+    return fac0;
 \}{/section}

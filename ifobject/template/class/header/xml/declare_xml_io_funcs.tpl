@@ -31,4 +31,12 @@
 		 *
 		 * \\param fileName file name
 		 */
-{swrap 75 "		"}virtual void loadFromXMLFile(const std::string& FileName);{/swrap}{/section}
+{swrap 75 "		"}virtual void loadFromXMLFile(const std::string& FileName);{/swrap}
+        
+        /** Get XML object factory
+		 *
+		 * Get the XML object factory singleton for the class.
+		 *
+		 * \\param fileName file name
+		 */
+{swrap 75 "		"}static Ionflux::ObjectBase::XMLUtils::IFXMLObjectFactory* getXMLObjectFactory();{/swrap}{/section}

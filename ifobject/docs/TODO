@@ -24,8 +24,7 @@ Critical stuff
 + XML I/O
   > the XML I/O code should support adding polymorphic types from within 
     other libraries
-    . create a subclass of IFXMLObjectFactory per class and register it 
-      with the base classes in an appropriate place
+    . get rid of the global XML get/create functions
     . use the XML object factory instead of create<class name>()
     . use static class info instance in IFXMLObjectFactory::getClassName() 
       instead of hard-coding the class name

@@ -15,7 +15,8 @@
 \#include "ifobject/IFMMEvent.hpp"{/if}{if ( enableSerialize == 1) || ( enableXMLIO == 1)}
 \#include "ifobject/utils.hpp"{/if}{if enableXMLIO == 1}
 \#include "ifobject/xmlutils.hpp"
-\#include "{if project.includePrefix != ""}{$project.includePrefix}/{/if}xmlutils.hpp"{/if}{if enableSerialize == 1}
+\#include "{if project.includePrefix != ""}{$project.includePrefix}/{/if}xmlutils.hpp"
+\#include "{if project.includePrefix != ""}{$project.includePrefix}/{/if}xmlio/{$class.name}XMLFactory.hpp"{/if}{if enableSerialize == 1}
 \#include "ifobject/serialize.hpp"
 
 using Ionflux::ObjectBase::pack;

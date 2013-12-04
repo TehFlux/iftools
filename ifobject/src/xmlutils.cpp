@@ -378,6 +378,22 @@ std::string getXML0(const Ionflux::ObjectBase::DoubleVector& v,
     return xmlData.str();
 }
 
+void getObject(const std::string& data, 
+    Ionflux::ObjectBase::IFObject& target)
+{
+    TiXmlDocument d0;
+    std::string d1(data);
+    d1.append(1, ' ');
+    if (!d0.Parse(d1.c_str(), 0, TIXML_ENCODING_UTF8))
+        throw ("[getObject] "
+            "Unable to parse XML data.");
+    TiXmlElement* m0 = 
+        findElementByNameOrError(
+            d0.RootElement(), 
+            Ionflux::ObjectBase::IFObject::XML_ELEMENT_NAME);
+    getObject(m0, target);
+}
+
 }
 
 }

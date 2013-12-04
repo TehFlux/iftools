@@ -1,4 +1,4 @@
-{section projectInfo}/* ==========================================================================
+{import class.insert_gpl_disclaimer}{section projectInfo}/* ==========================================================================
  * {$project.name}
  * Copyright © {$project.copyrightYear} {$project.author}
  * {$project.mail}

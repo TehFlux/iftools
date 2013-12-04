@@ -145,6 +145,12 @@ std::string& elementName)
 	return o0;
 }
 
+void IFXMLObjectFactory::initObject(const std::string& data, 
+Ionflux::ObjectBase::IFObject& target)
+{
+	getObject(data, target);
+}
+
 std::string IFXMLObjectFactory::getValueString() const
 {
 	ostringstream status;

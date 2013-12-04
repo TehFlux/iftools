@@ -1,4 +1,4 @@
-{section projectInfo}\#ifndef {$project.includeGuardPrefix}{$class.name|uppercase}
+{import class.insert_gpl_disclaimer}{section projectInfo}\#ifndef {$project.includeGuardPrefix}{$class.name|uppercase}
 \#define {$project.includeGuardPrefix}{$class.name|uppercase}
 /* ==========================================================================
  * {$project.name}
