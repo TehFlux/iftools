@@ -103,7 +103,20 @@ const
 	Ionflux::ObjectBase::XMLUtils::getObject(xmlElement, *target);
 }
 
-Ionflux::ObjectBase::IFObject* IFXMLObjectFactory::createObject()
+void IFXMLObjectFactory::initObject(TiXmlElement* xmlElement, 
+Ionflux::ObjectBase::IFObject& target, const std::string& elementName) 
+const
+{
+	initObject(xmlElement, &target, elementName);
+}
+
+void IFXMLObjectFactory::initObject(const std::string& data, 
+Ionflux::ObjectBase::IFObject& target) const
+{
+	getObject(data, target);
+}
+
+Ionflux::ObjectBase::IFObject* IFXMLObjectFactory::createObject() const
 {
 	// TODO: Implementation.
 	return IFObject::create();
@@ -111,7 +124,7 @@ Ionflux::ObjectBase::IFObject* IFXMLObjectFactory::createObject()
 
 Ionflux::ObjectBase::IFObject* 
 IFXMLObjectFactory::createObject(TiXmlElement* xmlElement, const 
-std::string& elementName)
+std::string& elementName) const
 {
 	std::string en0(xmlElement->Value());
 	IFObject* o0 = 0;
@@ -143,12 +156,6 @@ std::string& elementName)
 	    }
 	}
 	return o0;
-}
-
-void IFXMLObjectFactory::initObject(const std::string& data, 
-Ionflux::ObjectBase::IFObject& target)
-{
-	getObject(data, target);
 }
 
 std::string IFXMLObjectFactory::getValueString() const

@@ -121,6 +121,28 @@ class IFXMLObjectFactory
 		Ionflux::ObjectBase::IFObject* target, const std::string& elementName = 
 		"") const;
 		
+		/** Initialize object.
+		 *
+		 * Initialize an object from an XML element.
+		 *
+		 * \param xmlElement XML element.
+		 * \param target Target object.
+		 * \param elementName XML element name.
+		 */
+		virtual void initObject(TiXmlElement* xmlElement, 
+		Ionflux::ObjectBase::IFObject& target, const std::string& elementName = 
+		"") const;
+		
+		/** Initialize object.
+		 *
+		 * Initialize an object from XML data.
+		 *
+		 * \param data XML data.
+		 * \param target Target object.
+		 */
+		virtual void initObject(const std::string& data, 
+		Ionflux::ObjectBase::IFObject& target) const;
+		
 		/** Create new object.
 		 *
 		 * Create a new object. This should be overridden by derived classes 
@@ -128,7 +150,7 @@ class IFXMLObjectFactory
 		 *
 		 * \return New object.
 		 */
-		virtual Ionflux::ObjectBase::IFObject* createObject();
+		virtual Ionflux::ObjectBase::IFObject* createObject() const;
 		
 		/** Create object.
 		 *
@@ -140,17 +162,7 @@ class IFXMLObjectFactory
 		 * \return New object.
 		 */
 		virtual Ionflux::ObjectBase::IFObject* createObject(TiXmlElement* 
-		xmlElement, const std::string& elementName = "");
-		
-		/** Initialize object.
-		 *
-		 * Initialize an object from XML data.
-		 *
-		 * \param data XML data.
-		 * \param target Target object.
-		 */
-		virtual void initObject(const std::string& data, 
-		Ionflux::ObjectBase::IFObject& target);
+		xmlElement, const std::string& elementName = "") const;
 		
 		/** Get string representation of value.
 		 *

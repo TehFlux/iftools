@@ -54,9 +54,9 @@ class IFXMLObjectFactory
         virtual ~IFXMLObjectFactory();
         virtual std::string getObjectXMLElementName() const;
         virtual std::string getObjectClassName() const;
-        virtual Ionflux::ObjectBase::IFObject* createObject();
         virtual void initObject(const std::string& data, 
-        Ionflux::ObjectBase::IFObject& target);
+        Ionflux::ObjectBase::IFObject& target) const;
+        virtual Ionflux::ObjectBase::IFObject* createObject() const;
         virtual std::string getValueString() const;
 		virtual Ionflux::ObjectBase::XMLUtils::IFXMLObjectFactory* copy() const;
 		static Ionflux::ObjectBase::XMLUtils::IFXMLObjectFactory* 
