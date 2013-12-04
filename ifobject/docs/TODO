@@ -15,7 +15,10 @@ Up next
 New
 --------------------------------------------------------------------------------
 
-+ Add a class configuration builder for support classes.
++ builders
+  > merge XML object factory builder from geoutils
+  > use a list of all class configurations and an arbitrary template
+  > include-everything
 
 --------------------------------------------------------------------------------
 Critical stuff
