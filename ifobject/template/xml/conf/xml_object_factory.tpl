@@ -24,7 +24,7 @@
 # 02111-1307 USA
 # 
 # ==========================================================================
-{import class.check_features}{import class.utils.get_fq_name}{ref checkFeatures}{import xml.conf.project_info}{ref projectInfo}
+{import class.check_features}{import class.utils.get_fq_name}{ref checkFeatures}{import xml.xml_scan_properties}{ref xmlScanProperties}{import xml.xml_scan_child_classes}{ref xmlScanChildClasses}{import xml.xml_get_prop_child_element_name}{import class.utils.get_numeric_prop_vector_type}{import xml.conf.project_info}{ref projectInfo}
 \# namespaces{foreach ns in namespace}
 namespace[].name = {$ns.name}{/foreach}
 namespace[].name = XMLUtils
@@ -46,6 +46,8 @@ include = \{
         '"ifobject/objectutils.hpp"'
         '"ifobject/xmlutils_private.hpp"'
         '"ifobject/IFError.hpp"'
+        '"{if project.includePrefix != ""}{$project.includePrefix}/{/if}{if project.includeAll != ""}{$project.includeAll}{else}{$project.baseName}{/if}.hpp"'
+        '"{if project.includePrefix != ""}{$project.includePrefix}/{/if}xmlutils_private.hpp"'
     \}
 \}
 
@@ -258,7 +260,8 @@ while (ce0 != 0)
                 {$prop.element.type|replace('*', '')}, 
                 {$prop.element.type}>(ce0, pv0, 
             "{$xmlCEName}", 
-            {$prop.element.type|replace('*', '')}::XML_ELEMENT_NAME);
+            {$prop.element.type|replace('*', '')}::getXMLObjectFactory()
+                ->getObjectXMLElementName());
         target.add{if prop.element.plural != ""}{$prop.element.plural}{else}{$prop.element.name|uppercase(1)}s{/if}(pv0);{/if}{if ( prop.element.valueType == "integer" ) || ( prop.element.valueType == "float" )}{ref getNumericPropVectorType}
         Ionflux::ObjectBase::{$propEVecT} pv0;
         Ionflux::ObjectBase::XMLUtils::get{$propEVecT}(ce0, pv0);
@@ -309,7 +312,7 @@ if (en1.size() == 0)
 TiXmlElement* m0 = 
     Ionflux::ObjectBase::XMLUtils::findElementByNameOrError(
         d0.RootElement(), en1);
-initObject(m0, &target, en1);
+initObject(m0, target, en1);
 >>>
 \}
 function.public[] = \{
