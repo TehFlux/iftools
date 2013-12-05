@@ -254,19 +254,27 @@ while (ce0 != 0)
         {$prop.type} co0 = 
             {$prop.xml.createFunc}(ce0, en0);
         target.set{$prop.name|uppercase(1)}(co0);{else}
-\#error [xmlio] Required option 'xml.createFunc' missing on property '{$class.name}::{$prop.name}'.{/if}{/if}{if prop.style == "vector"}{if prop.element.valueType == "object"}
+        {$prop.type} co0 = 
+            {$prop.type|replace('*', '')}::upcast(
+                {$prop.type|replace('*', '')}::getXMLObjectFactory()
+                    ->createObject(ce0, en0));
+        target.set{$prop.name|uppercase(1)}(co0);{/if}{/if}{if prop.style == "vector"}{if prop.element.valueType == "object"}
         std::vector<{$prop.element.type}> pv0;
         Ionflux::ObjectBase::XMLUtils::getObjVector<
                 {$prop.element.type|replace('*', '')}, 
                 {$prop.element.type}>(ce0, pv0, 
-            "{$xmlCEName}", 
-            {$prop.element.type|replace('*', '')}::getXMLObjectFactory()
-                ->getObjectXMLElementName());
+            "{$xmlCEName}");
         target.add{if prop.element.plural != ""}{$prop.element.plural}{else}{$prop.element.name|uppercase(1)}s{/if}(pv0);{/if}{if ( prop.element.valueType == "integer" ) || ( prop.element.valueType == "float" )}{ref getNumericPropVectorType}
         Ionflux::ObjectBase::{$propEVecT} pv0;
         Ionflux::ObjectBase::XMLUtils::get{$propEVecT}(ce0, pv0);
         target.add{if prop.element.plural != ""}{$prop.element.plural}{else}{$prop.element.name|uppercase(1)}s{/if}(pv0);{/if}{/if}
-    \}{/if}{/foreach}
+    \}{/if}{if prop.style == "map"}{if prop.element.valueType == "object"}
+        std::map<std:.string, {$prop.element.type}> pm0;
+        Ionflux::ObjectBase::XMLUtils::getObjMap<
+                {$prop.element.type|replace('*', '')}, 
+                {$prop.element.type}>(ce0, pv0, 
+            "{$xmlCEName}");
+        target.add{if prop.element.plural != ""}{$prop.element.plural}{else}{$prop.element.name|uppercase(1)}s{/if}(pv0);{/if}{/if}{/foreach}
     ce0 = ce0->NextSiblingElement();
 }{/if}{else}
 {swrap 75}{$function.xml.fromXML.impl}{/swrap}{/if}

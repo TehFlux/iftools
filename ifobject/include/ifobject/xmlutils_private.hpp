@@ -115,7 +115,19 @@ void getObject0(TiXmlElement* e0, T& target,
     const std::string& elementName)
 {
     checkElementNameOrError(e0, elementName, "getObject0");
-    getObject(e0, target);
+    T::getXMLObjectFactory()->initObject(e0, target, elementName);
+}
+
+/// Load object from XML file.
+template<class T>
+void loadFromXMLFile(const std::string& fileName, T& target, 
+    const std::string& elementName)
+{
+    TiXmlDocument d0(fileName.c_str());
+    loadDocumentOrError(d0, "loadFromFile");
+    TiXmlElement* m0 = findElementByNameOrError(d0.RootElement(), 
+        elementName);
+    T::getXMLObjectFactory()->initObject(m0, target, elementName);
 }
 
 /// Get vector of objects from an XML element.
@@ -128,27 +140,12 @@ void getObjVector(TiXmlElement* e0,
     TiXmlElement* ce0 = e0->FirstChildElement();
     while (ce0 != 0)
     {
-        const char* a0 = ce0->Value();
-        if (std::string(a0) == childElementName)
-        {
-            TP co0 = T::create();
-            getObject0(ce0, *co0, childElementName);
-            target.push_back(co0);
-        }
+        TP co0 = T::upcast(
+            T::getXMLObjectFactory()->createObject(
+                ce0, childElementName));
+        target.push_back(co0);
         ce0 = ce0->NextSiblingElement();
     }
-}
-
-/// Load object from XML file.
-template<class T>
-void loadFromFile(const std::string& fileName, T& target, 
-    const std::string& elementName)
-{
-    TiXmlDocument d0(fileName.c_str());
-    loadDocumentOrError(d0, "loadFromFile");
-    TiXmlElement* m0 = findElementByNameOrError(d0.RootElement(), 
-        elementName);
-    getObject0(m0, target, elementName);
 }
 
 /// Get dictionary of objects from an XML element.
@@ -167,8 +164,9 @@ void getObjMap(TiXmlElement* e0,
             std::string k = getAttributeValue(ee0, "key", false);
             TiXmlElement* ce0 = findElementByNameOrError(ee0, 
                 childElementName, "getObjMap");
-            TP co0 = T::create();
-            getObject0(ce0, *co0, childElementName);
+            TP co0 = T::upcast(
+                T::getXMLObjectFactory()->createObject(
+                    ce0, childElementName));
             typename std::map<std::string, TP>::iterator j = target.find(k);
             if (j != target.end())
             {

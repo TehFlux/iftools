@@ -1116,17 +1116,19 @@ void IFObject::writeToXMLFile(const std::string& fileName) const
 	{
 	    std::ostringstream status;
 	    status << "Could not write to file' " << fileName << "'";
-	    throw IFError(status.str());
+	    throw IFError(getErrorString(status.str(), 
+	        "writeToXMLFile"));
 	}
 	std::string xmlData;
 	getXML(xmlData);
+	xmlData.append(1, '\n');
 	f0.write(xmlData.c_str(), xmlData.size());
 }
 
 void IFObject::loadFromXMLFile(const std::string& fileName)
 {
-	Ionflux::ObjectBase::XMLUtils::loadFromFile(fileName, *this, 
-	    getXMLElementName());
+	Ionflux::ObjectBase::XMLUtils::loadFromXMLFile(
+	    fileName, *this, getXMLElementName());
 }
 
 std::string IFObject::getValueString() const

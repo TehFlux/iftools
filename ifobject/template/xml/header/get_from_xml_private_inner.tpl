@@ -17,39 +17,4 @@ namespace XMLUtils
 
 \}{foreach ns in namespace}
 
-\}{/foreach}
-
-namespace Ionflux
-\{
-
-namespace ObjectBase
-\{
-
-namespace XMLUtils
-\{
-
-/// Initialize {$class.name} from TiXmlElement.
-template<>
-{swrap 75}void getObject0<{ref getFQName}>(TiXmlElement* e0, {ref getFQName}& target, const std::string& elementName);{/swrap}{if class.xml.haveChildClasses == 1}
-
-/// Get object vector for polymorphic type {$class.name}.
-template<>
-void getObjVector<{ref getFQName},
-    {ref getFQName}*>(TiXmlElement* e0, 
-    std::vector<{ref getFQName}*>& target, 
-    const std::string& elementName, 
-    const std::string& childElementName);
-
-/// Get object map for polymorphic type {$class.name}.
-template<>
-void getObjMap<{ref getFQName},
-    {ref getFQName}*>(TiXmlElement* e0, 
-    std::map<std::string, {ref getFQName}*>& target, 
-    const std::string& elementName, 
-    const std::string& childElementName);{/if}
-
-\}
-
-\}
-
-\}{/section}
+\}{/foreach}{/section}

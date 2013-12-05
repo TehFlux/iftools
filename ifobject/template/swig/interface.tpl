@@ -133,7 +133,12 @@ class {$class.name}{if ( haveBaseIFObject == 1 ) || ( haveBaseOther == 1 )}
 		{$class.name}(const {foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}& other);{/if}{foreach con in constructor.public}
 {swrap 75 "        "}{$class.name}({foreach prm in con.param}{$prm.type} {$prm.name}{if prm.default != ""} = {$prm.default}{/if}{first}, {/first}{mid}, {/mid}{/foreach});{/swrap}{/foreach}
         virtual ~{$class.name}(){if destructor.throw != ""} throw({if destructor.throw != "<none>"}{$destructor.throw}{/if}){/if};{foreach ev in event}{ref createEventHelperFunctionDecl}{/foreach}{foreach func in function.public}{if ( func.name != "operator=" ) && ( func.name != "operator[]" ) && ( func.disableBindings != "true" )}
-{swrap 75 "        "}{$func.spec} {$func.type} {$func.name}({foreach prm in func.param}{$prm.type} {$prm.name}{if prm.default != ""} = {$prm.default}{/if}{first}, {/first}{mid}, {/mid}{/foreach}){if func.const == "true"} const{/if}{if func.throw != ""} throw({if func.throw != "<none>"}{$func.throw}{/if}){/if}{if func.pureVirtual == "true"} = 0{/if};{/swrap}{/if}{/foreach}{if enableCopy == 1}{if abstractClass == 0}
+{swrap 75 "        "}{$func.spec} {$func.type} {$func.name}({foreach prm in func.param}{$prm.type} {$prm.name}{if prm.default != ""} = {$prm.default}{/if}{first}, {/first}{mid}, {/mid}{/foreach}){if func.const == "true"} const{/if}{if func.throw != ""} throw({if func.throw != "<none>"}{$func.throw}{/if}){/if}{if func.pureVirtual == "true"} = 0{/if};{/swrap}{/if}{/foreach}{if enableXMLIO == 1}
+{swrap 75 "		"}virtual std::string getXMLElementName() const;{/swrap}
+{swrap 75 "		"}virtual std::string getXMLAttributeData() const;{/swrap}
+{swrap 75 "		"}virtual void getXMLChildData(std::string& target, unsigned int indentLevel = 0) const;{/swrap}
+{swrap 75 "		"}virtual void loadFromXMLFile(const std::string& FileName);{/swrap}
+{swrap 75 "		"}static Ionflux::ObjectBase::XMLUtils::IFXMLObjectFactory* getXMLObjectFactory();{/swrap}{/if}{if enableCopy == 1}{if abstractClass == 0}
 {swrap 75 "		"}virtual {foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}* copy() const;{/swrap}{/if}{/if}{if enableUpcast == 1}
 {swrap 75 "		"}static {foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}* upcast(Ionflux::ObjectBase::IFObject* other);{/swrap}{/if}{if enableCreate == 1}
 {swrap 75 "		"}static {foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}* create(Ionflux::ObjectBase::IFObject* parentObject = 0);{/swrap}{if enablePersistence == 1}
@@ -155,14 +160,7 @@ class {$class.name}{if ( haveBaseIFObject == 1 ) || ( haveBaseOther == 1 )}
         virtual std::string getClassName() const;{/if}{if enablePropertySet == 1}{ref declarePropertySetFuncs}{/if}
 \};{foreach func in function.global}
 
-{swrap 75}{$func.type} {$func.name}({foreach prm in func.param}{$prm.type} {$prm.name}{if prm.default != ""} = {$prm.default}{/if}{first}, {/first}{mid}, {/mid}{/foreach}){if func.const == "true"} const{/if}{if func.pureVirtual == "true"} = 0{/if};{/swrap}{/foreach}{if enableXMLIO == 1}
-
-namespace XMLUtils
-\{
-
-{swrap 75}void get{$class.name|uppercase(1)}(const std::string& data, {foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}& target);{/swrap}
-
-\}{/if}{foreach ns in namespace}
+{swrap 75}{$func.type} {$func.name}({foreach prm in func.param}{$prm.type} {$prm.name}{if prm.default != ""} = {$prm.default}{/if}{first}, {/first}{mid}, {/mid}{/foreach}){if func.const == "true"} const{/if}{if func.pureVirtual == "true"} = 0{/if};{/swrap}{/foreach}{foreach ns in namespace}
 
 \}{/foreach}
 

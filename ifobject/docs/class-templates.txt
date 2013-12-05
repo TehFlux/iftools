@@ -33,14 +33,6 @@ class
   features
     'xmlio'        Enable XML I/O for the class.
   
-  base.other[].xml
-      enabled      Enable the use of XML functions by the derived class for 
-                   this base class.
-      getFunc      The function to be used for initializing an instance of the 
-                   base class from an XML element.
-      include      The include path and file base name for the base class, 
-                   without the extension.
-  
   xml
     elementName    XML element name to be used for the class.
     exception      Exception class to be used for the XML I/O functions.
@@ -97,7 +89,7 @@ property.protected[]
   [valueType = 'object']
   xml
     createFunc     Function to be used to create an object of the type 
-                   of the property from an XML element (required).
+                   of the property from an XML element.
   
   [style = 'vector' | 'map']
   element

@@ -15,14 +15,16 @@ Up next
 New
 --------------------------------------------------------------------------------
 
-+ builders
-  > merge XML object factory builder from geoutils
-  > use a list of all class configurations and an arbitrary template
-  > include-everything
+
 
 --------------------------------------------------------------------------------
 Critical stuff
 --------------------------------------------------------------------------------
+
++ builders
+  > merge XML object factory builder from geoutils
+  > use a list of all class configurations and an arbitrary template
+  > include-everything
 
 + XML I/O
   > the XML I/O code should support adding polymorphic types from within 
