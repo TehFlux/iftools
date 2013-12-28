@@ -80,6 +80,8 @@ Critical stuff
   > generate serialization code for vector/map style properties
   > install using SCons
   > add the proxyTarget feature to other property styles (done for vector)
+  > merge changes from Dievas (persistence)
+  > handling of null proxy object in clear...() (?)
 
 + Create memory management event handler for debugging
   > object lifetime statistics
