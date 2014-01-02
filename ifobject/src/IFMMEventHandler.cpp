@@ -91,6 +91,13 @@ IFMMEventHandler::~IFMMEventHandler()
 	// TODO: Nothing ATM. ;-)
 }
 
+void IFMMEventHandler::clearLogFile() const
+{
+	if (logFileName.size() == 0)
+	    return;
+	writeFile(logFileName, "", 'w');
+}
+
 void IFMMEventHandler::handleMMEvent(const Ionflux::ObjectBase::IFMMEvent& 
 event) const
 {
@@ -113,7 +120,7 @@ event) const
 
 std::string IFMMEventHandler::getValueString() const
 {
-	ostringstream state;
+	std::ostringstream state;
 	if (target != 0)
 	{
 	    state << "target = " << dynamic_cast<const void*>(target) 

@@ -618,6 +618,7 @@ class IFMMEventHandler
         const std::string& initLogFileName = "", bool initSilentFlag = 
         true);
         virtual ~IFMMEventHandler();
+        virtual void clearLogFile() const;
         virtual void handleMMEvent(const Ionflux::ObjectBase::IFMMEvent& 
         event) const;
         virtual std::string getValueString() const;

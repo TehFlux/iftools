@@ -107,6 +107,12 @@ class IFMMEventHandler
 		 */
 		virtual ~IFMMEventHandler();
 		
+		/** Clear log file.
+		 *
+		 * Clear the log file.
+		 */
+		virtual void clearLogFile() const;
+		
 		/** Handle memory management event.
 		 *
 		 * Handle memory management event.
