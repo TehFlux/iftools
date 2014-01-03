@@ -7,12 +7,10 @@
 
 {swrap 75}std::string {$class.name}::getXMLAttributeData() const{/swrap}
 \{{if enableGuards == 1}
-	Ionflux::ObjectBase::IFGuard functionGuard(guardMutex);{/if}{if function.xml.attributeData.impl == ""}{if haveBaseIFObject == 1}
-	std::string a0(Ionflux::ObjectBase::IFObject::getXMLAttributeData());{/if}{foreach base in class.base.other}{if base.xml.enabled == "true"}
-	std::string a0({$base.name}::getXMLAttributeData());{/if}{/foreach}
-	std::ostringstream d0;{if haveXMLBase == 1}
-	if (a0.size() > 0)
-	    d0 << a0{if haveXMLAttributes == 1} << " "{/if};{/if}{$xaFirst = 1}{foreach prop in property.protected}{if prop.xml.attribute.name != ""}
+	Ionflux::ObjectBase::IFGuard functionGuard(guardMutex);{/if}{if function.xml.attributeData.impl == ""}
+	std::ostringstream d0;{$xaFirst = 1}{if haveBaseIFObject == 1}
+	d0 << Ionflux::ObjectBase::IFObject::getXMLAttributeData();{$xaFirst = 0}{/if}{foreach base in class.base.other}{if base.xml.enabled == "true"}
+	d0 << {if xaFirst == 0}" " << {/if}{$base.name}::getXMLAttributeData();{$xaFirst = 0}{/if}{/foreach}{foreach prop in property.protected}{if prop.xml.attribute.name != ""}
 	d0 << {if xaFirst == 0}" " << {/if}{ref getXMLPropertyAttributeValue};{$xaFirst = 0}{/if}{/foreach}
 	return d0.str();{else}
 {swrap 75 "    "}{$function.xml.attributeData.impl}{/swrap}{/if}
@@ -25,7 +23,7 @@
 	std::string bc0;{/if}{$xcFirst = 1}{if haveBaseIFObject == 1}
 	Ionflux::ObjectBase::IFObject::getXMLChildData(bc0, indentLevel);
 	d0 << bc0;{$xcFirst = 0}{/if}{foreach base in class.base.other}{if base.xml.enabled == "true"}
-	{$bc.name}::getXMLChildData(bc0, indentLevel);
+	{$base.name}::getXMLChildData(bc0, indentLevel);
 	d0 << {if xcFirst == 0}"\\n" << {/if}bc0;{$xcFirst = 0}{/if}{/foreach}{if haveXMLChildElements == 1}
 	std::string iws0 = Ionflux::ObjectBase::getIndent(indentLevel);
 	bool haveBCData = false;{if haveXMLBase == 1}
