@@ -36,7 +36,7 @@ if (not os.path.isfile('site_scons/local_config.py')):
 import local_config as lc
 from sources import *
 from builders import buildSource, buildClassInterface, buildInterface
-from builders import buildClassXMLIO, buildXMLIO
+from builders import buildClassXMLFactory
 
 Help("""
 Type 'scons' to build the default targets.
@@ -190,16 +190,14 @@ classInterfaceBuilder = Builder(action = buildClassInterface)
 interfaceBuilder = Builder(action = buildInterface)
 swigPythonBuilder = Builder(action = "swig -c++ -python "
     + "-outdir swig/python -o $TARGET $SOURCE")
-classXMLIOBuilder = Builder(action = buildClassXMLIO)
-xmlIOBuilder = Builder(action = buildXMLIO)
+classXMLFactoryBuilder = Builder(action = buildClassXMLFactory)
 
 env.Append(BUILDERS = { 
     'Source' : sourceBuilder, 
     'ClassInterface' : classInterfaceBuilder, 
     'Interface' : interfaceBuilder, 
     'SWIGPython' : swigPythonBuilder, 
-    'ClassXMLIO' : classXMLIOBuilder, 
-    'XMLIO' : xmlIOBuilder
+    'ClassXMLFactory' : classXMLFactoryBuilder
 })
 
 allTargets = []
