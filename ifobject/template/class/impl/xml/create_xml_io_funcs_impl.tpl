@@ -9,9 +9,13 @@
 \{{if enableGuards == 1}
 	Ionflux::ObjectBase::IFGuard functionGuard(guardMutex);{/if}{if function.xml.attributeData.impl == ""}
 	std::ostringstream d0;{$xaFirst = 1}{if haveBaseIFObject == 1}
-	d0 << Ionflux::ObjectBase::IFObject::getXMLAttributeData();{$xaFirst = 0}{/if}{foreach base in class.base.other}{if base.xml.enabled == "true"}
-	d0 << {if xaFirst == 0}" " << {/if}{$base.name}::getXMLAttributeData();{$xaFirst = 0}{/if}{/foreach}{foreach prop in property.protected}{if prop.xml.attribute.name != ""}
-	d0 << {if xaFirst == 0}" " << {/if}{ref getXMLPropertyAttributeValue};{$xaFirst = 0}{/if}{/foreach}
+	d0 << Ionflux::ObjectBase::IFObject::getXMLAttributeData();{$xaFirst = 0}{/if}{foreach base in class.base.other}{if base.xml.enabled == "true"}{if xaFirst == 0}
+	if (d0.str().size() > 0)
+	    d0 << " ";{/if}
+	d0 << {$base.name}::getXMLAttributeData();{$xaFirst = 0}{/if}{/foreach}{foreach prop in property.protected}{if prop.xml.attribute.name != ""}{if xaFirst == 0}
+	if (d0.str().size() > 0)
+	    d0 << " ";{/if}
+	d0 << {ref getXMLPropertyAttributeValue};{$xaFirst = 0}{/if}{/foreach}
 	return d0.str();{else}
 {swrap 75 "    "}{$function.xml.attributeData.impl}{/swrap}{/if}
 \}
