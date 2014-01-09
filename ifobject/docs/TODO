@@ -15,9 +15,7 @@ Up next
 New
 --------------------------------------------------------------------------------
 
-+ XML I/O
-  > fix spaces in getXMLAttributeData() when base classes do not have any 
-    attribute data
+
 
 --------------------------------------------------------------------------------
 Critical stuff
