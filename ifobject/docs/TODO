@@ -25,27 +25,6 @@ Critical stuff
   > use a list of all class configurations and an arbitrary template
   > include-everything
 
-+ XML I/O
-  > the XML I/O code should support adding polymorphic types from within 
-    other libraries
-    . replace getObjVector/getObjMap specializations with a single 
-      implementation that uses the XML object factory of the element 
-      object class.
-    . get rid of the global XML get/create functions
-    . use the XML object factory instead of create<class name>()
-    . use static class info instance in IFXMLObjectFactory::getClassName() 
-      instead of hard-coding the class name
-
-+ Run-time class information needs to be truly extensible at run-time
-  > maintain a class information graph outside the actual class hierarchy
-    . get rid of static CLASS_INFO variables, use static class info 
-      instances allocated on the heap instead.
-    . add functions to query the graph for a class by name
-  > register child classes with base class
-    . avoid the static initialization order fiasco
-  > add createInstance() functions to the class info type that can be used 
-    to create instances of the class
-
 + Property system (fmbase)
   > add classes:
     Value, Property, ObjectSet, PropertySet, Callable, 
@@ -59,11 +38,23 @@ Critical stuff
   > Vector4 and Color are too specialized for ifobject, leave them out 
     for now
 
-+ Merge features from FMBase
-  > property system
-    . support storing object values as an ID (useful for serialization)
-    . support vectors and dictionaries of values as a value type
-  > Python context
++ Python context (fmbase)
+
++ XML I/O
+  > use static class info instance in IFXMLObjectFactory::getClassName() 
+    instead of hard-coding the class name
+  > support adding objects from an object store via ID reference
+
++ Run-time class information needs to be truly extensible at run-time
+  > maintain a class information graph outside the actual class hierarchy
+    . get rid of static CLASS_INFO variables, use static class info 
+      instances allocated on the heap instead.
+    . add functions to query the graph for a class by name
+  > register child classes with base class
+    . avoid the static initialization order fiasco
+  > add createInstance() functions to the class info type that can be used 
+    to create instances of the class
+  > move getXMLObjectFactory() to the class info
 
 + use iftemplate instead of iftools
   > testing
