@@ -22,7 +22,6 @@ Critical stuff
 --------------------------------------------------------------------------------
 
 + builders
-  > merge XML object factory builder from geoutils
   > use a list of all class configurations and an arbitrary template
   > include-everything
 
