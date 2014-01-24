@@ -37,6 +37,7 @@ Critical stuff
     . implicitly supported if objects are supported as value types
   > Vector4 and Color are too specialized for ifobject, leave them out 
     for now
+  > integrate into the new modular template system
 
 + Python context (fmbase)
 
