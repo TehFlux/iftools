@@ -1676,6 +1676,7 @@ class DateTime
         virtual Ionflux::Template::DateTime getUTC();
         virtual time_t getTimePosix() const;
         virtual std::string getTimestamp();
+        virtual std::string getTimestamp() const;
         virtual std::string getHMS();
         virtual std::string getDayOfWeekName() const;
         virtual std::string getDayOfWeekShortName() const;

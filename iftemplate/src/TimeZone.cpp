@@ -72,10 +72,10 @@ const Ionflux::Template::DSTSwitchingRule TimeZone::DSR_TO_NORMAL_EUROPE_EASTERN
 	    10, 0, 5, 4, 0, 0 };
 const Ionflux::Template::DSTSwitchingRule TimeZone::DSR_TO_DST_USA = {
 	DSTSwitchingRule::DSR_TYPE_TO_DST, 
-	    4, 0, 1, 2, 0, 0 };
+	    3, 0, 2, 2, 0, 0 };
 const Ionflux::Template::DSTSwitchingRule TimeZone::DSR_TO_NORMAL_USA = {
 	DSTSwitchingRule::DSR_TYPE_TO_NORMAL, 
-	    10, 0, 5, 2, 0, 0 };
+	    11, 0, 1, 2, 0, 0 };
 const Ionflux::Template::DSTSwitchingRule TimeZone::DSR_TO_DST_EGYPT = {
 	DSTSwitchingRule::DSR_TYPE_TO_DST, 
 	    4, 5, 5, 0, 0, 0 };
@@ -205,6 +205,13 @@ const
 	{
 	    DateTime toDstDT = getSwitchDT(utcDT.getYear(), toDST);
 	    DateTime toNormalDT = getSwitchDT(utcDT.getYear(), toNormal);
+	    /* <---- DEBUG ----- //
+	    std::cerr << "[TimeZone::getCurrentOffset] DEBUG: " 
+	        << "toDstDT = " << toDstDT.getTimestamp() << ", "
+	        << "toNormalDT = " << toNormalDT.getTimestamp() << ", "
+	        << "utcDT = " << utcDT.getTimestamp()
+	        << std::endl;
+	    // ----- DEBUG ----> */
 	    if ((utcDT >= toDstDT) && (utcDT < toNormalDT))
 	        currentOffset += 60;
 	}

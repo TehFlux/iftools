@@ -481,6 +481,13 @@ void DateTime::updateBrokenDownTime(int tickOffset)
 	    utcOffset = timeZone->getCurrentOffset(*this);
 	    if (utcOffset > timeZone->getOffset())
 	        dstState = true;
+	    /* <---- DEBUG ----- //
+	    std::cerr << "[DateTime::updateBrokenDownTime] DEBUG: " 
+	        << "utcOffset = " << utcOffset << ", "
+	        << "timeZone.offset = " << timeZone->getOffset() << ", " 
+	        << "dstState = " << dstState 
+	        << std::endl;
+	    // ----- DEBUG ----> */
 	    /* Recalculate only if this actually is another time zone.
 	       (Otherwise this would cause an infinite loop.) */
 	    if (utcOffset != 0)
@@ -846,6 +853,19 @@ std::string DateTime::getTimestamp()
 	return timestamp;
 }
 
+std::string DateTime::getTimestamp() const
+{
+	std::ostringstream result;
+	result << right << setfill('0') << std::setw(4)
+	    << year << TIMESTAMP_DATE_SEP << std::setw(2) 
+	    << month << TIMESTAMP_DATE_SEP << std::setw(2) 
+	    << day << TIMESTAMP_DATETIME_SEP << std::setw(2) 
+	    << hour << TIMESTAMP_TIME_SEP << std::setw(2) 
+	    << minute << TIMESTAMP_TIME_SEP << std::setw(2) 
+	    << second;
+	return result.str();
+}
+
 std::string DateTime::getHMS()
 {
 	// TODO: Implementation.
@@ -933,14 +953,14 @@ std::string DateTime::getRFCTimestamp() const
 Ionflux::Template::DateTime& 
 DateTime::operator+=(Ionflux::Template::TimeTicks seconds)
 {
-	// TODO: Implementation.
+	setTimeTicks(ticks + seconds);
 	return *this;
 }
 
 Ionflux::Template::DateTime& 
 DateTime::operator-=(Ionflux::Template::TimeTicks seconds)
 {
-	// TODO: Implementation.
+	setTimeTicks(ticks - seconds);
 	return *this;
 }
 
@@ -948,14 +968,14 @@ Ionflux::Template::TimeTicks DateTime::operator-(const
 Ionflux::Template::DateTime& diffTime) const
 {
 	// TODO: Implementation.
-	return 0;
+	return getTicks() - diffTime.getTicks();
 }
 
 bool DateTime::operator==(const Ionflux::Template::DateTime& compTime) 
 const
 {
 	// TODO: Implementation.
-	return false;
+	return (getTicks() == compTime.getTicks());
 }
 
 bool DateTime::operator!=(const Ionflux::Template::DateTime& compTime) 
@@ -968,27 +988,27 @@ const
 bool DateTime::operator>(const Ionflux::Template::DateTime& compTime) const
 {
 	// TODO: Implementation.
-	return false;
+	return (getTicks() > compTime.getTicks());
 }
 
 bool DateTime::operator<(const Ionflux::Template::DateTime& compTime) const
 {
 	// TODO: Implementation.
-	return false;
+	return (getTicks() < compTime.getTicks());
 }
 
 bool DateTime::operator>=(const Ionflux::Template::DateTime& compTime) 
 const
 {
 	// TODO: Implementation.
-	return false;
+	return (getTicks() >= compTime.getTicks());
 }
 
 bool DateTime::operator<=(const Ionflux::Template::DateTime& compTime) 
 const
 {
 	// TODO: Implementation.
-	return false;
+	return (getTicks() <= compTime.getTicks());
 }
 
 Ionflux::Template::Year DateTime::countLeapYears(Ionflux::Template::Year 

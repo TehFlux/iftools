@@ -708,6 +708,17 @@ class DateTime
 		 */
 		virtual std::string getTimestamp();
 		
+		/** Get timestamp.
+		 *
+		 * Create a timestamp in string representation ("YYYY-MM-DD 
+		 * HH:MM:SS").
+		 * 
+		 * \sa getTimestamp()
+		 *
+		 * \return Timestamp.
+		 */
+		virtual std::string getTimestamp() const;
+		
 		/** Get time of day.
 		 *
 		 * Get time of day in string representation ("HH:MM:SS").
