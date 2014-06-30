@@ -419,6 +419,11 @@ Tokenizer::create(Ionflux::ObjectBase::IFObject* parentObject)
     return newObject;
 }
 
+unsigned int Tokenizer::getMemSize() const
+{
+    return sizeof *this;
+}
+
 }
 
 }

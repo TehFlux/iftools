@@ -129,6 +129,11 @@ StringLTrim::create(Ionflux::ObjectBase::IFObject* parentObject)
     return newObject;
 }
 
+unsigned int StringLTrim::getMemSize() const
+{
+    return sizeof *this;
+}
+
 }
 
 }

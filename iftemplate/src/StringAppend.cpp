@@ -131,6 +131,11 @@ StringAppend::create(Ionflux::ObjectBase::IFObject* parentObject)
     return newObject;
 }
 
+unsigned int StringAppend::getMemSize() const
+{
+    return sizeof *this;
+}
+
 }
 
 }

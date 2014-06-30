@@ -464,6 +464,11 @@ Ionflux::ObjectBase::IFObject* parentObject)
     return newObject;
 }
 
+unsigned int File::getMemSize() const
+{
+    return sizeof *this;
+}
+
 }
 
 }

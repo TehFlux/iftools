@@ -207,6 +207,11 @@ NodeReference::create(Ionflux::ObjectBase::IFObject* parentObject)
     return newObject;
 }
 
+unsigned int NodeReference::getMemSize() const
+{
+    return sizeof *this;
+}
+
 }
 
 }

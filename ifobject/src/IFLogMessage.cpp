@@ -348,6 +348,11 @@ int IFLogMessage::deserialize(const std::string& source, int offset)
 	return offset;
 }
 
+unsigned int IFLogMessage::getMemSize() const
+{
+    return sizeof *this;
+}
+
 }
 
 }

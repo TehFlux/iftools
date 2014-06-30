@@ -134,6 +134,11 @@ StringReplace::create(Ionflux::ObjectBase::IFObject* parentObject)
     return newObject;
 }
 
+unsigned int StringReplace::getMemSize() const
+{
+    return sizeof *this;
+}
+
 }
 
 }

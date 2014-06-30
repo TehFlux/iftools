@@ -128,6 +128,11 @@ StringTrim::create(Ionflux::ObjectBase::IFObject* parentObject)
     return newObject;
 }
 
+unsigned int StringTrim::getMemSize() const
+{
+    return sizeof *this;
+}
+
 }
 
 }

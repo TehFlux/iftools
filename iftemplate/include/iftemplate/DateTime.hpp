@@ -1073,6 +1073,14 @@ class DateTime
 		initYear, int initMonth, int initDay, int initHour, int initMinute, int 
 		initSecond, Ionflux::ObjectBase::IFObject* parentObject = 0);
 		
+		/** Get allocated size in memory.
+		 *
+		 * Get the allocated size in memory for the object.
+		 *
+		 * \return The more specific object, or 0 if the cast failed.
+		 */
+		virtual unsigned int getMemSize() const;
+		
 		/** Get number of UTC seconds since 0001-01-01 00:00:00.
 		 *
 		 * \return Current value of number of UTC seconds since 0001-01-01 

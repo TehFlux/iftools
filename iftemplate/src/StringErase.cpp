@@ -134,6 +134,11 @@ StringErase::create(Ionflux::ObjectBase::IFObject* parentObject)
     return newObject;
 }
 
+unsigned int StringErase::getMemSize() const
+{
+    return sizeof *this;
+}
+
 }
 
 }

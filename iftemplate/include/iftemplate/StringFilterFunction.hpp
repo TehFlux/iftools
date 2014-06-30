@@ -170,6 +170,14 @@ class StringFilterFunction
 		initManip = 0, Ionflux::ObjectBase::StringVector* initArgs = 0, 
 		Ionflux::ObjectBase::IFObject* parentObject = 0);
 		
+		/** Get allocated size in memory.
+		 *
+		 * Get the allocated size in memory for the object.
+		 *
+		 * \return The more specific object, or 0 if the cast failed.
+		 */
+		virtual unsigned int getMemSize() const;
+		
 		/** Get name of the filter function.
 		 *
 		 * \return Current value of name of the filter function.

@@ -142,6 +142,11 @@ StringLowercase::create(Ionflux::ObjectBase::IFObject* parentObject)
     return newObject;
 }
 
+unsigned int StringLowercase::getMemSize() const
+{
+    return sizeof *this;
+}
+
 }
 
 }

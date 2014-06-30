@@ -136,6 +136,11 @@ StringRPad::create(Ionflux::ObjectBase::IFObject* parentObject)
     return newObject;
 }
 
+unsigned int StringRPad::getMemSize() const
+{
+    return sizeof *this;
+}
+
 }
 
 }

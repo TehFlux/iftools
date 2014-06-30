@@ -2170,6 +2170,11 @@ Ionflux::ObjectBase::IFObject* parentObject)
     return newObject;
 }
 
+unsigned int Template::getMemSize() const
+{
+    return sizeof *this;
+}
+
 }
 
 }

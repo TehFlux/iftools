@@ -66,6 +66,7 @@ class IFMMEventHandler
 		upcast(Ionflux::ObjectBase::IFObject* other);
 		static Ionflux::ObjectBase::IFMMEventHandler* 
 		create(Ionflux::ObjectBase::IFObject* parentObject = 0);
+		virtual unsigned int getMemSize() const;
 		static Ionflux::ObjectBase::IFMMEventHandler* 
 		create(Ionflux::ObjectBase::IFMMEventHandler* initTarget, const 
 		std::string& initLogFileName = "", bool initSilentFlag = true, 

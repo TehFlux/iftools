@@ -171,6 +171,11 @@ StringNumFormat::create(Ionflux::ObjectBase::IFObject* parentObject)
     return newObject;
 }
 
+unsigned int StringNumFormat::getMemSize() const
+{
+    return sizeof *this;
+}
+
 }
 
 }

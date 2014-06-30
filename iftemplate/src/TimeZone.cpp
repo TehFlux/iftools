@@ -205,13 +205,6 @@ const
 	{
 	    DateTime toDstDT = getSwitchDT(utcDT.getYear(), toDST);
 	    DateTime toNormalDT = getSwitchDT(utcDT.getYear(), toNormal);
-	    /* <---- DEBUG ----- //
-	    std::cerr << "[TimeZone::getCurrentOffset] DEBUG: " 
-	        << "toDstDT = " << toDstDT.getTimestamp() << ", "
-	        << "toNormalDT = " << toNormalDT.getTimestamp() << ", "
-	        << "utcDT = " << utcDT.getTimestamp()
-	        << std::endl;
-	    // ----- DEBUG ----> */
 	    if ((utcDT >= toDstDT) && (utcDT < toNormalDT))
 	        currentOffset += 60;
 	}
@@ -424,6 +417,11 @@ std::string& initAliases, Ionflux::ObjectBase::IFObject* parentObject)
     if (parentObject != 0)
         parentObject->addLocalRef(newObject);
     return newObject;
+}
+
+unsigned int TimeZone::getMemSize() const
+{
+    return sizeof *this;
 }
 
 }

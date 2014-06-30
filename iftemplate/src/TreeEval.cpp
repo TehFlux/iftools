@@ -899,6 +899,11 @@ TreeEval::create(Ionflux::ObjectBase::IFObject* parentObject)
     return newObject;
 }
 
+unsigned int TreeEval::getMemSize() const
+{
+    return sizeof *this;
+}
+
 }
 
 }

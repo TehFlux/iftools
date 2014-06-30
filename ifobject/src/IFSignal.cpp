@@ -138,6 +138,11 @@ std::string IFSignal::getName() const
     return name;
 }
 
+unsigned int IFSignal::getMemSize() const
+{
+    return sizeof *this;
+}
+
 }
 
 }

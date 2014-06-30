@@ -144,6 +144,11 @@ StringInsert::create(Ionflux::ObjectBase::IFObject* parentObject)
     return newObject;
 }
 
+unsigned int StringInsert::getMemSize() const
+{
+    return sizeof *this;
+}
+
 }
 
 }

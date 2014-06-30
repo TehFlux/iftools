@@ -70,6 +70,7 @@ class IFMMEvent
 		upcast(Ionflux::ObjectBase::IFObject* other);
 		static Ionflux::ObjectBase::IFMMEvent* 
 		create(Ionflux::ObjectBase::IFObject* parentObject = 0);
+		virtual unsigned int getMemSize() const;
 		static Ionflux::ObjectBase::IFMMEvent* 
 		create(Ionflux::ObjectBase::MMEventTypeID initTypeID, const 
 		Ionflux::ObjectBase::IFObject* initObject, unsigned int 

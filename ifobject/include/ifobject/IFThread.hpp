@@ -286,6 +286,14 @@ class IFThread
 		static void nanoSleep(unsigned int sleepSecs, unsigned int 
 		sleepNanoSecs);
 		
+		/** Get allocated size in memory.
+		 *
+		 * Get the allocated size in memory for the object.
+		 *
+		 * \return The more specific object, or 0 if the cast failed.
+		 */
+		virtual unsigned int getMemSize() const;
+		
 		/** Get the function which is executed within the thread.
 		 *
 		 * \return Current value of the function which is executed within the 

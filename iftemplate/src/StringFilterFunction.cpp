@@ -280,6 +280,11 @@ parentObject)
     return newObject;
 }
 
+unsigned int StringFilterFunction::getMemSize() const
+{
+    return sizeof *this;
+}
+
 }
 
 }

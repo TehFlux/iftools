@@ -142,7 +142,8 @@ class {$class.name}{if ( haveBaseIFObject == 1 ) || ( haveBaseOther == 1 )}
 {swrap 75 "		"}virtual {foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}* copy() const;{/swrap}{/if}{/if}{if enableUpcast == 1}
 {swrap 75 "		"}static {foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}* upcast(Ionflux::ObjectBase::IFObject* other);{/swrap}{/if}{if enableCreate == 1}
 {swrap 75 "		"}static {foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}* create(Ionflux::ObjectBase::IFObject* parentObject = 0);{/swrap}{if enablePersistence == 1}
-{swrap 75 "		"}static {foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}* create({$project.persistence.namespace}::{$project.persistence.database}* initDatabase, int objectID = -1);{/swrap}{/if}{if enableExtendedCreate == 1}{ref declareExtendedCreateFuncs}{/if}{/if}{if enableParam == 1}{foreach prm in class.param}
+{swrap 75 "		"}static {foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}* create({$project.persistence.namespace}::{$project.persistence.database}* initDatabase, int objectID = -1);{/swrap}{/if}{if ( haveBaseIFObject == 1 ) || ( enableClassInfo == 1)}
+{swrap 75 "		"}virtual unsigned int getMemSize() const;{/swrap}{/if}{if enableExtendedCreate == 1}{ref declareExtendedCreateFuncs}{/if}{/if}{if enableParam == 1}{foreach prm in class.param}
 {swrap 75 "		"}virtual void set{$prm.name|uppercase(1)}(Ionflux::ObjectBase::IFParamID paramID, {$prm.type} paramValue);{/swrap}
 {swrap 75 "		"}virtual {$prm.type} get{$prm.name|uppercase(1)}(Ionflux::ObjectBase::IFParamID paramID);{/swrap}{/foreach}{/if}{if enableSerialize == 1}
         virtual bool serialize(std::string& target) const;

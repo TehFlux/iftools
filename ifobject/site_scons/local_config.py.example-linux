@@ -15,16 +15,19 @@ baseName = 'ifobject'
 # Prefix.
 # Set this if you do not want to use the default or the SCons command line 
 # parameter.
-prefix = '/opt'
+prefix = '/home/flux4/usr'
 
-# debug mode
+# Enable debug mode.
 debug = True
 
 # Python version.
-pythonVersion = "3.3"
+pythonVersion = "3.4"
 # Python site packages path.
 pythonSitePackagesPath = ('/python' + pythonVersion + '/lib/python' 
     + pythonVersion + '/site-packages')
+
+# Ionflux Object Base system template path
+ifobjectTemplatePath = 'template'
 
 # The SWIG interface template file.
 swigInterfaceTemplateFile = [
@@ -36,14 +39,18 @@ swigInterfaceFile = [
 ]
 
 # Paths.
-PATH = 'bin'
+PATH = 'bin:bootstrap/bin'
 CPPPATH = [
     prefix + '/python' + pythonVersion + '/include/python' 
         + pythonVersion, 
-    prefix + '/include'
+    '/home/flux4/svn/iftools/trunk/iftemplate/include', 
+    prefix + '/include', 
+    'bootstrap/include'
 ]
 LIBPATH = [
     prefix + '/python' + pythonVersion + '/lib', 
-    prefix + '/lib'
+    '/home/flux4/svn/iftools/trunk/iftemplate/lib', 
+    prefix + '/lib', 
+    'bootstrap/lib'
 ]
 

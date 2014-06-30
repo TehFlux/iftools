@@ -62,7 +62,8 @@ class IFXMLObjectFactory
 		static Ionflux::ObjectBase::XMLUtils::IFXMLObjectFactory* 
 		upcast(Ionflux::ObjectBase::IFObject* other);
 		static Ionflux::ObjectBase::XMLUtils::IFXMLObjectFactory* 
-		create(Ionflux::ObjectBase::IFObject* parentObject = 0);        
+		create(Ionflux::ObjectBase::IFObject* parentObject = 0);
+		virtual unsigned int getMemSize() const;        
         virtual unsigned int getNumFactories() const;
         virtual Ionflux::ObjectBase::XMLUtils::IFXMLObjectFactory* 
         getFactory(unsigned int elementIndex = 0) const;

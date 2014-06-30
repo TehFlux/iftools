@@ -137,6 +137,11 @@ Ionflux::ObjectBase::IFMutex* IFGuard::getMutex() const
     return mutex;
 }
 
+unsigned int IFGuard::getMemSize() const
+{
+    return sizeof *this;
+}
+
 }
 
 }

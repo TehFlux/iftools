@@ -79,6 +79,7 @@ class IFCache
         hits = 0);
 		static Ionflux::ObjectBase::IFCache* 
 		create(Ionflux::ObjectBase::IFObject* parentObject = 0);
+		virtual unsigned int getMemSize() const;
         virtual void setMaxSize(Ionflux::ObjectBase::UInt64 newMaxSize);
         virtual Ionflux::ObjectBase::UInt64 getMaxSize() const;
         virtual Ionflux::ObjectBase::UInt64 getCurrentSize() const;

@@ -137,6 +137,11 @@ StringTruncate::create(Ionflux::ObjectBase::IFObject* parentObject)
     return newObject;
 }
 
+unsigned int StringTruncate::getMemSize() const
+{
+    return sizeof *this;
+}
+
 }
 
 }

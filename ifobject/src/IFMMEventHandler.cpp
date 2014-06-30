@@ -244,6 +244,11 @@ Ionflux::ObjectBase::IFObject* parentObject)
     return newObject;
 }
 
+unsigned int IFMMEventHandler::getMemSize() const
+{
+    return sizeof *this;
+}
+
 }
 
 }

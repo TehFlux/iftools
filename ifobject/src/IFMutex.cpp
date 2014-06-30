@@ -166,6 +166,11 @@ Ionflux::ObjectBase::IFMutexType IFMutex::getType() const
     return type;
 }
 
+unsigned int IFMutex::getMemSize() const
+{
+    return sizeof *this;
+}
+
 }
 
 }

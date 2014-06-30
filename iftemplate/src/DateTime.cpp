@@ -1283,6 +1283,11 @@ initSecond, Ionflux::ObjectBase::IFObject* parentObject)
     return newObject;
 }
 
+unsigned int DateTime::getMemSize() const
+{
+    return sizeof *this;
+}
+
 }
 
 }

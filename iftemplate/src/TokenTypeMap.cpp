@@ -243,6 +243,11 @@ TokenTypeMap::create(Ionflux::ObjectBase::IFObject* parentObject)
     return newObject;
 }
 
+unsigned int TokenTypeMap::getMemSize() const
+{
+    return sizeof *this;
+}
+
 }
 
 }

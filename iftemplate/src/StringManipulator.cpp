@@ -131,6 +131,11 @@ StringManipulator::create(Ionflux::ObjectBase::IFObject* parentObject)
     return newObject;
 }
 
+unsigned int StringManipulator::getMemSize() const
+{
+    return sizeof *this;
+}
+
 }
 
 }

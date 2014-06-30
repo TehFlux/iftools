@@ -129,6 +129,11 @@ StringRTrim::create(Ionflux::ObjectBase::IFObject* parentObject)
     return newObject;
 }
 
+unsigned int StringRTrim::getMemSize() const
+{
+    return sizeof *this;
+}
+
 }
 
 }

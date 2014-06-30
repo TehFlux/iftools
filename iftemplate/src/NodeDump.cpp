@@ -86,6 +86,11 @@ NodeDump::upcast(Ionflux::ObjectBase::IFObject* other)
     return dynamic_cast<NodeDump*>(other);
 }
 
+unsigned int NodeDump::getMemSize() const
+{
+    return sizeof *this;
+}
+
 }
 
 }

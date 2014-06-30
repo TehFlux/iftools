@@ -571,6 +571,11 @@ initFilter, Ionflux::ObjectBase::IFObject* parentObject)
     return newObject;
 }
 
+unsigned int StringFilter::getMemSize() const
+{
+    return sizeof *this;
+}
+
 }
 
 }

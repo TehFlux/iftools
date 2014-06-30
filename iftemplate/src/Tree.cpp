@@ -268,6 +268,11 @@ parentObject)
     return newObject;
 }
 
+unsigned int Tree::getMemSize() const
+{
+    return sizeof *this;
+}
+
 }
 
 }

@@ -138,6 +138,11 @@ parentObject)
     return newObject;
 }
 
+unsigned int Config::getMemSize() const
+{
+    return sizeof *this;
+}
+
 }
 
 }

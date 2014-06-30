@@ -779,6 +779,11 @@ ConfigTree::create(Ionflux::ObjectBase::IFObject* parentObject)
     return newObject;
 }
 
+unsigned int ConfigTree::getMemSize() const
+{
+    return sizeof *this;
+}
+
 }
 
 }

@@ -558,6 +558,11 @@ parentObject)
     return newObject;
 }
 
+unsigned int CLArgs::getMemSize() const
+{
+    return sizeof *this;
+}
+
 }
 
 }

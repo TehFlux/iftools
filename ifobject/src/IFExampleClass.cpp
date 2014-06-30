@@ -539,6 +539,11 @@ int IFExampleClass::deserialize(const std::string& source, int offset)
 	return offset;
 }
 
+unsigned int IFExampleClass::getMemSize() const
+{
+    return sizeof *this;
+}
+
 IFExampleSignal& IFExampleClass::getSignalFirst()
 {
 	return signalFirst;

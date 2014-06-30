@@ -372,6 +372,7 @@ class IFObject
         virtual std::string getErrorString(const std::string& message, 
         const std::string& source = "") const;
         virtual std::string getString() const;
+        virtual unsigned int getMemSize() const;
 		static Ionflux::ObjectBase::XMLUtils::IFXMLObjectFactory* 
 		getXMLObjectFactory();
         virtual bool serialize(std::string& target) const;
@@ -502,6 +503,7 @@ class IFCache
         hits = 0);
 		static Ionflux::ObjectBase::IFCache* 
 		create(Ionflux::ObjectBase::IFObject* parentObject = 0);
+		virtual unsigned int getMemSize() const;
         virtual void setMaxSize(Ionflux::ObjectBase::UInt64 newMaxSize);
         virtual Ionflux::ObjectBase::UInt64 getMaxSize() const;
         virtual Ionflux::ObjectBase::UInt64 getCurrentSize() const;
@@ -563,6 +565,7 @@ class IFMMEvent
 		upcast(Ionflux::ObjectBase::IFObject* other);
 		static Ionflux::ObjectBase::IFMMEvent* 
 		create(Ionflux::ObjectBase::IFObject* parentObject = 0);
+		virtual unsigned int getMemSize() const;
 		static Ionflux::ObjectBase::IFMMEvent* 
 		create(Ionflux::ObjectBase::MMEventTypeID initTypeID, const 
 		Ionflux::ObjectBase::IFObject* initObject, unsigned int 
@@ -629,6 +632,7 @@ class IFMMEventHandler
 		upcast(Ionflux::ObjectBase::IFObject* other);
 		static Ionflux::ObjectBase::IFMMEventHandler* 
 		create(Ionflux::ObjectBase::IFObject* parentObject = 0);
+		virtual unsigned int getMemSize() const;
 		static Ionflux::ObjectBase::IFMMEventHandler* 
 		create(Ionflux::ObjectBase::IFMMEventHandler* initTarget, const 
 		std::string& initLogFileName = "", bool initSilentFlag = true, 
@@ -686,7 +690,8 @@ class IFXMLObjectFactory
 		static Ionflux::ObjectBase::XMLUtils::IFXMLObjectFactory* 
 		upcast(Ionflux::ObjectBase::IFObject* other);
 		static Ionflux::ObjectBase::XMLUtils::IFXMLObjectFactory* 
-		create(Ionflux::ObjectBase::IFObject* parentObject = 0);        
+		create(Ionflux::ObjectBase::IFObject* parentObject = 0);
+		virtual unsigned int getMemSize() const;        
         virtual unsigned int getNumFactories() const;
         virtual Ionflux::ObjectBase::XMLUtils::IFXMLObjectFactory* 
         getFactory(unsigned int elementIndex = 0) const;

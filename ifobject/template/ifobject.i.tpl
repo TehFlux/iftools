@@ -309,6 +309,7 @@ class IFObject
         virtual std::string getErrorString(const std::string& message, 
         const std::string& source = "") const;
         virtual std::string getString() const;
+        virtual unsigned int getMemSize() const;
 		static Ionflux::ObjectBase::XMLUtils::IFXMLObjectFactory* 
 		getXMLObjectFactory();
         virtual bool serialize(std::string& target) const;

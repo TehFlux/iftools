@@ -453,6 +453,11 @@ TreeResolver::create(Ionflux::ObjectBase::IFObject* parentObject)
     return newObject;
 }
 
+unsigned int TreeResolver::getMemSize() const
+{
+    return sizeof *this;
+}
+
 }
 
 }

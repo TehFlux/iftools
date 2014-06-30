@@ -1260,6 +1260,11 @@ int IFObject::deserialize(const std::string& source, int offset)
 	return offset;
 }
 
+unsigned int IFObject::getMemSize() const
+{
+    return sizeof *this;
+}
+
 IFObjectSignal& IFObject::getSignalObjectChanged()
 {
 	return signalObjectChanged;

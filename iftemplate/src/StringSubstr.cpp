@@ -137,6 +137,11 @@ StringSubstr::create(Ionflux::ObjectBase::IFObject* parentObject)
     return newObject;
 }
 
+unsigned int StringSubstr::getMemSize() const
+{
+    return sizeof *this;
+}
+
 }
 
 }

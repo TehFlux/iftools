@@ -153,6 +153,11 @@ StringCenter::create(Ionflux::ObjectBase::IFObject* parentObject)
     return newObject;
 }
 
+unsigned int StringCenter::getMemSize() const
+{
+    return sizeof *this;
+}
+
 }
 
 }

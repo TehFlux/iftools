@@ -224,6 +224,14 @@ class IFLogMessage
 		 */
 		virtual int deserialize(const std::string& source, int offset = 0);
 		
+		/** Get allocated size in memory.
+		 *
+		 * Get the allocated size in memory for the object.
+		 *
+		 * \return The more specific object, or 0 if the cast failed.
+		 */
+		virtual unsigned int getMemSize() const;
+		
 		/** Get the message.
 		 *
 		 * \return Current value of the message.

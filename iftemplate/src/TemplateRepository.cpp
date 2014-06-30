@@ -357,6 +357,11 @@ TemplateRepository::create(Ionflux::ObjectBase::IFObject* parentObject)
     return newObject;
 }
 
+unsigned int TemplateRepository::getMemSize() const
+{
+    return sizeof *this;
+}
+
 }
 
 }

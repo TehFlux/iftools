@@ -257,6 +257,11 @@ Ionflux::ObjectBase::IFObject* IFThread::getContext() const
     return context;
 }
 
+unsigned int IFThread::getMemSize() const
+{
+    return sizeof *this;
+}
+
 IFThreadSignal& IFThread::getSignalStart()
 {
 	return signalStart;
