@@ -25,6 +25,49 @@ XML I/O
 This module adds automatic XML serialization and deserialization functions 
 for a class.
 
+The XML serialization functions that are added to each class are:
+
+  getXMLElementName()     Get the XML element name for the object.
+  getXMLAttributeData()   Get a string containing the XML attributes of 
+                          the object.
+  getXMLChildData()       Get the XML child data for the object.
+  loadFromXMLFile(()      Initialize the object from an XML file.
+  getXMLObjectFactory()   Get the XML object factory for the class (static).
+
+The build system is expected to create an XML object factory class for each 
+class that needs to be deserialized from XML. This is done using the 
+buildClassXMLFactory() builder (see site_scons/builders.py) and the 
+xml.conf.xml_object_factory template.
+
+Deserialization using the XML object factory is polymorphic if a child 
+class has registered its factory with the XML object factory of the parent 
+class. For this to work, it is sufficient to call getXMLObjectFactory() once 
+on each of the polymorphic child classes in application code.
+
+For serialization and deserialization of basic types, template functions are 
+defined in xmlutils.hpp, xmlutils_private.hpp and xmlutils.cpp. These 
+functions are:
+
+  getXML0()          Serialization of IntVector, UIntVector, DoubleVector, 
+                     vector of objects and dictionary of objects.
+  getObject0()       Polymorphic initialization of an object from an XML 
+                     element.
+  loadFromXMLFile()  Polymorphic loading of an object from an XML file.
+  getObjVector()     Polymorphic loading of a vector of objects.
+  getObjMap()        Polymorphic loading of a dictionary of objects.
+
+In addition to this, the XML object factory for each class defines the 
+following public functions:
+
+  getObjectXMLElementName()
+                     Get the XML element name for the object class.
+  getObjectClassName()
+                     Get the object class name.
+  initObject()       Initialize an object from an XML element or an XML 
+                     string.
+  createObject()     Create a new, uninitialized object or a new object 
+                     initialized from XML element.
+
 --------------------------------------------------------------------------------
 Configuration options
 --------------------------------------------------------------------------------
@@ -44,6 +87,10 @@ class
                    is outside the project namespace.
       getFunc      The function to be used for initializing an instance of the 
                    child class from an XML element.
+   base.[...]
+      xml.enabled  Set this to 'true' if a base class supports XML I/O and 
+                   the class should register its XML object factory with that 
+                   of the base class for polymorphic deserialization.
 
 property.protected[]
   [general]
@@ -94,6 +141,20 @@ property.protected[]
   [style = 'vector' | 'map']
   element
     valueType      Value type to be used for vector elements.
+
+function
+  xml
+    fromXML.impl   Implementation of the XML deserialization function 
+                   ([...]XMLObjectFactory::initObject())
+    loadFromFile.impl
+                   Implementation of the XML file loading function 
+                   (loadFromXMLFile()).
+    childData.impl 
+                   Implementation of the XML child data function 
+                   (getXMLChildData()).
+    attributeData.impl
+                   Implementation of the XML attribute data function 
+                   (getXMLAttributeData()).
 
 --------------------------------------------------------------------------------
 Template variables

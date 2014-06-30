@@ -24,7 +24,7 @@
 # 02111-1307 USA
 # 
 # ==========================================================================
-{import class.check_features}{import class.utils.get_fq_name}{ref checkFeatures}{import class.impl.insert_includes}{import class.impl.create_class_name_funcs_impl}{import class.impl.create_event_helper_function_impl}{import class.impl.property.create_property_set_funcs_impl}{import class.impl.accessor.create_extended_vector_add_func_impl}{import class.impl.accessor.create_extended_map_add_func_impl}{import class.impl.accessor.create_property_accessor_impl}{import class.impl.create_func_impl}{import class.impl.qt.create_qt_slot_impl}{import class.impl.operation.create_op_proxy_impl}{import class.impl.operation.create_op_dispatch_impl}{import class.impl.serialize.serialize_prop}{import class.impl.serialize.serialize_var}{import class.impl.serialize.deserialize_prop}{import class.impl.serialize.deserialize_var}{import class.impl.define_global_func}{import class.impl.persistence.create_persistent_init_func_impl}{import class.impl.persistence.persistent_database_accessor_impl}{import class.impl.persistence.create_persistent_protected_funcs_impl}{import class.impl.create_copy_funcs_impl}{import class.impl.create_upcast_funcs_impl}{import class.impl.create_extended_create_funcs_impl}{import class.impl.create_create_funcs_impl}{import class.impl.create_mem_funcs_impl}{import class.impl.create_param_funcs_impl}{import class.impl.xml.create_xml_io_funcs_impl}{import class.impl.project_info}{ref projectInfo}{ref insertIncludes}{foreach un in undef.impl}
+{import class.check_features}{import class.utils.get_fq_name}{ref checkFeatures}{import class.impl.insert_includes}{import class.impl.create_class_name_funcs_impl}{import class.impl.create_event_helper_function_impl}{import class.impl.property.create_property_set_funcs_impl}{import class.impl.accessor.create_extended_vector_add_func_impl}{import class.impl.accessor.create_extended_map_add_func_impl}{import class.impl.accessor.create_property_accessor_impl}{import class.impl.create_func_impl}{import class.impl.qt.create_qt_slot_impl}{import class.impl.operation.create_op_proxy_impl}{import class.impl.operation.create_op_dispatch_impl}{import class.impl.serialize.serialize_prop}{import class.impl.serialize.serialize_var}{import class.impl.serialize.deserialize_prop}{import class.impl.serialize.deserialize_var}{import class.impl.create_serialize_funcs_impl}{import class.impl.define_global_func}{import class.impl.persistence.create_persistent_init_func_impl}{import class.impl.persistence.persistent_database_accessor_impl}{import class.impl.persistence.create_persistent_protected_funcs_impl}{import class.impl.create_copy_funcs_impl}{import class.impl.create_upcast_funcs_impl}{import class.impl.create_extended_create_funcs_impl}{import class.impl.create_create_funcs_impl}{import class.impl.create_mem_funcs_impl}{import class.impl.create_param_funcs_impl}{import class.impl.xml.create_xml_io_funcs_impl}{import class.impl.project_info}{ref projectInfo}{ref insertIncludes}{foreach un in undef.impl}
 \#undef {$un}{/foreach}{foreach ud in using}{first}
 {/first}{single}
 {/single}
@@ -216,27 +216,7 @@ const std::string {$class.name}::XML_ELEMENT_NAME = "{if class.xml.elementName !
 	persistent = 0;{else}
 	// TODO: Nothing ATM. ;-){/if}{else}
 {$destructor.impl|swrap(75,'	')}{/if}
-\}{foreach func in function.private}{ref createFuncImpl}{/foreach}{foreach func in function.protected}{ref createFuncImpl}{/foreach}{if enablePersistence == 1}{ref createPersistentProtectedFuncsImpl}{/if}{foreach op in operation}{ref createOpProxyImpl}{/foreach}{if haveOps == 1}{ref createOpDispatchImpl}{/if}{foreach ev in event}{ref createEventHelperFunctionImpl}{/foreach}{foreach func in function.public}{ref createFuncImpl}{/foreach}{foreach prop in property.private}{ref createPropertyAccessorImpl}{/foreach}{foreach prop in property.protected}{ref createPropertyAccessorImpl}{/foreach}{if ( enablePersistence == 1 ) && ( haveBasePersistent == 0 )}{ref persistentDatabaseAccessorImpl}{/if}{if enableSerialize == 1}
-
-bool {$class.name}::serialize(std::string& target) const
-\{{if haveBaseIFObject == 1}{foreach bc in class.base.ifobject}
-	if (!{$bc.name}::serialize(target))
-		return false;{/foreach}{/if}{foreach bc in class.base.other}{if bc.serialize == "true"}
-	if (!{$bc.name}::serialize(target))
-		return false;{/if}{/foreach}{foreach prop in property.private}{if prop.serialize == "true"}{ref serializeProp}{/if}{/foreach}{foreach prop in property.protected}{if prop.serialize == "true"}{ref serializeProp}{/if}{/foreach}{foreach var in variable.private}{if var.serialize == "true"}{ref serializeVar}{/if}{/foreach}{foreach var in variable.protected}{if var.serialize == "true"}{ref serializeVar}{/if}{/foreach}{foreach var in variable.public}{if var.serialize == "true"}{ref serializeVar}{/if}{/foreach}
-	return true;
-\}
-
-int {$class.name}::deserialize(const std::string& source, int offset)
-\{{if haveBaseIFObject == 1}{foreach bc in class.base.ifobject}
-	offset = {$bc.name}::deserialize(source, offset);
-	if (offset < 0)
-		return -1;{/foreach}{/if}{foreach bc in class.base.other}{if bc.serialize == "true"}
-	offset = {$bc.name}::deserialize(source, offset);
-	if (offset < 0)
-		return false;{/if}{/foreach}{foreach prop in property.private}{if prop.serialize == "true"}{ref deserializeProp}{/if}{/foreach}{foreach prop in property.protected}{if prop.serialize == "true"}{ref deserializeProp}{/if}{/foreach}{foreach var in variable.private}{if var.serialize == "true"}{ref deserializeVar}{/if}{/foreach}{foreach var in variable.protected}{if var.serialize == "true"}{ref deserializeVar}{/if}{/foreach}{foreach var in variable.public}{if var.serialize == "true"}{ref deserializeVar}{/if}{/foreach}
-	return offset;
-\}{/if}{if enablePersistence == 1}{ref createPersistenceFuncsImpl}{/if}{if enableCopy == 1}{ref createCopyFuncsImpl}{/if}{if enableUpcast == 1}{ref createUpcastFuncsImpl}{/if}{if enableCreate == 1}{ref createCreateFuncsImpl}{/if}{if ( haveBaseIFObject == 1 ) || ( enableClassInfo == 1)}{ref createMemFuncsImpl}{/if}{if enableParam == 1}{ref createParamFuncsImpl}{/if}{foreach sig in signal}{foreach ins in sig.instance}
+\}{foreach func in function.private}{ref createFuncImpl}{/foreach}{foreach func in function.protected}{ref createFuncImpl}{/foreach}{if enablePersistence == 1}{ref createPersistentProtectedFuncsImpl}{/if}{foreach op in operation}{ref createOpProxyImpl}{/foreach}{if haveOps == 1}{ref createOpDispatchImpl}{/if}{foreach ev in event}{ref createEventHelperFunctionImpl}{/foreach}{foreach func in function.public}{ref createFuncImpl}{/foreach}{foreach prop in property.private}{ref createPropertyAccessorImpl}{/foreach}{foreach prop in property.protected}{ref createPropertyAccessorImpl}{/foreach}{if ( enablePersistence == 1 ) && ( haveBasePersistent == 0 )}{ref persistentDatabaseAccessorImpl}{/if}{if enableSerialize == 1}{ref createSerializeFuncsImpl}{/if}{if enablePersistence == 1}{ref createPersistenceFuncsImpl}{/if}{if enableCopy == 1}{ref createCopyFuncsImpl}{/if}{if enableUpcast == 1}{ref createUpcastFuncsImpl}{/if}{if enableCreate == 1}{ref createCreateFuncsImpl}{/if}{if ( haveBaseIFObject == 1 ) || ( enableClassInfo == 1)}{ref createMemFuncsImpl}{/if}{if enableParam == 1}{ref createParamFuncsImpl}{/if}{foreach sig in signal}{foreach ins in sig.instance}
 
 IF{$sig.id|uppercase(1)}Signal& {$class.name}::getSignal{$ins.name|uppercase(1)}()
 \{

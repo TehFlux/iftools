@@ -24,7 +24,7 @@
 # 02111-1307 USA
 # 
 # ==========================================================================
-{import class.check_features}{ref checkFeatures}{import class.utils.get_fq_name}{import class.header.insert_includes}{import class.header.insert_forwards}{import class.header.insert_typedefs}{import class.header.create_struct_decl}{import class.header.create_event_helper_function_decl}{import class.header.declare_global_func}{import class.header.declare_class_name_funcs}{import class.header.property.declare_property_set_funcs}{import class.header.property.declare_property_clear_func}{import class.header.accessor.declare_extended_vector_add_funcs}{import class.header.accessor.declare_vector_write_funcs}{import class.header.accessor.declare_extended_map_add_funcs}{import class.header.accessor.declare_map_write_funcs}{import class.header.accessor.declare_property_write_funcs}{import class.header.accessor.declare_vector_read_funcs}{import class.header.accessor.declare_map_read_funcs}{import class.header.accessor.declare_property_read_funcs}{import class.header.persistence.declare_persistent_init_func}{import class.header.persistence.declare_persistence_funcs}{import class.header.persistence.declare_persistent_protected_funcs}{import class.header.declare_copy_funcs}{import class.header.declare_upcast_funcs}{import class.header.declare_mem_funcs}{import class.header.declare_extended_create_funcs}{import class.header.declare_create_funcs}{import class.header.declare_param_funcs}{import class.header.declare_func}{import class.header.qt.declare_qt_signal}{import class.header.qt.declare_qt_slot}{import class.header.xml.declare_xml_io_funcs}{import class.header.project_info}{ref projectInfo}
+{import class.check_features}{ref checkFeatures}{import class.utils.get_fq_name}{import class.header.insert_includes}{import class.header.insert_forwards}{import class.header.insert_typedefs}{import class.header.create_struct_decl}{import class.header.create_event_helper_function_decl}{import class.header.declare_global_func}{import class.header.declare_class_name_funcs}{import class.header.property.declare_property_set_funcs}{import class.header.property.declare_property_clear_func}{import class.header.accessor.declare_extended_vector_add_funcs}{import class.header.accessor.declare_vector_write_funcs}{import class.header.accessor.declare_extended_map_add_funcs}{import class.header.accessor.declare_map_write_funcs}{import class.header.accessor.declare_property_write_funcs}{import class.header.accessor.declare_vector_read_funcs}{import class.header.accessor.declare_map_read_funcs}{import class.header.accessor.declare_property_read_funcs}{import class.header.persistence.declare_persistent_init_func}{import class.header.persistence.declare_persistence_funcs}{import class.header.persistence.declare_persistent_protected_funcs}{import class.header.declare_serialize_funcs}{import class.header.declare_copy_funcs}{import class.header.declare_upcast_funcs}{import class.header.declare_mem_funcs}{import class.header.declare_extended_create_funcs}{import class.header.declare_create_funcs}{import class.header.declare_param_funcs}{import class.header.declare_func}{import class.header.qt.declare_qt_signal}{import class.header.qt.declare_qt_slot}{import class.header.xml.declare_xml_io_funcs}{import class.header.project_info}{ref projectInfo}
 {ref insertIncludes}{if class.linkagePrefix != ""}
 
 \#ifndef {$class.linkagePrefix}
@@ -229,36 +229,7 @@ class {if class.linkagePrefix != ""}{$class.linkagePrefix} {else}{if project.lin
 		 *
 		 * Destruct {$class.name} object.
 		 */
-		virtual ~{$class.name}(){if destructor.throw != ""} throw({if destructor.throw != "<none>"}{$destructor.throw}{/if}){/if};{foreach ev in event}{ref createEventHelperFunctionDecl}{/foreach}{foreach func in function.public}{ref declareFunc}{/foreach}{if enableSerialize == 1}
-		
-		/** Serialize.
-		 *
-		 * Serialize the object. This creates a string which contains data 
-		 * from which the internal state of the object (as supported 
-		 * by serialization) can be restored using deserialize().
-		 *
-		 * \\param target where to store the result
-		 *
-		 * \\return \\c true on success, \\c false otherwise.
-		 *
-		 * \\sa deserialize()
-		 */
-		virtual bool serialize(std::string& target) const;
-		
-		/** Deserialize.
-		 *
-		 * Initialize the object from a serialized representation of its 
-		 * internal state. The serialized representation can be obtained 
-		 * using serialize().
-		 *
-		 * \\param source serialized data buffer
-		 * \\param offset position where to start deserialization
-		 *
-		 * \\return offset of remaining data, or -1 if an error occured.
-		 *
-		 * \\sa serialize()
-		 */
-		virtual int deserialize(const std::string& source, int offset = 0);{/if}{if enablePersistence == 1}{ref declarePersistenceFuncs}{/if}{if enableCopy == 1}{ref declareCopyFuncs}{/if}{if enableUpcast == 1}{ref declareUpcastFuncs}{/if}{if enableCreate == 1}{ref declareCreateFuncs}{/if}{if ( haveBaseIFObject == 1 ) || ( enableClassInfo == 1)}{ref declareMemFuncs}{/if}{if enableParam == 1}{ref declareParamFuncs}{/if}{if enablePropertySet == 1}{ref declarePropertySetFuncs}{/if}{if enableXMLIO == 1}{ref declareXMLIOFuncs}{/if}{foreach prop in property.private}{ref declarePropertyReadFuncs}{/foreach}{foreach prop in property.protected}{ref declarePropertyReadFuncs}{if ( prop.readOnly != "true" ) && ( prop.protectedWrite != "true" )}{ref declarePropertyWriteFuncs}{/if}{/foreach}{if enablePersistence == 1}{if haveBasePersistent == 0}{$prop.style = ""}{$prop.readOnly = "false"}{$prop.name = "database"}{$prop.desc = "Database"}{$prop.type = project.persistence.namespace + "::" + project.persistence.database + "*"}{$prop.setFromType = project.persistence.namespace + "::" + project.persistence.database + "*"}{ref declarePropertyReadFuncs}{ref declarePropertyWriteFuncs}{/if}{/if}{foreach sig in signal}{foreach ins in sig.instance}
+		virtual ~{$class.name}(){if destructor.throw != ""} throw({if destructor.throw != "<none>"}{$destructor.throw}{/if}){/if};{foreach ev in event}{ref createEventHelperFunctionDecl}{/foreach}{foreach func in function.public}{ref declareFunc}{/foreach}{if enableSerialize == 1}{ref declareSerializeFuncs}{/if}{if enablePersistence == 1}{ref declarePersistenceFuncs}{/if}{if enableCopy == 1}{ref declareCopyFuncs}{/if}{if enableUpcast == 1}{ref declareUpcastFuncs}{/if}{if enableCreate == 1}{ref declareCreateFuncs}{/if}{if ( haveBaseIFObject == 1 ) || ( enableClassInfo == 1)}{ref declareMemFuncs}{/if}{if enableParam == 1}{ref declareParamFuncs}{/if}{if enablePropertySet == 1}{ref declarePropertySetFuncs}{/if}{if enableXMLIO == 1}{ref declareXMLIOFuncs}{/if}{foreach prop in property.private}{ref declarePropertyReadFuncs}{/foreach}{foreach prop in property.protected}{ref declarePropertyReadFuncs}{if ( prop.readOnly != "true" ) && ( prop.protectedWrite != "true" )}{ref declarePropertyWriteFuncs}{/if}{/foreach}{if enablePersistence == 1}{if haveBasePersistent == 0}{$prop.style = ""}{$prop.readOnly = "false"}{$prop.name = "database"}{$prop.desc = "Database"}{$prop.type = project.persistence.namespace + "::" + project.persistence.database + "*"}{$prop.setFromType = project.persistence.namespace + "::" + project.persistence.database + "*"}{ref declarePropertyReadFuncs}{ref declarePropertyWriteFuncs}{/if}{/if}{foreach sig in signal}{foreach ins in sig.instance}
 		
 		/** Get signal: {$ins.desc}.
 		 *

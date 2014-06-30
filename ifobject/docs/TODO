@@ -21,6 +21,8 @@ New
 Critical stuff
 --------------------------------------------------------------------------------
 
++ polymorphic binary serialization/deserialization (just like for XML)
+
 + builders
   > use a list of all class configurations and an arbitrary template
   > include-everything
