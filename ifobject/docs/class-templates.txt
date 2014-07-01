@@ -47,6 +47,11 @@ property.protected[]
   setFromType   Type the property is set from.
   managed       If set to 'true', memory for this property will be managed 
                 automatically by the object.
+  protectedWrite
+                If set to 'true', the write accessor functions will be set 
+                protected for this property.
+  readOnly      If set to 'true', no write accessor functions will be 
+                generated for this property.
   impl
     get         Implementation for the property getter.
     set         Implementation for the property setter.
