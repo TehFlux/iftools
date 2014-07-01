@@ -15,8 +15,70 @@ SWIG interface files for classes. Each class is configured using a
 configuration file. A template processor is then used to generate the 
 implementation of these classes.
 
+The class template is easily extensible by adding new modules consisting 
+of templates and configuration options for the class configuration files.
+
 NOTE: This documentation is work in progress and by no means complete at 
-      the time of writing.
+      the time of writing. For examples of how to use the class template 
+      system, please see the configuration files in this and other 
+      projects that use the class templates.
+
+================================================================================
+Properties
+================================================================================
+
+This module supports class properties. The main purpose of properties is 
+to provide accessor functions and automatic memory management. Properties 
+are also handled by other modules to provide additional features (such as 
+serialization, XML I/O and persistence). These features are documented in 
+the sections for the modules that provide these features.
+
+In general, properties have to be protected class members (i.e. defined in 
+a property.protected[] block), because many other features depend on this.
+
+--------------------------------------------------------------------------------
+Configuration options
+--------------------------------------------------------------------------------
+
+property.protected[]
+  name          Name of the property.
+  type          Type of the property.
+  desc          Description
+  setFromType   Type the property is set from.
+  managed       If set to 'true', memory for this property will be managed 
+                automatically by the object.
+  impl
+    get         Implementation for the property getter.
+    set         Implementation for the property setter.
+  proxy         The property is a proxy for some other variable
+                If set to 'true', all accesses to the property will instead 
+                be applied to the specified target variable. No additional 
+                class member variable is created for this property.
+    target      Proxy target variable.
+    nullError   The exception to be thrown if the target variable is null.
+  style         Style of the property.
+                If set to 'vector', the property is a vector property.
+                If set to 'map', the property is a map property.
+  [style = 'vector' or 'map']
+  extendedAddFuncs
+                If set to 'true' extended element add functions will be 
+                created for this property. This allows new, empty elements to 
+                be added to a vector or map, adding elements from a 
+                std::vector or from another object of the same type.
+  element
+    type        Type of the vector or map element.
+    name        Element name
+    plural      Plural of the element name. If this is not set, the plural 
+                will be formed by appending 's' to element.name.
+    managed     If set to 'true', memory for the element will be managed 
+                automatically for the object.
+    defaultValue
+                Default value for newly created objects.
+  [style = 'map']
+  key
+    type        Type of map key.
+    accessType  Type for the key to be used instead of the actual type in 
+                accessor function declarations.
 
 ================================================================================
 XML I/O
