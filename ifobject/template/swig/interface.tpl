@@ -72,8 +72,8 @@ struct {$st.name}
 {swrap 75 "		"}virtual void updateProperty(const Ionflux::ObjectBase::IFProperty& p, bool ignoreOwnSet = false);{/swrap}
 {swrap 75 "		"}virtual void updateProperties(const Ionflux::ObjectBase::IFPropertySet& ps);{/swrap}
 {swrap 75 "		"}virtual void getProperty(Ionflux::ObjectBase::IFProperty& p, bool ignoreOwnSet = false);{/swrap}
-{swrap 75 "		"}virtual void getProperties(Ionflux::ObjectBase::IFPropertySet& ps);{/swrap}{/section}{section declareExtendedCreateFuncs}{foreach con in constructor.public}
-{swrap 75 "		"}static {foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}* create({foreach prm in con.param}{$prm.type} {$prm.name}{if prm.default != ""} = {$prm.default}{/if}{first}, {/first}{mid}, {/mid}{/foreach}, Ionflux::ObjectBase::IFObject* parentObject = 0);{/swrap}{/foreach}{/section}{section declareExtendedVectorAddFuncs}
+{swrap 75 "		"}virtual void getProperties(Ionflux::ObjectBase::IFPropertySet& ps);{/swrap}{/section}{section declareExtendedCreateFuncs}{foreach con in constructor.public}{if con.bindings.disable != "true"}
+{swrap 75 "		"}static {foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}* create({foreach prm in con.param}{$prm.type} {$prm.name}{if prm.default != ""} = {$prm.default}{/if}{first}, {/first}{mid}, {/mid}{/foreach}, Ionflux::ObjectBase::IFObject* parentObject = 0);{/swrap}{/if}{/foreach}{/section}{section declareExtendedVectorAddFuncs}
 {swrap 75 "		"}virtual {if prop.element.addType == ""}{$prop.element.type}{else}{$prop.element.addType}{/if} add{$prop.element.name|uppercase(1)}();{/swrap}
 {swrap 75 "		"}virtual void add{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if}(std::vector<{$prop.element.type}>& new{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if});{/swrap}
 {swrap 75 "		"}virtual void add{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if}({foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}* new{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if});{/swrap}{/section}{section declarePersistentInitFunc}
@@ -115,9 +115,9 @@ class {$class.name}{if ( haveBaseIFObject == 1 ) || ( haveBaseOther == 1 )}
         
         {$class.name}();{if enablePersistence == 1}
 		{$class.name}({$project.persistence.namespace}::{$project.persistence.database}* initDatabase, int objectID = -1);{/if}{if enableCopy == 1}
-		{$class.name}(const {foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}& other);{/if}{foreach con in constructor.public}
-{swrap 75 "        "}{$class.name}({foreach prm in con.param}{$prm.type} {$prm.name}{if prm.default != ""} = {$prm.default}{/if}{first}, {/first}{mid}, {/mid}{/foreach});{/swrap}{/foreach}
-        virtual ~{$class.name}(){if destructor.throw != ""} throw({if destructor.throw != "<none>"}{$destructor.throw}{/if}){/if};{foreach ev in event}{ref createEventHelperFunctionDecl}{/foreach}{foreach func in function.public}{if ( func.name != "operator=" ) && ( func.name != "operator[]" ) && ( func.disableBindings != "true" )}
+		{$class.name}(const {foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}& other);{/if}{foreach con in constructor.public}{if con.bindings.disable != "true"}
+{swrap 75 "        "}{$class.name}({foreach prm in con.param}{$prm.type} {$prm.name}{if prm.default != ""} = {$prm.default}{/if}{first}, {/first}{mid}, {/mid}{/foreach});{/swrap}{/if}{/foreach}
+        virtual ~{$class.name}(){if destructor.throw != ""} throw({if destructor.throw != "<none>"}{$destructor.throw}{/if}){/if};{foreach ev in event}{ref createEventHelperFunctionDecl}{/foreach}{foreach func in function.public}{if ( func.name != "operator=" ) && ( func.name != "operator[]" ) && ( func.disableBindings != "true" ) && ( func.bindings.disable != "true" )}
 {swrap 75 "        "}{$func.spec} {$func.type} {$func.name}({foreach prm in func.param}{$prm.type} {$prm.name}{if prm.default != ""} = {$prm.default}{/if}{first}, {/first}{mid}, {/mid}{/foreach}){if func.const == "true"} const{/if}{if func.throw != ""} throw({if func.throw != "<none>"}{$func.throw}{/if}){/if}{if func.pureVirtual == "true"} = 0{/if};{/swrap}{/if}{/foreach}{if enableXMLIO == 1}
 {swrap 75 "		"}virtual std::string getXMLElementName() const;{/swrap}
 {swrap 75 "		"}virtual std::string getXMLAttributeData() const;{/swrap}
