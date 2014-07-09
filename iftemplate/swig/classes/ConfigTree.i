@@ -76,6 +76,7 @@ Ionflux::Template::Config, virtual public Ionflux::Template::NodeDump
 		upcast(Ionflux::ObjectBase::IFObject* other);
 		static Ionflux::Template::ConfigTree* 
 		create(Ionflux::ObjectBase::IFObject* parentObject = 0);
+		virtual unsigned int getMemSize() const;
 };
 
 }

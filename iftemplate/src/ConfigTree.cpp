@@ -367,7 +367,8 @@ lineOffset)
 	                    error = true;
 	                    status.str("");
 	                    status << "[ConfigTree::parseConfigLine] "
-	                        "Parse error in line " << (lineCount + lineOffset)
+	                        "Parse error in line " << (lineCount 
+	                            + lineOffset + nestedLines)
 	                        << ": Mismatched nesting quotes.";
 	                    throw IFTemplateError(status.str());
 	                }
