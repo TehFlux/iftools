@@ -41,7 +41,11 @@ Critical stuff
     for now
   > integrate into the new modular template system
 
-+ Python context (fmbase)
++ Python context (FMViewer)
+  > add classes:
+    PythonContext, PythonObject, Callable, ObjectSet
+  > various functionality defined in pytypes.hpp, pyutils.hpp, 
+    pyutils_private.hpp, pyutils.cpp
 
 + XML I/O
   > use static class info instance in IFXMLObjectFactory::getClassName() 
@@ -140,7 +144,8 @@ Nice to have
   > allocate and recycle objects as needed
   > if object pool is too small, increase by a factor
 
-+ Build on windows
++ Build on Windows
+  > support export declarations (fmbase)
   > check dependencies (maybe boost can be used as a replacement?)
     . sigc++
     . pthread
