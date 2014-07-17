@@ -52,6 +52,9 @@ property.protected[]
                 protected for this property.
   readOnly      If set to 'true', no write accessor functions will be 
                 generated for this property.
+  bindings.disable
+                If set to 'true', no bindings will be generated for this 
+                property.
   impl
     get         Implementation for the property getter.
     set         Implementation for the property setter.
