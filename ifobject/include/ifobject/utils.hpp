@@ -558,6 +558,72 @@ std::string appendDirSeparator(const std::string& path,
 std::string prependDirSeparator(const std::string& path, 
 	unsigned char separator = DIR_SEPARATOR);
 
+/** Create line buffer.
+ * 
+ * Create a line buffer for the specified vector of strings.
+ * 
+ * \param data data vector
+ * 
+ * \sa cleanupLineBuffer()
+ */
+Ionflux::ObjectBase::LineBuffer createLineBuffer(
+    const Ionflux::ObjectBase::StringVector& data);
+
+/** Create line buffer.
+ * 
+ * Create a line buffer for the specified string. The string may contain 
+ * several lines, separated by newline characters. The newline characters 
+ * will not be included in the line buffer.
+ * 
+ * \param data data vector
+ * 
+ * \sa cleanupLineBuffer()
+ *
+ * \return line buffer
+ */
+Ionflux::ObjectBase::LineBuffer createLineBuffer(const std::string& data);
+
+/** Cleanup line buffer.
+ * 
+ * Clean up a line buffer and free any resources associated with the 
+ * line buffer.
+ * 
+ * \param lineBuffer line buffer
+ * 
+ * \sa createLineBuffer()
+ */
+void cleanupLineBuffer(Ionflux::ObjectBase::LineBuffer& lineBuffer);
+
+/** Get string vector.
+ * 
+ * Initialize a string vector from a line buffer.
+ * 
+ * \param lineBuffer line buffer
+ * \param target where to store the data
+ * 
+ * \sa createLineBuffer()
+ */
+void getStringVector(const Ionflux::ObjectBase::LineBuffer& lineBuffer, 
+    Ionflux::ObjectBase::StringVector& target);
+
+/** Create constant data line buffer.
+ * 
+ * Create a constant data line buffer from a line buffer. The constant data 
+ * line buffer will reference the data from the specified line buffer during 
+ * its life-time.
+ * 
+ * \param lineBuffer line buffer
+ * 
+ * \sa createLineBuffer()
+ *
+ * \return constant data line buffer
+ */
+Ionflux::ObjectBase::LineBufferConst createLineBufferConst(
+    const Ionflux::ObjectBase::LineBuffer& lineBuffer);
+
+/// Clean up line buffer.
+void cleanupLineBuffer(Ionflux::ObjectBase::LineBufferConst& lineBuffer);
+
 }
 
 }

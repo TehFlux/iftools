@@ -87,6 +87,18 @@ struct IFCacheEntry
 typedef unsigned int CachePolicy;
 typedef int MMEventTypeID;
 
+struct LineBuffer
+{
+    char** data;
+    int size;
+};
+
+struct LineBufferConst
+{
+    const char** data;
+    int size;
+};
+
 // utf8.hpp
 
 std::string uniCharToUTF8(IFUniChar uniChar);
@@ -161,6 +173,15 @@ std::string appendDirSeparator(const std::string& path,
 	unsigned char separator = DIR_SEPARATOR);
 std::string prependDirSeparator(const std::string& path, 
 	unsigned char separator = DIR_SEPARATOR);
+Ionflux::ObjectBase::LineBuffer createLineBuffer(
+    const Ionflux::ObjectBase::StringVector& data);
+Ionflux::ObjectBase::LineBuffer createLineBuffer(const std::string& data);
+void cleanupLineBuffer(Ionflux::ObjectBase::LineBuffer& lineBuffer);
+void getStringVector(const Ionflux::ObjectBase::LineBuffer& lineBuffer, 
+    Ionflux::ObjectBase::StringVector& target);
+Ionflux::ObjectBase::LineBufferConst createLineBufferConst(
+    const Ionflux::ObjectBase::LineBuffer& lineBuffer);
+void cleanupLineBuffer(Ionflux::ObjectBase::LineBufferConst& lineBuffer);
 
 // xmlutils.hpp
 

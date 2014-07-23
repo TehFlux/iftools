@@ -87,7 +87,7 @@ class IFXMLObjectFactory;
 
 }
 
-typedef	std::vector<Ionflux::ObjectBase::XMLUtils::IFXMLObjectFactory*> 
+typedef std::vector<Ionflux::ObjectBase::XMLUtils::IFXMLObjectFactory*> 
     XMLObjectFactoryVector;
 
 /// Cache entry.
@@ -110,6 +110,24 @@ typedef unsigned int CachePolicy;
 
 /// Memory management event type ID.
 typedef int MMEventTypeID;
+
+/// Line buffer.
+struct LineBuffer
+{
+    /// Data.
+    char** data;
+    /// Size.
+    int size;
+};
+
+/// Line buffer (constant data).
+struct LineBufferConst
+{
+    /// Data.
+    const char** data;
+    /// Size.
+    int size;
+};
 
 }
 

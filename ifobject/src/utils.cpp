@@ -635,6 +635,96 @@ std::string prependDirSeparator(const std::string& path,
 	return result;
 }
 
+Ionflux::ObjectBase::LineBuffer createLineBuffer(
+    const Ionflux::ObjectBase::StringVector& data)
+{
+    int n0 = data.size();
+    LineBuffer result;
+    result.data = new char*[n0];
+    Ionflux::ObjectBase::nullPointerCheck(result.data, 
+        "createLineBuffer", "Line buffer");
+    for (int i = 0; i < n0; i++)
+    {
+        std::string cl = data[i];
+        int n1 = cl.size() + 1;
+        char* cd = new char[n1];
+        if (cd == 0)
+        {
+            result.size = i;
+            cleanupLineBuffer(result);
+            std::ostringstream status;
+            status << "[createLineBuffer] "
+                "Could not allocate buffer for line #" << i << ".";
+            throw IFError(status.str());
+        }
+        ::strncpy(cd, cl.c_str(), n1);
+        result.data[i] = cd;
+    }
+    result.size = n0;
+    return result;
+}
+
+Ionflux::ObjectBase::LineBuffer createLineBuffer(const std::string& data)
+{
+    StringVector sv;
+    explode(data, "\n", sv);
+    return createLineBuffer(sv);
+}
+
+void cleanupLineBuffer(Ionflux::ObjectBase::LineBuffer& lineBuffer)
+{
+    if (lineBuffer.data != 0)
+    {
+        for (int i = 0; i < lineBuffer.size; i++)
+        {
+            char* cd = lineBuffer.data[i];
+            delete[] cd;
+            lineBuffer.data[i] = 0;
+        }
+        delete[] lineBuffer.data;
+    }
+    lineBuffer.data = 0;
+    lineBuffer.size = 0;
+}
+
+void getStringVector(const Ionflux::ObjectBase::LineBuffer& lineBuffer, 
+    Ionflux::ObjectBase::StringVector& target)
+{
+    for (int i = 0; i < lineBuffer.size; i++)
+    {
+        if (lineBuffer.data[i] != 0)
+            target.push_back(std::string(lineBuffer.data[i]));
+    }
+}
+
+Ionflux::ObjectBase::LineBufferConst createLineBufferConst(
+    const Ionflux::ObjectBase::LineBuffer& lineBuffer)
+{
+    LineBufferConst result;
+    result.data = 0;
+    result.size = 0;
+    if (lineBuffer.size == 0)
+        return result;
+    result.data = new const char*[lineBuffer.size];
+    Ionflux::ObjectBase::nullPointerCheck(result.data, 
+        "createLineBufferConst", "Line buffer");
+    if (lineBuffer.data != 0)
+    {
+        for (int i = 0; i < lineBuffer.size; i++)
+            result.data[i] = lineBuffer.data[i];
+    }
+    result.size = lineBuffer.size;
+    return result;
+}
+
+void cleanupLineBuffer(Ionflux::ObjectBase::LineBufferConst& lineBuffer)
+{
+    if (lineBuffer.data != 0)
+        delete[] lineBuffer.data;
+    lineBuffer.data = 0;
+    lineBuffer.size = 0;
+}
+
 }
 
 }
