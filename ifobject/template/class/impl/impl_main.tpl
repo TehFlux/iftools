@@ -73,11 +73,9 @@ Ionflux::ObjectBase::IFOpInfo {$class.name|uppercase(1)}ClassInfo::OP_INFO_{$op.
 // static private member variables{/first}{single}
 
 // static private member variables{/single}
-{$var.type} {$class.name}::{$var.name} = {$var.value};{/if}{/foreach}{foreach var in variable.protected}{if var.spec == "static"}{first}
+{$var.type} {$class.name}::{$var.name} = {$var.value};{/if}{/foreach}{$firstStatic = 1}{foreach var in variable.protected}{if var.spec == "static"}{if firstStatic == 1}
 
-// static protected member variables{/first}{single}
-
-// static protected member variables{/single}
+// static protected member variables{$firstStatic = 0}{/if}
 {$var.type} {$class.name}::{$var.name} = {$var.value};{/if}{/foreach}{foreach const in constant.private}{first}
 
 // private member constants{/first}{single}

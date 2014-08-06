@@ -173,11 +173,30 @@ T0* checkedDynamicCast(T1* p, const std::string& source = "",
         std::ostringstream status;
         if (source.size() > 0)
             status << "[" << source << "] ";
-        status << " " << objName << " has unexpected type "
+        status << objName << " has unexpected type "
             "(expected type: " << expectedType << ").";
         throw IFError(status.str());
     }
     return result;
+}
+
+/// Range check.
+template<class T0>
+T0 rangeCheck(T0& v, const T0& lower, const T0& upper, 
+    const std::string& source = "", 
+    const std::string& objName = "object")
+{
+    if ((v < lower) 
+        || (v > upper))
+    {
+        std::ostringstream status;
+        if (source.size() > 0)
+            status << "[" << source << "] ";
+        status << objName << " out of bounds (v = " << v 
+            << ", range = [" << upper << ", " << lower << "].";
+        throw IFError(status.str());
+    }
+    return v;
 }
 
 /** Read file.

@@ -87,6 +87,24 @@ T0* checkedDynamicCast(T1* p,
     return result;
 }
 
+/// Range check.
+template<class T0>
+T0 rangeCheck(T0& v, const T0& lower, const T0& upper, 
+    const Ionflux::ObjectBase::IFObject* sourceObj, 
+    const std::string& source = "", 
+    const std::string& objName = "object")
+{
+    if ((v < lower) 
+        || (v > upper))
+    {
+        std::ostringstream status;
+        status << objName << " out of bounds (v = " << v 
+            << ", range = [" << upper << ", " << lower << "].";
+        throw IFError(sourceObj->getErrorString(status.str(), source));
+    }
+    return v;
+}
+
 }
 
 }
