@@ -162,6 +162,28 @@ void vectorFromList(const std::string& data,
 void vectorFromList(const std::string& data, 
     Ionflux::ObjectBase::DoubleVector& target, 
     const std::string& separator = DEFAULT_COORD_SEPARATOR);
+void addValues(Ionflux::ObjectBase::IntVector& target, 
+    unsigned int numValues, 
+    int v0 = 0, int v1 = 0, int v2 = 0, int v3 = 0, 
+    int v4 = 0, int v5 = 0, int v6 = 0, int v7 = 0, 
+    int v8 = 0, int v9 = 0, int v10 = 0, int v11 = 0, 
+    int v12 = 0, int v13 = 0, int v14 = 0, int v15 = 0);
+void addValues(Ionflux::ObjectBase::UIntVector& target, 
+    unsigned int numValues, 
+    unsigned int v0 = 0, unsigned int v1 = 0, 
+    unsigned int v2 = 0, unsigned int v3 = 0, 
+    unsigned int v4 = 0, unsigned int v5 = 0, 
+    unsigned int v6 = 0, unsigned int v7 = 0, 
+    unsigned int v8 = 0, unsigned int v9 = 0, 
+    unsigned int v10 = 0, unsigned int v11 = 0, 
+    unsigned int v12 = 0, unsigned int v13 = 0, 
+    unsigned int v14 = 0, unsigned int v15 = 0);
+void addValues(Ionflux::ObjectBase::DoubleVector& target, 
+    unsigned int numValues, 
+    double v0 = 0., double v1 = 0., double v2 = 0., double v3 = 0., 
+    double v4 = 0., double v5 = 0., double v6 = 0., double v7 = 0., 
+    double v8 = 0., double v9 = 0., double v10 = 0., double v11 = 0., 
+    double v12 = 0., double v13 = 0., double v14 = 0., double v15 = 0.);
 std::string getIndent(unsigned int level = 0, 
     unsigned int indentWidth = DEFAULT_INDENT_WIDTH, 
     char indentChar = ' ');

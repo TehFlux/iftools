@@ -563,6 +563,133 @@ void vectorFromList(const std::string& data,
         target.push_back(toFloat(trim(*i)));
 }
 
+void addValues(Ionflux::ObjectBase::IntVector& target, 
+    unsigned int numValues, 
+    int v0, int v1, int v2, int v3, 
+    int v4, int v5, int v6, int v7, 
+    int v8, int v9, int v10, int v11, 
+    int v12, int v13, int v14, int v15)
+{
+    if (numValues > 0)
+        target.push_back(v0);
+    if (numValues > 1)
+        target.push_back(v1);
+    if (numValues > 2)
+        target.push_back(v2);
+    if (numValues > 3)
+        target.push_back(v3);
+    if (numValues > 4)
+        target.push_back(v4);
+    if (numValues > 5)
+        target.push_back(v5);
+    if (numValues > 6)
+        target.push_back(v6);
+    if (numValues > 7)
+        target.push_back(v7);
+    if (numValues > 8)
+        target.push_back(v8);
+    if (numValues > 9)
+        target.push_back(v9);
+    if (numValues > 10)
+        target.push_back(v10);
+    if (numValues > 11)
+        target.push_back(v11);
+    if (numValues > 12)
+        target.push_back(v12);
+    if (numValues > 13)
+        target.push_back(v13);
+    if (numValues > 14)
+        target.push_back(v14);
+    if (numValues > 15)
+        target.push_back(v15);
+}
+
+void addValues(Ionflux::ObjectBase::UIntVector& target, 
+    unsigned int numValues, 
+    unsigned int v0, unsigned int v1, 
+    unsigned int v2, unsigned int v3, 
+    unsigned int v4, unsigned int v5, 
+    unsigned int v6, unsigned int v7, 
+    unsigned int v8, unsigned int v9, 
+    unsigned int v10, unsigned int v11, 
+    unsigned int v12, unsigned int v13, 
+    unsigned int v14, unsigned int v15)
+{
+    if (numValues > 0)
+        target.push_back(v0);
+    if (numValues > 1)
+        target.push_back(v1);
+    if (numValues > 2)
+        target.push_back(v2);
+    if (numValues > 3)
+        target.push_back(v3);
+    if (numValues > 4)
+        target.push_back(v4);
+    if (numValues > 5)
+        target.push_back(v5);
+    if (numValues > 6)
+        target.push_back(v6);
+    if (numValues > 7)
+        target.push_back(v7);
+    if (numValues > 8)
+        target.push_back(v8);
+    if (numValues > 9)
+        target.push_back(v9);
+    if (numValues > 10)
+        target.push_back(v10);
+    if (numValues > 11)
+        target.push_back(v11);
+    if (numValues > 12)
+        target.push_back(v12);
+    if (numValues > 13)
+        target.push_back(v13);
+    if (numValues > 14)
+        target.push_back(v14);
+    if (numValues > 15)
+        target.push_back(v15);
+}
+
+void addValues(Ionflux::ObjectBase::DoubleVector& target, 
+    unsigned int numValues, 
+    double v0, double v1, double v2, double v3, 
+    double v4, double v5, double v6, double v7, 
+    double v8, double v9, double v10, double v11, 
+    double v12, double v13, double v14, double v15)
+{
+    if (numValues > 0)
+        target.push_back(v0);
+    if (numValues > 1)
+        target.push_back(v1);
+    if (numValues > 2)
+        target.push_back(v2);
+    if (numValues > 3)
+        target.push_back(v3);
+    if (numValues > 4)
+        target.push_back(v4);
+    if (numValues > 5)
+        target.push_back(v5);
+    if (numValues > 6)
+        target.push_back(v6);
+    if (numValues > 7)
+        target.push_back(v7);
+    if (numValues > 8)
+        target.push_back(v8);
+    if (numValues > 9)
+        target.push_back(v9);
+    if (numValues > 10)
+        target.push_back(v10);
+    if (numValues > 11)
+        target.push_back(v11);
+    if (numValues > 12)
+        target.push_back(v12);
+    if (numValues > 13)
+        target.push_back(v13);
+    if (numValues > 14)
+        target.push_back(v14);
+    if (numValues > 15)
+        target.push_back(v15);
+}
+
 std::string getIndent(unsigned int level, unsigned int indentWidth, 
     char indentChar)
 {

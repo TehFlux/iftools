@@ -491,6 +491,100 @@ void vectorFromList(const std::string& data,
     Ionflux::ObjectBase::DoubleVector& target, 
     const std::string& separator = DEFAULT_COORD_SEPARATOR);
 
+/** Add values to vector.
+ *
+ * Add values to a vector.
+ * 
+ * \param target target vector
+ * \param numValues number of values to add
+ * \param v0 value (0)
+ * \param v1 value (1)
+ * \param v2 value (2)
+ * \param v3 value (3)
+ * \param v4 value (4)
+ * \param v5 value (5)
+ * \param v6 value (6)
+ * \param v7 value (7)
+ * \param v8 value (8)
+ * \param v9 value (9)
+ * \param v10 value (10)
+ * \param v11 value (11)
+ * \param v12 value (12)
+ * \param v13 value (13)
+ * \param v14 value (14)
+ * \param v15 value (15)
+ */
+void addValues(Ionflux::ObjectBase::IntVector& target, 
+    unsigned int numValues, 
+    int v0 = 0, int v1 = 0, int v2 = 0, int v3 = 0, 
+    int v4 = 0, int v5 = 0, int v6 = 0, int v7 = 0, 
+    int v8 = 0, int v9 = 0, int v10 = 0, int v11 = 0, 
+    int v12 = 0, int v13 = 0, int v14 = 0, int v15 = 0);
+
+/** Add values to vector.
+ *
+ * Add values to a vector.
+ * 
+ * \param target target vector
+ * \param numValues number of values to add
+ * \param v0 value (0)
+ * \param v1 value (1)
+ * \param v2 value (2)
+ * \param v3 value (3)
+ * \param v4 value (4)
+ * \param v5 value (5)
+ * \param v6 value (6)
+ * \param v7 value (7)
+ * \param v8 value (8)
+ * \param v9 value (9)
+ * \param v10 value (10)
+ * \param v11 value (11)
+ * \param v12 value (12)
+ * \param v13 value (13)
+ * \param v14 value (14)
+ * \param v15 value (15)
+ */
+void addValues(Ionflux::ObjectBase::UIntVector& target, 
+    unsigned int numValues, 
+    unsigned int v0 = 0, unsigned int v1 = 0, 
+    unsigned int v2 = 0, unsigned int v3 = 0, 
+    unsigned int v4 = 0, unsigned int v5 = 0, 
+    unsigned int v6 = 0, unsigned int v7 = 0, 
+    unsigned int v8 = 0, unsigned int v9 = 0, 
+    unsigned int v10 = 0, unsigned int v11 = 0, 
+    unsigned int v12 = 0, unsigned int v13 = 0, 
+    unsigned int v14 = 0, unsigned int v15 = 0);
+
+/** Add values to vector.
+ *
+ * Add values to a vector.
+ * 
+ * \param target target vector
+ * \param numValues number of values to add
+ * \param v0 value (0)
+ * \param v1 value (1)
+ * \param v2 value (2)
+ * \param v3 value (3)
+ * \param v4 value (4)
+ * \param v5 value (5)
+ * \param v6 value (6)
+ * \param v7 value (7)
+ * \param v8 value (8)
+ * \param v9 value (9)
+ * \param v10 value (10)
+ * \param v11 value (11)
+ * \param v12 value (12)
+ * \param v13 value (13)
+ * \param v14 value (14)
+ * \param v15 value (15)
+ */
+void addValues(Ionflux::ObjectBase::DoubleVector& target, 
+    unsigned int numValues, 
+    double v0 = 0., double v1 = 0., double v2 = 0., double v3 = 0., 
+    double v4 = 0., double v5 = 0., double v6 = 0., double v7 = 0., 
+    double v8 = 0., double v9 = 0., double v10 = 0., double v11 = 0., 
+    double v12 = 0., double v13 = 0., double v14 = 0., double v15 = 0.);
+
 /** Get indentation string
  *
  * Get a string of characters that can be used for indentation.
