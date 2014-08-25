@@ -737,6 +737,28 @@ Ionflux::ObjectBase::LineBufferConst createLineBufferConst(
 /// Clean up line buffer.
 void cleanupLineBuffer(Ionflux::ObjectBase::LineBufferConst& lineBuffer);
 
+/** Get string representation of value (vector).
+ * 
+ * Get a string representation of the value of a vector.
+ * 
+ * \param v vector
+ * \param sep separator string
+ *
+ * \return string representation
+ */
+template<class T>
+std::string getValueStringVec(const T& v, const std::string& sep = ", ")
+{
+    std::ostringstream status;
+    for (unsigned int i = 0; i < v.size(); i++)
+    {
+        if (i > 0)
+            status << sep;
+        status << v[i];
+    }
+    return status.str();
+}
+
 }
 
 }

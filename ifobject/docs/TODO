@@ -15,7 +15,8 @@ Up next
 New
 --------------------------------------------------------------------------------
 
-
++ move templates/xml/{header,impl} to the attic
+  . make sure they are not used anywhere anymore
 
 --------------------------------------------------------------------------------
 Critical stuff
