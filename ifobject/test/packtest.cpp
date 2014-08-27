@@ -88,7 +88,7 @@ int main(int argc, char* argv[])
 	unpack(buffer, unpackedUInt16);
 	cout << "<-- UInt16: " << unpackedUInt16 << endl;
 	// UInt64
-	UInt64 testUInt64 = 0xfacefadefadefaceLL;
+	UInt64 testUInt64 = 0xfacefadefadefaceULL;
 	cout << "--> UInt64: " << testUInt64 << endl;
 	pack(testUInt64, buffer, false);
 	cout << makeNiceHex0(buffer);
