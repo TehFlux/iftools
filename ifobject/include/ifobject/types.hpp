@@ -64,8 +64,8 @@ typedef std::string IFObjectID;
 typedef std::string IFParamID;
 typedef int IFIDNum;
 typedef int IFEventType;
-typedef	std::set<Ionflux::ObjectBase::IFObject*> IFObjectSet;
-typedef	std::vector<Ionflux::ObjectBase::IFObject*> IFObjectVector;
+typedef std::set<Ionflux::ObjectBase::IFObject*> IFObjectSet;
+typedef std::vector<Ionflux::ObjectBase::IFObject*> IFObjectVector;
 typedef std::map<Ionflux::ObjectBase::IFObject*, IFObjectRefInfo*> IFObjectRefMap;
 typedef std::string IFSignalType;
 typedef int IFMutexType;
@@ -79,6 +79,21 @@ typedef std::vector<std::string> StringVector;
 typedef std::vector<double> DoubleVector;
 typedef std::vector<int> IntVector;
 typedef std::vector<unsigned int> UIntVector;
+
+/// Generic pointer.
+typedef void* GenericPointer;
+
+/// Pointer/offset map.
+typedef std::map<Ionflux::ObjectBase::GenericPointer, 
+    Ionflux::ObjectBase::UInt64> PointerOffsetMap;
+
+/// Offset/pointer map.
+typedef std::map<Ionflux::ObjectBase::UInt64, 
+    Ionflux::ObjectBase::GenericPointer> OffsetPointerMap;
+
+/// Pointer/pointer map.
+typedef std::map<Ionflux::ObjectBase::GenericPointer, 
+    Ionflux::ObjectBase::GenericPointer> PointerPointerMap;
 
 namespace XMLUtils
 {

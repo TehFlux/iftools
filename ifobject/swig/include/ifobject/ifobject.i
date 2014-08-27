@@ -75,6 +75,15 @@ typedef std::vector<double> DoubleVector;
 typedef std::vector<int> IntVector;
 typedef std::vector<unsigned int> UIntVector;
 
+typedef void* GenericPointer;
+
+typedef std::map<Ionflux::ObjectBase::GenericPointer, 
+    Ionflux::ObjectBase::UInt64> PointerOffsetMap;
+typedef std::map<Ionflux::ObjectBase::UInt64, 
+    Ionflux::ObjectBase::GenericPointer> OffsetPointerMap;
+typedef std::map<Ionflux::ObjectBase::GenericPointer, 
+    Ionflux::ObjectBase::GenericPointer> PointerPointerMap;
+
 struct IFCacheEntry
 {
     std::string itemID;

@@ -282,6 +282,30 @@ bool unpackNonNullCheck(const std::string& source,
 int unpackObj(const std::string& source, 
     Ionflux::ObjectBase::IFObject*& target, int offset = 0);
 
+/** Pack data (PointerOffsetMap).
+ *
+ * Packs the data into a string.
+ *
+ * \param source data to be packed
+ * \param target where to store the packed data
+ * \param append whether data should be appended to or replace the target data
+ */
+void pack(const Ionflux::ObjectBase::PointerOffsetMap& source, 
+    std::string& target, bool append = true);
+
+/** Unpack data (PointerOffsetMap).
+ *
+ * Unpacks the data from a string.
+ *
+ * \param source data to be unpacked
+ * \param target where to store the unpacked data
+ * \param offset offset from which to start unpacking
+ *
+ * \return new offset, or -1 if the data could not be unpacked
+ */
+int unpack(const std::string& source, 
+    Ionflux::ObjectBase::PointerOffsetMap& target, int offset = 0);
+
 }
 
 }
