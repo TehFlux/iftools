@@ -26,7 +26,8 @@ namespace ObjectBase
 // types.hpp
 
 /* HACK: This is necessary so that SWIG knows about the integer types 
-         but unfortunately platform dependent. */
+         but unfortunately platform dependent (and the SWIG stdint.i gets 
+         it wrong). */
 typedef signed char             int8_t;
 typedef short int               int16_t;
 typedef int                     int32_t;

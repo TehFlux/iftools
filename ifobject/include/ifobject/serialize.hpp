@@ -357,7 +357,7 @@ void pack(
 Ionflux::ObjectBase::DataSize unpackAndCheckMagicWord(
     const std::string& source, Ionflux::ObjectBase::MagicWord w, 
     Ionflux::ObjectBase::DataSize offset = 0, 
-    Ionflux::ObjectBase::IFObject* sourceObj = 0, 
+    const Ionflux::ObjectBase::IFObject* sourceObj = 0, 
     const std::string& sourceName = "");
 
 /** Unpack and check magic syllables.
@@ -380,7 +380,7 @@ Ionflux::ObjectBase::DataSize unpackAndCheckMagicWord(
     const std::string& source, Ionflux::ObjectBase::MagicSyllable s0, 
     Ionflux::ObjectBase::MagicSyllable s1, 
     Ionflux::ObjectBase::DataSize offset = 0, 
-    Ionflux::ObjectBase::IFObject* sourceObj = 0, 
+    const Ionflux::ObjectBase::IFObject* sourceObj = 0, 
     const std::string& sourceName = "");
 
 }
