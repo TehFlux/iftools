@@ -86,6 +86,7 @@ typedef std::vector<std::string> StringVector;
 typedef std::vector<double> DoubleVector;
 typedef std::vector<int> IntVector;
 typedef std::vector<unsigned int> UIntVector;
+typedef std::vector<IFUniChar> UniCharVector;
 
 /// Generic pointer.
 typedef void* GenericPointer;

@@ -93,8 +93,8 @@ if ('bootstrap' in COMMAND_LINE_TARGETS):
     bootstrap = True
 
 env.VariantDir('build', 'src')
-env.VariantDir('build/test', 'test')
-env.VariantDir('build/swig/wrapper', 'swig/wrapper')
+env.VariantDir('test/build', 'test')
+env.VariantDir('swig/wrapper/build', 'swig/wrapper')
 
 def checkProgram(ctx, cmd):
     """Check for installed program."""

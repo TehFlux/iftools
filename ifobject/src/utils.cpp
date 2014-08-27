@@ -438,8 +438,7 @@ std::string makeReadable(const std::string& inputData,
 	for (unsigned int i = 0; i < inputData.size(); i++)
 	{
 		currentChar = static_cast<unsigned char>(inputData[i]);
-		if (((currentChar >= 32) && (currentChar <= 126))
-			|| (currentChar >= 160))
+		if ((currentChar >= 32) && (currentChar <= 126))
 		{
 			buffer << inputData[i];
 		} else

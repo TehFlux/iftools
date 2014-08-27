@@ -105,6 +105,39 @@ bool utf8ToUniChar(const std::string& bytes,
  */
 unsigned int utf8GetSize(const std::string& bytes);
 
+/** Replace unreadable characters.
+ *
+ * Convert a string that not necessarily contains readable characters to
+ * readable characters, replacing characters considered unreadable with 
+ * 'replacement'.
+ *
+ * \param inputData A string of bytes to be converted.
+ * \param replacement A character with which to replace unreadable characters.
+ * \param target where to store the readable characters
+ *
+ * \return String composed of readable characters.
+ */
+void utf8MakeReadable(const std::string& inputData, 
+	Ionflux::ObjectBase::UniCharVector& target, 
+	Ionflux::ObjectBase::IFUniChar replacement = 46);
+
+/** Make nice hexadecimal output.
+ *
+ * This function generates a nice human readable hexadecimal output from a 
+ * string of hexadecimal bytes and a readable representation of that string, 
+ * similar to the display of a hex editor.
+ *
+ * \param hex String of bytes in hexadecimal representation.
+ * \param readable Readable representation of the string.
+ * \param bytesPerLine How many bytes to display per line.
+ * \param groupBytes How many bytes to display in each group.
+ *
+ * \return Nicely formatted hexadecimal output.
+ */
+std::string utf8MakeNiceHex(const std::string& hex, 
+    const Ionflux::ObjectBase::UniCharVector& readable, 
+    int bytesPerLine = 20, int groupBytes = 10);
+
 }
 
 }

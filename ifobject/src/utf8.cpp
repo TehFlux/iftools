@@ -214,6 +214,58 @@ unsigned int utf8GetSize(const std::string& bytes)
 	return result; 
 }
 
+void utf8MakeReadable(const std::string& inputData, 
+	Ionflux::ObjectBase::UniCharVector& target, 
+	Ionflux::ObjectBase::IFUniChar replacement)
+{
+    std::ostringstream buffer;
+	unsigned char currentChar;
+	for (unsigned int i = 0; i < inputData.size(); i++)
+	{
+		currentChar = static_cast<unsigned char>(inputData[i]);
+		if (((currentChar >= 32) && (currentChar <= 126)) 
+		    || (currentChar >= 161))
+		{
+			target.push_back(currentChar);
+		} else
+		{
+			target.push_back(replacement);
+		}
+	}
+}
+
+std::string utf8MakeNiceHex(const std::string& hex, 
+    const Ionflux::ObjectBase::UniCharVector& readable, 
+    int bytesPerLine, int groupBytes)
+{
+    std::ostringstream buffer;
+	string paddedHex(hex);
+	UniCharVector paddedReadable(readable);
+	if ((paddedHex.size() % 2) != 0)
+		paddedHex.append(" ");
+	while (((paddedHex.size() / 2) % bytesPerLine) != 0)
+		paddedHex.append("  ");
+	unsigned int bytes = paddedHex.size() / 2;
+	while (paddedReadable.size() < bytes)
+		paddedReadable.push_back(32);
+	int readablePos = 0;
+	for (unsigned int i = 0; i < bytes; i++)
+	{
+		buffer << paddedHex.substr(2 * i, 2) << " ";
+		if ((((i + 1) % groupBytes) == 0) && (((i + 1) % bytesPerLine) != 0))
+			buffer << " ";
+		if (((i + 1) % bytesPerLine) == 0)
+		{
+			buffer << " ";
+			for (int k = 0; k < bytesPerLine; k++)
+			    buffer << uniCharToUTF8(paddedReadable[readablePos + k]);
+			buffer << "\n";
+			readablePos += bytesPerLine;
+		}
+	}
+	return buffer.str();
+}
+
 }
 
 }
