@@ -759,6 +759,20 @@ std::string getValueStringVec(const T& v, const std::string& sep = ", ")
     return status.str();
 }
 
+/** Get error string.
+ *
+ * Get a string that can be used for reporting an error message.
+ *
+ * \param message error message
+ * \param source source of the error
+ * \param sourceObj source object
+ *
+ * \return error message string
+ */
+std::string getErrorString(const std::string& message, 
+    const std::string& source = "", 
+    const Ionflux::ObjectBase::IFObject* sourceObj = 0);
+
 }
 
 }

@@ -61,6 +61,9 @@ const std::string XML_ELEMENT_NAME_VECTOR2_SET_VECTOR = "vector2setv";
 /// Directory separator.
 const unsigned char DIR_SEPARATOR = '/';
 
+/// Data size: invalid.
+const Ionflux::ObjectBase::DataSize DATA_SIZE_INVALID = 0xffffffffffffffffULL;
+
 }
 
 }

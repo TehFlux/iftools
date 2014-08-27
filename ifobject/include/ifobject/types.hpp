@@ -52,6 +52,13 @@ typedef uint64_t UInt64;
 // unicode characters
 typedef UInt32 IFUniChar;
 
+// data size
+typedef UInt64 DataSize;
+// magic syllable
+typedef UInt16 MagicSyllable;
+// magic word
+typedef UInt32 MagicWord;
+
 // forward declarations
 class IFObject;
 struct IFObjectRefInfo;

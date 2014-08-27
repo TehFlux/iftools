@@ -79,6 +79,7 @@ class CLArgs
 		other);
 		static Ionflux::Template::CLArgs* create(Ionflux::ObjectBase::IFObject* 
 		parentObject = 0);
+		virtual unsigned int getMemSize() const;
         virtual void setCheckOptions(bool newCheckOptions);
         virtual bool getCheckOptions() const;
 };

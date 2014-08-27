@@ -9,7 +9,7 @@ bool {$class.name}::serialize(std::string& target) const
 	return true;
 \}
 
-int {$class.name}::deserialize(const std::string& source, int offset)
+Ionflux::ObjectBase::DataSize {$class.name}::deserialize(const std::string& source, Ionflux::ObjectBase::DataSize offset)
 \{{if haveBaseIFObject == 1}{foreach bc in class.base.ifobject}
 	offset = {$bc.name}::deserialize(source, offset);
 	if (offset < 0)

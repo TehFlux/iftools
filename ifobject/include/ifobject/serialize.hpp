@@ -27,6 +27,7 @@
 
 #include <string>
 #include "ifobject/types.hpp"
+#include "ifobject/constants.hpp"
 
 namespace Ionflux
 {
@@ -47,12 +48,12 @@ namespace ObjectBase
 template<class T>
 void packBE(const T& source, std::string& target, bool append = true)
 {
-	static const unsigned int dataSize = sizeof(T);
+	static const DataSize dataSize = sizeof(T);
 	std::string buffer;
 	buffer.assign(dataSize, '\0');
 	const unsigned char* rawData = 
 		reinterpret_cast<const unsigned char*>(&source);
-	for (unsigned int i = 0; i < dataSize; i++)
+	for (DataSize i = 0; i < dataSize; i++)
 		buffer[i] = rawData[dataSize - i - 1];
 	if (append)
 		target.append(buffer);
@@ -73,12 +74,12 @@ void packBE(const T& source, std::string& target, bool append = true)
 template<class T>
 void packLE(const T& source, std::string& target, bool append = true)
 {
-	static const unsigned int dataSize = sizeof(T);
+	static const DataSize dataSize = sizeof(T);
 	std::string buffer;
 	buffer.assign(dataSize, '\0');
 	const unsigned char* rawData = 
 		reinterpret_cast<const unsigned char*>(&source);
-	for (unsigned int i = 0; i < dataSize; i++)
+	for (DataSize i = 0; i < dataSize; i++)
 		buffer[i] = rawData[i];
 	if (append)
 		target.append(buffer);
@@ -111,16 +112,17 @@ void pack(const T& source, std::string& target, bool append = true)
  * \param target where to store the unpacked data
  * \param offset offset from which to start unpacking
  *
- * \return new offset, or -1 if the data could not be unpacked
+ * \return new offset, or DATA_SIZE_INVALID if the data could not be unpacked
  */
 template<class T>
-int unpackBE(const std::string& source, T& target, int offset = 0)
+Ionflux::ObjectBase::DataSize unpackBE(const std::string& source, T& target, 
+    Ionflux::ObjectBase::DataSize offset = 0)
 {
-	static const unsigned int dataSize = sizeof(T);
+	static const DataSize dataSize = sizeof(T);
 	if ((offset + dataSize) > source.size())
-		return -1;
+		return DATA_SIZE_INVALID;
 	unsigned char* rawData = reinterpret_cast<unsigned char*>(&target);
-	for (unsigned int i = 0; i < dataSize; i++)
+	for (DataSize i = 0; i < dataSize; i++)
 		rawData[dataSize - i - 1] = source[i + offset];
 	return offset + dataSize;
 }
@@ -135,16 +137,17 @@ int unpackBE(const std::string& source, T& target, int offset = 0)
  * \param target where to store the unpacked data
  * \param offset offset from which to start unpacking
  *
- * \return new offset, or -1 if the data could not be unpacked
+ * \return new offset, or DATA_SIZE_INVALID if the data could not be unpacked
  */
 template<class T>
-int unpackLE(const std::string& source, T& target, int offset = 0)
+Ionflux::ObjectBase::DataSize unpackLE(const std::string& source, T& target, 
+    Ionflux::ObjectBase::DataSize offset = 0)
 {
-	static const unsigned int dataSize = sizeof(T);
+	static const DataSize dataSize = sizeof(T);
 	if ((offset + dataSize) > source.size())
-		return -1;
+		return DATA_SIZE_INVALID;
 	unsigned char* rawData = reinterpret_cast<unsigned char*>(&target);
-	for (unsigned int i = 0; i < dataSize; i++)
+	for (DataSize i = 0; i < dataSize; i++)
 		rawData[i] = source[i + offset];
 	return offset + dataSize;
 }
@@ -158,10 +161,11 @@ int unpackLE(const std::string& source, T& target, int offset = 0)
  * \param target where to store the unpacked data
  * \param offset offset from which to start unpacking
  *
- * \return new offset, or -1 if the data could not be unpacked
+ * \return new offset, or DATA_SIZE_INVALID if the data could not be unpacked
  */
 template<class T>
-int unpack(const std::string& source, T& target, int offset = 0)
+Ionflux::ObjectBase::DataSize unpack(const std::string& source, T& target, 
+    Ionflux::ObjectBase::DataSize offset = 0)
 {
     return unpackBE(source, target, offset);
 }
@@ -184,10 +188,10 @@ void pack(const std::string& source, std::string& target, bool append = true);
  * \param target where to store the unpacked data
  * \param offset offset from which to start unpacking
  *
- * \return new offset, or -1 if the data could not be unpacked
+ * \return new offset, or DATA_SIZE_INVALID if the data could not be unpacked
  */
-int unpack(const std::string& source, std::string& target, 
-	int offset = 0);
+Ionflux::ObjectBase::DataSize unpack(const std::string& source, 
+    std::string& target, Ionflux::ObjectBase::DataSize offset = 0);
 
 /** Pack data (float).
  *
@@ -207,10 +211,10 @@ void pack(float source, std::string& target, bool append = true);
  * \param target where to store the unpacked data
  * \param offset offset from which to start unpacking
  *
- * \return new offset, or -1 if the data could not be unpacked
+ * \return new offset, or DATA_SIZE_INVALID if the data could not be unpacked
  */
-int unpack(const std::string& source, float& target, 
-	int offset = 0);
+Ionflux::ObjectBase::DataSize unpack(const std::string& source, 
+    float& target, Ionflux::ObjectBase::DataSize offset = 0);
 
 /** Pack data (double).
  *
@@ -230,10 +234,10 @@ void pack(double source, std::string& target, bool append = true);
  * \param target where to store the unpacked data
  * \param offset offset from which to start unpacking
  *
- * \return new offset, or -1 if the data could not be unpacked
+ * \return new offset, or DATA_SIZE_INVALID if the data could not be unpacked
  */
-int unpack(const std::string& source, double& target, 
-	int offset = 0);
+Ionflux::ObjectBase::DataSize unpack(const std::string& source, 
+    double& target, Ionflux::ObjectBase::DataSize offset = 0);
 
 /** Pack object.
  *
@@ -261,7 +265,7 @@ void packObj(const Ionflux::ObjectBase::IFObject* source,
  * \return \c true if the object is non-null, \c false otherwise.
  */
 bool unpackNonNullCheck(const std::string& source, 
-    int offset = 0);
+    Ionflux::ObjectBase::DataSize offset = 0);
 
 /** Unpack object.
  *
@@ -277,10 +281,11 @@ bool unpackNonNullCheck(const std::string& source,
  * \param target where to store the unpacked data.
  * \param offset offset from which to start unpacking.
  *
- * \return new offset, or -1 if the data could not be unpacked.
+ * \return new offset, or DATA_SIZE_INVALID if the data could not be unpacked.
  */
-int unpackObj(const std::string& source, 
-    Ionflux::ObjectBase::IFObject*& target, int offset = 0);
+Ionflux::ObjectBase::DataSize unpackObj(const std::string& source, 
+    Ionflux::ObjectBase::IFObject*& target, 
+    Ionflux::ObjectBase::DataSize offset = 0);
 
 /** Pack data (PointerOffsetMap).
  *
@@ -301,10 +306,82 @@ void pack(const Ionflux::ObjectBase::PointerOffsetMap& source,
  * \param target where to store the unpacked data
  * \param offset offset from which to start unpacking
  *
- * \return new offset, or -1 if the data could not be unpacked
+ * \return new offset, or DATA_SIZE_INVALID if the data could not be unpacked
  */
-int unpack(const std::string& source, 
-    Ionflux::ObjectBase::PointerOffsetMap& target, int offset = 0);
+Ionflux::ObjectBase::DataSize unpack(const std::string& source, 
+    Ionflux::ObjectBase::PointerOffsetMap& target, 
+    Ionflux::ObjectBase::DataSize offset = 0);
+
+/** Create magic word.
+ *
+ * Create a magic word from two syllables.
+ *
+ * \param s0 syllable (0)
+ * \param s1 syllable (1)
+ *
+ * \return magic word
+ */
+Ionflux::ObjectBase::MagicWord createMagicWord(
+    Ionflux::ObjectBase::MagicSyllable s0, 
+    Ionflux::ObjectBase::MagicSyllable s1);
+
+/** Pack magic syllables.
+ *
+ * Packs the two magic syllables into a string as a magic word.
+ *
+ * \param s0 magic syllable to be packed (0)
+ * \param s1 magic syllable to be packed (1)
+ * \param target where to store the packed data
+ * \param append whether data should be appended to or replace the target data
+ */
+void pack(
+    Ionflux::ObjectBase::MagicSyllable s0, 
+    Ionflux::ObjectBase::MagicSyllable s1, 
+    std::string& target, bool append = true);
+
+/** Unpack and check magic word.
+ *
+ * Unpacks a magic word from the source string and checks if it is equal to 
+ * the specified magic word. The function throws an exception if the magic 
+ * word is not equal to the expected magic word or if the magic word could 
+ * not be unpacked.
+ *
+ * \param source data to be unpacked
+ * \param w magic word
+ * \param offset offset from which to start unpacking
+ * \param sourceObj source object
+ * \param sourceName source name
+ *
+ * \return new offset
+ */
+Ionflux::ObjectBase::DataSize unpackAndCheckMagicWord(
+    const std::string& source, Ionflux::ObjectBase::MagicWord w, 
+    Ionflux::ObjectBase::DataSize offset = 0, 
+    Ionflux::ObjectBase::IFObject* sourceObj = 0, 
+    const std::string& sourceName = "");
+
+/** Unpack and check magic syllables.
+ *
+ * Unpacks a magic word from the source string and checks if it is equal to 
+ * the specified magic syllables. The function throws an exception if the 
+ * magic word is not equal to the expected magic word or if the magic word 
+ * could not be unpacked.
+ *
+ * \param source data to be unpacked
+ * \param s0 syllable (0)
+ * \param s1 syllable (1)
+ * \param offset offset from which to start unpacking
+ * \param sourceObj source object
+ * \param sourceName source name
+ *
+ * \return new offset
+ */
+Ionflux::ObjectBase::DataSize unpackAndCheckMagicWord(
+    const std::string& source, Ionflux::ObjectBase::MagicSyllable s0, 
+    Ionflux::ObjectBase::MagicSyllable s1, 
+    Ionflux::ObjectBase::DataSize offset = 0, 
+    Ionflux::ObjectBase::IFObject* sourceObj = 0, 
+    const std::string& sourceName = "");
 
 }
 

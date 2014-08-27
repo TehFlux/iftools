@@ -362,7 +362,7 @@ void CLArgs::setArgs(int argc, char** argv)
 void CLArgs::setArgs(const Ionflux::ObjectBase::StringVector& newArgs)
 {
 	clearOptions();
-	for (int i = 1; i < newArgs.size(); i++)
+	for (unsigned int i = 1; i < newArgs.size(); i++)
 	    args.push_back(newArgs[i]);
 	parse();
 }

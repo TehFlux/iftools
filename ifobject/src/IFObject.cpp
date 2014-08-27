@@ -412,7 +412,7 @@ std::string IFObject::getLiteral2(const std::string& encoding) const
 
 bool IFObject::initFromLiteral(const std::string& source)
 {
-	unsigned int pos = 0;
+	DataSize pos = 0;
 	ostringstream status;
 	// check prefix
 	if (source.size() < LITERAL_PREFIX.size())
@@ -436,7 +436,7 @@ bool IFObject::initFromLiteral(const std::string& source)
 	std::string encoding;
 	std::string rawEncodedSize;
 	std::string encodedData;
-	unsigned int encodedSize = 0;
+	DataSize encodedSize = 0;
 	std::string parseError;
 	/* state:
 		0 - extract class name
@@ -585,7 +585,7 @@ bool IFObject::initFromLiteral(const std::string& source)
 				"initFromLiteral"));
 			return false;
 		}
-		for (unsigned int i = 0; i < decodeTemp.size(); i++)
+		for (DataSize i = 0; i < decodeTemp.size(); i++)
 		{
 			if (decodeTemp[i] > 0xff)
 			{
@@ -631,7 +631,7 @@ bool IFObject::initFromLiteral(const std::string& source)
 		return false;
 	}
 	// deserialize the object
-	if (deserialize(decodedData) == -1)
+	if (deserialize(decodedData) == DATA_SIZE_INVALID)
 	{
 		status << "Deserialization failed (literal: '";
 		if (source.size() > 512)
@@ -1237,7 +1237,7 @@ bool IFObject::serialize(std::string& target) const
 	return true;
 }
 
-int IFObject::deserialize(const std::string& source, int offset)
+Ionflux::ObjectBase::DataSize IFObject::deserialize(const std::string& source, Ionflux::ObjectBase::DataSize offset)
 {
 	offset = unpack(source, id, offset);
 	if (offset < 0)

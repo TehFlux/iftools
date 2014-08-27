@@ -1,6 +1,7 @@
 %include <std_string.i>
 %include <std_map.i>
 %include <std_vector.i>
+%include <stdint.i>
 %module IFObjectBase
 %{
 #include "ifobject/ifobjectbase.hpp"
@@ -25,16 +26,6 @@ namespace ObjectBase
 
 // types.hpp
 
-// HACK.
-typedef signed char             int8_t;
-typedef short int               int16_t;
-typedef int                     int32_t;
-typedef long long int           int64_t;
-typedef unsigned char           uint8_t;
-typedef unsigned short int      uint16_t;
-typedef unsigned int            uint32_t;
-typedef unsigned long long int  uint64_t;
-
 // integers
 typedef int8_t Int8;
 typedef uint8_t UInt8;
@@ -47,6 +38,8 @@ typedef uint64_t UInt64;
 
 // unicode characters
 typedef UInt32 IFUniChar;
+
+typedef UInt64 DataSize;
 
 // forward declarations
 class IFObject;
@@ -130,6 +123,7 @@ const std::string XML_ELEMENT_NAME_DOUBLE_VECTOR = "doublev";
 const std::string XML_ELEMENT_NAME_COLOR_SET_VECTOR = "colorsetv";
 const std::string XML_ELEMENT_NAME_VECTOR2_SET_VECTOR = "vector2setv";
 const unsigned char DIR_SEPARATOR = '/';
+const Ionflux::ObjectBase::DataSize DATA_SIZE_INVALID = 0xffffffffffffffffULL;
 
 // utils.hpp
 
@@ -213,6 +207,9 @@ void getStringVector(const Ionflux::ObjectBase::LineBuffer& lineBuffer,
 Ionflux::ObjectBase::LineBufferConst createLineBufferConst(
     const Ionflux::ObjectBase::LineBuffer& lineBuffer);
 void cleanupLineBuffer(Ionflux::ObjectBase::LineBufferConst& lineBuffer);
+std::string getErrorString(const std::string& message, 
+    const std::string& source = "", 
+    const Ionflux::ObjectBase::IFObject* sourceObj = 0);
 
 // xmlutils.hpp
 

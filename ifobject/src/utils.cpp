@@ -852,6 +852,17 @@ void cleanupLineBuffer(Ionflux::ObjectBase::LineBufferConst& lineBuffer)
     lineBuffer.size = 0;
 }
 
+std::string getErrorString(const std::string& message, 
+    const std::string& source, 
+    const Ionflux::ObjectBase::IFObject* sourceObj)
+{
+    if (sourceObj != 0)
+        return sourceObj->getErrorString(message, source);
+    std::ostringstream status;
+    status << "[" << source << "] " << message;
+    return status.str();
+}
+
 }
 
 }
