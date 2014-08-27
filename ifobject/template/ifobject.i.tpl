@@ -1,7 +1,6 @@
 %include <std_string.i>
 %include <std_map.i>
 %include <std_vector.i>
-%include <stdint.i>
 %module IFObjectBase
 %{
 #include "ifobject/ifobjectbase.hpp"
@@ -25,6 +24,18 @@ namespace ObjectBase
 {
 
 // types.hpp
+
+/* HACK: This is necessary so that SWIG knows about the integer types 
+         but unfortunately platform dependent (and the SWIG stdint.i gets 
+         it wrong). */
+typedef signed char             int8_t;
+typedef short int               int16_t;
+typedef int                     int32_t;
+typedef long int                int64_t;
+typedef unsigned char           uint8_t;
+typedef unsigned short int      uint16_t;
+typedef unsigned int            uint32_t;
+typedef unsigned long int       uint64_t;
 
 // integers
 typedef int8_t Int8;

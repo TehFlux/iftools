@@ -313,7 +313,7 @@ bool IFLogMessage::serialize(std::string& target) const
 	return true;
 }
 
-int IFLogMessage::deserialize(const std::string& source, int offset)
+Ionflux::ObjectBase::DataSize IFLogMessage::deserialize(const std::string& source, Ionflux::ObjectBase::DataSize offset)
 {
 	offset = IFObject::deserialize(source, offset);
 	if (offset < 0)

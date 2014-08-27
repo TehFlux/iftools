@@ -222,7 +222,7 @@ class IFLogMessage
 		 *
 		 * \sa serialize()
 		 */
-		virtual int deserialize(const std::string& source, int offset = 0);
+		virtual Ionflux::ObjectBase::DataSize deserialize(const std::string& source, Ionflux::ObjectBase::DataSize offset = 0);
 		
 		/** Get allocated size in memory.
 		 *
