@@ -28,6 +28,7 @@
 
 #include <string>
 #include <vector>
+#include <iostream>
 #include <sstream>
 #include "ifobject/types.hpp"
 #include "ifobject/constants.hpp"
@@ -772,6 +773,41 @@ std::string getValueStringVec(const T& v, const std::string& sep = ", ")
 std::string getErrorString(const std::string& message, 
     const std::string& source = "", 
     const Ionflux::ObjectBase::IFObject* sourceObj = 0);
+
+/** Read from stream.
+ * 
+ * Read data from the specified stream and store it in the target string. If 
+ * \c numBytes is \c DATA_SIZE_INVALID, the maximum number of bytes possible 
+ * will be read from the stream. If \c offset is not 0, data will be read 
+ * starting from the specified offset.
+ *
+ * \param s input stream
+ * \param target where to store the data
+ * \param numBytes number of bytes to read
+ * \param offset offset
+ *
+ * \return number of bytes read
+ */
+Ionflux::ObjectBase::DataSize readFromStream(std::istream& s, 
+    std::string& target, Ionflux::ObjectBase::DataSize numBytes = 
+        Ionflux::ObjectBase::DATA_SIZE_INVALID, 
+    Ionflux::ObjectBase::DataSize offset = 
+        Ionflux::ObjectBase::DATA_SIZE_INVALID);
+
+/** Write to stream.
+ * 
+ * Write data to the specified stream. If \c offset is not 0, data will be 
+ * written starting from the specified offset.
+ *
+ * \param s output stream
+ * \param source source data
+ * \param offset offset
+ *
+ * \return number of bytes written
+ */
+Ionflux::ObjectBase::DataSize writeToStream(std::ostream& s, 
+    const std::string& source, Ionflux::ObjectBase::DataSize offset = 
+        Ionflux::ObjectBase::DATA_SIZE_INVALID);
 
 }
 

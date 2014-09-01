@@ -862,6 +862,86 @@ std::string getErrorString(const std::string& message,
     return status.str();
 }
 
+Ionflux::ObjectBase::DataSize readFromStream(std::istream& s, 
+    std::string& target, Ionflux::ObjectBase::DataSize numBytes, 
+    Ionflux::ObjectBase::DataSize offset)
+{
+    if (offset != DATA_SIZE_INVALID)
+    {
+        s.seekg(offset);
+        if (!s.good())
+        {
+            std::ostringstream status;
+            status << "[readFromStream] " 
+                "Invalid stream offset: " << offset;
+            throw IFError(status.str());
+        }
+    }
+    Ionflux::ObjectBase::DataSize bytesLeft = 0;
+    std::streampos p0 = s.tellg();
+    s.seekg(0, s.end);
+    std::streampos p1 = s.tellg();
+    s.seekg(p0);
+    if (p1 > p0)
+        bytesLeft = p1 - p0;
+    else
+        bytesLeft = 0;
+    if ((numBytes == DATA_SIZE_INVALID) 
+        || (numBytes > bytesLeft))
+        numBytes = bytesLeft;
+    if (numBytes == 0)
+        return 0;
+    char* buffer = new char[numBytes];
+    if (buffer == 0)
+    {
+        throw IFError("[readFromStream] "
+            "Could not allocate read buffer.");
+    }
+    s.read(buffer, numBytes);
+    if (s.fail() || s.bad())
+    {
+        std::ostringstream status;
+        status << "[readFromStream] " 
+            "Could not read from stream (numBytes = " 
+            << numBytes;
+        if (offset != DATA_SIZE_INVALID)
+            status << ", offset = " << offset;
+        status << ").";
+        throw IFError(status.str());
+    }
+    target.assign(buffer, numBytes);
+    delete[] buffer;
+    return numBytes;
+}
+
+Ionflux::ObjectBase::DataSize writeToStream(std::ostream& s, 
+    const std::string& source, Ionflux::ObjectBase::DataSize offset)
+{
+    if (offset != DATA_SIZE_INVALID)
+    {
+        s.seekp(offset);
+        if (s.fail() || s.bad())
+        {
+            std::ostringstream status;
+            status << "[writeToStream] " 
+                "Invalid stream offset: " << offset;
+            throw IFError(status.str());
+        }
+    }
+    s.write(source.c_str(), source.size());
+    if (s.fail() || s.bad())
+    {
+        std::ostringstream status;
+        status << "[writeToStream] " 
+            "Could not write to stream";
+        if (offset != DATA_SIZE_INVALID)
+            status << " (offset = " << offset;
+        status << ").";
+        throw IFError(status.str());
+    }
+    return source.size();
+}
+
 }
 
 }
