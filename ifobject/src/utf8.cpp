@@ -27,6 +27,7 @@
 #include <iostream>
 #include <sstream>
 #include "ifobject/utf8.hpp"
+#include "ifobject/utils.hpp"
 #include "ifobject/log.hpp"
 #include "ifobject/IFError.hpp"
 
@@ -264,6 +265,14 @@ std::string utf8MakeNiceHex(const std::string& hex,
 		}
 	}
 	return buffer.str();
+}
+
+std::string utf8MakeNiceHexForData(const std::string& data, 
+    int bytesPerLine, int groupBytes)
+{
+    UniCharVector v0;
+    utf8MakeReadable(data, v0);
+	return utf8MakeNiceHex(makeHex(data), v0, bytesPerLine, groupBytes);
 }
 
 }

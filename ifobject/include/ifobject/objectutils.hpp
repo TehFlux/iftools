@@ -105,6 +105,40 @@ T0 rangeCheck(T0& v, const T0& lower, const T0& upper,
     return v;
 }
 
+/// Checked map lookup.
+template<class KT, class VT>
+VT checkedLookup(typename std::map<KT, VT>& m, 
+    const KT& key, const Ionflux::ObjectBase::IFObject* sourceObj, 
+    const std::string& source = "", 
+    const std::string& objName = "object")
+{
+    typename std::map<KT, VT>::iterator i = m.find(key);
+    if (i == m.end())
+    {
+        std::ostringstream status;
+        status << objName << " not found (key = " << key << ").";
+        throw IFError(sourceObj->getErrorString(status.str(), source));
+    }
+    return (*i).second;
+}
+
+/// Checked map lookup.
+template<class KT, class VT>
+VT checkedLookup(const typename std::map<KT, VT>& m, 
+    const KT& key, const Ionflux::ObjectBase::IFObject* sourceObj, 
+    const std::string& source = "", 
+    const std::string& objName = "object")
+{
+    typename std::map<KT, VT>::const_iterator i = m.find(key);
+    if (i == m.end())
+    {
+        std::ostringstream status;
+        status << objName << " not found (key = " << key << ").";
+        throw IFError(sourceObj->getErrorString(status.str(), source));
+    }
+    return (*i).second;
+}
+
 }
 
 }

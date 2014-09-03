@@ -124,6 +124,14 @@ unsigned int utf8GetSize(unsigned char byte);
 bool utf8ToUniChar(const std::string& bytes, 
 	std::vector<IFUniChar>& target);
 unsigned int utf8GetSize(const std::string& bytes);
+void utf8MakeReadable(const std::string& inputData, 
+	Ionflux::ObjectBase::UniCharVector& target, 
+	Ionflux::ObjectBase::IFUniChar replacement = 46);
+std::string utf8MakeNiceHex(const std::string& hex, 
+    const Ionflux::ObjectBase::UniCharVector& readable, 
+    int bytesPerLine = 20, int groupBytes = 10);
+std::string utf8MakeNiceHexForData(const std::string& data, 
+    int bytesPerLine = 20, int groupBytes = 10);
 
 // constants.hpp
 

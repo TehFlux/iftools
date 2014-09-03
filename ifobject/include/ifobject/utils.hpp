@@ -778,8 +778,8 @@ std::string getErrorString(const std::string& message,
  * 
  * Read data from the specified stream and store it in the target string. If 
  * \c numBytes is \c DATA_SIZE_INVALID, the maximum number of bytes possible 
- * will be read from the stream. If \c offset is not 0, data will be read 
- * starting from the specified offset.
+ * will be read from the stream. If \c offset is not DATA_SIZE_INVALID, 
+ * data will be read starting from the specified offset.
  *
  * \param s input stream
  * \param target where to store the data
@@ -796,8 +796,8 @@ Ionflux::ObjectBase::DataSize readFromStream(std::istream& s,
 
 /** Write to stream.
  * 
- * Write data to the specified stream. If \c offset is not 0, data will be 
- * written starting from the specified offset.
+ * Write data to the specified stream. If \c offset is not DATA_SIZE_INVALID, 
+ * data will be written starting from the specified offset.
  *
  * \param s output stream
  * \param source source data
@@ -811,6 +811,42 @@ Ionflux::ObjectBase::DataSize writeToStream(std::ostream& s,
 
 /// Get string representation for a stream type ID.
 std::string getStreamTypeValueString(Ionflux::ObjectBase::StreamTypeID t);
+
+/// Checked map lookup.
+template<class KT, class VT>
+VT checkedLookup(typename std::map<KT, VT>& m, 
+    const KT& key, const std::string& source = "", 
+    const std::string& objName = "object")
+{
+    typename std::map<KT, VT>::iterator i = m.find(key);
+    if (i == m.end())
+    {
+        std::ostringstream status;
+        if (source.size() > 0)
+            status << "[" << source << "] ";
+        status << objName << " not found (key = " << key << ").";
+        throw IFError(status.str());
+    }
+    return (*i).second;
+}
+
+/// Checked map lookup.
+template<class KT, class VT>
+VT checkedLookup(const typename std::map<KT, VT>& m, 
+    const KT& key, const std::string& source = "", 
+    const std::string& objName = "object")
+{
+    typename std::map<KT, VT>::const_iterator i = m.find(key);
+    if (i == m.end())
+    {
+        std::ostringstream status;
+        if (source.size() > 0)
+            status << "[" << source << "] ";
+        status << objName << " not found (key = " << key << ").";
+        throw IFError(status.str());
+    }
+    return (*i).second;
+}
 
 }
 
