@@ -809,6 +809,9 @@ Ionflux::ObjectBase::DataSize writeToStream(std::ostream& s,
     const std::string& source, Ionflux::ObjectBase::DataSize offset = 
         Ionflux::ObjectBase::DATA_SIZE_INVALID);
 
+/// Get string representation for a stream type ID.
+std::string getStreamTypeValueString(Ionflux::ObjectBase::StreamTypeID t);
+
 }
 
 }

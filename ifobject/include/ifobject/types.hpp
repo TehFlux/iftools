@@ -152,6 +152,9 @@ struct LineBufferConst
     int size;
 };
 
+/// Stream type ID.
+typedef int StreamTypeID;
+
 }
 
 }

@@ -21,12 +21,16 @@ New
 Critical stuff
 --------------------------------------------------------------------------------
 
++ ConfigTree
+  > parser should report correct line numbers for errors
+  > #include directive
+
 + Curly braces inside verbatim sections should be completely ignored.
-  . Maybe escape characters should also be ignored.
-  . Allow escaping of the verbatim section delimiters.
+  > Maybe escape characters should also be ignored.
+  > Allow escaping of the verbatim section delimiters.
 
 + Scan template modules/files for mismatched tags and report exactly which 
-  tag is mismatched. 
+  tag is mismatched.
 
 + Add tags.
   > comment

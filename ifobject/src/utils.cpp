@@ -942,6 +942,19 @@ Ionflux::ObjectBase::DataSize writeToStream(std::ostream& s,
     return source.size();
 }
 
+std::string getStreamTypeValueString(Ionflux::ObjectBase::StreamTypeID t)
+{
+    if (t == Ionflux::ObjectBase::STREAM_TYPE_UNDEFINED)
+        return "undefined";
+    else
+    if (t == Ionflux::ObjectBase::STREAM_TYPE_FILE)
+        return "file";
+        else
+    if (t == Ionflux::ObjectBase::STREAM_TYPE_STRING)
+        return "string";
+return "<unknown>";
+}
+
 }
 
 }

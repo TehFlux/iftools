@@ -64,6 +64,13 @@ const unsigned char DIR_SEPARATOR = '/';
 /// Data size: invalid.
 const Ionflux::ObjectBase::DataSize DATA_SIZE_INVALID = 0xffffffffffffffffULL;
 
+/// Stream type ID: undefined.
+const Ionflux::ObjectBase::StreamTypeID STREAM_TYPE_UNDEFINED = 0;
+/// Stream type ID: file.
+const Ionflux::ObjectBase::StreamTypeID STREAM_TYPE_FILE = 1;
+/// Stream type ID: string.
+const Ionflux::ObjectBase::StreamTypeID STREAM_TYPE_STRING = 2;
+
 }
 
 }

@@ -112,6 +112,8 @@ struct LineBufferConst
     int size;
 };
 
+typedef int StreamTypeID;
+
 // utf8.hpp
 
 std::string uniCharToUTF8(IFUniChar uniChar);
@@ -135,6 +137,9 @@ const std::string XML_ELEMENT_NAME_COLOR_SET_VECTOR = "colorsetv";
 const std::string XML_ELEMENT_NAME_VECTOR2_SET_VECTOR = "vector2setv";
 const unsigned char DIR_SEPARATOR = '/';
 const Ionflux::ObjectBase::DataSize DATA_SIZE_INVALID = 0xffffffffffffffffULL;
+const Ionflux::ObjectBase::StreamTypeID STREAM_TYPE_UNDEFINED = 0;
+const Ionflux::ObjectBase::StreamTypeID STREAM_TYPE_FILE = 1;
+const Ionflux::ObjectBase::StreamTypeID STREAM_TYPE_STRING = 2;
 
 // utils.hpp
 
@@ -221,6 +226,7 @@ void cleanupLineBuffer(Ionflux::ObjectBase::LineBufferConst& lineBuffer);
 std::string getErrorString(const std::string& message, 
     const std::string& source = "", 
     const Ionflux::ObjectBase::IFObject* sourceObj = 0);
+std::string getStreamTypeValueString(Ionflux::ObjectBase::StreamTypeID t);
 
 // xmlutils.hpp
 
