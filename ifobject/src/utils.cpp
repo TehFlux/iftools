@@ -450,7 +450,7 @@ std::string makeReadable(const std::string& inputData,
 }
 
 std::string makeNiceHex(const std::string& hex, const std::string& readable, 
-	int bytesPerLine, int groupBytes)
+	int bytesPerLine, int groupBytes, bool showPos)
 {
     std::ostringstream buffer;
 	string paddedHex(hex);
@@ -463,16 +463,28 @@ std::string makeNiceHex(const std::string& hex, const std::string& readable,
 	while (paddedReadable.size() < bytes)
 		paddedReadable.append(" ");
 	int readablePos = 0;
+	int lineNum = 0;
 	for (unsigned int i = 0; i < bytes; i++)
 	{
+		if (((i % bytesPerLine) == 0) 
+		    && (lineNum > 0))
+		{
+		    buffer << "\n";
+		}
 		buffer << paddedHex.substr(2 * i, 2) << " ";
-		if ((((i + 1) % groupBytes) == 0) && (((i + 1) % bytesPerLine) != 0))
+		if ((((i + 1) % groupBytes) == 0) 
+		    && (((i + 1) % bytesPerLine) != 0))
+		{
 			buffer << " ";
+		}
 		if (((i + 1) % bytesPerLine) == 0)
 		{
-			buffer << " " << paddedReadable.substr(readablePos, bytesPerLine) 
-			    << "\n";
+			buffer << " " << paddedReadable.substr(
+			    readablePos, bytesPerLine);
+			if (showPos)
+			    buffer << "  " << (i + 1);
 			readablePos += bytesPerLine;
+			lineNum++;
 		}
 	}
 	return buffer.str();

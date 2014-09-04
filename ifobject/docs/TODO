@@ -17,6 +17,11 @@ New
 
 + Fix the variant dirs (all build files should go to 'build')
 
++ ByteBuffer
+  > store an array of bytes and length
+  > allocate, resize, append
+  > convert to/from string, utf8, hex
+
 --------------------------------------------------------------------------------
 Critical stuff
 --------------------------------------------------------------------------------

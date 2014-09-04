@@ -430,11 +430,12 @@ std::string makeReadable(const std::string& inputData,
  * \param readable Readable representation of the string.
  * \param bytesPerLine How many bytes to display per line.
  * \param groupBytes How many bytes to display in each group.
+ * \param showPos Show the current byte position at the end of each line.
  *
  * \return Nicely formatted hexadecimal output.
  */
 std::string makeNiceHex(const std::string& hex, const std::string& readable, 
-	int bytesPerLine, int groupBytes);
+	int bytesPerLine = 20, int groupBytes = 10, bool showPos = true);
 
 /** Parse hex string.
  *

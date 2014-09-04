@@ -131,12 +131,13 @@ void utf8MakeReadable(const std::string& inputData,
  * \param readable Readable representation of the string.
  * \param bytesPerLine How many bytes to display per line.
  * \param groupBytes How many bytes to display in each group.
+ * \param showPos Show the current byte position at the end of each line.
  *
  * \return Nicely formatted hexadecimal output.
  */
 std::string utf8MakeNiceHex(const std::string& hex, 
     const Ionflux::ObjectBase::UniCharVector& readable, 
-    int bytesPerLine = 20, int groupBytes = 10);
+    int bytesPerLine = 20, int groupBytes = 10, bool showPos = true);
 
 /** Make nice hexadecimal output.
  *
@@ -148,11 +149,12 @@ std::string utf8MakeNiceHex(const std::string& hex,
  * \param data String of bytes.
  * \param bytesPerLine How many bytes to display per line.
  * \param groupBytes How many bytes to display in each group.
+ * \param showPos Show the current byte position at the end of each line.
  *
  * \return Nicely formatted hexadecimal output.
  */
 std::string utf8MakeNiceHexForData(const std::string& data, 
-    int bytesPerLine = 20, int groupBytes = 10);
+    int bytesPerLine = 20, int groupBytes = 10, bool showPos = true);
 }
 
 }

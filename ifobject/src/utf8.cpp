@@ -237,7 +237,7 @@ void utf8MakeReadable(const std::string& inputData,
 
 std::string utf8MakeNiceHex(const std::string& hex, 
     const Ionflux::ObjectBase::UniCharVector& readable, 
-    int bytesPerLine, int groupBytes)
+    int bytesPerLine, int groupBytes, bool showPos)
 {
     std::ostringstream buffer;
 	string paddedHex(hex);
@@ -250,29 +250,39 @@ std::string utf8MakeNiceHex(const std::string& hex,
 	while (paddedReadable.size() < bytes)
 		paddedReadable.push_back(32);
 	int readablePos = 0;
+	int lineNum = 0;
 	for (unsigned int i = 0; i < bytes; i++)
 	{
+		if (((i % bytesPerLine) == 0) 
+		    && (lineNum > 0))
+		{
+		    buffer << "\n";
+		}
 		buffer << paddedHex.substr(2 * i, 2) << " ";
-		if ((((i + 1) % groupBytes) == 0) && (((i + 1) % bytesPerLine) != 0))
+		if ((((i + 1) % groupBytes) == 0) 
+		    && (((i + 1) % bytesPerLine) != 0))
 			buffer << " ";
 		if (((i + 1) % bytesPerLine) == 0)
 		{
 			buffer << " ";
 			for (int k = 0; k < bytesPerLine; k++)
 			    buffer << uniCharToUTF8(paddedReadable[readablePos + k]);
-			buffer << "\n";
+			if (showPos)
+			    buffer << "  " << (i + 1);
 			readablePos += bytesPerLine;
+			lineNum++;
 		}
 	}
 	return buffer.str();
 }
 
 std::string utf8MakeNiceHexForData(const std::string& data, 
-    int bytesPerLine, int groupBytes)
+    int bytesPerLine, int groupBytes, bool showPos)
 {
     UniCharVector v0;
     utf8MakeReadable(data, v0);
-	return utf8MakeNiceHex(makeHex(data), v0, bytesPerLine, groupBytes);
+	return utf8MakeNiceHex(makeHex(data), v0, bytesPerLine, groupBytes, 
+	    showPos);
 }
 
 }
