@@ -34,7 +34,8 @@ ifobjectLibHeaders = [
     'include/ifobject/IFError.hpp', 
     'include/ifobject/IFMMEvent.hpp', 
     'include/ifobject/IFMMEventHandler.hpp',
-    'include/ifobject/IFXMLObjectFactory.hpp'
+    'include/ifobject/IFXMLObjectFactory.hpp', 
+    'include/ifobject/IFIOContext.hpp'
 ]
 
 ifobjectLibSources = [
@@ -60,7 +61,8 @@ ifobjectLibSources = [
 	'build/IFError.cpp', 
 	'build/IFMMEvent.cpp', 
 	'build/IFMMEventHandler.cpp', 
-	'build/IFXMLObjectFactory.cpp'
+	'build/IFXMLObjectFactory.cpp', 
+	'build/IFIOContext.cpp'
 ]
 
 ifobjectLibClasses = [
@@ -76,6 +78,7 @@ ifobjectLibClasses = [
     'IFError', 
     'IFMMEvent', 
     'IFMMEventHandler', 
-    'IFXMLObjectFactory'
+    'IFXMLObjectFactory', 
+    'IFIOContext'
 ]
 
