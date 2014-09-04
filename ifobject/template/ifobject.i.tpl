@@ -431,6 +431,7 @@ $IFCache
 $IFMMEvent
 $IFMMEventHandler
 $IFXMLObjectFactory
+$IFIOContext
 
 %template(StringVector) std::vector<std::string>;
 %template(DoubleVector) std::vector<double>;
