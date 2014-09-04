@@ -139,6 +139,36 @@ following public functions:
                      initialized from XML element.
 
 --------------------------------------------------------------------------------
+Property value types
+--------------------------------------------------------------------------------
+
+The XML I/O system supports basic value types for class properties out of 
+the box by setting the 'valueType' option on a property. These basic value 
+types are given in the following table, along with compatible C++ types.
+
+  value type        C++ types
+  ----------------------------------------
+  integer           any C++ integer type
+  float             any C++ double type
+  bool              bool
+  string            std::string
+  object            -
+
+It is not important what the exact type of the property is, as long as it can 
+be serialized in the same way as the basic type that is specified for that 
+property. For example, the XML I/O system will work with properties that are 
+typedef'd from a C++ type that is compatible with the basic value types.
+
+Also, vectors of basic types and maps of basic types with a std::string key 
+are supported.
+
+If a class uses an unsupported type for a member property or variable, that 
+variable can still be serialized using the 'generatorFunc' options.
+
+If 'object' is specified as the value type of a property, the property is 
+expected to be a managed Ionflux Object Base System object pointer.
+
+--------------------------------------------------------------------------------
 Configuration options
 --------------------------------------------------------------------------------
 
@@ -164,7 +194,7 @@ class
 
 property.protected[]
   [general]
-  valueType        One of [float, integer, bool, object]
+  valueType        One of [float, integer, bool, string, object]
                    Used by the XML generator functions to determine how XML 
                    should be generated for the property value.
   xml

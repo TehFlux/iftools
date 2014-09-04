@@ -15,6 +15,12 @@ Up next
 New
 --------------------------------------------------------------------------------
 
+
+
+--------------------------------------------------------------------------------
+Critical stuff
+--------------------------------------------------------------------------------
+
 + Fix the variant dirs (all build files should go to 'build')
 
 + ByteBuffer
@@ -22,15 +28,11 @@ New
   > allocate, resize, append
   > convert to/from string, utf8, hex
 
---------------------------------------------------------------------------------
-Critical stuff
---------------------------------------------------------------------------------
-
 + polymorphic binary serialization/deserialization (just like for XML)
   > support streams (pack, serialize, deserialize)
+    . use IFIOContext
   > magic words
     . one magic syllable for the namespace and one for the object type
-  > pointer offset maps
 
 + builders
   > use a list of all class configurations and an arbitrary template

@@ -1,0 +1,74 @@
+================================================================================
+Ionflux Object Base System
+Copyright © 2006-2014 Joern P. Meier
+mail@ionflux.org
+--------------------------------------------------------------------------------
+XML I/O
+================================================================================
+
+The Ionflux Object Base System provides features that allow XML I/O to be 
+added to classes that are defined using the class template system. Adding 
+XML I/O capability works automatically to a large extent, especially if the 
+state of an object that is to be serialized to or from XML consists entirely 
+of basic types and objects based on the Ionflux Object Base System.
+
+This document contains notes on how the XML I/O system is implemented in the 
+class template system and is intended as a guide to developers who wish to 
+extend or modify its functionality.
+
+See class-templates.txt for information on supported properties for class 
+configuration and additional documentation for the XML I/O system from the 
+user perspective.
+
+================================================================================
+Templates
+================================================================================
+
+This section describes the templates used to create the XML I/O features for 
+a class.
+
+class
+  header
+    xml
+      declare_xml_io_funcs       Declares the XML I/O functions for a 
+                                 class:
+                                 
+                                 getXMLElementName()
+                                 getXMLAttributeData()
+                                 getXMLChildData()
+                                 loadFromXMLFile()
+                                 getXMLObjectFactory()
+                                 
+  impl
+    xml
+      create_xml_io_funcs_impl   Creates the implementation for the XML I/O 
+                                 functions.
+      get_xml_property_attribute_value
+                                 Creates the attribute value for properties 
+                                 that are serialized as XML attributes. The 
+                                 value thet is generated must be suitable for 
+                                 insertion into a std::ostream using the '<<' 
+                                 operator.
+      get_xml_property_child_element
+                                 Creates the child element XML data for  
+                                 properties that are serialized as XML child 
+                                 elements.
+xml
+  conf
+    xml_object_factory           This is a template used to create the class 
+                                 configuration for the XML object factory 
+                                 corresponding to a class.
+  xml_get_prop_child_element_name
+                                 Get the child element name for a vector or 
+                                 map style property.
+  xml_scan_base_classes          Scan base classes to check if XML I/O is 
+                                 enabled on any of them.
+  xml_scan_child_classes         Scan child classes to check if XML I/O is 
+                                 enabled on any of them. (This works only on 
+                                 child classes that are specified directly in 
+                                 the class configuration via the 'childClass' 
+                                 option.
+  xml_scan_properties            Scan class properties to check if any of 
+                                 them are enabled as XML attributes or child 
+                                 elements.
+
