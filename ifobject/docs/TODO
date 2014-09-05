@@ -15,7 +15,8 @@ Up next
 New
 --------------------------------------------------------------------------------
 
-
++ Testing
+  > stream versions of pack/unpack functions (serialize.hpp)
 
 --------------------------------------------------------------------------------
 Critical stuff
@@ -29,8 +30,10 @@ Critical stuff
   > convert to/from string, utf8, hex
 
 + polymorphic binary serialization/deserialization (just like for XML)
-  > support streams (pack, serialize, deserialize)
-    . use IFIOContext
+  > serialize/deserialize for maps and vectors (see xmlutils)
+  > class templates
+    . stream versions of serialize/deserialize
+    . IFIOContext versions of serialize/deserialize
   > magic words
     . one magic syllable for the namespace and one for the object type
 

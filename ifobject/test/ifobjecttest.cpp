@@ -28,6 +28,7 @@
 #include <iomanip>
 #include <sstream>
 #include <string>
+#include "ifobject/utf8.hpp"
 #include "ifobject/IFObject.hpp"
 #include "ifobject/IFObjectEvent.hpp"
 
@@ -54,71 +55,11 @@ bool objectIDChanged(const IFObjectEvent& event)
 	return true;
 }
 
-// Hex functions from iftools.
-std::string makeHex(const std::string& inputData)
-{
-	ostringstream buffer;
-	buffer << uppercase << right << setfill('0') << hex;
-	for (unsigned int i = 0; i < inputData.size(); i++)
-		buffer << setw(2) << int(static_cast<unsigned char>(inputData[i]));
-	return buffer.str();
-}
-
-std::string makeReadable(const std::string& inputData, 
-	const std::string& replacement)
-{
-	ostringstream buffer;
-	unsigned char currentChar;
-	for (unsigned int i = 0; i < inputData.size(); i++)
-	{
-		currentChar = static_cast<unsigned char>(inputData[i]);
-		if (((currentChar >= 32) && (currentChar <= 126))
-			|| (currentChar >= 160))
-		{
-			buffer << inputData[i];
-		} else
-		{
-			buffer << replacement;
-		}
-	}
-	return buffer.str();
-}
-
-std::string makeNiceHex(const std::string& hex, const std::string& readable, 
-	int bytesPerLine, int groupBytes)
-{
-	ostringstream buffer;
-	string paddedHex(hex);
-	string paddedReadable(readable);
-	if ((paddedHex.size() % 2) != 0)
-		paddedHex.append(" ");
-	while (((paddedHex.size() / 2) % bytesPerLine) != 0)
-		paddedHex.append("  ");
-	unsigned int bytes = paddedHex.size() / 2;
-	while (paddedReadable.size() < bytes)
-		paddedReadable.append(" ");
-	int readablePos = 0;
-	for (unsigned int i = 0; i < bytes; i++)
-	{
-		buffer << paddedHex.substr(2 * i, 2) << " ";
-		if ((((i + 1) % groupBytes) == 0) && (((i + 1) % bytesPerLine) != 0))
-			buffer << " ";
-		if (((i + 1) % bytesPerLine) == 0)
-		{
-			buffer << " " << paddedReadable.substr(readablePos, bytesPerLine) 
-				<< "\n";
-			readablePos += bytesPerLine;
-		}
-	}
-	return buffer.str();
-}
-
 // Default hex output.
 std::string makeNiceHex(const std::string& data, int bytesPerLine = 20, 
 	int groupBytes = 10)
 {
-	return makeNiceHex(makeHex(data), makeReadable(data, "."), 
-		bytesPerLine, groupBytes);
+	return utf8MakeNiceHexForData(makeHex(data), bytesPerLine, groupBytes);
 }
 
 int main(int argc, char* argv[])
