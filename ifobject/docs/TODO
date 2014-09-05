@@ -36,6 +36,8 @@ Critical stuff
     . IFIOContext versions of serialize/deserialize
   > magic words
     . one magic syllable for the namespace and one for the object type
+  > figure out how progressive serialization/deserialization of object 
+    hirerarchies can be done
 
 + builders
   > use a list of all class configurations and an arbitrary template
