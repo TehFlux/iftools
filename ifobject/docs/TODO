@@ -31,6 +31,8 @@ Critical stuff
 
 + polymorphic binary serialization/deserialization (just like for XML)
   > serialize/deserialize for maps and vectors (see xmlutils)
+    . vectors of basic types (int, uint, double) (xmlutils.cpp)
+    . vectors/maps of objects (xmlutils_private.hpp)
   > class templates
     . stream versions of serialize/deserialize
     . IFIOContext versions of serialize/deserialize
@@ -38,6 +40,11 @@ Critical stuff
     . one magic syllable for the namespace and one for the object type
   > figure out how progressive serialization/deserialization of object 
     hirerarchies can be done
+    . generic header that stores a pointer to a root object and the 
+      pointer/offset map offset
+    . leave member object pointers set to zero
+    . initialize object from the stream on demand using the 
+      pointer/offset maps
 
 + builders
   > use a list of all class configurations and an arbitrary template
