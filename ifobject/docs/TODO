@@ -30,9 +30,15 @@ Critical stuff
   > convert to/from string, utf8, hex
 
 + polymorphic binary serialization/deserialization (just like for XML)
-  > serialize/deserialize for maps and vectors (see xmlutils)
-    . vectors of basic types (int, uint, double) (xmlutils.cpp)
-    . vectors/maps of objects (xmlutils_private.hpp)
+  > serialize/deserialize vectors/maps of objects (xmlutils_private.hpp)
+    . need the polymorphic object deserialization
+    . store only pointers
+    . use pointer/offset map
+    . store child objects at end of serialized data block
+    . does not make much sense to do it this way for strings since offsets 
+      are relative (maybe just handle this case later)
+    . there is no need to store the null flag (packObj()) as null objects 
+      do not need to be stored at all (just store the pointers)
   > class templates
     . stream versions of serialize/deserialize
     . IFIOContext versions of serialize/deserialize
@@ -44,7 +50,8 @@ Critical stuff
       pointer/offset map offset
     . leave member object pointers set to zero
     . initialize object from the stream on demand using the 
-      pointer/offset maps
+      pointer/offset maps (deserializeMemberObjects(), 
+      deserializeHierarchy(), serializeHierarchy())
 
 + builders
   > use a list of all class configurations and an arbitrary template

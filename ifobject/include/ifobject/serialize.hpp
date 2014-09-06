@@ -592,7 +592,7 @@ Ionflux::ObjectBase::DataSize unpack(const std::string& source,
 
 /** Unpack data (PointerOffsetMap).
  *
- * Unpacks the data from a string.
+ * Unpacks the data from a stream.
  *
  * \param source source stream.
  * \param target where to store the unpacked data.
@@ -733,6 +733,230 @@ Ionflux::ObjectBase::DataSize unpackAndCheckMagicWord(
     Ionflux::ObjectBase::DataSize offset = DATA_SIZE_INVALID, 
     const Ionflux::ObjectBase::IFObject* sourceObj = 0, 
     const std::string& sourceName = "");
+
+/** Pack data (vector).
+ *
+ * Packs the data into a string.
+ *
+ * \param source data to be packed
+ * \param target where to store the packed data
+ * \param append whether data should be appended to or replace the target data
+ */
+template<class ET, class PT> 
+void packVec(const typename std::vector<ET>& source, 
+    std::string& target, bool append = true)
+{
+    std::string t0;
+    pack(static_cast<DataSize>(source.size()), t0);
+    for (typename std::vector<ET>::const_iterator i = source.begin(); 
+        i != source.end(); i++)
+    {
+        pack(static_cast<PT>(*i), t0, true);
+    }
+	if (append)
+		target.append(t0);
+	else
+		target = t0;
+}
+
+/** Pack data (vector).
+ *
+ * Packs the data into a stream.
+ *
+ * \param source data to be packed
+ * \param target target stream
+ * \param offset stream offset
+ */
+template<class ET, class PT> 
+void packVec(const std::vector<ET>& source, 
+    std::ostream& target, 
+    Ionflux::ObjectBase::DataSize offset = DATA_SIZE_INVALID)
+{
+	std::string t0;
+	packVec<ET, PT>(source, t0, false);
+	writeToStream(target, t0, offset);
+}
+
+/** Unpack data (vector).
+ *
+ * Unpacks the data from a string.
+ *
+ * \param source data to be unpacked
+ * \param target where to store the unpacked data
+ * \param offset offset from which to start unpacking
+ *
+ * \return new offset, or DATA_SIZE_INVALID if the data could not be unpacked
+ */
+template<class ET, class PT> 
+Ionflux::ObjectBase::DataSize unpackVec(const std::string& source, 
+    std::vector<ET>& target, 
+    Ionflux::ObjectBase::DataSize offset = 0)
+{
+    DataSize n0 = 0;
+    DataSize o0 = unpack(source, n0, offset);
+    DataSize s0 = sizeof(PT);
+	if ((o0 == DATA_SIZE_INVALID)
+		|| ((o0 + n0 * s0) > source.size()))
+		return DATA_SIZE_INVALID;
+    for (DataSize i = 0; i < n0; i++)
+    {
+        PT v0;
+        o0 = unpack(source, v0, o0);
+        if (offset == DATA_SIZE_INVALID)
+            return DATA_SIZE_INVALID;
+        target.push_back(static_cast<ET>(v0));
+    }
+}
+
+/** Unpack data (vector).
+ *
+ * Unpacks the data from a stream.
+ *
+ * \param source source stream.
+ * \param target where to store the unpacked data.
+ * \param offset offset from which to start unpacking.
+ *
+ * \return new offset, or DATA_SIZE_INVALID if the data could not be unpacked
+ */
+template<class ET, class PT> 
+Ionflux::ObjectBase::DataSize unpackVec(std::istream& source, 
+    std::vector<ET>& target, 
+    Ionflux::ObjectBase::DataSize offset = DATA_SIZE_INVALID)
+{
+    DataSize n0 = 0;
+    unpack(source, n0, offset);
+    DataSize s0 = sizeof(PT);
+	std::string t0;
+	DataSize s1 = readFromStream(source, t0, n0 * s0, DATA_SIZE_INVALID);
+	if (s1 < (n0 * s0))
+	{
+        std::ostringstream status;
+        status << "[unpack] " 
+            "Could not unpack vector from stream (numElements = " << n0 
+            << ", elementSize = " << s0;
+        if (offset != DATA_SIZE_INVALID)
+            status << ", offset = " << offset;
+        status << ").";
+        throw IFError(status.str());
+	}
+	return source.tellg();
+}
+
+/** Pack data (map).
+ *
+ * Packs the data into a string.
+ *
+ * \param source data to be packed
+ * \param target where to store the packed data
+ * \param append whether data should be appended to or replace the target data
+ */
+template<class KT, class VT, class KPT, class VPT> 
+void packMap(const typename std::map<KT, VT>& source, 
+    std::string& target, bool append = true)
+{
+    std::string t0;
+    pack(static_cast<DataSize>(source.size()), t0);
+    for (typename std::map<KT, VT>::const_iterator i = source.begin(); 
+        i != source.end(); i++)
+    {
+        pack(static_cast<KPT>((*i).first), t0, true);
+        pack(static_cast<VPT>((*i).second), t0, true);
+    }
+	if (append)
+		target.append(t0);
+	else
+		target = t0;
+}
+
+/** Pack data (map).
+ *
+ * Packs the data into a stream.
+ *
+ * \param source data to be packed
+ * \param target target stream
+ * \param offset stream offset
+ */
+template<class KT, class VT, class KPT, class VPT> 
+void packMap(const std::map<KT, VT>& source, 
+    std::ostream& target, 
+    Ionflux::ObjectBase::DataSize offset = DATA_SIZE_INVALID)
+{
+	std::string t0;
+	packMap<KT, VT, KPT, VPT>(source, t0, false);
+	writeToStream(target, t0, offset);
+}
+
+/** Unpack data (map).
+ *
+ * Unpacks the data from a string.
+ *
+ * \param source data to be unpacked
+ * \param target where to store the unpacked data
+ * \param offset offset from which to start unpacking
+ *
+ * \return new offset, or DATA_SIZE_INVALID if the data could not be unpacked
+ */
+template<class KT, class VT, class KPT, class VPT> 
+Ionflux::ObjectBase::DataSize unpackMap(const std::string& source, 
+    std::map<KT, VT>& target, 
+    Ionflux::ObjectBase::DataSize offset = 0)
+{
+    DataSize n0 = 0;
+    DataSize o0 = unpack(source, n0, offset);
+    DataSize s0 = sizeof(KPT);
+    DataSize s1 = sizeof(VPT);
+	if ((o0 == DATA_SIZE_INVALID)
+		|| ((o0 + n0 * (s0 + s1)) > source.size()))
+		return DATA_SIZE_INVALID;
+    for (DataSize i = 0; i < n0; i++)
+    {
+        KPT k0;
+        o0 = unpack(source, k0, o0);
+        if (offset == DATA_SIZE_INVALID)
+            return DATA_SIZE_INVALID;
+        VPT v0;
+        o0 = unpack(source, v0, o0);
+        if (offset == DATA_SIZE_INVALID)
+            return DATA_SIZE_INVALID;
+        target[static_cast<KT>(k0)] = static_cast<VT>(v0);
+    }
+}
+
+/** Unpack data (map).
+ *
+ * Unpacks the data from a stream.
+ *
+ * \param source source stream.
+ * \param target where to store the unpacked data.
+ * \param offset offset from which to start unpacking.
+ *
+ * \return new offset, or DATA_SIZE_INVALID if the data could not be unpacked
+ */
+template<class KT, class VT, class KPT, class VPT> 
+Ionflux::ObjectBase::DataSize unpackMap(std::istream& source, 
+    std::map<KT, VT>& target, 
+    Ionflux::ObjectBase::DataSize offset = DATA_SIZE_INVALID)
+{
+    DataSize n0 = 0;
+    unpack(source, n0, offset);
+    DataSize s0 = sizeof(KPT);
+    DataSize s1 = sizeof(VPT);
+	std::string t0;
+	DataSize s2 = readFromStream(source, t0, n0 * (s0 + s1), 
+	    DATA_SIZE_INVALID);
+	if (s2 < (n0 * (s0 + s1)))
+	{
+        std::ostringstream status;
+        status << "[unpack] " 
+            "Could not unpack map from stream (numElements = " << n0 
+            << ", keySize = " << s0 << ", valueSize = " << s1;
+        if (offset != DATA_SIZE_INVALID)
+            status << ", offset = " << offset;
+        status << ").";
+        throw IFError(status.str());
+	}
+	return source.tellg();
+}
 
 }
 
