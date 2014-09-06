@@ -15,12 +15,14 @@ Up next
 New
 --------------------------------------------------------------------------------
 
-+ Testing
-  > stream versions of pack/unpack functions (serialize.hpp)
+
 
 --------------------------------------------------------------------------------
 Critical stuff
 --------------------------------------------------------------------------------
+
++ Testing
+  > stream versions of pack/unpack functions (serialize.hpp)
 
 + Fix the variant dirs (all build files should go to 'build')
 
