@@ -39,6 +39,7 @@
 #include "ifobject/IFMMEvent.hpp"
 #include "ifobject/IFMMEventHandler.hpp"
 #include "ifobject/IFXMLObjectFactory.hpp"
+#include "ifobject/IFIOContext.hpp"
 #include "ifobject/xmlutils.hpp"
 
 /** \file ifobjectbase.hpp

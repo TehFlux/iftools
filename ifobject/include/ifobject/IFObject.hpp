@@ -37,6 +37,7 @@
 #include "ifobject/utf8.hpp"
 #include "libb64.hpp"
 #include "ifobject/IFClassInfo.hpp"
+#include <iostream>
 
 // forward declarations for types from the Ionflux Object Base System
 namespace Ionflux
@@ -786,11 +787,36 @@ class IFObject
 		 * \param source serialized data buffer
 		 * \param offset position where to start deserialization
 		 *
-		 * \return offset of remaining data, or -1 if an error occured.
+		 * \return offset of remaining data, or DATA_SIZE_INVALID if an error occured.
 		 *
 		 * \sa serialize()
 		 */
 		virtual Ionflux::ObjectBase::DataSize deserialize(const std::string& source, Ionflux::ObjectBase::DataSize offset = 0);
+		
+		/** Serialize.
+		 *
+		 * Serialize the object to a stream.
+		 *
+		 * \param target target stream
+		 *
+		 * \return \c true on success, \c false otherwise.
+		 *
+		 * \sa deserialize()
+		 */
+		virtual bool serialize(std::ostream& target) const;
+		
+		/** Deserialize.
+		 *
+		 * Deserialize the object from a stream.
+		 *
+		 * \param source source stream
+		 * \param offset stream position from where to start deserialization
+		 *
+		 * \return offset of remaining data
+		 *
+		 * \sa serialize()
+		 */
+		virtual Ionflux::ObjectBase::DataSize deserialize(std::istream& source, Ionflux::ObjectBase::DataSize offset = Ionflux::ObjectBase::DATA_SIZE_INVALID);
 		
 		/** Get allocated size in memory.
 		 *

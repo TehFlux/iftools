@@ -1,6 +1,6 @@
 {section deserializeProp}
-	// {$prop.name}{if prop.deserializeImpl != ""}
-{$prop.deserializeImpl|swrap(75,'	')}{else}{if ( prop.persistent == "true" ) || ( prop.proxy == "true" )}
+	// {$prop.name}{if prop.deserialize.impl.string != ""}
+{$prop.deserialize.impl.string|swrap(75,'	')}{else}{if ( prop.persistent == "true" ) || ( prop.proxy == "true" )}
     {$prop.type} t0;
     offset = unpack(source, t0, offset);
     set{$prop.name|uppercase(1)}(t0);{else}{if prop.valueType == "object"}

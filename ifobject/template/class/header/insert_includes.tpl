@@ -5,4 +5,5 @@
 \#include {$inc}{/foreach}{if enablePersistence == 1}
 \#include "{$project.persistence.include}"{/if}{foreach bc in class.base.ifobject}
 \#include "{if bc.include == ""}ifobject/{$bc.name}.hpp{else}{$bc.include}{/if}"{/foreach}{foreach bc in class.base.other}{if bc.include != "<none>"}
-\#include "{if bc.include == ""}{$bc.name}.hpp{else}{$bc.include}{/if}"{/if}{/foreach}{$includeBlockPos = "post"}{ref insertIncludeBlocks}{/section}
+\#include "{if bc.include == ""}{$bc.name}.hpp{else}{$bc.include}{/if}"{/if}{/foreach}{if enableSerialize == 1}
+\#include <iostream>{/if}{$includeBlockPos = "post"}{ref insertIncludeBlocks}{/section}

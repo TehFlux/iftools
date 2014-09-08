@@ -920,6 +920,7 @@ Ionflux::ObjectBase::DataSize unpackMap(const std::string& source,
             return DATA_SIZE_INVALID;
         target[static_cast<KT>(k0)] = static_cast<VT>(v0);
     }
+    return o0;
 }
 
 /** Unpack data (map).

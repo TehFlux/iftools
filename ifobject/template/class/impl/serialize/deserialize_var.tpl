@@ -1,5 +1,5 @@
-{section deserializeVar}{if var.deserializeImpl != ""}
-{$var.deserializeImpl|swrap(75,'	')}{else}
+{section deserializeVar}{if var.deserialize.impl.string != ""}
+{$var.deserialize.impl.string|swrap(75,'	')}{else}
 	offset = unpack(source, {$var.name}, offset);{/if}
 	if (offset < 0)
 	\{{if enableLogMessage == 1}

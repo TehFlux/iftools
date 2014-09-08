@@ -222,7 +222,7 @@ std::string a0;{foreach prop in property.protected}{if prop.xml.attribute.name !
 // Property: {$prop.name} ({$prop.valueType})
 a0 = Ionflux::ObjectBase::XMLUtils::getAttributeValue(
     e0, "{$prop.xml.attribute.name}"{if prop.xml.attribute.optional == "false"}, false{else}, true{/if});{if prop.valueType == "string"}
-target.set{$prop.name|uppercase(1)}(a0));{/if}{if prop.valueType == "float"}
+target.set{$prop.name|uppercase(1)}(a0);{/if}{if prop.valueType == "float"}
 target.set{$prop.name|uppercase(1)}(::strtod(a0.c_str(), 0));{/if}{if prop.valueType == "integer"}
 target.set{$prop.name|uppercase(1)}(::strtol(a0.c_str(), 0, 10));{/if}{/if}{/foreach}{/if}{if haveXMLChildElements == 1}
 // Get child data.

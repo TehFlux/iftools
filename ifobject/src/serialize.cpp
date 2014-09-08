@@ -154,16 +154,13 @@ void packObj(const Ionflux::ObjectBase::IFObject* source,
 void packObj(const Ionflux::ObjectBase::IFObject* source, 
     std::ostream& target, Ionflux::ObjectBase::DataSize offset)
 {
-    // TODO: Use stream version of serialize().
-	std::string buffer;
 	if (source == 0)
-		pack(static_cast<UInt8>(false), buffer);
+		pack(static_cast<UInt8>(false), target, offset);
 	else
 	{
-		pack(static_cast<UInt8>(true), buffer);
-		source->serialize(buffer);
+		pack(static_cast<UInt8>(true), target, offset);
+		source->serialize(target);
 	}
-	writeToStream(target, buffer, offset);
 }
 
 bool unpackNonNullCheck(const std::string& source, 
@@ -212,8 +209,7 @@ Ionflux::ObjectBase::DataSize unpackObj(std::istream& source,
 	}
 	Ionflux::ObjectBase::nullPointerCheck(target, "unpack", 
 	    "Target object");
-    /* TODO: Implementation.
-       Use stream version of deserialize(). */
+	target->deserialize(source, offset);
 	return source.tellg();
 }
 

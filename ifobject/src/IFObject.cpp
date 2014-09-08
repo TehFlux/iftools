@@ -1260,6 +1260,30 @@ Ionflux::ObjectBase::DataSize IFObject::deserialize(const std::string& source, I
 	return offset;
 }
 
+bool IFObject::serialize(std::ostream& target) const
+{
+	pack(id, target);
+	pack(idNum, target);
+	return true;
+}
+
+Ionflux::ObjectBase::DataSize IFObject::deserialize(std::istream& source, Ionflux::ObjectBase::DataSize offset)
+{
+    if (offset != DATA_SIZE_INVALID)
+    {
+        source.seekg(offset);
+        if (!source.good())
+        {
+            std::ostringstream status;
+            status << "Invalid stream offset: " << offset;
+            throw Ionflux::ObjectBase::IFError(getErrorString(status.str(), "deserialize"));
+        }
+    }
+	unpack(source, id);
+	unpack(source, idNum);
+	return offset;
+}
+
 unsigned int IFObject::getMemSize() const
 {
     return sizeof *this;

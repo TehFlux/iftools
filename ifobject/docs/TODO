@@ -15,7 +15,10 @@ Up next
 New
 --------------------------------------------------------------------------------
 
-
++ Write documentation on how to bootstrap/rebuild ifobject/iftemplate 
+  correctly.
+  > regenerating the ifobject sources requires a working ifobject/iftemplate 
+    implementation, but building the libraries needs the current headers
 
 --------------------------------------------------------------------------------
 Critical stuff
@@ -42,7 +45,6 @@ Critical stuff
     . there is no need to store the null flag (packObj()) as null objects 
       do not need to be stored at all (just store the pointers)
   > class templates
-    . stream versions of serialize/deserialize
     . IFIOContext versions of serialize/deserialize
   > magic words
     . one magic syllable for the namespace and one for the object type
@@ -94,9 +96,6 @@ Critical stuff
   > add createInstance() functions to the class info type that can be used 
     to create instances of the class
   > move getXMLObjectFactory() to the class info
-
-+ use iftemplate instead of iftools
-  > testing
 
 + Class templates
   > output a preprocessor error if a required option is missing
