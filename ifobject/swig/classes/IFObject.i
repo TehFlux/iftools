@@ -174,7 +174,9 @@ class IFObject
         static Ionflux::ObjectBase::XMLUtils::IFXMLObjectFactory* 
         getXMLObjectFactory();
         virtual bool serialize(std::string& target) const;
-        virtual int deserialize(const std::string& source, int offset = 0);
+        virtual Ionflux::ObjectBase::DataSize deserialize(const std::string& source, int offset = 0);
+        virtual Ionflux::ObjectBase::MagicSyllable getMagicSyllable();
+        virtual Ionflux::ObjectBase::MagicSyllable getMagicSyllableBase();
         virtual void setLogTarget(Ionflux::ObjectBase::IFObject* 
         newLogTarget);
         virtual Ionflux::ObjectBase::IFObject* getLogTarget() const;

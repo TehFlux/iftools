@@ -182,7 +182,9 @@ class {if class.linkagePrefix != ""}{$class.linkagePrefix} {else}{if project.lin
 		/// Class information.
 		static const Ionflux::ObjectBase::IFClassInfo* CLASS_INFO;{/if}{if enableXMLIO == 1}
 		/// XML element name.
-		static const std::string XML_ELEMENT_NAME;{/if}
+		static const std::string XML_ELEMENT_NAME;{/if}{if enableSerialize == 1}
+		/// Magic syllable (object{if class.serialize.magicSyllable.desc != ""}, {$class.serialize.magicSyllable.desc}{/if}).
+		static const Ionflux::ObjectBase::MagicSyllable MAGIC_SYLLABLE_OBJECT;{/if}
 		
 		/** Constructor.
 		 *

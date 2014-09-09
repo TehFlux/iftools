@@ -132,7 +132,11 @@ class {$class.name}{if ( haveBaseIFObject == 1 ) || ( haveBaseOther == 1 )}
 {swrap 75 "		"}virtual void set{$prm.name|uppercase(1)}(Ionflux::ObjectBase::IFParamID paramID, {$prm.type} paramValue);{/swrap}
 {swrap 75 "		"}virtual {$prm.type} get{$prm.name|uppercase(1)}(Ionflux::ObjectBase::IFParamID paramID);{/swrap}{/foreach}{/if}{if enableSerialize == 1}
         virtual bool serialize(std::string& target) const;
-        virtual int deserialize(const std::string& source, int offset = 0);{/if}{if enablePersistence == 1}{if haveBasePersistent == 0}
+        virtual Ionflux::ObjectBase::DataSize deserialize(const std::string& source, int offset = 0);
+        virtual bool serialize(Ionflux::ObjectBase::IFIOContext& ioCtx, bool addMagicWord = true) const;
+        virtual Ionflux::ObjectBase::DataSize deserialize(Ionflux::ObjectBase::IFIOContext& ioCtx, Ionflux::ObjectBase::DataSize offset = Ionflux::ObjectBase::DATA_SIZE_INVALID, bool checkMagicWord = true);
+        virtual Ionflux::ObjectBase::MagicSyllable getMagicSyllable() const;
+        virtual Ionflux::ObjectBase::MagicSyllable getMagicSyllableBase() const;{/if}{if enablePersistence == 1}{if haveBasePersistent == 0}
         virtual void update();
         virtual void remove();
         virtual int getPersistentID();

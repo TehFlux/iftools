@@ -849,6 +849,36 @@ VT checkedLookup(const typename std::map<KT, VT>& m,
     return (*i).second;
 }
 
+/** Get string representation for vector.
+ *
+ * Get a string representation for a vector. The string is constructed by 
+ * joining the string representation for each vector element with the 
+ * specified separator string.
+ *
+ * \param v vector
+ * \param sep separator string
+ *
+ * \return string representation of vector
+ */
+template<class ET>
+std::string getVecString(const typename std::vector<ET>& v, 
+    const std::string& sep = 
+    Ionflux::ObjectBase::DEFAULT_COORD_SEPARATOR)
+{
+    std::ostringstream result;
+    bool e0 = true;
+    for (typename std::vector<ET>::const_iterator i = v.begin(); 
+        i != v.end(); i++)
+    {
+        if (!e0)
+            result << sep;
+        else
+            e0 = false;
+        result << *i;
+    }
+    return result.str();
+}
+
 }
 
 }

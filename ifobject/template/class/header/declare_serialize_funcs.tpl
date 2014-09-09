@@ -34,12 +34,13 @@
 		 * Serialize the object to a stream.
 		 *
 		 * \\param target target stream
+		 * \\param addMagicWord add magic word
 		 *
 		 * \\return \\c true on success, \\c false otherwise.
 		 *
 		 * \\sa deserialize()
 		 */
-		virtual bool serialize(std::ostream& target) const;
+		virtual bool serialize(std::ostream& target, bool addMagicWord = true) const;
 		
 		/** Deserialize.
 		 *
@@ -47,9 +48,53 @@
 		 *
 		 * \\param source source stream
 		 * \\param offset stream position from where to start deserialization
+		 * \\param checkMagicWord add magic word
 		 *
 		 * \\return offset of remaining data
 		 *
 		 * \\sa serialize()
 		 */
-		virtual Ionflux::ObjectBase::DataSize deserialize(std::istream& source, Ionflux::ObjectBase::DataSize offset = Ionflux::ObjectBase::DATA_SIZE_INVALID);{/section}
+		virtual Ionflux::ObjectBase::DataSize deserialize(std::istream& source, Ionflux::ObjectBase::DataSize offset = Ionflux::ObjectBase::DATA_SIZE_INVALID, bool checkMagicWord = true);
+		
+		/** Serialize.
+		 *
+		 * Serialize the object.
+		 *
+		 * \\param ioCtx I/O context
+		 * \\param addMagicWord add magic word
+		 *
+		 * \\return \\c true on success, \\c false otherwise.
+		 *
+		 * \\sa deserialize()
+		 */
+		virtual bool serialize(Ionflux::ObjectBase::IFIOContext& ioCtx, bool addMagicWord = true) const;
+		
+		/** Deserialize.
+		 *
+		 * Deserialize the object from a stream.
+		 *
+		 * \\param ioCtx I/O context
+		 * \\param offset stream position from where to start deserialization
+		 * \\param checkMagicWord add magic word
+		 *
+		 * \\return offset of remaining data
+		 *
+		 * \\sa serialize()
+		 */
+		virtual Ionflux::ObjectBase::DataSize deserialize(Ionflux::ObjectBase::IFIOContext& ioCtx, Ionflux::ObjectBase::DataSize offset = Ionflux::ObjectBase::DATA_SIZE_INVALID, bool checkMagicWord = true);
+		
+		/** Get magic syllable (object).
+		 *
+		 * Get the magic syllable for the object.
+		 *
+		 * \\return magic syllable
+		 */
+		virtual Ionflux::ObjectBase::MagicSyllable getMagicSyllable() const;
+		
+		/** Get magic syllable (base).
+		 *
+		 * Get the magic syllable for the namespace.
+		 *
+		 * \\return magic syllable
+		 */
+		virtual Ionflux::ObjectBase::MagicSyllable getMagicSyllableBase() const;{/section}

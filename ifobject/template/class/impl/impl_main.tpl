@@ -104,7 +104,9 @@ const std::string {$class.name}::SIGNAL_NAME_{$ins.id|uppercase} = "{$ins.id|low
 const {$class.name}ClassInfo {$class.name}::{$class.name|lowercase(1)}ClassInfo;
 const Ionflux::ObjectBase::IFClassInfo* {$class.name}::CLASS_INFO = &{$class.name}::{$class.name|lowercase(1)}ClassInfo;{/if}{if enableXMLIO == 1}
 
-const std::string {$class.name}::XML_ELEMENT_NAME = "{if class.xml.elementName != ""}{$class.xml.elementName}{else}{$class.name|lowercase}{/if}";{/if}{if class.hooks.preConstructorDef != ""}
+const std::string {$class.name}::XML_ELEMENT_NAME = "{if class.xml.elementName != ""}{$class.xml.elementName}{else}{$class.name|lowercase}{/if}";{/if}{if enableSerialize == 1}
+
+const Ionflux::ObjectBase::MagicSyllable {$class.name}::MAGIC_SYLLABLE_OBJECT = {if class.serialize.magicSyllable.value != ""}{$class.serialize.magicSyllable.value}{else}0x5858{/if};{/if}{if class.hooks.preConstructorDef != ""}
 
 {$class.hooks.preConstructorDef}{/if}
 

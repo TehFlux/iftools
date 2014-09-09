@@ -71,6 +71,9 @@ const Ionflux::ObjectBase::StreamTypeID STREAM_TYPE_FILE = 1;
 /// Stream type ID: string.
 const Ionflux::ObjectBase::StreamTypeID STREAM_TYPE_STRING = 2;
 
+/// Magic syllable: base
+const Ionflux::ObjectBase::MagicSyllable MAGIC_SYLLABLE_BASE = 0x4942;
+
 }
 
 }

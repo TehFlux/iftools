@@ -18,7 +18,9 @@
 \#include "ifobject/xmlutils_private.hpp"
 \#include "{if project.includePrefix != ""}{$project.includePrefix}/{/if}xmlutils.hpp"
 \#include "{if project.includePrefix != ""}{$project.includePrefix}/{/if}xmlio/{$class.name}XMLFactory.hpp"{/if}{if enableSerialize == 1}
+\#include "ifobject/objectutils.hpp"
 \#include "ifobject/serialize.hpp"
+\#include "ifobject/IFIOContext.hpp"
 
 using Ionflux::ObjectBase::pack;
 using Ionflux::ObjectBase::packObj;

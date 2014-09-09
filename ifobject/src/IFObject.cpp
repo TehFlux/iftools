@@ -40,7 +40,9 @@
 #include "ifobject/xmlutils_private.hpp"
 #include "ifobject/IFXMLObjectFactory.hpp"
 #include "ifobject/utils.hpp"
+#include "ifobject/objectutils.hpp"
 #include "ifobject/serialize.hpp"
+#include "ifobject/IFIOContext.hpp"
 
 using Ionflux::ObjectBase::pack;
 using Ionflux::ObjectBase::packObj;
@@ -102,6 +104,8 @@ const std::string IFObject::SIGNAL_NAME_OBJECT_ID_CHANGED = "object_id_changed";
 // run-time type information instance constants
 const IFObjectClassInfo IFObject::iFObjectClassInfo;
 const Ionflux::ObjectBase::IFClassInfo* IFObject::CLASS_INFO = &IFObject::iFObjectClassInfo;
+
+const Ionflux::ObjectBase::MagicSyllable IFObject::MAGIC_SYLLABLE_OBJECT = 0x4f42;
 
 IFObject::IFObject()
 : idNum(ID_NUM_UNDEFINED), refData(0), guardMutex(0), logTarget(0), signalObjectChangedWrapper(0), signalObjectIDNumChangedWrapper(0), signalObjectIDChangedWrapper(0)
@@ -1260,16 +1264,19 @@ Ionflux::ObjectBase::DataSize IFObject::deserialize(const std::string& source, I
 	return offset;
 }
 
-bool IFObject::serialize(std::ostream& target) const
+bool IFObject::serialize(std::ostream& target, bool addMagicWord) const
 {
+	if (addMagicWord)
+        Ionflux::ObjectBase::pack(getMagicSyllableBase(), 
+            getMagicSyllable(), target);
 	pack(id, target);
 	pack(idNum, target);
 	return true;
 }
 
-Ionflux::ObjectBase::DataSize IFObject::deserialize(std::istream& source, Ionflux::ObjectBase::DataSize offset)
+Ionflux::ObjectBase::DataSize IFObject::deserialize(std::istream& source, Ionflux::ObjectBase::DataSize offset, bool checkMagicWord)
 {
-    if (offset != DATA_SIZE_INVALID)
+    if (offset != Ionflux::ObjectBase::DATA_SIZE_INVALID)
     {
         source.seekg(offset);
         if (!source.good())
@@ -1279,9 +1286,38 @@ Ionflux::ObjectBase::DataSize IFObject::deserialize(std::istream& source, Ionflu
             throw Ionflux::ObjectBase::IFError(getErrorString(status.str(), "deserialize"));
         }
     }
+    if (checkMagicWord)
+        Ionflux::ObjectBase::unpackAndCheckMagicWord(source, 
+            getMagicSyllableBase(), getMagicSyllable(), 
+            Ionflux::ObjectBase::DATA_SIZE_INVALID, 
+            this, "deserialize");
 	unpack(source, id);
 	unpack(source, idNum);
-	return offset;
+	return source.tellg();
+}
+
+bool IFObject::serialize(Ionflux::ObjectBase::IFIOContext& ioCtx, bool addMagicWord) const
+{
+	std::ostream* os0 = Ionflux::ObjectBase::nullPointerCheck(
+	    ioCtx.getOutputStream(), this, "serialize", "Output stream");
+    return serialize(*os0, addMagicWord);
+}
+
+Ionflux::ObjectBase::DataSize IFObject::deserialize(Ionflux::ObjectBase::IFIOContext& ioCtx, Ionflux::ObjectBase::DataSize offset, bool checkMagicWord)
+{
+	std::istream* is0 = Ionflux::ObjectBase::nullPointerCheck(
+	    ioCtx.getInputStream(), this, "deserialize", "Input stream");
+    return deserialize(*is0, offset, checkMagicWord);
+}
+
+Ionflux::ObjectBase::MagicSyllable IFObject::getMagicSyllable() const
+{
+    return MAGIC_SYLLABLE_OBJECT;
+}
+
+Ionflux::ObjectBase::MagicSyllable IFObject::getMagicSyllableBase() const
+{
+    return MAGIC_SYLLABLE_BASE;
 }
 
 unsigned int IFObject::getMemSize() const
