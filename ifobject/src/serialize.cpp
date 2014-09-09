@@ -85,6 +85,7 @@ Ionflux::ObjectBase::DataSize unpack(std::istream& source,
         status << ").";
         throw IFError(status.str());
 	}
+	target.assign(t0);
 	return source.tellg();
 }
 
