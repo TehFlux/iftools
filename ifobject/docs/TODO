@@ -15,10 +15,12 @@ Up next
 New
 --------------------------------------------------------------------------------
 
-+ Write documentation on how to bootstrap/rebuild ifobject/iftemplate 
-  correctly.
-  > regenerating the ifobject sources requires a working ifobject/iftemplate 
-    implementation, but building the libraries needs the current headers
++ Documentation
+  > class templates: serialization
+  > how to bootstrap/rebuild ifobject/iftemplate correctly
+    . regenerating the ifobject sources requires a working 
+      ifobject/iftemplate implementation, but building the libraries needs 
+      the current headers
 
 --------------------------------------------------------------------------------
 Critical stuff
