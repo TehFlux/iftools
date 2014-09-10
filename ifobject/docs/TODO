@@ -46,10 +46,6 @@ Critical stuff
       are relative (maybe just handle this case later)
     . there is no need to store the null flag (packObj()) as null objects 
       do not need to be stored at all (just store the pointers)
-  > class templates
-    . IFIOContext versions of serialize/deserialize
-  > magic words
-    . one magic syllable for the namespace and one for the object type
   > figure out how progressive serialization/deserialization of object 
     hirerarchies can be done
     . generic header that stores a pointer to a root object and the 

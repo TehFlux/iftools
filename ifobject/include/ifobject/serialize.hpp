@@ -772,9 +772,10 @@ void packVec(const std::vector<ET>& source,
     std::ostream& target, 
     Ionflux::ObjectBase::DataSize offset = DATA_SIZE_INVALID)
 {
-	std::string t0;
-	packVec<ET, PT>(source, t0, false);
-	writeToStream(target, t0, offset);
+    pack(static_cast<DataSize>(source.size()), target, offset);
+    for (typename std::vector<ET>::const_iterator i = source.begin(); 
+        i != source.end(); i++)
+        pack(static_cast<PT>(*i), target);
 }
 
 /** Unpack data (vector).
@@ -825,20 +826,12 @@ Ionflux::ObjectBase::DataSize unpackVec(std::istream& source,
 {
     DataSize n0 = 0;
     unpack(source, n0, offset);
-    DataSize s0 = sizeof(PT);
-	std::string t0;
-	DataSize s1 = readFromStream(source, t0, n0 * s0, DATA_SIZE_INVALID);
-	if (s1 < (n0 * s0))
-	{
-        std::ostringstream status;
-        status << "[unpack] " 
-            "Could not unpack vector from stream (numElements = " << n0 
-            << ", elementSize = " << s0;
-        if (offset != DATA_SIZE_INVALID)
-            status << ", offset = " << offset;
-        status << ").";
-        throw IFError(status.str());
-	}
+    for (DataSize i = 0; i < n0; i++)
+    {
+        PT cv;
+        unpack(source, cv);
+        target.push_back(static_cast<ET>(cv));
+    }
 	return source.tellg();
 }
 
@@ -956,6 +949,57 @@ Ionflux::ObjectBase::DataSize unpackMap(std::istream& source,
         status << ").";
         throw IFError(status.str());
 	}
+	return source.tellg();
+}
+
+/** Pack data (vector of objects).
+ *
+ * Packs the data into a stream.
+ *
+ * \param source data to be packed
+ * \param target target stream
+ * \param offset stream offset
+ */
+template<class ET> 
+void packObjVec0(const typename std::vector<ET*>& source, 
+    std::ostream& target, 
+    Ionflux::ObjectBase::DataSize offset = DATA_SIZE_INVALID, 
+    bool addMagicWord = false)
+{
+    DataSize n0 = source.size();
+    pack(n0, target, offset);
+    for (typename std::vector<ET*>::const_iterator i = source.begin(); 
+        i != source.end(); i++)
+    {
+        ET* o0 = nullPointerCheck(*i, "packObjVec0", "Element");
+        o0->serialize(target, addMagicWord);
+    }
+}
+
+/** Unpack data (vector of objects).
+ *
+ * Unpacks the data from a stream.
+ *
+ * \param source source stream.
+ * \param target where to store the unpacked data.
+ * \param offset offset from which to start unpacking.
+ *
+ * \return new offset, or DATA_SIZE_INVALID if the data could not be unpacked
+ */
+template<class ET> 
+Ionflux::ObjectBase::DataSize unpackObjVec0(std::istream& source, 
+    typename std::vector<ET*>& target, 
+    Ionflux::ObjectBase::DataSize offset = DATA_SIZE_INVALID, 
+    bool checkMagicWord = false)
+{
+    DataSize n0 = 0;
+    unpack(source, n0, offset);
+    for (DataSize i = 0; i < n0; i++)
+    {
+        ET* o0 = ET::create();
+        o0->deserialize(source, DATA_SIZE_INVALID, checkMagicWord);
+        target.push_back(o0);
+    }
 	return source.tellg();
 }
 
