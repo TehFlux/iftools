@@ -874,9 +874,13 @@ void packMap(const std::map<KT, VT>& source,
     std::ostream& target, 
     Ionflux::ObjectBase::DataSize offset = DATA_SIZE_INVALID)
 {
-	std::string t0;
-	packMap<KT, VT, KPT, VPT>(source, t0, false);
-	writeToStream(target, t0, offset);
+    pack(static_cast<DataSize>(source.size()), target, offset);
+    for (typename std::map<KT, VT>::const_iterator i = source.begin(); 
+        i != source.end(); i++)
+    {
+        pack(static_cast<KPT>((*i).first), target);
+        pack(static_cast<VPT>((*i).second), target);
+    }
 }
 
 /** Unpack data (map).
@@ -933,22 +937,14 @@ Ionflux::ObjectBase::DataSize unpackMap(std::istream& source,
 {
     DataSize n0 = 0;
     unpack(source, n0, offset);
-    DataSize s0 = sizeof(KPT);
-    DataSize s1 = sizeof(VPT);
-	std::string t0;
-	DataSize s2 = readFromStream(source, t0, n0 * (s0 + s1), 
-	    DATA_SIZE_INVALID);
-	if (s2 < (n0 * (s0 + s1)))
-	{
-        std::ostringstream status;
-        status << "[unpack] " 
-            "Could not unpack map from stream (numElements = " << n0 
-            << ", keySize = " << s0 << ", valueSize = " << s1;
-        if (offset != DATA_SIZE_INVALID)
-            status << ", offset = " << offset;
-        status << ").";
-        throw IFError(status.str());
-	}
+    for (DataSize i = 0; i < n0; i++)
+    {
+        KPT k0;
+        unpack(source, k0);
+        VPT v0;
+        unpack(source, v0);
+        target[static_cast<KT>(k0)] = static_cast<VT>(v0);
+    }
 	return source.tellg();
 }
 
@@ -959,6 +955,7 @@ Ionflux::ObjectBase::DataSize unpackMap(std::istream& source,
  * \param source data to be packed
  * \param target target stream
  * \param offset stream offset
+ * \param addMagicWord add magic word for each element
  */
 template<class ET> 
 void packObjVec0(const typename std::vector<ET*>& source, 
@@ -983,6 +980,7 @@ void packObjVec0(const typename std::vector<ET*>& source,
  * \param source source stream.
  * \param target where to store the unpacked data.
  * \param offset offset from which to start unpacking.
+ * \param checkMagicWord check magic word for each element
  *
  * \return new offset, or DATA_SIZE_INVALID if the data could not be unpacked
  */
@@ -999,6 +997,61 @@ Ionflux::ObjectBase::DataSize unpackObjVec0(std::istream& source,
         ET* o0 = ET::create();
         o0->deserialize(source, DATA_SIZE_INVALID, checkMagicWord);
         target.push_back(o0);
+    }
+	return source.tellg();
+}
+
+/** Pack data (map of objects).
+ *
+ * Packs the data into a stream.
+ *
+ * \param source data to be packed
+ * \param target target stream
+ * \param offset stream offset
+ * \param addMagicWord add magic word for each element
+ */
+template<class KT, class KPT, class VT> 
+void packObjMap0(const std::map<KT, VT*>& source, 
+    std::ostream& target, 
+    Ionflux::ObjectBase::DataSize offset = DATA_SIZE_INVALID, 
+    bool addMagicWord = false)
+{
+    pack(static_cast<DataSize>(source.size()), target, offset);
+    for (typename std::map<KT, VT*>::const_iterator i = source.begin(); 
+        i != source.end(); i++)
+    {
+        pack(static_cast<KPT>((*i).first), target);
+        VT* o0 = nullPointerCheck((*i).second, "packObjMap0", "Element");
+        o0->serialize(target, addMagicWord);
+    }
+}
+
+/** Unpack data (map of objects).
+ *
+ * Unpacks the data from a stream.
+ *
+ * \param source source stream.
+ * \param target where to store the unpacked data.
+ * \param offset offset from which to start unpacking.
+ * \param checkMagicWord check magic word for each element
+ *
+ * \return new offset, or DATA_SIZE_INVALID if the data could not be unpacked
+ */
+template<class KT, class KPT, class VT> 
+Ionflux::ObjectBase::DataSize unpackObjMap0(std::istream& source, 
+    std::map<KT, VT*>& target, 
+    Ionflux::ObjectBase::DataSize offset = DATA_SIZE_INVALID, 
+    bool checkMagicWord = false)
+{
+    DataSize n0 = 0;
+    unpack(source, n0, offset);
+    for (DataSize i = 0; i < n0; i++)
+    {
+        KPT k0;
+        unpack(source, k0);
+        VT* o0 = VT::create();
+        o0->deserialize(source, DATA_SIZE_INVALID, checkMagicWord);
+        target[static_cast<KT>(k0)] = o0;
     }
 	return source.tellg();
 }
