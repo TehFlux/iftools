@@ -369,5 +369,60 @@ function.public[] = \{
         desc = New object
     \}
 \}
-
+function.public[] = \{
+	spec = virtual
+	type = {ref getFQName}*
+	name = createObject
+	const = true
+	shortDesc = Create object
+	longDesc = Create an object from XML data. This function supports polymorphic object creation if the XML object factories of derived classes have been loaded.
+	param[] = \{
+	    type = const std::string&
+	    name = data
+	    desc = XML data
+	\}
+	param[] = \{
+	    type = const std::string&
+	    name = elementName
+	    desc = XML element name
+	    default = ""
+	\}
+	impl = <<<
+{$class.name}* result = {$class.name}::upcast(
+    Ionflux::ObjectBase::XMLUtils::IFXMLObjectFactory::createObject(
+        data, elementName));
+>>>
+    return = \{
+        value = result
+        desc = New object
+    \}
+\}
+function.public[] = \{
+	spec = virtual
+	type = {ref getFQName}*
+	name = loadFromXMLFile
+    const = true
+	shortDesc = Load object from XML file
+	longDesc = Create a new object that is initialized with data loaded from an XML file. This function supports polymorphic object creation if the XML object factories of derived classes have been loaded.
+	param[] = \{
+	    type = const std::string&
+	    name = fileName
+	    desc = File name
+	\}
+	param[] = \{
+	    type = const std::string&
+	    name = elementName
+	    desc = XML element name
+	    default = ""
+	\}
+	impl = <<<
+{$class.name}* result = {$class.name}::upcast(
+    Ionflux::ObjectBase::XMLUtils::IFXMLObjectFactory::loadFromXMLFile(
+        fileName, elementName));
+>>>
+    return = \{
+        value = result
+        desc = New object
+    \}
+\}
 

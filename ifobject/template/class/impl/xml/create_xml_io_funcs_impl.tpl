@@ -42,11 +42,14 @@
 {swrap 75 "    "}{$function.xml.childData.impl}{/swrap}{/if}
 \}
 
-{swrap 75}void {$class.name}::loadFromXMLFile(const std::string& fileName){/swrap}
+{swrap 75}void {$class.name}::loadFromXMLFile(const std::string& fileName, const std::string& elementName){/swrap}
 \{{if enableGuards == 1}
 	Ionflux::ObjectBase::IFGuard functionGuard(guardMutex);{/if}{if function.xml.loadFromFile.impl == ""}
+	std::string en0(elementName);
+	if (en0.size() == 0)
+	    en0 = getXMLElementName();
 	Ionflux::ObjectBase::XMLUtils::loadFromXMLFile(
-	    fileName, *this, getXMLElementName());{else}
+	    fileName, *this, en0);{else}
 {swrap 75 "    "}{$function.xml.loadFromFile.impl}{/swrap}{/if}
 \}
 

@@ -154,7 +154,9 @@ class IFXMLObjectFactory
 		
 		/** Create object.
 		 *
-		 * Create a new object from an XML element.
+		 * Create a new object from an XML element. This function supports 
+		 * polymorphic object creation if the XML object factories of derived 
+		 * classes have been loaded.
 		 *
 		 * \param xmlElement XML element.
 		 * \param elementName XML element name.
@@ -163,6 +165,34 @@ class IFXMLObjectFactory
 		 */
 		virtual Ionflux::ObjectBase::IFObject* createObject(TiXmlElement* 
 		xmlElement, const std::string& elementName = "") const;
+		
+		/** Create object.
+		 *
+		 * Create an object from XML data. This function supports polymorphic 
+		 * object creation if the XML object factories of derived classes have
+		 * been loaded.
+		 *
+		 * \param data XML data.
+		 * \param elementName XML element name.
+		 *
+		 * \return .
+		 */
+		virtual Ionflux::ObjectBase::IFObject* createObject(const std::string& 
+		data, const std::string& elementName = "") const;
+		
+		/** Load object from XML file.
+		 *
+		 * Create a new object that is initialized with data loaded from an 
+		 * XML file. This function supports polymorphic object creation if the
+		 * XML object factories of derived classes have been loaded.
+		 *
+		 * \param fileName File name.
+		 * \param elementName XML element name.
+		 *
+		 * \return New object.
+		 */
+		virtual Ionflux::ObjectBase::IFObject* loadFromXMLFile(const std::string&
+		fileName, const std::string& elementName = "") const;
 		
 		/** Get string representation of value.
 		 *

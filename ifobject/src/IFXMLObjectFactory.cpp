@@ -158,6 +158,40 @@ std::string& elementName) const
 	return o0;
 }
 
+Ionflux::ObjectBase::IFObject* IFXMLObjectFactory::createObject(const 
+std::string& data, const std::string& elementName) const
+{
+	TiXmlDocument d0;
+	/* NOTE: Probably a peculiarity of tinyxml, there must be at least one 
+	         character after the data. Or there could of course also be 
+	         something wrong with how tinyxml is used here. Anyway, this 
+	         seems to work. */
+	std::string d1(data);
+	d1.append(1, ' ');
+	if (!d0.Parse(d1.c_str(), 0, TIXML_ENCODING_UTF8))
+	    throw (getErrorString( 
+	        "Unable to parse XML data.", "createObject"));
+	std::string en0(elementName);
+	if (en0.size() == 0)
+	    en0 = getObjectXMLElementName();
+	TiXmlElement* e0 = 
+	    Ionflux::ObjectBase::XMLUtils::findElementByNameOrError(
+	        d0.RootElement(), en0);
+	return createObject(e0, en0);
+}
+
+Ionflux::ObjectBase::IFObject* IFXMLObjectFactory::loadFromXMLFile(const 
+std::string& fileName, const std::string& elementName) const
+{
+	TiXmlDocument d0(fileName.c_str());
+	loadDocumentOrError(d0, "loadFromXMLFile");
+	std::string en0(elementName);
+	if (en0.size() == 0)
+	    en0 = getObjectXMLElementName();
+	TiXmlElement* e0 = findElementByNameOrError(d0.RootElement(), en0);
+	return createObject(e0, en0);
+}
+
 std::string IFXMLObjectFactory::getValueString() const
 {
 	ostringstream status;

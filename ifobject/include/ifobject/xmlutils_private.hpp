@@ -124,7 +124,7 @@ void loadFromXMLFile(const std::string& fileName, T& target,
     const std::string& elementName)
 {
     TiXmlDocument d0(fileName.c_str());
-    loadDocumentOrError(d0, "loadFromFile");
+    loadDocumentOrError(d0, "loadFromXMLFile");
     TiXmlElement* m0 = findElementByNameOrError(d0.RootElement(), 
         elementName);
     T::getXMLObjectFactory()->initObject(m0, target, elementName);

@@ -57,6 +57,10 @@ class IFXMLObjectFactory
         virtual void initObject(const std::string& data, 
         Ionflux::ObjectBase::IFObject& target) const;
         virtual Ionflux::ObjectBase::IFObject* createObject() const;
+        virtual Ionflux::ObjectBase::IFObject* createObject(const 
+        std::string& data, const std::string& elementName = "") const;
+        virtual Ionflux::ObjectBase::IFObject* loadFromXMLFile(const 
+        std::string& fileName, const std::string& elementName = "") const;
         virtual std::string getValueString() const;
 		virtual Ionflux::ObjectBase::XMLUtils::IFXMLObjectFactory* copy() const;
 		static Ionflux::ObjectBase::XMLUtils::IFXMLObjectFactory* 

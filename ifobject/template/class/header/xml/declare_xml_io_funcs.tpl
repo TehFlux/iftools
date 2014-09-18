@@ -30,8 +30,9 @@
 		 * Initialize the object from an XML file.
 		 *
 		 * \\param fileName file name
+		 * \\param elementName element name
 		 */
-{swrap 75 "		"}virtual void loadFromXMLFile(const std::string& fileName);{/swrap}
+{swrap 75 "		"}virtual void loadFromXMLFile(const std::string& fileName, const std::string& elementName = "");{/swrap}
         
         /** Get XML object factory
 		 *
