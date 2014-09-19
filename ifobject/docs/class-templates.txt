@@ -82,6 +82,12 @@ property.protected[]
                 automatically for the object.
     defaultValue
                 Default value for newly created objects.
+    addType     Type for the element to be used instead of the actual type in 
+                'add' function declarations.
+    removeType  Type for the element to be used instead of the actual type in 
+                'remove' function declarations.
+    findType   Type for the element to be used instead of the actual type in 
+                'find' function declarations.
   [style = 'map']
   key
     type        Type of map key.
