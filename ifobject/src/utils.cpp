@@ -964,7 +964,14 @@ std::string getStreamTypeValueString(Ionflux::ObjectBase::StreamTypeID t)
         else
     if (t == Ionflux::ObjectBase::STREAM_TYPE_STRING)
         return "string";
-return "<unknown>";
+    return "<unknown>";
+}
+
+std::string getBooleanValueString(bool v)
+{
+    if (v)
+        return "true";
+    return "false";
 }
 
 }

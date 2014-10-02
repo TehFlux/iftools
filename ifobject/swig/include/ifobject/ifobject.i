@@ -235,6 +235,7 @@ std::string getErrorString(const std::string& message,
     const std::string& source = "", 
     const Ionflux::ObjectBase::IFObject* sourceObj = 0);
 std::string getStreamTypeValueString(Ionflux::ObjectBase::StreamTypeID t);
+std::string getBooleanValueString(bool v);
 
 // xmlutils.hpp
 

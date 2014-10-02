@@ -879,6 +879,9 @@ std::string getVecString(const typename std::vector<ET>& v,
     return result.str();
 }
 
+/// Get value string (boolean).
+std::string getBooleanValueString(bool v);
+
 }
 
 }
