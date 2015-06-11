@@ -28,17 +28,18 @@ Dependencies
 IFTemplate depends on the following packages:
 
 + Ionflux Object Base System (http://sf.net/projects/iftools)
-+ Ionflux Tools (http://sf.net/projects/iftools, optional, required for 
-  generating the source files from the class configuration files)
 
-Make sure you get a recent SVN version of Ionflux Object Base System and 
-Ionflux Tools. Older packages will most likely not work.
+The following dependencies are optional:
+
+• Python >= 3.3
+  required for the Python bindings
+
+Make sure you get a recent SVN version of Ionflux Object Base System. 
+Older packages will most likely not work.
 
 You can checkout the recent source code from SVN like this:
 
 svn co https://iftools.svn.sourceforge.net/svnroot/iftools/trunk/ifobject ifobject-svn
-
-svn co https://iftools.svn.sourceforge.net/svnroot/iftools/trunk/iftools iftools-svn
 
 --------------------------------------------------------------------------
 Building
@@ -56,6 +57,21 @@ adjust the settings as required.
 
 If everything is set up correctly, you can build the project with 
 'scons' in the main directory.
+
+--------------------------------------------------------------------------
+Notes
+--------------------------------------------------------------------------
+
+The source files for all of the classes of the Ionflux Template Processor 
+(iftemplate) can be generated from class configuration files using the 
+ifclassgen and iftpl tools, which are part of the distribution. To avoid 
+a circular dependency, iftemplate can be built from the pre-generated 
+source files that are part of the distribution. The build process will 
+skip generating the source files if iftpl or ifclassgen are not available.
+
+Care must be taken if libifobject has changed and ifclassgen and iftpl 
+require re-linking. In this case, 'scons bootstrap' can be used to 
+rebuild iftemplate without generating the source files.
 
 --------------------------------------------------------------------------
 Using

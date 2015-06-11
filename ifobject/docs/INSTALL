@@ -1,6 +1,6 @@
 ================================================================================
 Ionflux Object Base System
-Copyright © 2006-2010 Joern P. Meier
+Copyright © 2006-2015 Joern P. Meier
 mail@ionflux.org
 --------------------------------------------------------------------------------
 Install
@@ -13,13 +13,20 @@ installed on your target system:
 • libsigc++ (http://libsigc.sourceforge.net/)
 • pthread
 • tinyxml (http://www.grinninglizard.com/tinyxml/)
-• iftools (http://iftools.sourceforge.net/), required for ifclassgen
-  (this will change in the future)
+
+The following dependencies are optional:
+
+• Python >= 3.3
+  required for the Python bindings
+• Ionflux Template Processor (IFTemplate) (http://iftools.sourceforge.net/)
+  required to build the source files from the class configuration
+  (see notes)
 
 If you want to use custom configuration for the build process (for 
 example, Python and library paths), copy 
 site_scons/local_config.py.default to site_scons/local_config.py and 
 adjust the settings as required.
+
 Start the build with
 
   scons
@@ -38,12 +45,20 @@ Ionflux Object Base System should be installed.
  * there is no guarantee.)                                                    *
  ******************************************************************************
 
-You can then test ifclassgen by creating the implementation files for 
-IFExampleClass:
+--------------------------------------------------------------------------------
+Notes
+--------------------------------------------------------------------------------
 
-  bin/ifclassgen -epm conf/example.conf -i test/include IFExampleClass
+The source files for all of the classes of the Ionflux Object Base System can 
+be generated from class configuration files using the ifclassgen and iftpl 
+tools which are part of Ionflux Template Processor, which in turn is based on 
+the Ionflux Object Base System (ifobject). To avoid a circular dependency, 
+ifobject can be built from the pre-generated source files that are part of the 
+distribution. The build process will skip generating the source files if 
+iftpl or ifclassgen are not available.
 
-Take a look at conf/example.conf and conf/class/IFExampleClass.conf to see 
-how it works.
+Care must be taken if libifobject has changed and ifclassgen and iftpl require 
+re-linking. In this case, 'scons bootstrap' can be used to rebuild ifobject 
+without generating the source files.
 
 Enjoy!
