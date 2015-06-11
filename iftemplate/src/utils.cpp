@@ -29,6 +29,7 @@
 #include <cstdlib>
 #include <algorithm>
 #include <dirent.h>
+#include <unistd.h>
 #include "ifobject/serialize.hpp"
 #include "ifobject/utils.hpp"
 #include "iftemplate/utils.hpp"
