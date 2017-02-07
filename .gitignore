@@ -7,3 +7,5 @@ lib/
 *.pyc
 **/site_scons/local_config.py
 bin/
+**/swig/python/
+**/swig/wrapper/

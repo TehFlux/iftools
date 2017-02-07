@@ -32,7 +32,9 @@
 #include "ifobject/IFExampleEvent.hpp"
 #include <sstream>
 #include "ifobject/utils.hpp"
+#include "ifobject/objectutils.hpp"
 #include "ifobject/serialize.hpp"
+#include "ifobject/IFIOContext.hpp"
 
 using Ionflux::ObjectBase::pack;
 using Ionflux::ObjectBase::packObj;
@@ -66,7 +68,7 @@ IFExampleClassClassInfo::IFExampleClassClassInfo()
 	currentParam.name = "victim";
 	currentParam.desc = "object";
 	currentParam.optional = false;
-	currentParam.defaultValue = 0;
+	currentParam.defaultValue = false;
 	OP_INFO_DOSTUFFWITHOBJECTOP.paramInfo.push_back(currentParam);
 	currentResult.type = Ionflux::ObjectBase::IFObject::CLASS_INFO;
 	currentResult.desc = "result";
@@ -96,6 +98,8 @@ const std::string IFExampleClass::SIGNAL_NAME_SECOND = "second";
 // run-time type information instance constants
 const IFExampleClassClassInfo IFExampleClass::iFExampleClassClassInfo;
 const Ionflux::ObjectBase::IFClassInfo* IFExampleClass::CLASS_INFO = &IFExampleClass::iFExampleClassClassInfo;
+
+const Ionflux::ObjectBase::MagicSyllable IFExampleClass::MAGIC_SYLLABLE_OBJECT = 0x5858;
 
 IFExampleClass::IFExampleClass()
 : signalFirstWrapper(0), signalSecondWrapper(0)
@@ -483,6 +487,7 @@ void IFExampleClass::clearBlahs()
 
 bool IFExampleClass::serialize(std::string& target) const
 {
+	Ionflux::ObjectBase::IFGuard functionGuard(guardMutex);
 	if (!IFObject::serialize(target))
 		return false;
 	pack(someValue, target);
@@ -492,8 +497,9 @@ bool IFExampleClass::serialize(std::string& target) const
 	return true;
 }
 
-int IFExampleClass::deserialize(const std::string& source, int offset)
+Ionflux::ObjectBase::DataSize IFExampleClass::deserialize(const std::string& source, Ionflux::ObjectBase::DataSize offset)
 {
+	Ionflux::ObjectBase::IFGuard functionGuard(guardMutex);
 	offset = IFObject::deserialize(source, offset);
 	if (offset < 0)
 		return -1;
@@ -537,6 +543,77 @@ int IFExampleClass::deserialize(const std::string& source, int offset)
         return false;
 	}
 	return offset;
+}
+
+bool IFExampleClass::serialize(std::ostream& target, bool addMagicWord) const
+{
+	Ionflux::ObjectBase::IFGuard functionGuard(guardMutex);
+	if (addMagicWord)
+        Ionflux::ObjectBase::pack(getMagicSyllableBase(), 
+            getMagicSyllable(), target);
+	if (!IFObject::serialize(target, false))
+		return false;
+	pack(someValue, target);
+	pack(someText, target);
+	pack(roProp, target);
+	pack(miep, target);
+	return true;
+}
+
+Ionflux::ObjectBase::DataSize IFExampleClass::deserialize(std::istream& source, Ionflux::ObjectBase::DataSize offset, bool checkMagicWord)
+{
+	Ionflux::ObjectBase::IFGuard functionGuard(guardMutex);
+    if (offset != Ionflux::ObjectBase::DATA_SIZE_INVALID)
+    {
+        source.seekg(offset);
+        if (!source.good())
+        {
+            std::ostringstream status;
+            status << "Invalid stream offset: " << offset;
+            throw Ionflux::ObjectBase::IFError(getErrorString(status.str(), "deserialize"));
+        }
+    }
+    if (checkMagicWord)
+        Ionflux::ObjectBase::unpackAndCheckMagicWord(source, 
+            getMagicSyllableBase(), getMagicSyllable(), 
+            Ionflux::ObjectBase::DATA_SIZE_INVALID, 
+            this, "deserialize");
+	IFObject::deserialize(source, 
+	    Ionflux::ObjectBase::DATA_SIZE_INVALID, false);
+	// someValue
+    unpack(source, someValue);
+	// someText
+    unpack(source, someText);
+	// roProp
+    unpack(source, roProp);
+	unpack(source, miep);
+	return source.tellg();
+}
+
+bool IFExampleClass::serialize(Ionflux::ObjectBase::IFIOContext& ioCtx, bool addMagicWord) const
+{
+	Ionflux::ObjectBase::IFGuard functionGuard(guardMutex);
+	std::ostream* os0 = Ionflux::ObjectBase::nullPointerCheck(
+	    ioCtx.getOutputStream(), this, "serialize", "Output stream");
+    return serialize(*os0, addMagicWord);
+}
+
+Ionflux::ObjectBase::DataSize IFExampleClass::deserialize(Ionflux::ObjectBase::IFIOContext& ioCtx, Ionflux::ObjectBase::DataSize offset, bool checkMagicWord)
+{
+	Ionflux::ObjectBase::IFGuard functionGuard(guardMutex);
+	std::istream* is0 = Ionflux::ObjectBase::nullPointerCheck(
+	    ioCtx.getInputStream(), this, "deserialize", "Input stream");
+    return deserialize(*is0, offset, checkMagicWord);
+}
+
+Ionflux::ObjectBase::MagicSyllable IFExampleClass::getMagicSyllable() const
+{
+    return MAGIC_SYLLABLE_OBJECT;
+}
+
+Ionflux::ObjectBase::MagicSyllable IFExampleClass::getMagicSyllableBase() const
+{
+    return MAGIC_SYLLABLE_BASE;
 }
 
 unsigned int IFExampleClass::getMemSize() const

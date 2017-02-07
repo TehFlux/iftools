@@ -73,7 +73,11 @@ class IFLogMessage
         getLevelFromString(const std::string& levelString);
         virtual std::string getString() const;
         virtual bool serialize(std::string& target) const;
-        virtual int deserialize(const std::string& source, int offset = 0);
+        virtual Ionflux::ObjectBase::DataSize deserialize(const std::string& source, int offset = 0);
+        virtual bool serialize(Ionflux::ObjectBase::IFIOContext& ioCtx, bool addMagicWord = true) const;
+        virtual Ionflux::ObjectBase::DataSize deserialize(Ionflux::ObjectBase::IFIOContext& ioCtx, Ionflux::ObjectBase::DataSize offset = Ionflux::ObjectBase::DATA_SIZE_INVALID, bool checkMagicWord = true);
+        virtual Ionflux::ObjectBase::MagicSyllable getMagicSyllable() const;
+        virtual Ionflux::ObjectBase::MagicSyllable getMagicSyllableBase() const;
         virtual void setMessage(const std::string& newMessage);
         virtual std::string getMessage() const;
         virtual void setLevel(Ionflux::ObjectBase::IFVerbosityLevel 
