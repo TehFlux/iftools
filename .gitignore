@@ -1,0 +1,9 @@
+.sconf_temp/
+.sconsign.dblite
+build/
+config.log
+lib/
+**/scripts/profile-local.sh
+*.pyc
+**/site_scons/local_config.py
+bin/

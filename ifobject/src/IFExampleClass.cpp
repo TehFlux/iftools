@@ -66,7 +66,7 @@ IFExampleClassClassInfo::IFExampleClassClassInfo()
 	currentParam.name = "victim";
 	currentParam.desc = "object";
 	currentParam.optional = false;
-	currentParam.defaultValue = false;
+	currentParam.defaultValue = 0;
 	OP_INFO_DOSTUFFWITHOBJECTOP.paramInfo.push_back(currentParam);
 	currentResult.type = Ionflux::ObjectBase::IFObject::CLASS_INFO;
 	currentResult.desc = "result";

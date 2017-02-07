@@ -216,7 +216,7 @@ Ionflux::Template::NodeRefVector& nodeRefs)
 	    std::ostringstream status;
 	    status << "[TreeResolver::parseTreePath] Parse error at position " 
 	        << errPos << ":" << endl << treePathExpr << endl << ws << "^" 
-	        << endl << "(" << errorReason << ")" << status;
+	        << endl << "(" << errorReason << ")" << endl;
 	    throw IFTemplateError(status.str());
 	}
 	return !error;
