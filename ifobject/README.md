@@ -5,7 +5,7 @@ Copyright © 2006-2024 • Jörn Meier <webmaster@ionflux.org>
 
 ### What is it?
 
-The Ionflux Object Base System (ifobject) is a small library which provides a framework for developing object oriented software in C++. It is intended to be the foundation of a modular re-implementation of the Ionflux Tools Class Library. New classes based on the framework can be created easily using templates and configuration files.
+The Ionflux Object Base System (IFObject) is a small library which provides a framework for developing object oriented software in C++. It is intended to be the foundation of a modular re-implementation of the Ionflux Tools Class Library. New classes based on the framework can be created easily using templates and configuration files.
 
 See [specification](misc/spec.md) for an overview of features which will be provided by the Ionflux Tools Object Base System.
 
@@ -24,7 +24,7 @@ To build the Ionflux Object Base System, the following dependencies must be inst
 + [libsigc++](http://libsigc.sourceforge.net/)
 + pthread
 + [tinyxml](http://www.grinninglizard.com/tinyxml/)  
-  A version suitable for use with ifobject, including Scons build scripts for a dynamic library is, included in the repository.
+  A version suitable for use with ifobject, including Scons build scripts for a dynamic library, is included in the IFObject repository.
 
 The following dependencies are optional, but highly recommended:
 
@@ -81,6 +81,6 @@ Care must be taken if libifobject has changed and ifclassgen and iftpl require r
 
 ### Using
 
-This library is intended for developers, so you should be able to derive how it is meant to be used from the source code documentation and the scripts in the 'test' directory. If you have any questions, you can still contact me by mail.
+This library is intended for developers, so you should be able to derive how it is meant to be used from the source code documentation and the scripts in the `test` directory. If you have any questions, you can still contact me by mail.
 
 **Enjoy!**

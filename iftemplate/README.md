@@ -86,6 +86,6 @@ Care must be taken if libifobject has changed and ifclassgen and iftpl require r
 
 ### Using
 
-This library is intended for developers, so you should be able to derive how it is meant to be used from the source code documentation and the scripts in the 'test' directory. If you have any questions, you can still contact me by mail.
+This library is intended for developers, so you should be able to derive how it is meant to be used from the source code documentation and the scripts in the `test` directory. If you have any questions, you can still contact me by mail.
 
 **Enjoy!**
