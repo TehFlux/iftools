@@ -87,9 +87,9 @@ prefix = ARGUMENTS.get('prefix', defaultPrefix)
 
 bootstrap = False
 if ('bootstrap' in COMMAND_LINE_TARGETS):
-    print "***********************"
-    print "Bootstrap build enabled"
-    print "***********************"
+    print("***********************")
+    print("Bootstrap build enabled")
+    print("***********************")
     bootstrap = True
 
 iftemplateEnv = env.Clone()
@@ -118,7 +118,7 @@ def checkPkgConfig(ctx, pkg):
         p0 = subprocess.Popen(shlex.split(cmd), stdout=subprocess.PIPE, 
             stderr=subprocess.STDOUT)
         d = p0.stdout.read()
-        if (d.find('was not found') != -1):
+        if (d.find(b'was not found') != -1):
             result = 0
         else:
             ctx.sconf.env.MergeFlags('!' + cmd)
@@ -142,22 +142,22 @@ if (not config.CheckLibWithHeader("ifobject", "ifobject/IFObject.hpp",
     missingDeps += ['ifobject']
 
 if (len(missingDeps) > 0):
-    print "***********************************************************"
-    print "IFTemplate cannot be built because the following dependencies"
-    print "were not found:"
-    print " "
+    print("***********************************************************")
+    print("IFTemplate cannot be built because the following dependencies")
+    print("were not found:")
+    print(" ")
     for it in missingDeps:
-        print "  " + it
-    print " "
-    print "***********************************************************"
+        print("  " + it)
+    print(" ")
+    print("***********************************************************")
     Exit(1)
 
 buildPyModule = True
 if (not config.CheckLibWithHeader("python" + lc.pythonVersion, 
     "Python.h", 'C', autoadd = 0)):
-    print "***************************************************"
-    print "Python not found - Python modules will NOT be built!"
-    print "***************************************************"
+    print("***************************************************")
+    print("Python not found - Python modules will NOT be built!")
+    print("***************************************************")
     buildPyModule = False
 
 haveIFClassgen = True
@@ -174,9 +174,9 @@ if (not config.CheckProgram("iftpl0")):
     haveIFTpl0 = False
 haveSWIG = True
 if (not config.CheckProgram("swig")):
-    print "*************************************************"
-    print "SWIG not found - Python module will NOT be built!"
-    print "*************************************************"
+    print("*************************************************")
+    print("SWIG not found - Python module will NOT be built!")
+    print("*************************************************")
     haveSWIG = False
     buildPyModule = False
 
@@ -218,9 +218,9 @@ if (not bootstrap):
             ]
         allTargets += sources
     else:
-        print "**********************************************************"
-        print "ifclassgen not found - source files will NOT be generated!"
-        print "**********************************************************"
+        print("**********************************************************")
+        print("ifclassgen not found - source files will NOT be generated!")
+        print("**********************************************************")
     
     # Interface declarations.
     if (haveIFTpl0):
@@ -239,14 +239,14 @@ if (not bootstrap):
             source = interfaceTargets + [lc.swigInterfaceTemplateFile[0]]) ]
         allTargets += (classInterfaces + interfaces)
     else:
-        print "****************************************************************"
-        print "iftpl not found -  Interface declarations will NOT be generated!"
-        print "****************************************************************"
+        print("****************************************************************")
+        print("iftpl not found -  Interface declarations will NOT be generated!")
+        print("****************************************************************")
 else:
-    print "*****************************************************************"
-    print "Not generating source files and interface declarations, bootstrap"
-    print "mode enabled."
-    print "*****************************************************************"
+    print("*****************************************************************")
+    print("Not generating source files and interface declarations, bootstrap")
+    print("mode enabled.")
+    print("*****************************************************************")
 
 # iftemplate shared library
 iftemplateLibEnv = iftemplateEnv.Clone()
@@ -312,7 +312,7 @@ installLibs = iftemplateEnv.Install(prefix + '/lib', targetLibs)
 installBins = iftemplateEnv.Install(prefix + '/bin', installBinTargets)
 if (buildPyModule):
     pyModuleTargets = ['swig/python/IFTemplate.py', iftemplatePyModule]
-    installPyModules = iftemplateEnv.Install(prefix + lc.pythonSitePackagesPath, 
+    installPyModules = iftemplateEnv.Install(lc.pythonSitePackagesPath, 
         pyModuleTargets)
 
 installTargets = [installHeaders, installLibs, installBins]

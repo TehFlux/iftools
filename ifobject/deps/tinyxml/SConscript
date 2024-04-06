@@ -1,0 +1,161 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+import os, subprocess, shutil, shlex, string, copy
+
+# Create a default local configuration file if it does not exist.
+if (not os.path.isfile('site_scons/local_config.py')):
+    shutil.copy('site_scons/local_config.py.default', 
+        'site_scons/local_config.py')
+
+import local_config as lc
+from sources import *
+
+Help("""
+Type 'scons' to build the default targets.
+Type 'scons install' to install to default location.
+Type 'scons <target>' to build a specific target.
+
+You can add local configuration to site_scons/local_config.py.
+
+Targets:
+  (default)                    Everything.
+  all                          Everything
+  libs                         Shared libraries.
+  programs                     Programs.
+  tests                        Test programs.
+  pymodule                     Python module.
+  install                      Install headers, libraries and programs.
+
+Options:
+  prefix=<target directory>    Installation prefix
+                               (default: /usr/local)
+  debug=<yes|ntinyxmlEnvo>               Whether to use debug compiler flags 
+                               (default: yes)
+""")
+
+env0 = os.environ
+env0['PATH'] += (':' + lc.PATH)
+
+env = Environment(ENV = env0, 
+    CPPPATH = ['include', 'include/tinyxml'] + lc.CPPPATH, 
+    LIBPATH = ['lib'] + lc.LIBPATH)
+env.MergeFlags(['-Wall', '-Wno-deprecated', '-O2'])
+
+if (hasattr(lc, 'debug') and lc.debug):
+    debugDefault = 'yes'
+else:
+    debugDefault = 'no'
+if (ARGUMENTS.get('debug', debugDefault) == 'yes'):
+    env.Append(CCFLAGS = '-g')
+
+tinyxmlEnv = env.Clone()
+
+if (hasattr(lc, 'prefix')):
+    defaultPrefix = lc.prefix
+else:
+    defaultPrefix = '/usr/local'
+prefix = ARGUMENTS.get('prefix', defaultPrefix)
+
+tinyxmlEnv.VariantDir('build', 'src')
+
+def checkProgram(ctx, cmd):
+    """Check for installed program."""
+    ctx.Message('Checking for ' + cmd + '... ')
+    try:
+        subprocess.call(cmd, stdout=subprocess.PIPE, 
+            stderr=subprocess.STDOUT)
+        result = 1
+    except Exception:
+        result = 0
+    ctx.Result(result)
+    return result
+
+config = tinyxmlEnv.Configure(custom_tests = { 
+    "CheckProgram" : checkProgram })
+
+buildPyModule = False
+#if (not config.CheckLibWithHeader("python" + lc.pythonVersion, 
+#    "Python.h", 'C', autoadd = 0)):
+#    print "***************************************************"
+#    print "Python not found - Python module will NOT be built!"
+#    print "***************************************************"
+#    buildPyModule = False
+
+haveSWIG = False
+#if (not config.CheckProgram("swig")):
+#    print "*************************************************"
+#    print "SWIG not found - Python module will NOT be built!"
+#    print "*************************************************"
+#    haveSWIG = False
+#    buildPyModule = False
+
+tinyxmlEnv = config.Finish()
+
+swigIncludes = ''
+for it in tinyxmlEnv['CPPPATH']:
+    swigIncludes += ('-I' + it + ' ')
+swigPythonBuilder = Builder(action = "swig -c++ -python "
+    + swigIncludes + "-outdir swig/python -o $TARGET $SOURCE")
+
+tinyxmlEnv.Append(BUILDERS = { 'SWIGPython' : swigPythonBuilder})
+
+allTargets = []
+
+# tinyxml shared library
+tinyxmlLibEnv = tinyxmlEnv.Clone()
+tinyxmlLibEnv.MergeFlags(['-DTIXML_USE_STL'])
+tinyxmlLib = tinyxmlLibEnv.SharedLibrary(target = "lib/" + lc.baseName, 
+    source = tinyxmlLibSources)
+
+targetLibs = [tinyxmlLib]
+
+# programs.
+targetBins = []
+
+# tests
+
+targetTests = []
+
+## Python module.
+#tinyxmlWrapper = tinyxmlEnv.SWIGPython(target = [ 
+#        'swig/tinyxml_wrap.cxx', 'swig/python/tinyxml.py'], 
+#    source = 'swig/tinyxml.i')
+#
+#tinyxmlPyModuleEnv = tinyxmlEnv.Clone()
+#tinyxmlPyModuleEnv.Append(LIBS = ['tinyxml', 'python' + lc.pythonVersion])
+#
+#tinyxmlPyModule = tinyxmlPyModuleEnv.SharedLibrary(
+#    target = 'swig/python/_tinyxml', 
+#    source = 'swig/tinyxml_wrap.cxx', SHLIBPREFIX = '', SHLIBSUFFIX = '.so')
+
+allHeaders = tinyxmlLibHeaders
+if (buildPyModule):
+    allHeaders += [lc.swigInterfaceFile]
+
+installBinTargets = [targetBins]
+
+installHeaders = tinyxmlEnv.Install(prefix + '/include/' + lc.baseName, 
+    allHeaders)
+installLibs = tinyxmlEnv.Install(prefix + '/lib', targetLibs)
+installBins = tinyxmlEnv.Install(prefix + '/bin', installBinTargets)
+if (buildPyModule):
+    installPyModule = tinyxmlEnv.Install(prefix + lc.pythonSitePackagesPath, 
+        ['swig/python/tinyxml.py', tinyxmlPyModule])
+
+allTargets += (targetLibs + targetBins + targetTests)
+if (buildPyModule):
+    allTargets += [tinyxmlPyModule]
+
+installTargets = [installHeaders, installLibs, installBins]
+if (buildPyModule):
+    installTargets += [installPyModule]
+
+aliasLibs = Alias('libs', targetLibs)
+aliasBins = Alias('programs', targetBins)
+aliasTests = Alias('tests', targetTests)
+aliasAll = Alias('all', allTargets)
+aliasInstall = Alias('install', installTargets)
+if (buildPyModule):
+    aliasPyModule = Alias('pymodule', tinyxmlPyModule)
+
+Default('all')

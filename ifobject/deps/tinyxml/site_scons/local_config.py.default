@@ -1,0 +1,33 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+"""Local configuration.
+
+Use this to add local configuration that will be used for the build. To do 
+this, create a copy of this file named local_config.py in the site_scons 
+directory.
+
+If you do not want to use any local configuration, a default copy will be 
+created for you automatically."""
+
+# Base name.
+# Do not change this unless you know what you are doing.
+baseName = 'tinyxml'
+## Prefix.
+## Set this if you do not want to use the default or the SCons command line 
+## parameter.
+#prefix = '/usr/local'
+
+# Python version.
+pythonVersion = "3.2"
+# Python site packages path.
+pythonSitePackagesPath = '/lib/python' + pythonVersion + '/site-packages'
+
+# The SWIG interface template file.
+swigInterfaceTemplateFile = 'template/' + baseName + '.i.tpl'
+# The SWIG interface file.
+swigInterfaceFile = 'swig/' + baseName + '.i'
+
+# Paths.
+PATH = 'bin'
+CPPPATH = ['/usr/include/python' + pythonVersion]
+LIBPATH = []

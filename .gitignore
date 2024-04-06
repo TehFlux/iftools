@@ -1,3 +1,4 @@
+.vscode/
 .sconf_temp/
 .sconsign.dblite
 build/
@@ -9,3 +10,4 @@ lib/
 bin/
 **/swig/python/
 **/swig/wrapper/
+**/bootstrap/

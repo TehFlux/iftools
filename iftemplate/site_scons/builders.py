@@ -43,7 +43,7 @@ def buildSource(source, target, env):
         #c0 = ("ifclassgen -t " + lc.ifobjectTemplatePath 
         #    + "/attic/class -c conf/class -m conf/main.conf -i include/" 
         #    + lc.baseName + " -s src " + cn)
-        print c0
+        print(c0)
         sp0 = subprocess.call(shlex.split(c0))
 
 def buildClassInterface(source, target, env):
@@ -60,7 +60,7 @@ def buildClassInterface(source, target, env):
         #c0 = ("iftpl " + lc.ifobjectTemplatePath 
         #    + "/attic/interface.i.tpl conf/class/" + cn #
         #    + ".conf conf/main.conf")
-        print c0
+        print(c0)
         f0 = open("swig/classes/" + cn + ".i", 'w')
         sp0 = subprocess.call(shlex.split(c0), stdout = f0)
         f0.close()
@@ -77,7 +77,7 @@ def buildInterface(source, target, env):
         elif (ext == '.tpl'):
             templateFile = it.path
     tplData = {}
-    p0 = re.compile("/\*.*?\*/", re.DOTALL)
+    p0 = re.compile("/\\*.*?\\*/", re.DOTALL)
     for cn in classNames:
         tplData[cn] = p0.sub('', open('swig/classes/' + cn + '.i').read())
     tplStr = open(templateFile).read()
@@ -113,7 +113,7 @@ def buildClassXMLIO(source, target, env):
         c0 = ("iftpl0 -I " + lc.ifobjectTemplatePath 
             + " " + templateModule + " conf/class/" 
                 + cn + ".conf conf/main.conf")
-        print c0
+        print(c0)
         f0 = open("temp/xmlutils/" + cn + suffix, 'w')
         sp0 = subprocess.call(shlex.split(c0), stdout = f0)
         f0.close()
@@ -142,7 +142,7 @@ def buildXMLIO(source, target, env):
                     suffix = "_xml.hpp"
                 elif (cn.endswith("_xml_private")):
                     suffix = "_xml_private.hpp"
-    p0 = re.compile("/\*.*?\*/", re.DOTALL)
+    p0 = re.compile("/\\*.*?\\*/", re.DOTALL)
     tplData = {}
     for cn in classNames:
         tplData[cn] = p0.sub('', open('temp/xmlutils/' + cn 
