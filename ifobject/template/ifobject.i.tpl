@@ -237,6 +237,19 @@ std::string getErrorString(const std::string& message,
 std::string getStreamTypeValueString(Ionflux::ObjectBase::StreamTypeID t);
 std::string getBooleanValueString(bool v);
 
+template<class T>
+std::string getValueStringVec(const T& v, const std::string& sep = ", ")
+{
+    std::ostringstream status;
+    for (unsigned int i = 0; i < v.size(); i++)
+    {
+        if (i > 0)
+            status << sep;
+        status << v[i];
+    }
+    return status.str();
+}
+
 // xmlutils.hpp
 
 namespace XMLUtils
@@ -422,6 +435,11 @@ bool hasPrefix(const std::string& bytes, const std::string& prefix,
 bool hasPrefix(const std::string& bytes, const std::vector<std::string>& 
     prefixes, bool ignoreCase = true);
 Ionflux::ObjectBase::UInt64 getTimeTicks();
+
+%template(getValueStringVecString) getValueStringVec<StringVector>;
+%template(getValueStringVecDouble) getValueStringVec<DoubleVector>;
+%template(getValueStringVecInt) getValueStringVec<IntVector>;
+%template(getValueStringVecUInt) getValueStringVec<UIntVector>;
 
 }
 
