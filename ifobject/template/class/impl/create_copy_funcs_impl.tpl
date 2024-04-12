@@ -23,7 +23,7 @@
 if (this == &other)
     return *this;{foreach prop in property.protected}{if ( prop.copy == "true" ) && ( prop.persistent != "true" )}
 set{$prop.name|uppercase(1)}(other.get{$prop.name|uppercase(1)}());{/if}{/foreach}{/if}
-	return *this;
+    return *this;
 \}{if abstractClass == 0}
 
 {swrap 75}{foreach ns in namespace}{$ns.name}::{/foreach}{$class.name}* {$class.name}::copy() const{/swrap}
