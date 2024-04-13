@@ -121,10 +121,10 @@ const Ionflux::ObjectBase::MagicSyllable {$class.name}::MAGIC_SYLLABLE_OBJECT = 
 	theClass = CLASS_INFO;{/if}{if enableAutoGuards == 1}
 	// NOTE: The following line is required for guards to work.
 	setGuardEnabled(true);{/if}{if enableMemDebug == 1}{if class.memDebug.autoEnable == "true"}
-    refData->mmDebug = true;{/if}
-    if (refData->mmDebug)
-        handleMMEvent(Ionflux::ObjectBase::IFMMEvent(
-            Ionflux::ObjectBase::IFMMEvent::TYPE_CREATE, this));{/if}{if constructor.default.impl == ""}
+	refData->mmDebug = true;{/if}
+	if (refData->mmDebug)
+		handleMMEvent(Ionflux::ObjectBase::IFMMEvent(
+			Ionflux::ObjectBase::IFMMEvent::TYPE_CREATE, this));{/if}{if constructor.default.impl == ""}
 	// TODO: Nothing ATM. ;-){else}
 {$constructor.default.impl|swrap(75,'	')}{/if}
 \}{if enablePersistence == 1}
@@ -140,10 +140,10 @@ const Ionflux::ObjectBase::MagicSyllable {$class.name}::MAGIC_SYLLABLE_OBJECT = 
 	theClass = CLASS_INFO;{/if}{if enableAutoGuards == 1}
 	// NOTE: The following line is required for guards to work.
 	setGuardEnabled(true);{/if}{if enableMemDebug == 1}{if class.memDebug.autoEnable == "true"}
-    refData->mmDebug = true;{/if}
-    if (refData->mmDebug)
-        handleMMEvent(Ionflux::ObjectBase::IFMMEvent(
-            Ionflux::ObjectBase::IFMMEvent::TYPE_CREATE, this));{/if}
+	refData->mmDebug = true;{/if}
+	if (refData->mmDebug)
+		handleMMEvent(Ionflux::ObjectBase::IFMMEvent(
+			Ionflux::ObjectBase::IFMMEvent::TYPE_CREATE, this));{/if}
 	setDatabase(initDatabase);
 	if (objectID != -1)
 		setFromID(objectID);
@@ -161,9 +161,9 @@ const Ionflux::ObjectBase::MagicSyllable {$class.name}::MAGIC_SYLLABLE_OBJECT = 
 	// NOTE: The following line is required for guards to work.
 	setGuardEnabled(true);{/if}{if enableMemDebug == 1}{if class.memDebug.autoEnable == "true"}
 	refData->mmDebug = true;{/if}
-    if (refData->mmDebug)
-        handleMMEvent(Ionflux::ObjectBase::IFMMEvent(
-            Ionflux::ObjectBase::IFMMEvent::TYPE_CREATE, this));{/if}
+	if (refData->mmDebug)
+		handleMMEvent(Ionflux::ObjectBase::IFMMEvent(
+			Ionflux::ObjectBase::IFMMEvent::TYPE_CREATE, this));{/if}
 	/* Do not use setDatabase() here since that also initializes the 
 	   persistent backend. */
 	database = initDatabase;
@@ -182,9 +182,9 @@ const Ionflux::ObjectBase::MagicSyllable {$class.name}::MAGIC_SYLLABLE_OBJECT = 
 	// NOTE: The following line is required for guards to work.
 	setGuardEnabled(true);{/if}{if enableMemDebug == 1}{if class.memDebug.autoEnable == "true"}
 	refData->mmDebug = true;{/if}
-    if (refData->mmDebug)
-        handleMMEvent(Ionflux::ObjectBase::IFMMEvent(
-            Ionflux::ObjectBase::IFMMEvent::TYPE_CREATE, this));{/if}{if constructor.copy.impl == ""}
+	if (refData->mmDebug)
+		handleMMEvent(Ionflux::ObjectBase::IFMMEvent(
+			Ionflux::ObjectBase::IFMMEvent::TYPE_CREATE, this));{/if}{if constructor.copy.impl == ""}
 	*this = other;{else}
 {swrap 75 "	"}{$constructor.copy.impl}{/swrap}{/if}
 \}{/if}{foreach con in constructor.public}
@@ -198,9 +198,9 @@ const Ionflux::ObjectBase::MagicSyllable {$class.name}::MAGIC_SYLLABLE_OBJECT = 
 	// NOTE: The following line is required for guards to work.
 	setGuardEnabled(true);{/if}{if enableMemDebug == 1}{if class.memDebug.autoEnable == "true"}
 	refData->mmDebug = true;{/if}
-    if (refData->mmDebug)
-        handleMMEvent(Ionflux::ObjectBase::IFMMEvent(
-            Ionflux::ObjectBase::IFMMEvent::TYPE_CREATE, this));{/if}{if con.impl == ""}
+	if (refData->mmDebug)
+		handleMMEvent(Ionflux::ObjectBase::IFMMEvent(
+			Ionflux::ObjectBase::IFMMEvent::TYPE_CREATE, this));{/if}{if con.impl == ""}
 	// TODO: Nothing ATM. ;-){else}
 {$con.impl|swrap(75,'	')}{/if}
 \}{/foreach}
@@ -208,9 +208,9 @@ const Ionflux::ObjectBase::MagicSyllable {$class.name}::MAGIC_SYLLABLE_OBJECT = 
 {$class.name}::~{$class.name}(){if destructor.throw != ""} throw({if destructor.throw != "<none>"}{$destructor.throw}{/if}){/if}
 \{{foreach prop in property.protected}{if ( prop.style == "vector" ) || ( prop.style == "map" )}{if prop.proxy != "true"}
 	clear{if prop.element.plural == ""}{$prop.element.name|uppercase(1)}s{else}{$prop.element.plural|uppercase(1)}{/if}();{/if}{/if}{/foreach}{if enableMemDebug == 1}
-    if (refData->mmDebug)
-        handleMMEvent(Ionflux::ObjectBase::IFMMEvent(
-            Ionflux::ObjectBase::IFMMEvent::TYPE_DELETE, this));{/if}{if destructor.impl == ""}{if enablePersistence == 1}
+	if (refData->mmDebug)
+		handleMMEvent(Ionflux::ObjectBase::IFMMEvent(
+			Ionflux::ObjectBase::IFMMEvent::TYPE_DELETE, this));{/if}{if destructor.impl == ""}{if enablePersistence == 1}
 	if (persistent != 0)
 		delete persistent;
 	persistent = 0;{else}
